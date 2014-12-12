@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<properties>
+<comment></comment>
+<entry key="per:alternate_names">per:alternate_names</entry>
+<entry key="per:date_of_birth">per:date_of_birth</entry>
+<entry key="per:age">per:age</entry>
+<entry key="per:country_of_birth">per:country_of_birth</entry>
+<entry key="per:stateorprovince_of_birth">per:stateorprovince_of_birth</entry>
+<entry key="per:city_of_birth">per:city_of_birth</entry>
+<entry key="per:origin">per:origin</entry>
+<entry key="per:date_of_death">per:date_of_death</entry>
+<entry key="per:country_of_death">per:country_of_death</entry>
+<entry key="per:stateorprovince_of_death">per:stateorprovince_of_death</entry>
+<entry key="per:city_of_death">per:city_of_death</entry>
+<entry key="per:cause_of_death">per:cause_of_death</entry>
+<entry key="per:countries_of_residence">per:countries_of_residence</entry>
+<entry key="per:statesorprovinces_of_residence">per:statesorprovinces_of_residence</entry>
+<entry key="per:cities_of_residence">per:cities_of_residence</entry>
+<entry key="per:schools_attended">per:schools_attended</entry>
+<entry key="per:title">per:title</entry>
+<entry key="per:member_of">per:member_of</entry>
+<entry key="per:employee_of">per:employee_of</entry>
+<entry key="per:religion">per:religion</entry>
+<entry key="per:spouse">per:spouse</entry>
+<entry key="per:children">per:children</entry>
+<entry key="per:parents">per:parents</entry>
+<entry key="per:siblings">per:siblings</entry>
+<entry key="per:other_family">per:other_family</entry>
+<entry key="per:charges">per:charges</entry>
+<entry key="org:alternate_names">org:alternate_names</entry>
+<entry key="org:political_religious_affiliation">org:political_religious_affiliation</entry>
+<entry key="org:top_members_employees">org:top_members_employees</entry>
+<entry key="org:number_of_employees_members">org:number_of_employees_members</entry>
+<entry key="org:members">org:members</entry>
+<entry key="org:member_of">org:member_of</entry>
+<entry key="org:subsidiaries">org:subsidiaries</entry>
+<entry key="org:parents">org:parents</entry>
+<entry key="org:founded_by">org:founded_by</entry>
+<entry key="org:date_founded">org:date_founded</entry>
+<entry key="org:date_dissolved">org:date_dissolved</entry>
+<entry key="org:country_of_headquarters">org:country_of_headquarters</entry>
+<entry key="org:stateorprovince_of_headquarters">org:stateorprovince_of_headquarters</entry>
+<entry key="org:city_of_headquarters">org:city_of_headquarters</entry>
+<entry key="org:shareholders">org:shareholders</entry>
+<entry key="org:website">org:website</entry>
+<entry key="REVERB">REVERB</entry>
+<entry key="OLLIE">OLLIE</entry>
+<entry key="UIUCEvent">UIUCEvent</entry>
+<entry key="CAUSE_ENABLE/PART_OF/RELATED">CAUSE_ENABLE/PART_OF/RELATED</entry>
+<entry key="NOMSRL">NOMSRL</entry>
+<entry key="VERBSRL">VERBSRL</entry>
+<entry key="Positive">Positive</entry> 
+<entry key="Negative">Negative</entry>
+<entry key="event:domaineventtype">event:domaineventtype</entry>
+<entry key="event:subevent_of">event:subevent_of</entry>
+<entry key="event:member_of">event:member_of</entry>
+<entry key="event:epistemic_status">event:epistemic_status</entry>
+<entry key="event:participant1">event:participant1</entry>
+<entry key="event:participant2">event:participant2</entry>
+<entry key="event:location">event:location</entry>
+<entry key="event:time">event:time</entry>
+<entry key="Interaction">Interaction</entry>
+<entry key="Cognition">Cognition</entry>
+</properties>

@@ -1,0 +1,2 @@
+mapreduce.PreprocessingJob		src/main/resources/pipeline/PreprocessingJobInput.txt	output
+edu.washington.mapreduce.WashingtonMultirMapClass	mapreduce.PreprocessingJob	output/part-00000	multir_output

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<properties version="1.0">
+	<comment></comment>
+	<entry key="UNKNOWN">UNKNOWN</entry>
+	<entry key="ADJP">ADJP</entry>
+	<entry key="ADJP-LOC">ADJP-LOC</entry>
+	<entry key="ADJP-PRD">ADJP-PRD</entry>
+	<entry key="ADJP-SPR">ADJP-SPR</entry>
+	<entry key="ADJX">ADJX</entry>
+	<entry key="ADVP">ADVP</entry>
+	<entry key="ADVP-DIR">ADVP-DIR</entry>
+	<entry key="ADVP-LOC">ADVP-LOC</entry>
+	<entry key="ADVP-TMP">ADVP-TMP</entry>
+	<entry key="ADVX">ADVX</entry>
+	<entry key="CONJP">CONJP</entry>
+	<entry key="CP-ADV">CP-ADV</entry>
+	<entry key="CP-CAR">CP-CAR</entry>
+	<entry key="CP-CLF">CP-CLF</entry>
+	<entry key="CP-CMP">CP-CMP</entry>
+	<entry key="CP-DEG">CP-DEG</entry>
+	<entry key="CP-EOP">CP-EOP</entry>
+	<entry key="CP-EXL">CP-EXL</entry>
+	<entry key="CP-FRL">CP-FRL</entry>
+	<entry key="CP-QUE">CP-QUE</entry>
+	<entry key="CP-REL">CP-REL</entry>
+	<entry key="CP-THT">CP-THT</entry>
+	<entry key="FRAG">FRAG</entry>
+	<entry key="INTJ">INTJ</entry>
+	<entry key="ITJP">ITJP</entry>
+	<entry key="IP-IMP">IP-IMP</entry>
+	<entry key="IP-INF">IP-INF</entry>
+	<entry key="IP-INF-ABS">IP-INF-ABS</entry>
+	<entry key="IP-INF-PRP">IP-INF-PRP</entry>
+	<entry key="IP-MAT">IP-MAT</entry>
+	<entry key="IP-PPL">IP-PPL</entry>
+	<entry key="IP-PPL-ABS">IP-PPL-ABS</entry>
+	<entry key="IP-SMC">IP-SMC</entry>
+	<entry key="IP-SMC-ABS">IP-SMC-ABS</entry>
+	<entry key="IP-SUB">IP-SUB</entry>
+	<entry key="LATIN">LATIN</entry>
+	<entry key="LST">LST</entry>
+	<entry key="NP">NP</entry>
+	<entry key="NP-ADT">NP-ADT</entry>
+	<entry key="NP-ADV">NP-ADV</entry>
+	<entry key="NP-COM">NP-COM</entry>
+	<entry key="NP-DIR">NP-DIR</entry>
+	<entry key="NP-LOC">NP-LOC</entry>
+	<entry key="NP-LFD">NP-LFD</entry>
+	<entry key="NP-MSR">NP-MSR</entry>
+	<entry key="NP-OB1">NP-OB1</entry>
+	<entry key="NP-OB2">NP-OB2</entry>
+	<entry key="NP-PART">NP-PART</entry>
+	<entry key="NP-PRD">NP-PRD</entry>
+	<entry key="NP-PRN">NP-PRN</entry>
+	<entry key="NP-RFL">NP-RFL</entry>
+	<entry key="NP-SBJ">NP-SBJ</entry>
+	<entry key="NP-SPR">NP-SPR</entry>
+	<entry key="NP-TMP">NP-TMP</entry>
+	<entry key="NP-VOC">NP-VOC</entry>
+	<entry key="NUMP">NUMP</entry>
+	<entry key="NX">NX</entry>
+	<entry key="PP">PP</entry>
+	<entry key="PRT">PRT</entry>
+	<entry key="QP">QP</entry>
+	<entry key="QTP">QTP</entry>
+	<entry key="QX">QX</entry>
+	<entry key="REF">REF</entry>
+	<entry key="RRC">RRC</entry>
+        <entry key="SBAR">SBAR</entry>
+        <entry key="UCP">UCP</entry>
+	<entry key="WADJP">WADJP</entry>
+	<entry key="WADVP">WADVP</entry>
+	<entry key="WNP">WNP</entry>
+	<entry key="WPP">WPP</entry>
+	<entry key="WQP">WQP</entry>
+        <entry key="VP">VP</entry>
+	<entry key="XX">XX</entry>
+</properties>

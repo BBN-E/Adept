@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<properties version="1.0">
+	<comment></comment>
+	<entry key="CC">CC</entry>
+	<entry key="CD">CD</entry>
+	<entry key="DT">DT</entry>
+	<entry key="EX">EX</entry>
+	<entry key="FW">FW</entry>
+	<entry key="IN">IN</entry>
+	<entry key="JJ">JJ</entry>
+	<entry key="JJR">JJR</entry>
+	<entry key="JJS">JJS</entry>
+	<entry key="LS">LS</entry>
+	<entry key="MD">MD</entry>
+	<entry key="NN">NN</entry>
+	<entry key="NNS">NNS</entry>
+	<entry key="NNP">NNP</entry>
+	<entry key="NNPS">NNPS</entry>
+	<entry key="PDT">PDT</entry>
+	<entry key="POS">POS</entry>
+	<entry key="PRP">PRP</entry>
+	<entry key="PRP$">PRP$</entry>
+	<entry key="RB">RB</entry>
+	<entry key="RBR">RBR</entry>
+	<entry key="RBS">RBS</entry>
+	<entry key="RP">RP</entry>
+	<entry key="SYM">SYM</entry>
+	<entry key="TO">TO</entry>
+	<entry key="UH">UH</entry>
+	<entry key="VB">VB</entry>
+	<entry key="VBD">VBD</entry>
+	<entry key="VBG">VBG</entry>
+	<entry key="VBN">VBN</entry>
+	<entry key="VBP">VBP</entry>
+	<entry key="VBZ">VBZ</entry>
+	<entry key="WDT">WDT</entry>
+	<entry key="WP">WP</entry>
+	<entry key="WP$">WP$</entry>
+	<entry key="WRB">WRB</entry>
+	<entry key="#">#</entry>
+	<entry key="''">&apos;&apos;</entry>
+	<entry key="'">&apos;</entry>
+	<entry key=",">,</entry>
+	<entry key=":">:</entry>
+	<entry key="-RRB-">-RRB-</entry>
+	<entry key="-LRB-">-LRB-</entry>
+	<entry key="$">$</entry>
+	<entry key="``">``</entry>
+	<entry key="`">`</entry>
+	<entry key=".">.</entry>
+</properties>

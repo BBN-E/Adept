@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<properties version="1.0">
+	<comment></comment>	
+	<entry key="PERSON">PER</entry>
+	<entry key="PER">PER</entry>
+	<entry key="LOCATION">LOC</entry>
+	<entry key="LOC">LOC</entry>	
+	<entry key="ORG">ORG</entry>
+	<entry key="ORGANIZATION">ORG</entry>
+	<entry key="TITLE">TITLE</entry>
+	<entry key="FAC">FAC</entry>
+	<entry key="GPE">GPE</entry>
+	<entry key="OTHER">OTHER</entry>
+	<entry key="MISC">OTHER</entry>
+	<entry key="UNKNOWN">UNKNOWN</entry>
+	<!--  From Stanford CoreNlp -->
+	<entry key="DATE">DATE</entry>
+	<entry key="TIME">TIME</entry>
+	<entry key="MONEY">MONEY</entry>
+	<entry key="NUMBER">NUMBER</entry>
+</properties>

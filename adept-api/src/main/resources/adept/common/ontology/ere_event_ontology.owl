@@ -1,0 +1,509 @@
+<?xml version="1.0"?>
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <Ontology rdf:about="deft://event.ere"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://event.ere#OTH -->
+
+    <Class rdf:about="deft://event.ere#OTH"/>
+    
+
+
+    <!-- deft://event.ere#business -->
+
+    <Class rdf:about="deft://event.ere#business"/>
+    
+
+
+    <!-- deft://event.ere#business.declarebankruptcy -->
+
+    <Class rdf:about="deft://event.ere#business.declarebankruptcy">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#business"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#business.endorg -->
+
+    <Class rdf:about="deft://event.ere#business.endorg">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#business"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#business.mergeorg -->
+
+    <Class rdf:about="deft://event.ere#business.mergeorg">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#business"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#business.startorg -->
+
+    <Class rdf:about="deft://event.ere#business.startorg">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#business"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#conflict -->
+
+    <Class rdf:about="deft://event.ere#conflict"/>
+    
+
+
+    <!-- deft://event.ere#conflict.attack -->
+
+    <Class rdf:about="deft://event.ere#conflict.attack">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#conflict"/>
+        <disjointWith rdf:resource="deft://event.ere#conflict.demonstrate"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#conflict.demonstrate -->
+
+    <Class rdf:about="deft://event.ere#conflict.demonstrate">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#conflict"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#contact -->
+
+    <Class rdf:about="deft://event.ere#contact"/>
+    
+
+
+    <!-- deft://event.ere#contact.communicate -->
+
+    <Class rdf:about="deft://event.ere#contact.communicate">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#contact"/>
+        <disjointWith rdf:resource="deft://event.ere#contact.meet"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#contact.meet -->
+
+    <Class rdf:about="deft://event.ere#contact.meet">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#contact"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#date -->
+
+    <Class rdf:about="deft://event.ere#date"/>
+    
+
+
+    <!-- deft://event.ere#justice -->
+
+    <Class rdf:about="deft://event.ere#justice"/>
+    
+
+
+    <!-- deft://event.ere#justice.acquit -->
+
+    <Class rdf:about="deft://event.ere#justice.acquit">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.appeal -->
+
+    <Class rdf:about="deft://event.ere#justice.appeal">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.arrest -->
+
+    <Class rdf:about="deft://event.ere#justice.arrest">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.arrestjail -->
+
+    <Class rdf:about="deft://event.ere#justice.arrestjail">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.charge -->
+
+    <Class rdf:about="deft://event.ere#justice.charge">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.chargeindict -->
+
+    <Class rdf:about="deft://event.ere#justice.chargeindict">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.convict -->
+
+    <Class rdf:about="deft://event.ere#justice.convict">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.execute -->
+
+    <Class rdf:about="deft://event.ere#justice.execute">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.extradite -->
+
+    <Class rdf:about="deft://event.ere#justice.extradite">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.fine -->
+
+    <Class rdf:about="deft://event.ere#justice.fine">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.holdhearing -->
+
+    <Class rdf:about="deft://event.ere#justice.holdhearing">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.indict -->
+
+    <Class rdf:about="deft://event.ere#justice.indict">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.jail -->
+
+    <Class rdf:about="deft://event.ere#justice.jail">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.pardon -->
+
+    <Class rdf:about="deft://event.ere#justice.pardon">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.release -->
+
+    <Class rdf:about="deft://event.ere#justice.release">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.releaseparole -->
+
+    <Class rdf:about="deft://event.ere#justice.releaseparole">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.sentence -->
+
+    <Class rdf:about="deft://event.ere#justice.sentence">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.sue -->
+
+    <Class rdf:about="deft://event.ere#justice.sue">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.trialhearing -->
+
+    <Class rdf:about="deft://event.ere#justice.trialhearing">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#justice.try -->
+
+    <Class rdf:about="deft://event.ere#justice.try">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#justice"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#life -->
+
+    <Class rdf:about="deft://event.ere#life"/>
+    
+
+
+    <!-- deft://event.ere#life.beborn -->
+
+    <Class rdf:about="deft://event.ere#life.beborn">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#life"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#life.die -->
+
+    <Class rdf:about="deft://event.ere#life.die">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#life"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#life.divorce -->
+
+    <Class rdf:about="deft://event.ere#life.divorce">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#life"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#life.injure -->
+
+    <Class rdf:about="deft://event.ere#life.injure">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#life"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#life.marry -->
+
+    <Class rdf:about="deft://event.ere#life.marry">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#life"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#movement -->
+
+    <Class rdf:about="deft://event.ere#movement"/>
+    
+
+
+    <!-- deft://event.ere#movement.transportperson -->
+
+    <Class rdf:about="deft://event.ere#movement.transportperson">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#movement"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#personnel -->
+
+    <Class rdf:about="deft://event.ere#personnel"/>
+    
+
+
+    <!-- deft://event.ere#personnel.elect -->
+
+    <Class rdf:about="deft://event.ere#personnel.elect">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#personnel"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#personnel.endposition -->
+
+    <Class rdf:about="deft://event.ere#personnel.endposition">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#personnel"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#personnel.nominate -->
+
+    <Class rdf:about="deft://event.ere#personnel.nominate">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#personnel"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#personnel.startposition -->
+
+    <Class rdf:about="deft://event.ere#personnel.startposition">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#personnel"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#place -->
+
+    <Class rdf:about="deft://event.ere#place"/>
+    
+
+
+    <!-- deft://event.ere#transaction -->
+
+    <Class rdf:about="deft://event.ere#transaction"/>
+    
+
+
+    <!-- deft://event.ere#transaction.transfermoney -->
+
+    <Class rdf:about="deft://event.ere#transaction.transfermoney">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#transaction"/>
+        <disjointWith rdf:resource="deft://event.ere#transaction.transferownership"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#transaction.transferownership -->
+
+    <Class rdf:about="deft://event.ere#transaction.transferownership">
+        <rdfs:subClassOf rdf:resource="deft://event.ere#transaction"/>
+    </Class>
+    
+
+
+    <!-- deft://event.ere#trigger -->
+
+    <Class rdf:about="deft://event.ere#trigger"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="deft://event.ere#life.beborn"/>
+            <rdf:Description rdf:about="deft://event.ere#life.die"/>
+            <rdf:Description rdf:about="deft://event.ere#life.divorce"/>
+            <rdf:Description rdf:about="deft://event.ere#life.injure"/>
+            <rdf:Description rdf:about="deft://event.ere#life.marry"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="deft://event.ere#personnel.elect"/>
+            <rdf:Description rdf:about="deft://event.ere#personnel.endposition"/>
+            <rdf:Description rdf:about="deft://event.ere#personnel.nominate"/>
+            <rdf:Description rdf:about="deft://event.ere#personnel.startposition"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="deft://event.ere#justice.acquit"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.appeal"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.arrestjail"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.chargeindict"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.convict"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.execute"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.extradite"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.fine"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.pardon"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.releaseparole"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.sentence"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.sue"/>
+            <rdf:Description rdf:about="deft://event.ere#justice.trialhearing"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="deft://event.ere#business.declarebankruptcy"/>
+            <rdf:Description rdf:about="deft://event.ere#business.endorg"/>
+            <rdf:Description rdf:about="deft://event.ere#business.mergeorg"/>
+            <rdf:Description rdf:about="deft://event.ere#business.startorg"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="deft://event.ere#business"/>
+            <rdf:Description rdf:about="deft://event.ere#conflict"/>
+            <rdf:Description rdf:about="deft://event.ere#contact"/>
+            <rdf:Description rdf:about="deft://event.ere#justice"/>
+            <rdf:Description rdf:about="deft://event.ere#life"/>
+            <rdf:Description rdf:about="deft://event.ere#movement"/>
+            <rdf:Description rdf:about="deft://event.ere#personnel"/>
+            <rdf:Description rdf:about="deft://event.ere#transaction"/>
+        </members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

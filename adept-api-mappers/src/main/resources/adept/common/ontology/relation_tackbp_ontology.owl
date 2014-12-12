@@ -1,0 +1,492 @@
+<?xml version="1.0"?>
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns:this="deft://relation.tackbp#"
+     xml:base="deft://relation.tackbp"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="deft://relation.tackbp">
+        <rdfs:comment>The TAC-KBP relation ontology</rdfs:comment>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://relation.tackbp#hasEndTime -->
+
+    <owl:ObjectProperty rdf:about="deft://relation.tackbp#hasEndTime">
+        <rdfs:domain rdf:resource="deft://relation.tackbp#Relation"/>
+        <rdfs:range rdf:resource="deft://relation.tackbp#Time"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://relation.tackbp#hasRelation -->
+
+    <owl:ObjectProperty rdf:about="deft://relation.tackbp#hasRelation">
+        <rdfs:range rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://relation.tackbp#hasStartTime -->
+
+    <owl:ObjectProperty rdf:about="deft://relation.tackbp#hasStartTime">
+        <rdfs:domain rdf:resource="deft://relation.tackbp#Relation"/>
+        <rdfs:range rdf:resource="deft://relation.tackbp#Time"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://relation.tackbp#hasValue -->
+
+    <owl:ObjectProperty rdf:about="deft://relation.tackbp#hasValue"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://relation.tackbp#hasLiteralValue -->
+
+    <owl:DatatypeProperty rdf:about="deft://relation.tackbp#hasLiteralValue"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://relation.tackbp#Affiliation -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Affiliation"/>
+    
+
+
+    <!-- deft://relation.tackbp#Age -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Age">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Alias -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Alias"/>
+    
+
+
+    <!-- deft://relation.tackbp#AlternateName -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#AlternateName">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Cause -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Cause"/>
+    
+
+
+    <!-- deft://relation.tackbp#CauseOfDeath -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#CauseOfDeath">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Charge -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Charge">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Child -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Child">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#City -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#City"/>
+    
+
+
+    <!-- deft://relation.tackbp#CityOfBirth -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#CityOfBirth">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#CityOfDeath -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#CityOfDeath">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#CityOfHQ -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#CityOfHQ">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#CityOfResidence -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#CityOfResidence">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Country -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Country"/>
+    
+
+
+    <!-- deft://relation.tackbp#CountryOfBirth -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#CountryOfBirth">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#CountryOfDeath -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#CountryOfDeath">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#CountryOfHQ -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#CountryOfHQ">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#CountryOfResidence -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#CountryOfResidence">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Date -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Date"/>
+    
+
+
+    <!-- deft://relation.tackbp#DateOfBirth -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#DateOfBirth">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#DissolvedDate -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#DissolvedDate">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#EmployeeCount -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#EmployeeCount">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#EmployeeOf -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#EmployeeOf">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#FoundedBy -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#FoundedBy">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#FoundedDate -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#FoundedDate">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Member -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Member">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#MemberOf -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#MemberOf">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Number -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Number"/>
+    
+
+
+    <!-- deft://relation.tackbp#Organization -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Organization"/>
+    
+
+
+    <!-- deft://relation.tackbp#OrganizationWebsite -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#OrganizationWebsite">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#OtherFamily -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#OtherFamily">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Parent -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Parent">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Person -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Person"/>
+    
+
+
+    <!-- deft://relation.tackbp#PoliticalReligiousAffiliation -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#PoliticalReligiousAffiliation">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Relation -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Relation"/>
+    
+
+
+    <!-- deft://relation.tackbp#Religion -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Religion"/>
+    
+
+
+    <!-- deft://relation.tackbp#ReligionFollowed -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#ReligionFollowed">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#SchoolAttended -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#SchoolAttended">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#ShareHolder -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#ShareHolder">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Sibling -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Sibling">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Spouse -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Spouse">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#StateOfBirth -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#StateOfBirth">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#StateOfDeath -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#StateOfDeath">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#StateOfHQ -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#StateOfHQ">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#StateOfResidence -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#StateOfResidence">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#StateOrProvince -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#StateOrProvince"/>
+    
+
+
+    <!-- deft://relation.tackbp#Subsidiary -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Subsidiary">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Time -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Time"/>
+    
+
+
+    <!-- deft://relation.tackbp#Title -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Title"/>
+    
+
+
+    <!-- deft://relation.tackbp#TitleGained -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#TitleGained">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#TopEmployee -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#TopEmployee">
+        <rdfs:subClassOf rdf:resource="deft://relation.tackbp#Relation"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://relation.tackbp#Website -->
+
+    <owl:Class rdf:about="deft://relation.tackbp#Website"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

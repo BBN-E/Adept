@@ -1,0 +1,565 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title></title><meta name="generator" content="Altova StyleVision Professional Edition 2014 rel. 2 sp1 (x64) (http://www.altova.com)"><meta http-equiv="X-UA-Compatible" content="IE=9"><!--[if IE]><STYLE type="text/css">.altova-rotate-left-textbox{filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3)} .altova-rotate-right-textbox{filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1)} </STYLE><![endif]--><!--[if !IE]><!--><style type="text/css">.altova-rotate-left-textbox{-webkit-transform: rotate(-90deg) translate(-100%, 0%); -webkit-transform-origin: 0% 0%;-moz-transform: rotate(-90deg) translate(-100%, 0%); -moz-transform-origin: 0% 0%;-ms-transform: rotate(-90deg) translate(-100%, 0%); -ms-transform-origin: 0% 0%;}.altova-rotate-right-textbox{-webkit-transform: rotate(90deg) translate(0%, -100%); -webkit-transform-origin: 0% 0%;-moz-transform: rotate(90deg) translate(0%, -100%); -moz-transform-origin: 0% 0%;-ms-transform: rotate(90deg) translate(0%, -100%); -ms-transform-origin: 0% 0%;}</style><!--<![endif]--><script type="text/javascript"><!--
+var Altova = {};
+Altova.ADD_ROW_EXPAND_COLLAPSE_BUTTONS_CLASS = "altova-add-row-expand-collapse-buttons";
+Altova.ADD_COLUMN_CLOSE_BUTTONS_CLASS = "altova-add-column-close-buttons";
+Altova.EXPAND_COLLAPSE_LEVEL_CLASS = "altova-expand-collapse-level-";
+Altova.COLLAPSED_ATTR = "altova_collapsed";
+Altova.HIDDEN_ATTR = "altova_hidden";
+Altova.init = function() {
+    var tables = document.getElementsByTagName( "table" );
+	if ( tables.length == 0 )
+	    tables = document.getElementsByTagName( "TABLE" );
+	for (var i = tables.length - 1; i >= 0; i = i - 1)
+	{
+		var table = tables[ i ];
+		Altova.Button.initRowExpandCollapseButtons( table );
+		Altova.Button.initColumnCloseButtons( table );
+	}
+};
+Altova.canAddRowExpandCollapseButtons = function(node) {
+    try {
+        var classNames = node.className.split(' ');
+        for (var i = 0; i < classNames.length; ++i) {
+            if (classNames[i] == Altova.ADD_ROW_EXPAND_COLLAPSE_BUTTONS_CLASS)
+                return true;
+        }
+        return false;
+    }
+    catch (e) {
+        return false;
+    }
+};
+Altova.canAddColumnCloseButtons = function( node ) {
+	try {
+	    var classNames = node.className.split(' ');
+	    for (var i = 0; i < classNames.length; ++i) {
+	        if (classNames[i] == Altova.ADD_COLUMN_CLOSE_BUTTONS_CLASS)
+	            return true;
+	    }
+	    return false;
+	}
+	catch ( e )
+	{
+		return false;
+	}
+};
+Altova.getExpandCollapseLevel = function( node ) {
+	try {
+	    var classNames = node.className.split(' ');
+	    for (var i = 0; i < classNames.length; ++i) {
+	        if (classNames[i].indexOf( Altova.EXPAND_COLLAPSE_LEVEL_CLASS ) == 0 )
+	            return classNames[i].substr( Altova.EXPAND_COLLAPSE_LEVEL_CLASS.length ) * 1;
+	    }
+	    return 0;
+	}
+	catch ( e )
+	{
+		return 0;
+	}
+};
+Altova.isCollapsed = function( node ) {
+	try
+	{
+		if ( node.getAttribute( Altova.COLLAPSED_ATTR ) != null && node.getAttribute( Altova.COLLAPSED_ATTR ) != "" )
+			return node.getAttribute( Altova.COLLAPSED_ATTR ) == "true";
+		else
+			return false;
+	}
+	catch ( e )
+	{
+		return false;
+	}
+};
+Altova.setIsCollapsed = function( node, isCollapsed ) {
+	node.setAttribute( Altova.COLLAPSED_ATTR, isCollapsed ? "true" : "false" );
+};
+Altova.isHidden = function( node ) {
+	try
+	{
+		if ( node.getAttribute( Altova.HIDDEN_ATTR ) != null && node.getAttribute( Altova.HIDDEN_ATTR ) != "" )
+			return node.getAttribute( Altova.HIDDEN_ATTR ) == "true";
+		else
+			return false;
+	}
+	catch ( e )
+	{
+		return false;
+	}
+};
+Altova.setIsHidden = function( node, isHidden ) {
+	node.setAttribute( Altova.HIDDEN_ATTR, isHidden ? "true" : "false" );
+};
+Altova.Button = {};
+Altova.Button.BUTTON_EXPAND = 0;
+Altova.Button.BUTTON_COLLAPSE = 1;
+Altova.Button.BUTTON_CLOSE = 2;
+Altova.Button.BUTTON_ADD = 3;
+Altova.Button.BUTTON_TYPE_ATTR = "altova_button-type";
+Altova.Button.createNewButton = function( type, containerType ) {
+	var button = document.createElement( containerType );
+	Altova.Button.changeButtonTo( button, type );
+	return button;
+};
+Altova.Button.changeButtonTo = function( button, type ) {
+	button.setAttribute( Altova.Button.BUTTON_TYPE_ATTR, type );
+	if ( type == Altova.Button.BUTTON_EXPAND )
+	{
+		button.innerHTML =
+			"<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr><td style=\"font-size: 0pt; width: 9px; height: 9px\">" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 9px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 5px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +	
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +	
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 9px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+			"</td></tr></tbody></table>";
+	}
+	else if ( type == Altova.Button.BUTTON_COLLAPSE )
+	{
+		button.innerHTML =
+			"<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr><td style=\"font-size: 0pt; width: 9px; height: 9px\">" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 9px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 5px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +	
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +	
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 9px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+			"</td></tr></tbody></table>";
+	}
+	else if ( type == Altova.Button.BUTTON_CLOSE )
+	{
+		button.innerHTML =
+			"<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr><td style=\"font-size: 0pt; width: 7px; height: 7px\">" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 5px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 5px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+			"</td></tr></tbody></table>";
+	}
+	else if ( type == Altova.Button.BUTTON_ADD )
+	{
+		button.innerHTML =
+			"<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr><td style=\"font-size: 0pt; width: 8px; height: 8px\">" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 8px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 8px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+			"</td></tr></tbody></table>";
+	}
+};
+Altova.Button.containsButton = function( node, type ) {
+	for ( var i = 0; i < node.childNodes.length; ++i )
+	{
+		var child = node.childNodes[ i ];
+		try
+		{
+			if ( child.getAttribute( Altova.Button.BUTTON_TYPE_ATTR ) != null && child.getAttribute( Altova.Button.BUTTON_TYPE_ATTR ) != "" )
+					if ( child.getAttribute( Altova.Button.BUTTON_TYPE_ATTR ) == type )
+						return true;
+		}
+		catch ( e )
+		{
+		}
+	}
+	return false;
+};
+Altova.Button.makeButtonHot = function( button, hot ) {
+	var maincell = button.firstChild.rows[ 0 ].cells[ 0 ];
+	for ( var i = 0; i < maincell.childNodes.length; ++i )
+	{
+		var cells = maincell.childNodes[ i ].rows[ 0 ].cells;
+		for ( var j = 0; j < cells.length; ++j )
+		{
+			var cell = cells[ j ];
+			if ( cell.style.backgroundColor != "" )
+			{
+				if ( hot )
+					cell.style.backgroundColor = "#E71818";
+				else
+					cell.style.backgroundColor = "#999999";
+			}
+		}
+	}
+};
+Altova.Button.isButtonOfType = function( button, type ) {
+	return button.getAttribute( Altova.Button.BUTTON_TYPE_ATTR ) == type;
+};
+Altova.Button.generateOnClickExpandOrCollapseButton = function( row, button ) {
+	return function() { Altova.Button.onRowExpandOrCollapse( row, button ); }
+};
+Altova.Button.generateOnClickCloseButton = function( table, index, button ) {
+	return function() { Altova.Button.onColumnHide( table, index, button ); }
+};
+Altova.Button.generateOnClickAddButton = function( table ) {
+	return function() { Altova.Button.onColumnAddAll( table ); }
+};
+Altova.Button.generateOnMouseOverButton = function( button ) {
+	return function() { Altova.Button.makeButtonHot( button, true ); }
+};
+Altova.Button.generateOnMouseOutButton = function( button ) {
+	return function() { Altova.Button.makeButtonHot( button, false ); }
+};
+Altova.Button.onRowExpandOrCollapse = function( row, button ) {
+	var bCollapse = Altova.Button.isButtonOfType( button, Altova.Button.BUTTON_COLLAPSE );
+	if ( bCollapse )
+		Altova.Button.changeButtonTo( button, Altova.Button.BUTTON_EXPAND );
+	else
+		Altova.Button.changeButtonTo( button, Altova.Button.BUTTON_COLLAPSE );
+
+	Altova.setIsCollapsed( row, bCollapse );
+
+	var nLevel = Altova.getExpandCollapseLevel( row );
+
+	var nStopAtLevel = -1;
+	var nextRow = row;
+	while ( true )
+	{
+		nextRow = nextRow.nextSibling;
+		while ( nextRow && nextRow.nodeName != "tr" && nextRow.nodeName != "TR" )
+			nextRow = nextRow.nextSibling;
+		if ( !nextRow )
+			break;
+		
+		var nOtherLevel = Altova.getExpandCollapseLevel( nextRow );
+
+		if ( nOtherLevel <= nLevel  )
+			break;
+
+		if ( !Altova.isHidden( nextRow ) )
+		{
+			if ( nStopAtLevel == -1 || nOtherLevel < nStopAtLevel )
+			{
+				if ( bCollapse )
+					nextRow.style.display = "none";
+				else
+					nextRow.style.display = "";
+
+				if ( Altova.isCollapsed( nextRow ) )
+					nStopAtLevel = nOtherLevel + 1;
+				else
+					nStopAtLevel = -1;
+			}
+		}
+	}
+};
+Altova.Button.onColumnHide = function( table, index, button ) {
+	table.rows[ 0 ].cells[ 0 ].firstChild.style.display = "";
+
+	var rows = table.rows;
+	for ( var i = 0; i < rows.length; ++i )
+	{
+		var cell = rows[ i ].cells[ index ];
+		Altova.setIsHidden( cell, true );
+		cell.style.display = "none";
+	}
+
+	var lastVisibleCell = null;
+	for ( var i = 1; i < table.rows[ 0 ].cells.length; ++i )
+	{
+		var cell = table.rows[ 0 ].cells[ i ];
+		if ( !Altova.isHidden( cell ) )
+		{
+			if ( lastVisibleCell == null )
+				lastVisibleCell = cell;
+			else
+			{
+				lastVisibleCell = null;
+				break;
+			}
+		}
+	}	
+	if ( lastVisibleCell != null )
+		lastVisibleCell.firstChild.style.display = "none";
+};
+Altova.Button.onColumnAddAll = function( table ) {
+	table.rows[ 0 ].cells[ 0 ].firstChild.style.display = "none";
+
+	var rows = table.rows;
+	for ( var i = 0; i < rows.length; ++i )
+	{
+		var row = rows[ i ];
+		for ( var j = 1; j < row.cells.length; ++j )
+		{
+			var cell = row.cells[ j ];
+	
+			Altova.setIsHidden( cell, false );
+			cell.style.display = "";
+			
+			if ( i == 0 )
+				cell.firstChild.style.display = "";
+		}
+	}
+};
+Altova.Button.initRowExpandCollapseButtons = function( table ) {
+	if ( Altova.canAddRowExpandCollapseButtons( table ) )
+	{
+		var rows = table.tBodies[ 0 ].rows;
+		for ( var i = 0; i < rows.length; ++i )
+		{
+			var cell = rows[ i ].cells[ 0 ];
+			var button = null;
+	
+			if ( i + 1 < rows.length )
+			{
+				var nLevel = Altova.getExpandCollapseLevel( rows[ i ] );
+				var nNextLevel = Altova.getExpandCollapseLevel( rows[ i + 1 ] );
+	
+				if ( nNextLevel > nLevel )
+				{
+					button = Altova.Button.createNewButton( Altova.Button.BUTTON_COLLAPSE, "span" );
+					button.style.marginRight = "3px";
+					button.onclick = Altova.Button.generateOnClickExpandOrCollapseButton( rows[ i ], button );
+					cell.insertBefore( button, cell.firstChild );
+				}
+			}
+	
+			if ( button == null )
+			{
+				button = document.createElement( "span" );
+				button.innerHTML = "<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"12\"><tbody><tr><td style=\"font-size: 0pt; width: 12px; height: 1px\"></td></tr></tbody></table>";
+				cell.insertBefore( button, cell.firstChild );
+			}
+		}
+	}
+};
+Altova.Button.initColumnCloseButtons = function( table ) {
+	if ( Altova.canAddColumnCloseButtons( table ) )
+	{
+		if ( table.rows[ 0 ].cells.length > 2 )
+		{				
+			var cells = table.rows[ 0 ].cells;
+			for ( var i = 0; i < cells.length; ++i )
+			{
+				var cell = cells[ i ];
+				var button = null;
+				
+				cell.vAlign = "top";
+				
+				if ( i == 0 )
+				{
+					button = Altova.Button.createNewButton( Altova.Button.BUTTON_ADD, "div" );
+					button.onclick = Altova.Button.generateOnClickAddButton( table );
+					button.onmouseover = Altova.Button.generateOnMouseOverButton( button );
+					button.onmouseout = Altova.Button.generateOnMouseOutButton( button );
+					button.style.display = "none";
+					button.style.textAlign = "right";
+					button.title = "Show all columns";
+					table.rows[ 0 ].cells[ 0 ].insertBefore( button, table.rows[ 0 ].cells[ 0 ].firstChild );
+				}
+				else
+				{
+					button = Altova.Button.createNewButton( Altova.Button.BUTTON_CLOSE, "div" );
+					button.onclick = Altova.Button.generateOnClickCloseButton( table, i, button );
+					button.onmouseover = Altova.Button.generateOnMouseOverButton( button );
+					button.onmouseout = Altova.Button.generateOnMouseOutButton( button );
+					button.style.textAlign = "right";
+					button.title = "Hide column";
+				}
+
+				if ( cell.firstChild )
+					cell.insertBefore( button, cell.firstChild );
+				else
+					cell.appendChild( button );
+			}
+		}
+	}
+};
+//--></script><script type="text/javascript"><!--
+function highlightSource(row) {
+	var content = document.getElementById("documentContent");
+	var regex = /(<([^>]+)>)/ig;
+	var cleanedContent = content.innerHTML.replace(regex, "");
+	
+	var startIndex = row.children[1].innerHTML;
+	startIndex = parseInt(startIndex);
+	var endIndex = row.children[2].innerHTML;
+	endIndex = parseInt(endIndex);
+
+	var contentArray = cleanedContent.split(/\s+/);
+	
+	var highlightedContent = "";
+	for(var i = 0; i < contentArray.length; i++) {
+		if(i == startIndex) {
+			highlightedContent += "<span style=\"background-color: yellow\">";
+		} 
+		if (i  == (1 + endIndex) ) {
+			highlightedContent += "</span>";
+		}
+		highlightedContent += (" " + contentArray[i]);
+	}
+
+	content.innerHTML = highlightedContent;
+	
+}
+//--></script><style type="text/css">@page { margin-left:0.60in; margin-right:0.60in; margin-top:0.79in; margin-bottom:0.79in } @media print { br.altova-page-break { page-break-before: always; } }</style></head><body style="color:#222222; " onload="Altova.init();"><br><a name="Table of Contents"></a><span style="font-family:arial; font-size:14pt; font-weight:bolder; ">Table of Contents</span><ul><li><a href="#Document Value"><span>Document</span></a></li><li><a href="#Entity Mentions"><span>Entity Mentions and Coreferences</span></a></li><li><span>Relations</span><span>&nbsp;</span></li><li><span>Sarcasms</span><span>&nbsp;</span></li><li><span>Opinions</span><span>&nbsp;</span></li><li><span>Committed Beliefs</span><span>&nbsp;</span></li><li><a href="#Syntactic Chunks"><span>Syntactic Chunks</span></a><span>&nbsp;</span></li><li><span>Paraphrases</span><span>&nbsp;</span></li><li><span>Triples</span><span>&nbsp;</span></li><li><a href="#Tokens"><span>Tokens</span></a></li></ul><center style="background:#323d40; color:white; "><span style="font-family:arial; font-size:14pt; font-weight:bolder; ">Document</span><span>&nbsp;&nbsp; </span><a href="help.htm#Document"><img align="bottom" src="file:///C:/Users/jwatson/Documents/information_icon_small.svg.png" alt=""></a></center><a name="Document Value"></a><br><span>Type: </span>Text<br><span>URI: </span>/nfs/mercury-04/u40/deft/test/test.txt<br><span>Language: </span>English<br><span>Headline: </span><br><br><span id="documentContent">Barack Obama is the president of the United States.</span><br><br><a href="#Table of Contents"><center><span>Go to Top of Page</span></center></a><a name="Entity Mentions"></a><br><center style="background:#323d40; color:white; "><span style="font-family:Arial; font-size:14pt; font-weight:bolder; ">Entity Mentions and Coreferences</span><span>&nbsp;&nbsp; </span><a href="help.htm#Entity_Mentions"><img align="bottom" src="file:///C:/Users/jwatson/Documents/information_icon_small.svg.png" alt=""></a></center><center><table style="border-collapse:collapse; margin-top:10px; " class="altova-add-row-expand-collapse-buttons"><thead style="margin:2px; " align="left"><tr align="left" bgcolor="#697376"><th style="border-bottom:solid gray thin; border-bottom-width:thin; border-left:solid gray thin; border-top:solid gray thin; "><span style="color:white; ">ResolvedEntityId</span></th><th style="border-bottom:solid gray thin; border-bottom-width:thin; border-left:solid gray thin; border-top:solid gray thin; "><span style="color:white; ">SequenceId</span></th><th style="border-bottom:solid gray thin; border-bottom-width:thin; border-left:solid gray thin; border-top:solid gray thin; text-align:left; " width="384"><span style="color:white; ">Entity Mention Value</span></th><th style="border-bottom:solid gray thin; border-bottom-width:thin; border-left:solid gray thin; border-top:solid gray thin; "><span style="color:white; ">Begin</span></th><th style="border-bottom:solid gray thin; border-bottom-width:thin; border-left:solid gray thin; border-top:solid gray thin; "><span style="color:white; ">End</span></th><th style="border-bottom:solid gray thin; border-bottom-width:thin; border-left:solid gray thin; border-top:solid gray thin; "><span style="color:white; ">MentionType</span></th><th style="border-bottom:solid gray thin; border-bottom-width:thin; border-left:solid gray thin; border-top:solid gray thin; "><span style="color:white; ">EntityType</span></th><th style="border-bottom:solid gray thin; border-bottom-width:thin; border-left:solid gray thin; border-top:solid gray thin; " width="384"><span style="color:white; ">Context</span></th><th style="border-bottom:solid gray thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " width="384"><span style="color:white; ">Wikipedia URL</span></th></tr></thead><tbody><tr bgcolor="lightgray" onclick="highlightSource(this)" class="altova-expand-collapse-level-1"><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">1</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">1</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; margin-right:5px; text-align:left; " width="384">Barack</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">0</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">0</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">
+						NPSubchunk
+					</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; ">
+						UNKNOWN
+					</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; text-align:left; " width="384">Barack Obama is</td><td style="border-bottom:solid gray thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " width="384"><a href="http://en.wikipedia.org/wiki/Barack_Obama"><span>&nbsp;</span><span>Barack Obama</span></a></td></tr><tr bgcolor="white" onclick="highlightSource(this)" class="altova-expand-collapse-level-1"><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">1</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">3</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; margin-right:5px; text-align:left; " width="384">Obama</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">1</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">1</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">
+						NPSubchunk
+					</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; ">
+						UNKNOWN
+					</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; text-align:left; " width="384">Barack Obama is the</td><td style="border-bottom:solid gray thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " width="384"><a href="http://en.wikipedia.org/wiki/Barack_Obama"><span>&nbsp;</span><span>Barack Obama</span></a></td></tr><tr bgcolor="lightgray" onclick="highlightSource(this)" class="altova-expand-collapse-level-1"><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">4</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">6</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; margin-right:5px; text-align:left; " width="384">the United States</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">6</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">8</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">
+						NPChunk
+					</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; ">
+						UNKNOWN
+					</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; text-align:left; " width="384">president of the United States.</td><td style="border-bottom:solid gray thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " width="384"><a href="http://en.wikipedia.org/wiki/United_States"><span>&nbsp;</span><span>United States</span></a></td></tr><tr bgcolor="white" onclick="highlightSource(this)" class="altova-expand-collapse-level-1"><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">4</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">8</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; margin-right:5px; text-align:left; " width="384">United States</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">7</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">8</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " align="center">
+						NER LOC
+					</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; ">
+						LOC
+					</td><td style="border-bottom:solid gray thin; border-bottom-style:solid; border-bottom-width:thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; text-align:left; " width="384">of the United States.</td><td style="border-bottom:solid gray thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; " width="384"><a href="http://en.wikipedia.org/wiki/United_States"><span>&nbsp;</span><span>United States</span></a></td></tr></tbody></table></center><a href="#Table of Contents"><center><span>Go to Top of&nbsp; Page</span></center></a><a name="Syntactic Chunks"></a><br><center style="background:#323d40; color:white; "><span style="font-family:arial; font-size:14pt; font-weight:bolder; ">Syntactic Chunks</span><span>&nbsp;&nbsp; </span><a href="help.htm#Syntactic_Chunks"><img align="bottom" src="file:///C:/Users/jwatson/Documents/information_icon_small.svg.png" alt=""></a></center><center><table style="border-bottom:solid gray thin; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; margin-top:10px; " class="altova-add-row-expand-collapse-buttons"><thead align="left"><tr align="left" bgcolor="#697376"><th><span style="color:white; ">SequenceId</span></th><th style="text-align:left; " width="384"><span style="color:white; ">Syntactic Chunk Value</span></th><th><span style="color:white; ">Begin</span></th><th><span style="color:white; ">End</span></th><th><span style="color:white; ">Type</span></th></tr></thead><tbody><tr bgcolor="lightgray" class="altova-expand-collapse-level-1"><td>0</td><td style="text-align:left; " width="384">Barack Obama</td><td align="center">0</td><td align="center">1</td><td align="center">
+				NP
+			</td></tr><tr bgcolor="white" class="altova-expand-collapse-level-1"><td>1</td><td style="text-align:left; " width="384">is</td><td align="center">2</td><td align="center">2</td><td align="center">
+				VP
+			</td></tr><tr bgcolor="lightgray" class="altova-expand-collapse-level-1"><td>2</td><td style="text-align:left; " width="384">the president</td><td align="center">3</td><td align="center">4</td><td align="center">
+				NP
+			</td></tr><tr bgcolor="white" class="altova-expand-collapse-level-1"><td>3</td><td style="text-align:left; " width="384">of</td><td align="center">5</td><td align="center">5</td><td align="center">
+				PP
+			</td></tr><tr bgcolor="lightgray" class="altova-expand-collapse-level-1"><td>4</td><td style="text-align:left; " width="384">the United States</td><td align="center">6</td><td align="center">8</td><td align="center">
+				NP
+			</td></tr></tbody></table></center><a href="#Table of Contents"><center><span>Go to Top of Page</span></center></a><span>&nbsp;</span><a name="Tokens"></a><br><center style="background:#323d40; color:white; "><span style="font-family:arial; font-size:14pt; font-weight:bolder; ">Tokens</span><span>&nbsp;&nbsp; </span><a href="help.htm#Tokens"><img align="bottom" src="file:///C:/Users/jwatson/Documents/information_icon_small.svg.png" alt=""></a></center><center><table style="border-color:transparent; border-left-color:transparent; border-right-color:transparent; border-top-color:transparent; vertical-align:top; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td style="border-left-color:black; border-left-style:solid; border-left-width:thin; border-right-color:black; border-right-style:solid; border-right-width:thin; border-top-color:black; border-top-style:solid; border-top-width:thin; "><table style="border-bottom-color:transparent; border-color:transparent; border-left-color:transparent; border-left-style:solid; border-left-width:thin; border-right-color:transparent; border-right-style:solid; border-right-width:thin; border-top-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><thead style="border-top-color:black; border-top-style:solid; "><tr style="text-align:center; vertical-align:top; " bgcolor="#697376"><th><span style="color:white; ">SequenceId</span></th><th><span style="color:white; ">Value</span></th><th><span style="color:white; ">CharOffset</span></th></tr></thead><tbody><tr style="text-align:center; vertical-align:top; "><td>0</td><td style="text-align:left; ">Barack</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>0</td><td>6</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>1</td><td style="text-align:left; ">Obama</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>7</td><td>12</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>2</td><td style="text-align:left; ">is</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>13</td><td>15</td></tr></tbody></table></td></tr></tbody></table></td><td style="border-right-color:black; border-right-style:solid; border-right-width:thin; border-top-color:black; border-top-style:solid; border-top-width:thin; "><table style="border-left-color:transparent; border-left-style:solid; border-left-width:thin; border-right-color:transparent; border-right-style:solid; border-right-width:thin; display:inline; margin-top:10px; " border="0" width="auto"><thead style="border-top-color:black; "><tr style="text-align:center; vertical-align:top; " bgcolor="#697376"><th><span style="color:white; ">SequenceId</span></th><th><span style="color:white; ">Value</span></th><th><span style="color:white; ">CharOffset</span></th></tr></thead><tbody><tr style="text-align:center; vertical-align:top; "><td>4</td><td style="text-align:left; ">president</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>20</td><td>29</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>5</td><td style="text-align:left; ">of</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>30</td><td>32</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>6</td><td style="text-align:left; ">the</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>33</td><td>36</td></tr></tbody></table></td></tr></tbody></table></td><td style="border-right-color:black; border-right-style:solid; border-right-width:thin; border-top-color:black; border-top-style:solid; border-top-width:thin; "><table style="border-left-color:transparent; border-left-style:solid; border-left-width:thin; border-right-color:transparent; border-right-style:solid; border-right-width:thin; display:inline; margin-top:10px; " border="0" width="auto"><thead style="border-top-color:black; "><tr style="text-align:center; vertical-align:top; " bgcolor="#697376"><th><span style="color:white; ">SequenceId</span></th><th><span style="color:white; ">Value</span></th><th><span style="color:white; ">CharOffset</span></th></tr></thead><tbody><tr style="text-align:center; vertical-align:top; "><td>7</td><td style="text-align:left; ">United</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>37</td><td>43</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>8</td><td style="text-align:left; ">States</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>44</td><td>50</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>9</td><td style="text-align:left; ">.</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>50</td><td>51</td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></center><a href="#Table of Contents"><center><span>Go to Top of Page</span></center></a><br></body></html>

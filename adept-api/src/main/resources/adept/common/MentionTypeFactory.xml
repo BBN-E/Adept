@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<properties version="1.0">
+	<comment></comment>	
+	<entry key="NAME">NAME</entry>
+    <entry key="NOMINAL">NOMINAL</entry>
+    <entry key="PRONOUN">PRONOUN</entry>
+    <entry key="PROPER">NAME</entry>    
+    <entry key="PRONOMINAL">PRONOUN</entry>
+    <entry key="LIST">LIST</entry>
+    <entry key="UNKNOWN">UNKNOWN</entry>
+</properties>

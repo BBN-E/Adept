@@ -1,0 +1,469 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
+/*
+ * 
+ */
+package adept.common;
+
+import java.util.List;
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HltContentContainer.
+ */
+public class HltContentContainer extends HltContent {
+
+	/** The coreferences. */
+	// Keep these first so that XSLT will find complete EntityMention elements
+	// inside the <resolvedEntityMentions> element, rather than only references to EntityMentions.
+	private List<Coreference> coreferences;
+
+	/** The sentences. */
+	private List<Sentence> sentences;
+
+	/** The passages. */
+	private List<Passage> passages;
+
+	/** The entity mentions. */
+	private List<EntityMention> entityMentions;
+
+	/** The named entities. */
+	private List<EntityMention> namedEntities;
+
+	/** The part of speechs. */
+	private List<PartOfSpeech> partOfSpeechs;
+
+	/** The dependencies. */
+	private List<Dependency> dependencies;
+
+	/** The syntactic chunks. */
+	private List<SyntacticChunk> syntacticChunks;
+
+	/** The relations. */
+	private List<Relation> relations;
+
+	/** The joint relation coreferences. */
+	private List<JointRelationCoreference> jointRelationCoreferences;
+
+	/** The opinions. */
+	private List<Opinion> opinions;
+
+	/** The prosodic phrases. */
+	private List<ProsodicPhrase> prosodicPhrases;
+
+	/** The sarcasms. */
+	private List<Sarcasm> sarcasms;
+
+	/** The committed beliefs. */
+	private List<CommittedBelief> committedBeliefs;
+
+	/** Utterances. */
+	private List<Utterance> utterances;
+
+    /** The messages. */
+    private List<Message> messages;
+
+	/** The inter pausal units. */
+	private List<InterPausalUnit> interPausalUnits;
+	
+	/** The events. */
+	private List<Event> events;
+
+	/** The sessions. */
+	private List<Session> sessions;
+		
+	/**
+	 * Instantiates a new hlt content container.
+	 */
+	public HltContentContainer() {
+
+	}
+
+	/**
+	 * Gets the named entities.
+	 * 
+	 * @return the named entities
+	 */
+	public List<EntityMention> getNamedEntities() {
+		return namedEntities;
+	}
+
+	/**
+	 * Sets the named entities.
+	 * 
+	 * @param namedEntities
+	 *            the new named entities
+	 */
+	public void setNamedEntities(List<EntityMention> namedEntities) {
+		this.namedEntities = namedEntities;
+	}
+
+	/**
+	 * Gets the entity mentions.
+	 * 
+	 * @return the entity mentions
+	 */
+	public List<EntityMention> getEntityMentions() {
+		return entityMentions;
+	}
+
+	/**
+	 * Sets the entity mentions.
+	 * 
+	 * @param entityMentions
+	 *            the new entity mentions
+	 */
+	public void setEntityMentions(List<EntityMention> entityMentions) {
+		this.entityMentions = entityMentions;
+	}
+
+	/**
+	 * Gets the opinions.
+	 * 
+	 * @return the opinions
+	 */
+	public List<Opinion> getOpinions() {
+		return opinions;
+	}
+
+	/**
+	 * Sets the opinions.
+	 * 
+	 * @param opinions
+	 *            the new opinions
+	 */
+	public void setOpinions(List<Opinion> opinions) {
+		this.opinions = opinions;
+	}
+
+	/**
+	 * Gets the prosodic phrases.
+	 * 
+	 * @return the prosodic phrases
+	 */
+	public List<ProsodicPhrase> getProsodicPhrases() {
+		return prosodicPhrases;
+	}
+
+	/**
+	 * Sets the prosodic phrases.
+	 * 
+	 * @param prosodicPhrases
+	 *            the new prosodic phrases
+	 */
+	public void setProsodicPhrases(List<ProsodicPhrase> prosodicPhrases) {
+		this.prosodicPhrases = prosodicPhrases;
+	}
+
+	/**
+	 * Gets the sarcasms.
+	 * 
+	 * @return the sarcasms
+	 */
+	public List<Sarcasm> getSarcasms() {
+		return sarcasms;
+	}
+
+	/**
+	 * Sets the sarcasms.
+	 * 
+	 * @param sarcasms
+	 *            the new sarcasms
+	 */
+	public void setSarcasms(List<Sarcasm> sarcasms) {
+		this.sarcasms = sarcasms;
+	}
+	
+	/**
+	 * Gets the events.
+	 * 
+	 * @return the events
+	 */
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	/**
+	 * Sets the events.
+	 * 
+	 * @param sarcasms
+	 *            the new events
+	 */
+	public void setEvents(List<Event> events) {
+		this.events = events;
+	}
+
+	/**
+	 * Gets the sentences.
+	 * 
+	 * @return the sentences
+	 */
+	public List<Sentence> getSentences() {
+		return sentences;
+	}
+
+	/**
+	 * Sets the sentences.
+	 * 
+	 * @param sentences
+	 *            the new sentences
+	 */
+	public void setSentences(List<Sentence> sentences) {
+		this.sentences = sentences;
+	}
+
+	/**
+	 * Gets the mentions.
+	 * 
+	 * @return the mentions
+	 */
+	public List<EntityMention> getMentions() {
+		return entityMentions;
+	}
+
+	/**
+	 * Sets the mentions.
+	 * 
+	 * @param entityMentions
+	 *            the new mentions
+	 */
+	public void setMentions(List<EntityMention> entityMentions) {
+		this.entityMentions = entityMentions;
+	}
+
+	/**
+	 * Gets the relations.
+	 * 
+	 * @return the relations
+	 */
+	public List<Relation> getRelations() {
+		return relations;
+	}
+
+	/**
+	 * Sets the relations.
+	 * 
+	 * @param relations
+	 *            the new relations
+	 */
+	public void setRelations(List<Relation> relations) {
+		this.relations = relations;
+	}
+
+	/**
+	 * Gets the coreferences.
+	 * 
+	 * @return the coreferences
+	 */
+	public List<Coreference> getCoreferences() {
+		return coreferences;
+	}
+
+	/**
+	 * Sets the coreferences.
+	 * 
+	 * @param coreferences
+	 *            the new coreferences
+	 */
+	public void setCoreferences(List<Coreference> coreferences) {
+		this.coreferences = coreferences;
+	}
+
+	/**
+	 * Gets the passages.
+	 * 
+	 * @return the passages
+	 */
+	public List<Passage> getPassages() {
+		return passages;
+	}
+
+	/**
+	 * Sets the passages.
+	 * 
+	 * @param passages
+	 *            the new passages
+	 */
+	public void setPassages(List<Passage> passages) {
+		this.passages = passages;
+	}
+
+	/**
+	 * Gets the messages.
+	 * 
+	 * @return the messages
+	 */
+	public List<Message> getMessages() {
+		return messages;
+	}
+
+	/**
+	 * Sets the messages.
+	 *
+	 * @param messages the new messages
+	 * @meram messages
+	 * the new messages
+	 */
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
+	}
+
+	/**
+	 * Gets the joint relation coreferences.
+	 * 
+	 * @return the joint relation coreferences
+	 */
+	public List<JointRelationCoreference> getJointRelationCoreferences() {
+		return jointRelationCoreferences;
+	}
+
+	/**
+	 * Sets the joint relation coreferences.
+	 * 
+	 * @param jointRelationCoreferences
+	 *            the new joint relation coreferences
+	 */
+	public void setJointRelationCoreferences(
+			List<JointRelationCoreference> jointRelationCoreferences) {
+		this.jointRelationCoreferences = jointRelationCoreferences;
+	}
+
+	/**
+	 * Gets the part of speechs.
+	 * 
+	 * @return the part of speechs
+	 */
+	public List<PartOfSpeech> getPartOfSpeechs() {
+		return partOfSpeechs;
+	}
+
+	/**
+	 * Sets the part of speechs.
+	 * 
+	 * @param partOfSpeechs
+	 *            the new part of speechs
+	 */
+	public void setPartOfSpeechs(List<PartOfSpeech> partOfSpeechs) {
+		this.partOfSpeechs = partOfSpeechs;
+	}
+
+	/**
+	 * Gets the syntactic chunks.
+	 * 
+	 * @return the syntactic chunks
+	 */
+	public List<SyntacticChunk> getSyntacticChunks() {
+		return syntacticChunks;
+	}
+
+	/**
+	 * Sets the syntactic chunks.
+	 * 
+	 * @param syntacticChunks
+	 *            the new syntactic chunks
+	 */
+	public void setSyntacticChunks(List<SyntacticChunk> syntacticChunks) {
+		this.syntacticChunks = syntacticChunks;
+	}
+
+	/**
+	 * Gets the dependencies.
+	 * 
+	 * @return the dependencies
+	 */
+	public List<Dependency> getDependencies() {
+		return dependencies;
+	}
+
+	/**
+	 * Sets the dependencies.
+	 * 
+	 * @param dependencies
+	 *            the new dependencies
+	 */
+	public void setDependencies(List<Dependency> dependencies) {
+		this.dependencies = dependencies;
+	}
+
+	/**
+	 * Gets the committed beliefs.
+	 *
+	 * @return the committed beliefs
+	 */
+	public List<CommittedBelief> getCommittedBeliefs() {
+		return committedBeliefs;
+	}
+
+	/**
+	 * Sets the committed beliefs.
+	 *
+	 * @param committedBeliefs the new committed beliefs
+	 */
+	public void setCommittedBeliefs(List<CommittedBelief> committedBeliefs) {
+		this.committedBeliefs = committedBeliefs;
+	}
+	
+	/**
+	 * Gets the utterances.
+	 *
+	 * @return the utterances
+	 */
+	public List<Utterance> getUtterances() {
+		return utterances;
+	}
+	
+	/**
+	 * Sets the utterances.
+	 *
+	 * @param utterances the utterances
+	 */
+	public void setUtterances(List<Utterance> utterances) {
+		this.utterances = utterances;
+	}
+
+	/**
+	 * Gets the inter pausal units.
+	 *
+	 * @return the inter pausal units
+	 */
+	public List<InterPausalUnit> getInterPausalUnits() {
+		return interPausalUnits;
+	}
+
+
+	/**
+	 * Sets the inter pausal units.
+	 *
+	 * @param interPausalUnits the new inter pausal units
+	 */
+
+	public void setInterPausalUnits(List<InterPausalUnit> interPausalUnits) {
+		this.interPausalUnits = interPausalUnits;
+	}
+
+	/**
+	 * Gets the sessions.
+	 *
+	 * @return the sessions
+	 */
+	public List<Session> getSessions() {
+		return sessions;
+	}
+
+	/**
+	 * Sets the sessions.
+	 *
+	 * @param sessions the new sessions
+	 */
+	public void setSessions(List<Session> sessions) {
+		this.sessions = sessions;
+	}
+
+}

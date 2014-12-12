@@ -1,12 +1,64 @@
+/release
+*/release
+*/*/release
+/debug
+*/debug
+*/*/debug
+/bin
+/build
+/logs
+/out
 *.class
+*.log
+.gradle
+META-INF
+*.bak
+*.prefs
+/dist
+/.metadata
+*.number
+*.MF
+.DS_Store
+*target
+*deploy
+*/svn
+*.settings
+.DS_Store
+*/*/target
+*~
+*.versionsBackup
+*/*/*..versionsBackup
+*/*/deploy
+*.classpath
+*.project
+*/*.settings
+*/*/*.settings
+_misc
+_save
+org/apache/*
+org/codehaus/*
+org/eclipse/*
+org/sonatype/*
+org/cleartk/*
+org/sameersingh/*
+org/scala-lang/*
+org/scalanlp/*
+org/slf4j/*
+org/springframework/*
+com/google/*
+com/twitter/*
+*.svn
+*.pydevproject
+*/ext
+*/*/ext
+*.a
+.nfs*
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# IntelliJ IDEA cruft
+/.idea
+*.iml
+*.o
+# Python cruft
+*.pyc
+*/*/ext
+*.a

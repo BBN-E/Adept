@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<properties>
+<comment></comment>
+<entry key="Target1">Target1</entry>
+<entry key="Target2">Target2</entry>
+<entry key="Trigger">Trigger</entry>
+<entry key="A0">A0</entry>
+<entry key="A1">A1</entry>
+<entry key="A2">A2</entry>
+<entry key="A3">A3</entry>
+<entry key="A4">A4</entry>
+<entry key="A5">A5</entry>
+<entry key="AA">AA</entry>
+<entry key="affiliation">affiliation</entry>
+<entry key="age">age</entry>
+<entry key="alias">alias</entry>
+<entry key="AM">AM</entry>
+<entry key="AM_ADV">AM_ADV</entry>
+<entry key="AM_CAU">AM_CAU</entry>
+<entry key="AM_DIR">AM_DIR</entry>
+<entry key="AM_DIS">AM_DIS</entry>
+<entry key="AM_EXT">AM_EXT</entry>
+<entry key="AM_LOC">AM_LOC</entry>
+<entry key="AM_MNR">AM_MNR</entry>
+<entry key="AM_MOD">AM_MOD</entry>
+<entry key="AM_NEG">AM_NEG</entry>
+<entry key="AM_PNC">AM_PNC</entry>
+<entry key="AM_PRD">AM_PRD</entry>
+<entry key="AM_REC">AM_REC</entry>
+<entry key="AM_TMP">AM_TMP</entry>
+<entry key="arg1">arg1</entry>
+<entry key="arg2">arg2</entry>
+<entry key="begin">begin</entry>
+<entry key="C_A0">C_A0</entry>
+<entry key="C_A1">C_A1</entry>
+<entry key="C_A2">C_A2</entry>
+<entry key="C_A3">C_A3</entry>
+<entry key="C_A4">C_A4</entry>
+<entry key="C_A5">C_A5</entry>
+<entry key="C_AM_ADV">C_AM_ADV</entry>
+<entry key="C_AM_CAU">C_AM_CAU</entry>
+<entry key="C_AM_DIR">C_AM_DIR</entry>
+<entry key="C_AM_DIS">C_AM_DIS</entry>
+<entry key="C_AM_EXT">C_AM_EXT</entry>
+<entry key="C_AM_LOC">C_AM_LOC</entry>
+<entry key="C_AM_MNR">C_AM_MNR</entry>
+<entry key="C_AM_NEG">C_AM_NEG</entry>
+<entry key="C_AM_PNC">C_AM_PNC</entry>
+<entry key="C_AM_TMP">C_AM_TMP</entry>
+<entry key="C_V">C_V</entry>
+<entry key="cause">cause</entry>
+<entry key="charge">charge</entry>
+<entry key="child">child</entry>
+<entry key="city">city</entry>
+<entry key="country">country</entry>
+<entry key="date">date</entry>
+<entry key="enabling_condition">enabling_condition</entry>
+<entry key="end">end</entry>
+<entry key="epistemic_type">epistemic_type</entry>
+<entry key="event_instance">event_instance</entry>
+<entry key="event_type">event_type</entry>
+<entry key="founder">founder</entry>
+<entry key="general_location">general_location</entry>
+<entry key="general_time_expression">general_time_expression</entry>
+<entry key="holder">holder</entry>
+<entry key="member">member</entry>
+<entry key="modality">modality</entry>
+<entry key="NULL">NULL</entry>
+<entry key="number">number</entry>
+<entry key="organization">organization</entry>
+<entry key="organization_mention">organization_mention</entry>
+<entry key="origin">origin</entry>
+<entry key="other_familymember">other_familymember</entry>
+<entry key="otherorganization">otherorganization</entry>
+<entry key="parent">parent</entry>
+<entry key="parentorganization">parentorganization</entry>
+<entry key="person_mention">person_mention</entry>
+<entry key="person_mention OR organization_mention">person_mention OR organization_mention</entry>
+<entry key="predicate">predicate</entry>
+<entry key="R_A0">R_A0</entry>
+<entry key="R_A1">R_A1</entry>
+<entry key="R_A2">R_A2</entry>
+<entry key="R_A3">R_A3</entry>
+<entry key="R_A4">R_A4</entry>
+<entry key="R_AA">R_AA</entry>
+<entry key="R_AM_ADV">R_AM_ADV</entry>
+<entry key="R_AM_CAU">R_AM_CAU</entry>
+<entry key="R_AM_DIR">R_AM_DIR</entry>
+<entry key="R_AM_EXT">R_AM_EXT</entry>
+<entry key="R_AM_LOC">R_AM_LOC</entry>
+<entry key="R_AM_MNR">R_AM_MNR</entry>
+<entry key="R_AM_PNC">R_AM_PNC</entry>
+<entry key="R_AM_TMP">R_AM_TMP</entry>
+<entry key="relation_phrase">relation_phrase</entry>
+<entry key="religion">religion</entry>
+<entry key="school">school</entry>
+<entry key="shareholder">shareholder</entry>
+<entry key="sibling">sibling</entry>
+<entry key="source">source</entry>
+<entry key="spouse">spouse</entry>
+<entry key="stateorprovince">stateorprovince</entry>
+<entry key="subsidiary">subsidiary</entry>
+<entry key="T1">T1</entry>
+<entry key="T2">T2</entry>
+<entry key="T3">T3</entry>
+<entry key="T4">T4</entry>
+<entry key="target">target</entry>
+<entry key="temporal_relation">temporal_relation</entry>
+<entry key="title">title</entry>
+<entry key="top_person">top_person</entry>
+<entry key="topic">topic</entry>
+<entry key="V">V</entry>
+<entry key="website">website</entry>
+
+</properties>

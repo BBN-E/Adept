@@ -1,0 +1,27 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
+/**
+ * 
+ */
+
+package adept.mappers.thrift.factories;
+
+import org.dozer.BeanFactory;
+import thrift.adept.common.Document;
+
+public class ThriftDocumentFactory implements org.dozer.BeanFactory {
+	public Document createBean(Object source, Class sourceClass, String targetBeanId) {
+		final adept.common.Document document = (adept.common.Document) source;
+
+		thrift.adept.common.Corpus corpus = new thrift.adept.common.Corpus("", "", "", "");
+
+		return new thrift.adept.common.Document("", corpus, "", "", "");
+	}
+}

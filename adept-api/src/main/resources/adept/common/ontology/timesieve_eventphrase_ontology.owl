@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns:this="deft://timesieve.eventphrase#"
+     xml:base="deft://timesieve.eventphrase"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="deft://timesieve.eventphrase">
+        <rdfs:comment>The event phrase ontology</rdfs:comment>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://timesieve.eventphrase#SITUATION -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#SITUATION"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#FACT -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#FACT">
+        <rdfs:subClassOf rdf:resource="deft://timesieve.eventphrase#SITUATION"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://timesieve.eventphrase#CAUSAL_FACT -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#CAUSAL_FACT">
+        <rdfs:subClassOf rdf:resource="deft://timesieve.eventphrase#FACT"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://timesieve.eventphrase#TEMPORAL_FACT -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#TEMPORAL_FACT">
+        <rdfs:subClassOf rdf:resource="deft://timesieve.eventphrase#FACT"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://timesieve.eventphrase#EVENT -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#EVENT">
+        <rdfs:subClassOf rdf:resource="deft://timesieve.eventphrase#SITUATION"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://timesieve.eventphrase#STATE-->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#STATE">
+        <rdfs:subClassOf rdf:resource="deft://timesieve.eventphrase#SITUATION"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://timesieve.eventphrase#PRIVATE_STATE-->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#PRIVATE_STATE">
+        <rdfs:subClassOf rdf:resource="deft://timesieve.eventphrase#STATE"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://timesieve.eventphrase#SENTIMENT-->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#SENTIMENT">
+        <rdfs:subClassOf rdf:resource="deft://timesieve.eventphrase#PRIVATE_STATE"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://timesieve.eventphrase#OCCURRENCE_CLASS -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#OCCURRENCE_CLASS"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#PERCEPTION_CLASS -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#PERCEPTION_CLASS"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#REPORTING_CLASS -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#REPORTING_CLASS"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#ASPECTUAL_CLASS -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#ASPECTUAL_CLASS"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#STATE_CLASS -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#STATE_CLASS"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#I_STATE_CLASS -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#I_STATE_CLASS"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#I_ACTION_CLASS -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#I_ACTION_CLASS"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#FUTURE_TENSE -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#FUTURE_TENSE"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#INFINITIVE_TENSE -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#INFINITIVE_TENSE"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#PAST_TENSE -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#PAST_TENSE"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#PASTPART_TENSE -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#PASTPART_TENSE"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#PRESENT_TENSE -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#PRESENT_TENSE"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#PRESPART_TENSE -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#PRESPART_TENSE"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#NONE_TENSE -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#NONE_TENSE"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#PROGRESSIVE_ASPECT -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#PROGRESSIVE_ASPECT"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#PERFECTIVE_ASPECT -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#PERFECTIVE_ASPECT"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#PERFECTIVE_PROGRESSIVE_ASPECT -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#PERFECTIVE_PROGRESSIVE_ASPECT"/>
+    
+
+
+    <!-- deft://timesieve.eventphrase#NONE_ASPECT -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#NONE_ASPECT"/>
+	
+	
+	<!-- deft://timesieve.eventphrase#OTH -->
+
+    <owl:Class rdf:about="deft://timesieve.eventphrase#OTH"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

@@ -1,0 +1,2 @@
+mapreduce.PreprocessingJob		src/main/resources/pipeline/PreprocessingJobInput.txt	output
+edu.stanford.nlp.mapreduce.StanfordMIMLREMapClass	mapreduce.PreprocessingJob	output/part-00000	mimlre_output

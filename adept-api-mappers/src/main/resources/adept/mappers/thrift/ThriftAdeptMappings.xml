@@ -1,0 +1,1189 @@
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://dozer.sourceforge.net schema/beanmapping.xsd">
+  <configuration>
+    <custom-converters>
+      <converter type="adept.mappers.thrift.converters.ArgumentConverter">
+        <class-a>thrift.adept.common.Argument</class-a>
+        <class-b bean-factory="adept.mappers.thrift.factories.ArgumentFactory">adept.common.Argument</class-b>
+      </converter>
+      <converter type="adept.mappers.thrift.converters.PostConverter">
+        <class-a>thrift.adept.common.Post</class-a>
+        <class-b bean-factory="adept.mappers.thrift.factories.PostFactory">adept.common.Post</class-b>
+      </converter>
+      <converter type="adept.mappers.thrift.converters.PostQuoteConverter">
+        <class-a>thrift.adept.common.PostQuote</class-a>
+        <class-b bean-factory="adept.mappers.thrift.factories.PostQuoteFactory">adept.common.PostQuote</class-b>
+      </converter>
+    </custom-converters>
+  </configuration>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.AnomalousText</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.AnomalousTextFactory">adept.common.AnomalousText</class-b>
+    <field>
+      <a>document</a>
+      <b>document</b>
+      <a-hint>thrift.adept.common.Document</a-hint>
+      <b-hint>adept.common.Document</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.ArgumentTuple</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.ArgumentTupleFactory">adept.common.ArgumentTuple</class-b>
+    <field>
+      <a>tupleType</a>
+      <b>tupleType</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field>
+      <a>attributes</a>
+      <b>attributes</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.ArgumentConverter">
+      <a>arguments</a>
+      <b>arguments</b>
+      <a-hint>thrift.adept.common.Argument</a-hint>
+      <b-hint>adept.common.Argument</b-hint>
+    </field>
+    <field>
+      <a>confidence</a>
+      <b>confidence</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>algorithmName</a>
+      <b>algorithmName</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.AudioOffset</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.AudioOffsetFactory">adept.common.AudioOffset</class-b>
+    <field>
+      <a>beginIndex</a>
+      <b>begin</b>
+    </field>
+    <field>
+      <a>endIndex</a>
+      <b>end</b>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.CharOffset</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.CharOffsetFactory">adept.common.CharOffset</class-b>
+    <field>
+      <a>beginIndex</a>
+      <b>begin</b>
+    </field>
+    <field>
+      <a>endIndex</a>
+      <b>end</b>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.io.CoNLLDocument</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.CoNLLDocumentFactory">adept.io.CoNLLDocument</class-b>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.TokenOffset</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TokenOffsetFactory">adept.common.TokenOffset</class-b>
+    <field>
+      <a>beginIndex</a>
+      <b>begin</b>
+    </field>
+    <field>
+      <a>endIndex</a>
+      <b>end</b>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Chunk</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.ChunkFactory">adept.common.Chunk</class-b>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.CommittedBelief</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.CommittedBeliefFactory">adept.common.CommittedBelief</class-b>
+    <field>
+      <a>modality</a>
+      <b>modality</b>
+    </field>
+    <field>
+      <a>sequenceId</a>
+      <b>sequenceId</b>
+    </field>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Coreference</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.CoreferenceFactory">adept.common.Coreference</class-b>
+    <field>
+      <a>entities</a>
+      <b>entities</b>
+      <a-hint>thrift.adept.common.Entity</a-hint>
+      <b-hint>adept.common.Entity</b-hint>
+    </field>
+    <field>
+      <a>resolvedEntityMentions</a>
+      <b>resolvedEntityMentions</b>
+      <a-hint>thrift.adept.common.EntityMention</a-hint>
+      <b-hint>adept.common.EntityMention</b-hint>
+    </field>
+    <field>
+      <a>coreferenceId</a>
+      <b>coreferenceId</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Corpus</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.CorpusFactory">adept.common.Corpus</class-b>
+    <field>
+      <a>corpusId</a>
+      <b>corpusId</b>
+    </field>
+    <field>
+      <a>type</a>
+      <b>type</b>
+    </field>
+    <field>
+      <a>name</a>
+      <b>name</b>
+    </field>
+    <field>
+      <a>uri</a>
+      <b>uri</b>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Dependency</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.DependencyFactory">adept.common.Dependency</class-b>
+    <field>
+      <a>dependencyType</a>
+      <b>dependencyType</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true" bean-factory="adept.mappers.thrift.factories.ThriftDocumentFactory">thrift.adept.common.Document</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.DocumentFactory">adept.common.Document</class-b>
+    <field>
+      <a>docId</a>
+      <b>docId</b>
+    </field>
+    <field>
+      <a>corpus</a>
+      <b>corpus</b>
+      <a-hint>thrift.adept.common.Corpus</a-hint>
+      <b-hint>adept.common.Corpus</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Entailment</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.EntailmentFactory">adept.common.Entailment</class-b>
+    <field>
+      <a>text</a>
+      <b>text</b>
+      <a-hint>thrift.adept.common.Passage</a-hint>
+      <b-hint>adept.common.Passage</b-hint>
+    </field>
+    <field>
+      <a>hypothesis</a>
+      <b>hypothesis</b>
+      <a-hint>thrift.adept.common.Passage</a-hint>
+      <b-hint>adept.common.Passage</b-hint>
+    </field>
+    <field>
+      <a>judgmentDistribution</a>
+      <b>judgmentDistribution</b>
+      <a-hint>java.lang.Double</a-hint>
+      <b-hint>java.lang.Double</b-hint>
+    </field>
+    <field>
+      <a>entailmentId</a>
+      <b>entailmentId</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.EntailmentJudgment</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.EntailmentJudgmentFactory">adept.common.Entailment.Judgment</class-b>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Entity</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.EntityFactory">adept.common.Entity</class-b>
+    <field>
+      <a>canonicalMention</a>
+      <b>canonicalMention</b>
+      <a-hint>thrift.adept.common.EntityMention</a-hint>
+      <b-hint>adept.common.EntityMention</b-hint>
+    </field>
+    <field>
+      <a>entityId</a>
+      <b>entityId</b>
+    </field>
+    <field>
+      <a>entityType</a>
+      <b>entityType</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.EntityMention</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.EntityMentionFactory">adept.common.EntityMention</class-b>
+    <field>
+      <a>entityType</a>
+      <b>entityType</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field>
+      <a>mentionType</a>
+      <b>mentionType</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>entityIdDistribution</a>
+      <b>entityIdDistribution</b>
+      <a-hint>java.lang.Double</a-hint>
+      <b-hint>java.lang.Double</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>context</a>
+      <b>context</b>
+    </field>
+    <field>
+      <a>contextSize</a>
+      <b>contextSize</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.io.EREDocument</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.EREDocumentFactory">adept.io.EREDocument</class-b>
+    <field>
+      <a>fullText</a>
+      <b>fullText</b>
+    </field>
+    <field>
+      <a>document</a>
+      <b>document</b>
+      <a-hint>thrift.adept.common.Document</a-hint>
+      <b-hint>adept.common.Document</b-hint>
+    </field>
+    <field>
+      <a>charMapping</a>
+      <b>charMapping</b>
+    </field>
+    <field>
+      <a>charToTokenOffset</a>
+      <b>charToTokenOffset</b>
+    </field>
+    <field>
+      <a>startIndices</a>
+      <b>startIndices</b>
+    </field>
+    <field>
+      <a>endIndices</a>
+      <b>endIndices</b>
+    </field>
+    <field>
+      <a>entityMentionsById</a>
+      <b>entityMentionsById</b>
+      <a-hint>thrift.adept.common.EntityMention</a-hint>
+      <b-hint>adept.common.EntityMention</b-hint>
+    </field>
+    <field>
+      <a>canonicalEntityMentionsById</a>
+      <b>canonicalEntityMentionsById</b>
+      <a-hint>thrift.adept.common.EntityMention</a-hint>
+      <b-hint>adept.common.EntityMention</b-hint>
+    </field>
+    <field>
+      <a>isProxy</a>
+      <b>isProxy</b>
+    </field>
+    <field>
+      <a>eventsById</a>
+      <b>eventsById</b>
+      <a-hint>thrift.adept.common.Event</a-hint>
+      <b-hint>adept.common.Event</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Event</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.EventFactory">adept.common.Event</class-b>
+    <field>
+      <a>eventType</a>
+      <b>tupleType</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field>
+      <a>attributes</a>
+      <b>attributes</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.ArgumentConverter">
+      <a>arguments</a>
+      <b>arguments</b>
+      <a-hint>thrift.adept.common.Argument</a-hint>
+      <b-hint>adept.common.Argument</b-hint>
+    </field>
+    <field>
+      <a>eventId</a>
+      <b>eventId</b>
+    </field>
+    <field>
+      <a>confidence</a>
+      <b>confidence</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>algorithmName</a>
+      <b>algorithmName</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.EventRelations</class-a>
+    <class-b is-accessible="true">adept.common.EventRelations</class-b>
+    <field>
+      <a>coreferences</a>
+      <b>coreferences</b>
+      <a-hint>thrift.adept.common.Event</a-hint>
+      <b-hint>adept.common.Event</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.HltContent</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TokenOffsetFactory">adept.common.HltContent</class-b>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.HltContentContainer</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TokenOffsetFactory">adept.common.HltContentContainer</class-b>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+    <field>
+      <a>relations</a>
+      <b>relations</b>
+      <a-hint>thrift.adept.common.Relation</a-hint>
+      <b-hint>adept.common.Relation</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.PostConverter">
+      <a>posts</a>
+      <b>posts</b>
+      <a-hint>thrift.adept.common.Post</a-hint>
+      <b-hint>adept.common.Post</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.ID</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TokenOffsetFactory">adept.common.ID</class-b>
+    <field>
+      <a>id</a>
+      <b>id</b>
+    </field>
+    <field>
+      <a>idStr</a>
+      <b>idStr</b>
+    </field>
+    <field-exclude>
+      <a>MAX_ID</a>
+      <b>MAX_ID</b>
+    </field-exclude>
+    <field-exclude>
+      <a>MIN_ID</a>
+      <b>MIN_ID</b>
+    </field-exclude>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.InterPausalUnit</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.InterPausalUnitFactory">adept.common.InterPausalUnit</class-b>
+    <field>
+      <a>ipuAudioOffset</a>
+      <b>ipuAudioOffset</b>
+      <a-hint>thrift.adept.common.AudioOffset</a-hint>
+      <b-hint>adept.common.AudioOffset</b-hint>
+    </field>
+    <field>
+      <a>acousticFeatures</a>
+      <b>acousticFeatures</b>
+      <a-hint>java.lang.Double</a-hint>
+      <b-hint>java.lang.Double</b-hint>
+    </field>
+    <field>
+      <a>sequenceId</a>
+      <b>sequenceId</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Item</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TokenOffsetFactory">adept.common.Item</class-b>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.JointRelationCoreference</class-a>
+    <class-b is-accessible="true">adept.common.JointRelationCoreference</class-b>
+    <field>
+      <a>coreference</a>
+      <b>coreference</b>
+      <a-hint>thrift.adept.common.Coreference</a-hint>
+      <b-hint>adept.common.Coreference</b-hint>
+    </field>
+    <field>
+      <a>relations</a>
+      <b>relations</b>
+      <a-hint>thrift.adept.common.Relation</a-hint>
+      <b-hint>adept.common.Relation</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Opinion</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.OpinionFactory">adept.common.Opinion</class-b>
+    <field>
+      <a>polarity</a>
+      <b>polarity</b>
+      <a-hint>thrift.adept.common.Polarity</a-hint>
+      <b-hint>adept.common.Polarity</b-hint>
+    </field>
+    <field>
+      <a>subjectivity</a>
+      <b>subjectivity</b>
+      <a-hint>thrift.adept.common.Subjectivity</a-hint>
+      <b-hint>adept.common.Subjectivity</b-hint>
+    </field>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Paraphrase</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.ParaphraseFactory">adept.common.Paraphrase</class-b>
+    <field>
+      <a>confidence</a>
+      <b>confidence</b>
+    </field>
+    <field>
+      <a>posTag</a>
+      <b>posTag</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.PartOfSpeech</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.PartOfSpeechFactory">adept.common.PartOfSpeech</class-b>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>posTag</a>
+      <b>posTag</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field>
+      <a>sequenceId</a>
+      <b>sequenceId</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Passage</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.PassageFactory">adept.common.Passage</class-b>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>sequenceId</a>
+      <b>sequenceId</b>
+    </field>
+    <field>
+      <a>contentType</a>
+      <b>contentType</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Polarity</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.PolarityFactory">adept.common.Polarity</class-b>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.ProsodicPhrase</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.ProsodicPhraseFactory">adept.common.ProsodicPhrase</class-b>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>uncertaintyConfidence</a>
+      <b>uncertaintyConfidence</b>
+    </field>
+    <field>
+      <a>noveltyConfidence</a>
+      <b>noveltyConfidence</b>
+    </field>
+    <field>
+      <a>confidence</a>
+      <b>confidence</b>
+    </field>
+    <field>
+      <a>sequenceId</a>
+      <b>sequenceId</b>
+    </field>
+    <field>
+      <a>type</a>
+      <b>type</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Relation</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.RelationFactory">adept.common.Relation</class-b>
+    <field>
+      <a>type</a>
+      <b>tupleType</b>
+      <a-hint>thrift.adept.common.Type</a-hint>
+      <b-hint>adept.common.Type</b-hint>
+    </field>
+    <field>
+      <a>confidence</a>
+      <b>confidence</b>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.ArgumentConverter">
+      <a>arguments</a>
+      <b>arguments</b>
+      <a-hint>thrift.adept.common.Argument</a-hint>
+      <b-hint>adept.common.Argument</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>relationId</a>
+      <b>relationId</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Sarcasm</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.SarcasmFactory">adept.common.Sarcasm</class-b>
+    <field>
+      <a>confidence</a>
+      <b>confidence</b>
+    </field>
+    <field>
+      <a>sarcasmId</a>
+      <b>sarcasmId</b>
+    </field>
+    <field>
+      <a>judgment</a>
+      <b>judgment</b>
+      <a-hint>thrift.adept.common.SarcasmJudgment</a-hint>
+      <b-hint>adept.common.Sarcasm.Judgment</b-hint>
+    </field>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Sentence</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.SentenceFactory">adept.common.Sentence</class-b>
+    <field>
+      <a>uncertaintyConfidence</a>
+      <b>uncertaintyConfidence</b>
+    </field>
+    <field>
+      <a>noveltyConfidence</a>
+      <b>noveltyConfidence</b>
+    </field>
+    <field>
+      <a>punctuation</a>
+      <b>punctuation</b>
+    </field>
+    <field>
+      <a>sequenceId</a>
+      <b>sequenceId</b>
+    </field>
+    <field>
+      <a>type</a>
+      <b>type</b>
+      <a-hint>thrift.adept.common.SentenceType</a-hint>
+      <b-hint>adept.common.SentenceType</b-hint>
+    </field>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.SentenceSimilarity</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.SentenceSimilarityFactory">adept.common.SentenceSimilarity</class-b>
+    <field>
+      <a>sentence1</a>
+      <b>sentence1</b>
+      <a-hint>thrift.adept.common.Sentence</a-hint>
+      <b-hint>adept.common.Sentence</b-hint>
+    </field>
+    <field>
+      <a>sentence2</a>
+      <b>sentence2</b>
+      <a-hint>thrift.adept.common.Sentence</a-hint>
+      <b-hint>adept.common.Sentence</b-hint>
+    </field>
+    <field>
+      <a>similarity</a>
+      <b>similarity</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.SentenceType</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.SentenceTypeFactory">adept.common.SentenceType</class-b>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Slot</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.SlotFactory">adept.common.Slot</class-b>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Story</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.StoryFactory">adept.common.Story</class-b>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>topicLabels</a>
+      <b>topicLabels</b>
+    </field>
+    <field>
+      <a>sequenceId</a>
+      <b>sequenceId</b>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Subjectivity</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.SubjectivityFactory">adept.common.Subjectivity</class-b>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Token</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TokenFactory">adept.common.Token</class-b>
+    <field>
+      <a>audioOffset</a>
+      <b>audioOffset</b>
+      <a-hint>thrift.adept.common.AudioOffset</a-hint>
+      <b-hint>adept.common.AudioOffset</b-hint>
+    </field>
+    <field>
+      <a>charOffset</a>
+      <b>charOffset</b>
+      <a-hint>thrift.adept.common.CharOffset</a-hint>
+      <b-hint>adept.common.CharOffset</b-hint>
+    </field>
+    <field>
+      <a>confidence</a>
+      <b>confidence</b>
+    </field>
+    <field>
+      <a>sequenceId</a>
+      <b>sequenceId</b>
+    </field>
+    <field>
+      <a>lemma</a>
+      <b>lemma</b>
+    </field>
+    <field>
+      <a>tokenType</a>
+      <b>tokenType</b>
+      <a-hint>thrift.adept.common.TokenType</a-hint>
+      <b-hint>adept.common.TokenType</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Tag</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TagFactory">adept.common.Tag</class-b>
+    <field>
+      <a>tagName</a>
+      <b>tagName</b>
+    </field>
+    <field>
+      <a>attributes</a>
+      <b>attributes</b>
+      <a-hint>thrift.adept.common.Token</a-hint>
+      <b-hint>adept.common.Token</b-hint>
+    </field>
+    <field>
+      <a>charOffset</a>
+      <b>charOffset</b>
+      <a-hint>thrift.adept.common.CharOffset</a-hint>
+      <b-hint>adept.common.CharOffset</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.TokenStream</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TokenStreamFactory">adept.common.TokenStream</class-b>
+    <field>
+      <a>asrName</a>
+      <b>asrName</b>
+      <a-hint>thrift.adept.common.AsrName</a-hint>
+      <b-hint>adept.common.AsrName</b-hint>
+    </field>
+    <field>
+      <a>channelName</a>
+      <b>channelName</b>
+      <a-hint>thrift.adept.common.ChannelName</a-hint>
+      <b-hint>adept.common.ChannelName</b-hint>
+    </field>
+    <field>
+      <a>contentType</a>
+      <b>contentType</b>
+      <a-hint>thrift.adept.common.ContentType</a-hint>
+      <b-hint>adept.common.ContentType</b-hint>
+    </field>
+    <field>
+      <a>document</a>
+      <b>document</b>
+      <a-hint>thrift.adept.common.Document</a-hint>
+      <b-hint>adept.common.Document</b-hint>
+    </field>
+    <field>
+      <a>speechUnit</a>
+      <b>speechUnit</b>
+      <a-hint>thrift.adept.common.SpeechUnit</a-hint>
+      <b-hint>adept.common.SpeechUnit</b-hint>
+    </field>
+    <field>
+      <a>tokenizerType</a>
+      <b>tokenizerType</b>
+      <a-hint>thrift.adept.common.TokenizerType</a-hint>
+      <b-hint>adept.common.TokenizerType</b-hint>
+    </field>
+    <field>
+      <a>transcriptType</a>
+      <b>transcriptType</b>
+      <a-hint>thrift.adept.common.TranscriptType</a-hint>
+      <b-hint>adept.common.TranscriptType</b-hint>
+    </field>
+    <field>
+      <a>translatorName</a>
+      <b>translatorName</b>
+      <a-hint>thrift.adept.common.TranslatorName</a-hint>
+      <b-hint>adept.common.TranslatorName</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Topic</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TopicFactory">adept.common.Topic</class-b>
+    <field>
+      <a>polarity</a>
+      <b>polarity</b>
+      <a-hint>thrift.adept.common.TopicPolarity</a-hint>
+      <b-hint>adept.common.Topic.Polarity</b-hint>
+    </field>
+    <field>
+      <a>viewpoints</a>
+      <b>viewpoints</b>
+      <a-hint>thrift.adept.common.Viewpoint</a-hint>
+      <b-hint>adept.common.Viewpoint</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Translation</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TranslationFactory">adept.common.Translation</class-b>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Triple</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TripleFactory">adept.common.Triple</class-b>
+    <field>
+      <a>entity</a>
+      <b>entity</b>
+      <a-hint>thrift.adept.common.Entity</a-hint>
+      <b-hint>adept.common.Entity</b-hint>
+    </field>
+    <field>
+      <a>slot</a>
+      <b>slot</b>
+      <a-hint>thrift.adept.common.Slot</a-hint>
+      <b-hint>adept.common.Slot</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>tvalue</b>
+      <a-hint>thrift.adept.common.Value</a-hint>
+      <b-hint>adept.common.Value</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Type</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.TypeFactory">adept.common.Type</class-b>
+    <field>
+      <a>type</a>
+      <b>type</b>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Utterance</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.UtteranceFactory">adept.common.Utterance</class-b>
+    <field>
+      <a>tokenOffset</a>
+      <b>tokenOffset</b>
+      <a-hint>thrift.adept.common.TokenOffset</a-hint>
+      <b-hint>adept.common.TokenOffset</b-hint>
+    </field>
+    <field custom-converter="adept.mappers.thrift.converters.TokenStreamConverter">
+      <a>tokenStream</a>
+      <b>tokenStream</b>
+      <a-hint>thrift.adept.common.TokenStream</a-hint>
+      <b-hint>adept.common.TokenStream</b-hint>
+    </field>
+    <field>
+      <a>value</a>
+      <b>value</b>
+    </field>
+    <field>
+      <a>id</a>
+      <b>id</b>
+      <a-hint>thrift.adept.common.ID</a-hint>
+      <b-hint>adept.common.ID</b-hint>
+    </field>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Value</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.ValueFactory">adept.common.Value</class-b>
+  </mapping>
+  <mapping map-null="false">
+    <class-a is-accessible="true">thrift.adept.common.Viewpoint</class-a>
+    <class-b is-accessible="true" bean-factory="adept.mappers.thrift.factories.ViewpointFactory">adept.common.Viewpoint</class-b>
+  </mapping>
+</mappings>

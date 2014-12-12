@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<properties version="1.0">
+	<comment></comment>	
+	<entry key="TACKBP">deft://relation.tackbp</entry>
+	<entry key="EVENTPHRASE">deft://timesieve.eventphrase</entry>
+	<entry key="TREEBANK">deft://pos.treebank</entry>
+	<entry key="ENTITY_ACE2008">deft://entity.ace08</entry>
+	<entry key="MENTION_ACE2008">deft://mention.ace2008</entry>
+	<entry key="ENTITY_SERIF">deft://entity.serif</entry>
+	<entry key="EVENT_SERIF">deft://event.serif</entry>
+	<entry key="RELATION_SERIF">deft://relation.serif</entry>
+	<entry key="FACT_SERIF">deft://fact.serif</entry>	
+    <entry key="EVENT_ERE">deft://event.ere</entry>
+    <entry key="MENTION_ERE">deft://mention.ere</entry>
+</properties>

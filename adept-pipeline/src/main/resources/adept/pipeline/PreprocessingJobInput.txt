@@ -1,0 +1,3 @@
+001	pipeline/XIN_ENG_20081203.0154.xml
+002	pipeline/XIN_ENG_20081212.0080.xml
+003	pipeline/XIN_ENG_20081213.0136.xml

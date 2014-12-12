@@ -1,0 +1,343 @@
+<?xml version="1.0"?>
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>adept</groupId>
+    <artifactId>adept</artifactId>
+    <relativePath>..</relativePath>
+    <version>1.9-SNAPSHOT</version>
+  </parent>
+  <artifactId>adept-pipeline</artifactId>
+  <name>adept-pipeline</name>
+  <description>The project file to run the Hadoop pipeline</description>
+  <properties>
+    <appAsmDir>${basedir}/target/appassembler</appAsmDir>
+    <resourceDir>${basedir}/src/main/resources/pipeline</resourceDir>
+  </properties>
+  <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <testOutputDirectory>${project.basedir}/target/test-classes</testOutputDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </testResource>
+    </testResources>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.tomcat.maven</groupId>
+          <artifactId>tomcat6-maven-plugin</artifactId>
+          <version>2.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.tomcat.maven</groupId>
+          <artifactId>tomcat7-maven-plugin</artifactId>
+          <version>2.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefirePluginVersion}</version>
+        <configuration>
+          <workingDirectory>${project.basedir}/target/test-classes</workingDirectory>
+          <skipTests>${skipUnitTests}</skipTests>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>${sourcePluginVersion}</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${project.basedir}/target/test-classes</workingDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${execPluginVersion}</version>
+        <executions>
+          <execution>
+            <id>MapReducePipelineDriver</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>${execMinMemorySize}</argument>
+                <argument>${execMaxMemorySize}</argument>
+                <argument>${execNewRatio}</argument>
+                <argument>-XX:+PrintGCTimeStamps</argument>
+                <argument>-XX:+PrintGCDetails</argument>
+                <argument>-Xloggc:${project.basedir}/target/test-classes/gc.log</argument>
+                <argument>-classpath</argument>
+                <classpath />
+                <argument>pipeline.Driver</argument>
+              </arguments>
+              <workingDirectory>${project.basedir}/target/test-classes</workingDirectory>
+              <skip>true</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+<!-- appassembler plugin for packaging command-line executables -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>appassembler-maven-plugin</artifactId>
+        <version>${appassemblerPluginVersion}</version>
+        <configuration>
+          <assembleDirectory>${project.build.directory}/appassembler</assembleDirectory>
+          <binFolder>bin</binFolder>
+          <binFileExtensions>
+            <unix />
+          </binFileExtensions>
+          <configurationDirectory>config</configurationDirectory>
+          <configurationSourceDirectory>src/main/resources</configurationSourceDirectory>
+          <copyConfigurationDirectory>true</copyConfigurationDirectory>
+          <extraJvmArguments />
+          <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+          <platforms>
+            <platform>unix</platform>
+          </platforms>
+          <repositoryLayout>default</repositoryLayout>
+          <repositoryName>lib</repositoryName>
+          <programs>
+            <program>
+<!-- main class for pipeline driver -->
+              <mainClass>pipeline.Driver</mainClass>
+              <name>MapReducePipelineDriver</name>
+              <jvmSettings>
+                <initialMemorySize>${appassemblerMinMemorySize}</initialMemorySize>
+                <maxMemorySize>${appassemblerMaxMemorySize}</maxMemorySize>
+              </jvmSettings>
+            </program>
+          </programs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>${antrunPluginVersion}</version>
+        <executions>
+<!-- Set permissions on subsidiary scripts. -->
+          <execution>
+            <id>process-test-classes</id>
+            <phase>verify</phase>
+            <configuration>
+              <target>
+                <echo message="Maven antrun setting script permissions." />
+<!--chmod dir="target/test-classes/pipeline/" perm="ugo+rx" includes="**/*.sh"/-->
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+<!-- Creates distribution folders - - Copies readme files from src/main/resources 
+						to package root - - Copies API doc to /doc - - Copies /edu from /test-classes to 
+						/test -->
+          <execution>
+            <id>package-create</id>
+            <phase>deploy</phase>
+            <configuration>
+              <target>
+                <echo message="Maven creating package and copying data and test classes." />
+                <mkdir dir="${basedir}/deploy" />
+                <copy todir="${basedir}/deploy">
+                  <fileset dir="${resourceDir}" includes="README.txt" />
+                </copy>
+                <copy todir="${basedir}/deploy">
+                  <fileset dir="${resourceDir}" includes="COPYRIGHT.txt" />
+                </copy>
+                <mkdir dir="${appAsmDir}/data" />
+                <mkdir dir="${appAsmDir}/docs" />
+                <mkdir dir="${appAsmDir}/logs" />
+                <mkdir dir="${appAsmDir}/test" />
+                <mkdir dir="${appAsmDir}/out" />
+                <mkdir dir="${appAsmDir}/code-samples" />
+                <mkdir dir="${appAsmDir}/bin" />
+                <copy todir="${appAsmDir}/data">
+                  <fileset dir="${basedir}/../data" includes="*.*" />
+                </copy>
+                <copy todir="${appAsmDir}/docs">
+                  <fileset dir="${basedir}/../docs" includes="*.*" />
+                </copy>
+                <copy todir="${appAsmDir}/bin">
+                  <fileset dir="${basedir}/target/classes" includes="**/*" excludes="*.*" />
+                </copy>
+<!-- need config from src/main/resources to run regression test -->
+                <copy todir="${appAsmDir}/test">
+                  <fileset dir="${basedir}/target/classes" includes="**/*" excludes="*.*" />
+                </copy>
+                <copy todir="${appAsmDir}/test">
+                  <fileset dir="${basedir}/target/test-classes" includes="**/*" excludes="*.*" />
+                </copy>
+                <copy todir="${appAsmDir}">
+                  <fileset dir="${resourceDir}" includes="README.txt" />
+                </copy>
+                <copy todir="${appAsmDir}">
+                  <fileset dir="${resourceDir}" includes="COPYRIGHT.txt" />
+                </copy>
+<!--copy todir="${appAsmDir}/code-samples">
+                  <fileset dir="${basedir}/src/main/java/edu/stanford/nlp" includes="*App.java" />
+                  <fileset dir="${basedir}/src/main/java/edu/stanford/nlp/restapi" includes="*Client.java" />
+                </copy-->
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>package-move</id>
+            <phase>deploy</phase>
+            <configuration>
+              <target>
+<!-- Sets execute permissions on all scripts - - Moves test script to/test - - Deletes scripts for other sites -->
+                <echo message="Maven antrun copying binaries and setting permissions." />
+<!-- Unfortunately the ${project.parent.basedir} is not available in antrun. -->
+                <chmod file="${appAsmDir}/bin/*" perm="755" failonerror="false" />
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+<!-- Package the software in a tarball. -->
+          <execution>
+            <id>package-tarball</id>
+            <phase>deploy</phase>
+            <configuration>
+              <target>
+                <echo message="Maven antrun deploying package via DeftPackage.sh." />
+                <exec executable="${basedir}/../../DeftPackage.sh">
+                  <arg value="${project.name}" />
+                  <arg value="${project.artifactId}-${project.parent.version}-${maven.build.timestamp}" />
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>adept</groupId>
+      <artifactId>adept-api</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.columbia</groupId>
+      <artifactId>columbia-relation-adept</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+<!--dependency>
+      <groupId>org.ihmc</groupId>
+      <artifactId>ihmc-adept</artifactId>
+      <version>1.3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.jhu</groupId>
+      <artifactId>jhu-adept</artifactId>
+      <version>1.3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.oregonstate</groupId>
+      <artifactId>oregonstate-adept</artifactId>
+      <version>1.3-SNAPSHOT</version>
+    </dependency-->
+<!--dependency>
+      <groupId>edu.qccuny</groupId>
+      <artifactId>qccuny-adept</artifactId>
+      <version>1.3-SNAPSHOT</version>
+    </dependency-->
+    <dependency>
+      <groupId>edu.stanford</groupId>
+      <artifactId>stanford-adept</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+<!--dependency>
+      <groupId>edu.uiuc</groupId>
+      <artifactId>uiuc-adept</artifactId>
+      <version>1.3-SNAPSHOT</version>
+    </dependency-->
+    <!--dependency>
+      <groupId>edu.umass</groupId>
+      <artifactId>umass-adept</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency-->
+<!--dependency>
+      <groupId>edu.utaustin</groupId>
+      <artifactId>utaustin-adept</artifactId>
+      <version>1.3-SNAPSHOT</version>
+    </dependency-->
+    <!--  dependency>
+      <groupId>edu.washington</groupId>
+      <artifactId>washington-adept</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency-->
+<!--dependency>
+      <groupId>edu.wisconsin</groupId>
+      <artifactId>wisconsin-adept</artifactId>
+      <version>1.3-SNAPSHOT</version>
+    </dependency-->
+    <dependency>
+	  <groupId>org.apache.tomcat</groupId>
+	  <artifactId>catalina</artifactId>
+	  <version>6.0.26</version>
+    </dependency>
+    <dependency>
+      <groupId>adept</groupId>
+      <artifactId>adept-mapreduce</artifactId>
+      <version>${project.parent.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>servlet-api-2.5</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+</project>

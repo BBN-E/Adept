@@ -1,0 +1,536 @@
+<?xml version="1.0"?>
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="deft://entity.serif#"
+     xml:base="deft://entity.serif"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="deft://entity.serif"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://entity.serif#APPO -->
+
+    <owl:Class rdf:about="deft://entity.serif#APPO">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#MentionType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#DESC -->
+
+    <owl:Class rdf:about="deft://entity.serif#DESC">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#MentionType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#EntityType -->
+
+    <owl:Class rdf:about="deft://entity.serif#EntityType"/>
+    
+
+
+    <!-- deft://entity.serif#FAC -->
+
+    <owl:Class rdf:about="deft://entity.serif#FAC">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#EntityType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#FAC.Airport -->
+
+    <owl:Class rdf:about="deft://entity.serif#FAC.Airport">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#FAC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#FAC.Building-Grounds -->
+
+    <owl:Class rdf:about="deft://entity.serif#FAC.Building-Grounds">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#FAC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#FAC.Path -->
+
+    <owl:Class rdf:about="deft://entity.serif#FAC.Path">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#FAC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#FAC.Plant -->
+
+    <owl:Class rdf:about="deft://entity.serif#FAC.Plant">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#FAC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#FAC.Subarea-Facility -->
+
+    <owl:Class rdf:about="deft://entity.serif#FAC.Subarea-Facility">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#FAC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#GPE -->
+
+    <owl:Class rdf:about="deft://entity.serif#GPE">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#EntityType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#GPE.GPE-Cluster -->
+
+    <owl:Class rdf:about="deft://entity.serif#GPE.GPE-Cluster">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#GPE"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#GPE.Continent -->
+
+    <owl:Class rdf:about="deft://entity.serif#GPE.Continent">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#GPE"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#GPE.County-or-District -->
+
+    <owl:Class rdf:about="deft://entity.serif#GPE.County-or-District">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#GPE"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#GPE.Nation -->
+
+    <owl:Class rdf:about="deft://entity.serif#GPE.Nation">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#GPE"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#GPE.Population-Center -->
+
+    <owl:Class rdf:about="deft://entity.serif#GPE.Population-Center">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#GPE"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#GPE.Special -->
+
+    <owl:Class rdf:about="deft://entity.serif#GPE.Special">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#GPE"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#GPE.State-or-Province -->
+
+    <owl:Class rdf:about="deft://entity.serif#GPE.State-or-Province">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#GPE"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#INFL -->
+
+    <owl:Class rdf:about="deft://entity.serif#INFL">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#MentionType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#LIST -->
+
+    <owl:Class rdf:about="deft://entity.serif#LIST">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#MentionType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#LOC -->
+
+    <owl:Class rdf:about="deft://entity.serif#LOC">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#EntityType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#LOC.Address -->
+
+    <owl:Class rdf:about="deft://entity.serif#LOC.Address">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#LOC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#LOC.Boundary -->
+
+    <owl:Class rdf:about="deft://entity.serif#LOC.Boundary">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#LOC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#LOC.Celestial -->
+
+    <owl:Class rdf:about="deft://entity.serif#LOC.Celestial">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#LOC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#LOC.Land-Region-Natural -->
+
+    <owl:Class rdf:about="deft://entity.serif#LOC.Land-Region-Natural">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#LOC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#LOC.Region-General -->
+
+    <owl:Class rdf:about="deft://entity.serif#LOC.Region-General">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#LOC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#LOC.Region-International -->
+
+    <owl:Class rdf:about="deft://entity.serif#LOC.Region-International">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#LOC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#LOC.Water-Body -->
+
+    <owl:Class rdf:about="deft://entity.serif#LOC.Water-Body">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#LOC"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#MentionType -->
+
+    <owl:Class rdf:about="deft://entity.serif#MentionType"/>
+    
+
+
+    <!-- deft://entity.serif#NAME -->
+
+    <owl:Class rdf:about="deft://entity.serif#NAME">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#MentionType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#NONE -->
+
+    <owl:Class rdf:about="deft://entity.serif#NONE">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#MentionType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#EntityType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG.Commercial -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG.Commercial">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#ORG"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG.Educational -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG.Educational">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#ORG"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG.Entertainment -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG.Entertainment">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#ORG"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG.Government -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG.Government">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#ORG"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG.Media -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG.Media">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#ORG"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG.Medical-Science -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG.Medical-Science">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#ORG"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG.Non-Governmental -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG.Non-Governmental">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#ORG"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG.Religious -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG.Religious">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#ORG"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#ORG.Sports -->
+
+    <owl:Class rdf:about="deft://entity.serif#ORG.Sports">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#ORG"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#OTH -->
+
+    <owl:Class rdf:about="deft://entity.serif#OTH">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#EntityType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#PART -->
+
+    <owl:Class rdf:about="deft://entity.serif#PART">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#MentionType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#PER -->
+
+    <owl:Class rdf:about="deft://entity.serif#PER">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#EntityType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#PER.Group -->
+
+    <owl:Class rdf:about="deft://entity.serif#PER.Group">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#PER"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#PER.Indeterminate -->
+
+    <owl:Class rdf:about="deft://entity.serif#PER.Indeterminate">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#PER"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#PER.Individual -->
+
+    <owl:Class rdf:about="deft://entity.serif#PER.Individual">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#PER"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#PRON -->
+
+    <owl:Class rdf:about="deft://entity.serif#PRON">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#MentionType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#VEH -->
+
+    <owl:Class rdf:about="deft://entity.serif#VEH">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#EntityType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#VEH.Air -->
+
+    <owl:Class rdf:about="deft://entity.serif#VEH.Air">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#VEH"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#VEH.Subarea-Vehicle -->
+
+    <owl:Class rdf:about="deft://entity.serif#VEH.Subarea-Vehicle">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#VEH"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#VEH.Underspecified -->
+
+    <owl:Class rdf:about="deft://entity.serif#VEH.Underspecified">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#VEH"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#VEH.Water -->
+
+    <owl:Class rdf:about="deft://entity.serif#VEH.Water">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#VEH"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#EntityType"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA.Biological -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA.Biological">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#WEA"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA.Blunt -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA.Blunt">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#WEA"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA.Chemical -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA.Chemical">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#WEA"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA.Exploding -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA.Exploding">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#WEA"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA.Nuclear -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA.Nuclear">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#WEA"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA.Projectile -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA.Projectile">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#WEA"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA.Sharp -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA.Sharp">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#WEA"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA.Shooting -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA.Shooting">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#WEA"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://entity.serif#WEA.Underspecified -->
+
+    <owl:Class rdf:about="deft://entity.serif#WEA.Underspecified">
+        <rdfs:subClassOf rdf:resource="deft://entity.serif#WEA"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

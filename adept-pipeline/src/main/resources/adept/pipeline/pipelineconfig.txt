@@ -1,0 +1,2 @@
+mapreduce.PreprocessingJob		src/main/resources/pipeline/PreprocessingJobInput.txt	output
+edu.columbia.relation.sarcasm.mapreduce.ColumbiaSarcasmMapClass	mapreduce.PreprocessingJob	output/part-00000	sarcasm_output

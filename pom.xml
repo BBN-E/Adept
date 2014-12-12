@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+
+<!--***************************************************************************
+ * Raytheon BBN Technologies Corp., December 2014
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2014 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ***************************************************************************-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<version>1.9-SNAPSHOT</version>
+	<groupId>adept</groupId>
+	<artifactId>adept</artifactId>
+	<name>adept</name>
+	<packaging>pom</packaging>
+	<description>The project file to build and run ADEPT interfaces and applications using Maven</description>
+	<modules>
+	<module>adept-api</module>
+	<module>adept-api-mappers</module>
+	<module>adept-mapreduce</module>
+	<module>adept-pipeline</module>
+	<module>adept-thrift-api</module>
+	<module>adept-thrift-cpp</module>
+	<module>adept-thrift-java</module>
+	<module>adept-thrift-perl</module>
+	<module>example</module>
+	</modules>
+  <properties>
+    <antrunPluginVersion>1.7</antrunPluginVersion>
+    <appassemblerMaxMemorySize>2g</appassemblerMaxMemorySize>
+    <appassemblerMinMemorySize>2g</appassemblerMinMemorySize>
+    <appassemblerPluginVersion>1.3.1</appassemblerPluginVersion>
+    <execMaxMemorySize>-Xmx16g</execMaxMemorySize>
+    <execMinMemorySize>-Xms8g</execMinMemorySize>
+    <execNewRatio>-XX:NewRatio=3</execNewRatio>
+    <execPluginVersion>1.2.1</execPluginVersion>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <skipRegressionTest>true</skipRegressionTest>
+    <skipBenchmarkTest>true</skipBenchmarkTest>
+    <skipUnitTests>true</skipUnitTests>
+    <skipProfiler>true</skipProfiler>
+    <skipUntar>false</skipUntar>
+    <skipLicensing>true</skipLicensing>
+    <surefirePluginVersion>2.14.1</surefirePluginVersion>
+    <jdk.version.value>1.7</jdk.version.value>
+    <javac.exec.path>${env.JAVA_HOME_7}/bin/javac</javac.exec.path>
+    <java.exec.path>${env.JAVA_HOME_7}/bin/java</java.exec.path>
+    <thriftPluginVersion>0.1.12-SNAPSHOT</thriftPluginVersion>
+    <sourcePluginVersion>2.2.1</sourcePluginVersion>
+    <redirect>false</redirect>
+  </properties>	<build>
+	<plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>${antrunPluginVersion}</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <echo>DEFT POM Properties:</echo>
+                <echo>Skip Regression = ${skipRegressionTest}</echo>
+                <echo>Redirect regression output = ${redirect}</echo>
+                <echo>Skip Benchmark = ${skipBenchmarkTest}</echo>
+                <echo>Skip Profiler = ${skipProfiler}</echo>
+                <echo>Skip Batch Unit Tests = ${skipUnitTests}</echo>
+                <echo>Skip Untar = ${skipUntar}</echo>
+                <echo>Skip Licensing = ${skipLicensing}</echo>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>	
+		<plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>license-maven-plugin</artifactId>
+		<version>1.7</version>
+		<configuration>
+			<licenseName>apache_v2</licenseName>
+			<licenseResolver>file://${project.basedir}/license</licenseResolver>
+			<year>2014</year>
+			<inceptionYear>2014</inceptionYear>
+			<copyrightOwner>Raytheon BBN Technologies Corp.</copyrightOwner>
+			<organizationName>Raytheon BBN Technologies Corp.</organizationName>
+			<projectName>Adept</projectName>	
+			<dryRun>false</dryRun>
+			<verbose>true</verbose>			
+			<processStartTag>------</processStartTag>
+			<sectionDelimiter>-----</sectionDelimiter>
+			<processEndTag>-------</processEndTag>
+              <roots>
+				<root>src</root>
+              </roots>		
+              <excludes>
+                <exclude>**/*.xml</exclude>
+              </excludes>			  
+			<skip>${skipLicensing}</skip>
+		</configuration>
+		<executions>
+			<!-- Downloads the project licenses via mvn license:download-licenses 		
+			<execution>
+				<id>download-licenses</id>
+				<goals>
+					<goal>download-licenses</goal>
+				</goals>
+			</execution> -->
+			<!-- Updates the source files via mvn license:update-file-header -->
+			<!--execution>
+            <id>update-file-header-first</id>
+            <goals>
+              <goal>update-file-header</goal>
+            </goals>
+            <phase>process-sources</phase>
+            <configuration>
+              <licenseName>apache_v2 </licenseName>
+				<header>src/main/licenseHeader.txt</header>
+				<properties>
+				</properties>		  
+
+            </configuration>
+          </execution-->
+			<!-- not needed?
+			<execution>
+				<id>check-file-header</id>
+				<goals>
+					<goal>check-file-header</goal>
+				</goals>
+				<phase>generate-sources</phase>
+			</execution>	
+			-->	
+		</executions>
+		</plugin>
+		<!--
+		Note that "token" is actually a regex, so watch out for punctuation.
+		Note that version 1.5.1 works for multiple files, 1.5.3 works for single file.
+		For testing, use this instead of includes/excludes:
+				<file>test.xml</file>		
+		-->
+		<!--
+       <plugin>
+           <groupId>com.google.code.maven-replacer-plugin</groupId>
+           <artifactId>replacer</artifactId>
+           <version>1.5.1</version>
+           <executions>
+               <execution>
+                   <phase>validate</phase>
+                   <goals>
+                       <goal>replace</goal>
+                   </goals>                   
+               </execution>
+           </executions>
+           <configuration>
+                <includes>
+                    <include>**/*.cpp</include>
+                    <include>**/*.h</include>
+                    <include>**/*.java</include>
+                    <include>**/*.pm</include>
+                    <include>**/*.xml</include>
+                </includes>
+                <excludes>
+                    <exclude>**/pom.xml</exclude>
+                </excludes>
+                   <replacement>
+                       <token>Copyright \(C\) 2014 Raytheon BBN Technologies</token>
+                       <value>Copyright (C) 2014 Raytheon BBN Technologies Corp.</value>
+                   </replacement> 	
+				   <replacements>
+                   <replacement>
+                       <token>Corp. Corp.</token>
+                       <value>Corp.</value>
+                   </replacement> 	
+               </replacements>
+           </configuration>
+       </plugin>		
+		-->	   
+	</plugins>
+	</build>	
+</project>

@@ -1,0 +1,58 @@
+
+
+Document
+Document Value
+Type: 
+URI: 
+Language: 
+Headline: 
+
+Entity Mentions and Coreferences
+ResolvedEntityId
+SequenceId
+Entity Mention Value
+Begin
+End
+MentionType
+EntityType
+Context
+
+Relations
+RelationId
+Relation Type
+Begin
+End
+Argument Value
+Argument Type
+Confidence
+Context
+
+Sarcasms
+SarcasmId
+Sarcasm value
+Begin
+End
+Judgment
+Confidence
+
+Committed Beliefs
+SequenceId
+Committed Belief Value
+Begin
+End
+Modality
+
+Paraphrases
+Paraphrase Value
+POS Tag
+Confidence
+
+Triples
+Entity
+Slot
+Value
+
+Tokens
+SequenceId
+Value
+CharOffset
