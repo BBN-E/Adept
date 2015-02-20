@@ -1077,4 +1077,3 @@ public class Coreference implements org.apache.thrift.TBase<Coreference, Corefer
   }
 
 }
-

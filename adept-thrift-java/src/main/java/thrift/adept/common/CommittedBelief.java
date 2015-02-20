@@ -1202,4 +1202,3 @@ public class CommittedBelief implements org.apache.thrift.TBase<CommittedBelief,
   }
 
 }
-

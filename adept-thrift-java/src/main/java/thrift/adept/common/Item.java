@@ -515,4 +515,3 @@ public class Item implements org.apache.thrift.TBase<Item, Item._Fields>, java.i
   }
 
 }
-

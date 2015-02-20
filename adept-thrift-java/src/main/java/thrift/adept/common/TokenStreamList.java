@@ -437,4 +437,3 @@ public class TokenStreamList implements org.apache.thrift.TBase<TokenStreamList,
   }
 
 }
-

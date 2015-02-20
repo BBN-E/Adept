@@ -499,4 +499,3 @@ public class Viewpoint implements org.apache.thrift.TBase<Viewpoint, Viewpoint._
   }
 
 }
-

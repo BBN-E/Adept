@@ -1194,4 +1194,3 @@ public class ArgumentTuple implements org.apache.thrift.TBase<ArgumentTuple, Arg
   }
 
 }
-

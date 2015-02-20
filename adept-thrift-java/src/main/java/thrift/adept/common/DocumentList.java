@@ -515,4 +515,3 @@ public class DocumentList implements org.apache.thrift.TBase<DocumentList, Docum
   }
 
 }
-

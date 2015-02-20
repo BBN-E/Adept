@@ -665,4 +665,3 @@ public class TokenLattice implements org.apache.thrift.TBase<TokenLattice, Token
   }
 
 }
-

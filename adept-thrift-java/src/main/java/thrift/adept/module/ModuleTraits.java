@@ -583,4 +583,3 @@ public class ModuleTraits implements org.apache.thrift.TBase<ModuleTraits, Modul
   }
 
 }
-

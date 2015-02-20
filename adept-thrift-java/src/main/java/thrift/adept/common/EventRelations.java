@@ -450,4 +450,3 @@ public class EventRelations implements org.apache.thrift.TBase<EventRelations, E
   }
 
 }
-

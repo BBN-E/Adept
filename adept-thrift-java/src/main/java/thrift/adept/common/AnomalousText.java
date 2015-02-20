@@ -968,4 +968,3 @@ public class AnomalousText implements org.apache.thrift.TBase<AnomalousText, Ano
   }
 
 }
-

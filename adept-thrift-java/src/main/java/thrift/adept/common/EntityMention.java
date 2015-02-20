@@ -1722,4 +1722,3 @@ public class EntityMention implements org.apache.thrift.TBase<EntityMention, Ent
   }
 
 }
-

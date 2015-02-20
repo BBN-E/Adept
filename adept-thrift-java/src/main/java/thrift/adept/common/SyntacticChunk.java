@@ -1199,4 +1199,3 @@ public class SyntacticChunk implements org.apache.thrift.TBase<SyntacticChunk, S
   }
 
 }
-

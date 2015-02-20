@@ -1211,4 +1211,3 @@ public class Opinion implements org.apache.thrift.TBase<Opinion, Opinion._Fields
   }
 
 }
-

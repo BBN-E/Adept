@@ -494,4 +494,3 @@ public class CharOffset implements org.apache.thrift.TBase<CharOffset, CharOffse
   }
 
 }
-

@@ -1743,4 +1743,3 @@ public class EREDocument implements org.apache.thrift.TBase<EREDocument, EREDocu
   }
 
 }
-

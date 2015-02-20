@@ -391,4 +391,3 @@ public class Type implements org.apache.thrift.TBase<Type, Type._Fields>, java.i
   }
 
 }
-

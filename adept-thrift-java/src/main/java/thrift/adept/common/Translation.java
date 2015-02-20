@@ -503,4 +503,3 @@ public class Translation implements org.apache.thrift.TBase<Translation, Transla
   }
 
 }
-

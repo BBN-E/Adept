@@ -1521,4 +1521,3 @@ public class ProsodicPhrase implements org.apache.thrift.TBase<ProsodicPhrase, P
   }
 
 }
-

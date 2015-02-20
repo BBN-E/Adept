@@ -390,4 +390,3 @@ public class Value implements org.apache.thrift.TBase<Value, Value._Fields>, jav
   }
 
 }
-

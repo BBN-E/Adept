@@ -838,4 +838,3 @@ public class Corpus implements org.apache.thrift.TBase<Corpus, Corpus._Fields>, 
   }
 
 }
-

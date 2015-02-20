@@ -672,4 +672,3 @@ public class Tag implements org.apache.thrift.TBase<Tag, Tag._Fields>, java.io.S
   }
 
 }
-

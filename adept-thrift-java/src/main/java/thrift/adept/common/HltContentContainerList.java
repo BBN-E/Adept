@@ -682,4 +682,3 @@ public class HltContentContainerList implements org.apache.thrift.TBase<HltConte
   }
 
 }
-

@@ -1646,4 +1646,3 @@ public class CoNLLDocument implements org.apache.thrift.TBase<CoNLLDocument, CoN
   }
 
 }
-

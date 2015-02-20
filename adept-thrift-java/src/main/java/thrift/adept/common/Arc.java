@@ -722,4 +722,3 @@ public class Arc implements org.apache.thrift.TBase<Arc, Arc._Fields>, java.io.S
   }
 
 }
-

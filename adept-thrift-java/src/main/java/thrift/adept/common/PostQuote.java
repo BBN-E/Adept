@@ -1592,4 +1592,3 @@ public class PostQuote implements org.apache.thrift.TBase<PostQuote, PostQuote._
   }
 
 }
-

@@ -507,4 +507,3 @@ public class EmailAddress implements org.apache.thrift.TBase<EmailAddress, Email
   }
 
 }
-

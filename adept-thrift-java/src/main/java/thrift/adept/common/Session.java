@@ -1351,4 +1351,3 @@ public class Session implements org.apache.thrift.TBase<Session, Session._Fields
   }
 
 }
-
