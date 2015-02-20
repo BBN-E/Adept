@@ -1196,3 +1196,4 @@ public class Token implements org.apache.thrift.TBase<Token, Token._Fields>, jav
   }
 
 }
+

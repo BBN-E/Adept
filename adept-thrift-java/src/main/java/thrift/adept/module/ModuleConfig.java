@@ -544,3 +544,4 @@ public class ModuleConfig implements org.apache.thrift.TBase<ModuleConfig, Modul
   }
 
 }
+

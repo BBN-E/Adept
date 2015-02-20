@@ -1734,3 +1734,4 @@ public class TokenStream implements org.apache.thrift.TBase<TokenStream, TokenSt
   }
 
 }
+

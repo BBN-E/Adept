@@ -617,3 +617,4 @@ public class Triple implements org.apache.thrift.TBase<Triple, Triple._Fields>, 
   }
 
 }
+

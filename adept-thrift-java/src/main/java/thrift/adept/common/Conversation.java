@@ -1115,3 +1115,4 @@ public class Conversation implements org.apache.thrift.TBase<Conversation, Conve
   }
 
 }
+

@@ -967,3 +967,4 @@ public class SentenceSimilarity implements org.apache.thrift.TBase<SentenceSimil
   }
 
 }
+

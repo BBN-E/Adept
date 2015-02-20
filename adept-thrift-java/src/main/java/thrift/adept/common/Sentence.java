@@ -1537,3 +1537,4 @@ public class Sentence implements org.apache.thrift.TBase<Sentence, Sentence._Fie
   }
 
 }
+

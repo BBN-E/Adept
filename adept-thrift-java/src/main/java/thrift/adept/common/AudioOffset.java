@@ -494,3 +494,4 @@ public class AudioOffset implements org.apache.thrift.TBase<AudioOffset, AudioOf
   }
 
 }
+

@@ -1246,3 +1246,4 @@ public class Story implements org.apache.thrift.TBase<Story, Story._Fields>, jav
   }
 
 }
+

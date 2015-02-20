@@ -1297,3 +1297,4 @@ public class Utterance implements org.apache.thrift.TBase<Utterance, Utterance._
   }
 
 }
+

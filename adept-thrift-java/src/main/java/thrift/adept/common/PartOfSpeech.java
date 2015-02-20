@@ -1205,3 +1205,4 @@ public class PartOfSpeech implements org.apache.thrift.TBase<PartOfSpeech, PartO
   }
 
 }
+

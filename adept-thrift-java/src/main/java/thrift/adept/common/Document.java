@@ -1407,3 +1407,4 @@ public class Document implements org.apache.thrift.TBase<Document, Document._Fie
   }
 
 }
+

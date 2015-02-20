@@ -1297,3 +1297,4 @@ public class Event implements org.apache.thrift.TBase<Event, Event._Fields>, jav
   }
 
 }
+

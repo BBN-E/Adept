@@ -1156,3 +1156,4 @@ public class Entailment implements org.apache.thrift.TBase<Entailment, Entailmen
   }
 
 }
+

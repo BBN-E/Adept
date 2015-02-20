@@ -962,3 +962,4 @@ public class Dependency implements org.apache.thrift.TBase<Dependency, Dependenc
   }
 
 }
+

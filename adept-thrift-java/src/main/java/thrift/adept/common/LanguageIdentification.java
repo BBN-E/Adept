@@ -687,3 +687,4 @@ public class LanguageIdentification implements org.apache.thrift.TBase<LanguageI
   }
 
 }
+

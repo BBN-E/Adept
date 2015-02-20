@@ -915,3 +915,4 @@ public class JointRelationCoreference implements org.apache.thrift.TBase<JointRe
   }
 
 }
+

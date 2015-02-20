@@ -1309,3 +1309,4 @@ public class Sarcasm implements org.apache.thrift.TBase<Sarcasm, Sarcasm._Fields
   }
 
 }
+

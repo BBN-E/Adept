@@ -395,3 +395,4 @@ public class AdeptException extends TException implements org.apache.thrift.TBas
   }
 
 }
+

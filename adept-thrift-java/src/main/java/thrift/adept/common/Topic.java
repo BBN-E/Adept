@@ -906,3 +906,4 @@ public class Topic implements org.apache.thrift.TBase<Topic, Topic._Fields>, jav
   }
 
 }
+

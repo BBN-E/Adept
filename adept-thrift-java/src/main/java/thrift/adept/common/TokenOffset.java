@@ -494,3 +494,4 @@ public class TokenOffset implements org.apache.thrift.TBase<TokenOffset, TokenOf
   }
 
 }
+

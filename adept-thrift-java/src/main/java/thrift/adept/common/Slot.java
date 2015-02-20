@@ -390,3 +390,4 @@ public class Slot implements org.apache.thrift.TBase<Slot, Slot._Fields>, java.i
   }
 
 }
+

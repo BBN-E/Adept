@@ -1200,3 +1200,4 @@ public class Passage implements org.apache.thrift.TBase<Passage, Passage._Fields
   }
 
 }
+

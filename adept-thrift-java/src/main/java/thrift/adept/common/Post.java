@@ -1646,3 +1646,4 @@ public class Post implements org.apache.thrift.TBase<Post, Post._Fields>, java.i
   }
 
 }
+

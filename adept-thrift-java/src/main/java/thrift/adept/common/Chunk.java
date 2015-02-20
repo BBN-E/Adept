@@ -862,3 +862,4 @@ public class Chunk implements org.apache.thrift.TBase<Chunk, Chunk._Fields>, jav
   }
 
 }
+
