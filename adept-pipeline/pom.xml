@@ -1,6 +1,6 @@
+<?xml version="1.0"?>
 <!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
 
-<?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -255,11 +255,6 @@
       <artifactId>adept-api</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
-    <dependency>
-      <groupId>edu.columbia</groupId>
-      <artifactId>columbia-relation-adept</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
 <!--dependency>
       <groupId>org.ihmc</groupId>
       <artifactId>ihmc-adept</artifactId>
@@ -280,11 +275,6 @@
       <artifactId>qccuny-adept</artifactId>
       <version>1.3-SNAPSHOT</version>
     </dependency-->
-    <dependency>
-      <groupId>edu.stanford</groupId>
-      <artifactId>stanford-adept</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
 <!--dependency>
       <groupId>edu.uiuc</groupId>
       <artifactId>uiuc-adept</artifactId>
