@@ -1,24 +1,20 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
+
+import com.google.common.base.Optional;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -33,10 +29,10 @@ public class DiscourseUnit extends Chunk {
 	private String discourceType;
 
 	/** The uncertainty confidence. */
-	private float uncertaintyConfidence;
+	private Float uncertaintyConfidence;
 
 	/** The novelty confidence. */
-	private float noveltyConfidence;
+	private Float noveltyConfidence;
 
 	/**
 	 * Instantiates a new discourse unit.
@@ -51,10 +47,11 @@ public class DiscourseUnit extends Chunk {
 	 *            the discource type
 	 */
 	public DiscourseUnit(TokenOffset tokenOffset, TokenStream tokenStream,
-			long sequenceId, String discourceType) {
+			long sequenceId, String discourseType) {
 		super(tokenOffset, tokenStream);
 		this.sequenceId = sequenceId;
-		this.discourceType = discourceType;
+                checkArgument(discourseType!=null && discourseType.trim().length()>0);
+		this.discourceType = discourseType;
 	}
 
 	/**
@@ -62,8 +59,8 @@ public class DiscourseUnit extends Chunk {
 	 * 
 	 * @return the uncertainty confidence
 	 */
-	public float getUncertaintyConfidence() {
-		return uncertaintyConfidence;
+	public Optional<Float> getUncertaintyConfidence() {
+		return Optional.fromNullable(uncertaintyConfidence);
 	}
 
 	/**
@@ -81,8 +78,8 @@ public class DiscourseUnit extends Chunk {
 	 * 
 	 * @return the novelty confidence
 	 */
-	public float getNoveltyConfidence() {
-		return noveltyConfidence;
+	public Optional<Float> getNoveltyConfidence() {
+		return Optional.fromNullable(noveltyConfidence);
 	}
 
 	/**
@@ -110,8 +107,9 @@ public class DiscourseUnit extends Chunk {
 	 * @param discourceType
 	 *            the new discource type
 	 */
-	public void setDiscourceType(String discourceType) {
-		this.discourceType = discourceType;
+	public void setDiscourceType(String discourseType) {
+                checkArgument(discourseType!=null && discourseType.trim().length()>0);
+		this.discourceType = discourseType;
 	}
 
 	/**

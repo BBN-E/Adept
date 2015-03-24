@@ -1,23 +1,3 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
 package adept.common;
 
 import com.google.common.base.Optional;
@@ -179,25 +159,25 @@ public class EventTest {
 
     @Test
     public void testOSU() {
-        final DocumentEventArgument.Filler RajatGuptaEntity = DocumentEventArgument.Filler.fromEntity(new Entity(0, null));
-        final DocumentEventArgument.Filler RajatGuptaEntityInDoc2 = DocumentEventArgument.Filler.fromEntity(new Entity(0, null));
+        final DocumentEventArgument.Filler RajatGuptaEntity = DocumentEventArgument.Filler.fromEntity(new Entity(0, new Type("PER")));
+        final DocumentEventArgument.Filler RajatGuptaEntityInDoc2 = DocumentEventArgument.Filler.fromEntity(new Entity(0, new Type("PER")));
 
         final EntityMention RajatGuptaMention1 = dummyEntityMention(0, "Rajat Gupta");
         final EntityMention RajatGuptaMention2 = dummyEntityMention(0, "Rajat Gupta");
         final EntityMention illegallyTippingHisFormerFriend = dummyEntityMention(1, "illegally Tipping His Former Friend");
-        final DocumentEventArgument.Filler illegallyTippingEntity = DocumentEventArgument.Filler.fromEntity(new Entity(1, null));
+        final DocumentEventArgument.Filler illegallyTippingEntity = DocumentEventArgument.Filler.fromEntity(new Entity(1, new Type("PER")));
         final Chunk chunk = dummyChunk("2011-10-XX");
         final TimePhrase october = new TimePhrase(chunk.getTokenOffset(), chunk.getTokenStream(), null);        
         october.setResolution("2011-10-XX");
         final DocumentEventArgument.Filler octoberEntity = DocumentEventArgument.Filler.fromTemporalValue(
                 TimexValue.fromString(october.getResolution()));
         final EntityMention fiveCountsOfSecuritiesFraud = dummyEntityMention(3, "five Counts Of Securities Fraud");
-        final DocumentEventArgument.Filler securitiesFraudEntity = DocumentEventArgument.Filler.fromEntity(new Entity(3, null));
+        final DocumentEventArgument.Filler securitiesFraudEntity = DocumentEventArgument.Filler.fromEntity(new Entity(3, new Type("PER")));
         final EntityMention providingTips = dummyEntityMention(4, "providing tips");
 
-        final DocumentEventArgument.Filler tipsEntity = DocumentEventArgument.Filler.fromEntity(new Entity(4, null));
+        final DocumentEventArgument.Filler tipsEntity = DocumentEventArgument.Filler.fromEntity(new Entity(4, new Type("PER")));
         final EntityMention charge14PassingIllegal = dummyEntityMention(5, "charge 14 Passing Illegal");
-        final DocumentEventArgument.Filler passingIllegalEntity = DocumentEventArgument.Filler.fromEntity(new Entity(5, null));
+        final DocumentEventArgument.Filler passingIllegalEntity = DocumentEventArgument.Filler.fromEntity(new Entity(5, new Type("PER")));
 
         // skipping other crime argument for brevity
         final Type JusticeChargeIndict = new Type("Justice.Charge-Indict");

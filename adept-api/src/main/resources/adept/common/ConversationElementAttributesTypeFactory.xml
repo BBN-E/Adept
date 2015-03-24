@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+	<comment></comment>	
+	<entry key="SEQUENCE ID">SEQUENCE ID</entry>
+    <entry key="PRIORITY">PRIORITY</entry>
+    <entry key="SUBJECT">SUBJECT</entry>
+    <entry key="OPEN TAG">OPEN TAG</entry>
+    <entry key="CLOSE TAG">CLOSE TAGT</entry>
+</properties>

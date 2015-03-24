@@ -7,7 +7,7 @@
     <groupId>adept</groupId>
     <artifactId>adept</artifactId>
     <relativePath>..</relativePath>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.10-SNAPSHOT</version>
   </parent>
   <artifactId>example-adept</artifactId>
   <name>example</name>

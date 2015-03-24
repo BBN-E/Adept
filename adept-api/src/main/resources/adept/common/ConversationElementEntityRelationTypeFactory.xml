@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+	<comment></comment>	
+	<entry key="SENDER">SENDER</entry>
+    <entry key="RECIPIENTS">RECIPIENTS</entry>
+    <entry key="CC RECIPIENTS">CC RECIPIENTS</entry>
+    <entry key="BCC RECIPIENTS">BCC RECIPIENTS</entry>
+</properties>

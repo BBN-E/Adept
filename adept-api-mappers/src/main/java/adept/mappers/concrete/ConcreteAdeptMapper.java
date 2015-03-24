@@ -1,22 +1,15 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., October 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
+ * 
+ */
 
 package adept.mappers.concrete;
 
@@ -101,6 +94,13 @@ public class ConcreteAdeptMapper {
 		return token;
 	}
 
+	public adept.common.Token map(edu.jhu.hlt.concrete.Token concreteToken) {
+		adept.common.Token token = new adept.common.Token(0, new adept.common.CharOffset(0,1), "test");
+		mapper.map(concreteToken, token);
+		return token;
+	}
+
+
 	public adept.common.HltContentContainer map(edu.jhu.hlt.concrete.Concrete.Communication communication) {
 		adept.common.HltContentContainer hltContentContainer = new adept.common.HltContentContainer();
 		List<adept.common.Sentence> sentences = new ArrayList<adept.common.Sentence>();
@@ -118,7 +118,7 @@ public class ConcreteAdeptMapper {
 		List<adept.common.EntityMention> entityMentions = new ArrayList<adept.common.EntityMention>();
 		for (edu.jhu.hlt.concrete.Concrete.EntityMentionSet entityMentionSet : communication.getEntityMentionSetList()) {
 			for (edu.jhu.hlt.concrete.Concrete.EntityMention entityMention : entityMentionSet.getMentionList()) {
-				entityMentions.add(map(communication, entityMention));
+//				entityMentions.add(map(communication, entityMention));
 			}
 		}
 					
@@ -147,18 +147,18 @@ public class ConcreteAdeptMapper {
 	}
 */
 
-	public adept.common.EntityMention map(edu.jhu.hlt.concrete.Concrete.Communication communication, edu.jhu.hlt.concrete.Concrete.EntityMention concreteEntityMention) {
-	        edu.jhu.hlt.concrete.Concrete.Tokenization tkn = communication.getSectionSegmentation(0)
-        	                        .getSection(0)
-        	                        .getSentenceSegmentation(0)
-        	                        .getSentence(0)
-        	                        .getTokenization(0);
-        	edu.jhu.hlt.concrete.Concrete.TokenRefSequence trs = concreteEntityMention.getTokens();
+	public adept.common.EntityMention map(edu.jhu.hlt.concrete.Communication communication, edu.jhu.hlt.concrete.EntityMention concreteEntityMention) {
+	        edu.jhu.hlt.concrete.Tokenization tkn = communication.getSectionSegmentations().get(0)
+	                                .getSectionList().get(0)
+	                                .getSentenceSegmentation().get(0)
+	                                .getSentenceList().get(0)
+        	                        .getTokenizationList().get(0);
+        	edu.jhu.hlt.concrete.TokenRefSequence trs = concreteEntityMention.getTokens();
         	List<Integer> tokenIdList = trs.getTokenIndexList();	
         	adept.common.TokenStream tokenStream = map(tkn);
 		adept.common.TokenOffset tokenOffset = new adept.common.TokenOffset(tokenIdList.get(0), tokenIdList.get(tokenIdList.size()-1));
-		adept.common.Corpus corpus = new adept.common.Corpus(null, null, null, null);
-		adept.common.Document document = new adept.common.Document(null, corpus, null, null, null);
+		adept.common.Corpus corpus = new adept.common.Corpus("ID", null, "Name", null);
+		adept.common.Document document = new adept.common.Document("ID", corpus, "Type", null, "language");
 		document.setValue(communication.getText());
 //		tokenStream.setDocument(document);
 		adept.common.EntityMention retEntityMention = new adept.common.EntityMention(1, tokenOffset, tokenStream);
@@ -219,6 +219,25 @@ public class ConcreteAdeptMapper {
 		mapper.map(tokenization, tokenStream);
                 List<edu.jhu.hlt.concrete.Concrete.Token> tokenList = tokenization.getTokenList();
         	for (edu.jhu.hlt.concrete.Concrete.Token tok : tokenList) {
+        	    tokenStream.add(map(tok));
+		}
+		adept.common.TokenOffset tokenOffset = new adept.common.TokenOffset(tokenList.get(0).getTokenIndex()-1, tokenList.get(tokenList.size()-1).getTokenIndex()-1);
+		return tokenStream;
+	}
+
+	public adept.common.TokenStream map(edu.jhu.hlt.concrete.Tokenization tokenization) {
+		String value = "";
+        	for (edu.jhu.hlt.concrete.Token tok : tokenization.getTokenList().getTokens()) {
+	            value += tok.getText() + " ";
+		}
+		adept.common.Corpus corpus = new adept.common.Corpus("ID", null, "Name", null);
+		adept.common.Document document = new adept.common.Document("ID", corpus, "Type", null, "language");
+		document.setValue(value);
+
+		adept.common.TokenStream tokenStream = new adept.common.TokenStream(adept.common.TokenizerType.OTHER, null, "", null, null, document);
+		mapper.map(tokenization, tokenStream);
+                List<edu.jhu.hlt.concrete.Token> tokenList = tokenization.getTokenList().getTokens();
+        	for (edu.jhu.hlt.concrete.Token tok : tokenList) {
         	    tokenStream.add(map(tok));
 		}
 		adept.common.TokenOffset tokenOffset = new adept.common.TokenOffset(tokenList.get(0).getTokenIndex()-1, tokenList.get(tokenList.size()-1).getTokenIndex()-1);
@@ -378,11 +397,6 @@ public class ConcreteAdeptMapper {
 		return retEmailAddress;
 	}
 
-	public edu.jhu.hlt.concrete.Concrete.EmailCommunicationInfo map(adept.common.Message message) {
-		edu.jhu.hlt.concrete.Concrete.EmailCommunicationInfo emailCommunicationInfo = edu.jhu.hlt.concrete.Concrete.EmailCommunicationInfo.getDefaultInstance();
-		mapper.map(message, emailCommunicationInfo);
-		return emailCommunicationInfo;
-	}
 
 	public edu.jhu.hlt.concrete.Concrete.TextSpan map(adept.common.CharOffset charOffset) {
 		edu.jhu.hlt.concrete.Concrete.TextSpan textSpan = edu.jhu.hlt.concrete.Concrete.TextSpan.getDefaultInstance();

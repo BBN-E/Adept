@@ -1,23 +1,3 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
 package adept.mappers.concrete;
 
 import edu.jhu.hlt.concrete.io.ProtocolBufferReader;
@@ -30,20 +10,17 @@ public class MappingTest {
 
 	ProtocolBufferReader pbr;
 	ConcreteAdeptMapper mapper = new ConcreteAdeptMapper();
-
-
 	try {
-	    pbr = new ProtocolBufferReader(args[0], edu.jhu.hlt.concrete.Concrete.Communication.class);
 
-	edu.jhu.hlt.concrete.Concrete.Communication comm = (edu.jhu.hlt.concrete.Concrete.Communication)(pbr.next());
 
-        edu.jhu.hlt.concrete.Concrete.UUID tknUuid = edu.jhu.hlt.concrete.Concrete.UUID.newBuilder()
-				.setHigh(1)
-				.setLow(2)
-				.build();
+	edu.jhu.hlt.concrete.Communication comm = new edu.jhu.hlt.concrete.Communication();
+	comm.setText("Concrete originates in Baltimore, Maryland");
 
-        edu.jhu.hlt.concrete.Concrete.Tokenization.Builder tknBuilder = edu.jhu.hlt.concrete.Concrete.Tokenization.newBuilder()
-                                .setUuid(tknUuid);
+        edu.jhu.hlt.concrete.UUID tknUuid = new edu.jhu.hlt.concrete.UUID("1");
+
+        edu.jhu.hlt.concrete.Tokenization tkn = new edu.jhu.hlt.concrete.Tokenization();
+        edu.jhu.hlt.concrete.TokenList tknList = new edu.jhu.hlt.concrete.TokenList();
+        tkn.setUuid(tknUuid);
 
 	Scanner scanner = new Scanner(comm.getText());
 
@@ -51,91 +28,87 @@ public class MappingTest {
 	while (scanner.hasNext()) 
 	{
 
-	        edu.jhu.hlt.concrete.Concrete.Token token = edu.jhu.hlt.concrete.Concrete.Token.newBuilder()
-				.setTokenIndex(index)
-				.setText(scanner.next())
-				.build();
-		tknBuilder.addToken(token);
+	        edu.jhu.hlt.concrete.Token token = new edu.jhu.hlt.concrete.Token();
+				token.setTokenIndex(index);
+				token.setText(scanner.next());
+		tknList.addToTokens(token);
 		++index;
 	}
 
-        edu.jhu.hlt.concrete.Concrete.Tokenization tkn = tknBuilder.build();
+        tkn.setTokenList(tknList);
 
 
-	edu.jhu.hlt.concrete.Concrete.TokenRefSequence tokenRefSequence = edu.jhu.hlt.concrete.Concrete.TokenRefSequence.newBuilder()
-		.addTokenIndex(0)
-		.addTokenIndex(1)
-		.setTokenizationId(tkn.getUuid())
-		.build();
+	edu.jhu.hlt.concrete.TokenRefSequence tokenRefSequence = new edu.jhu.hlt.concrete.TokenRefSequence();
+		tokenRefSequence.addToTokenIndexList(3);
+		tokenRefSequence.addToTokenIndexList(4);
+		tokenRefSequence.setTokenizationId(tkn.getUuid());
 
-	edu.jhu.hlt.concrete.Concrete.UUID entityMentionUuid = edu.jhu.hlt.concrete.Concrete.UUID.newBuilder()
-		.setHigh(3)
-		.setLow(4)
-		.build();
+	edu.jhu.hlt.concrete.UUID entityMentionUuid = new edu.jhu.hlt.concrete.UUID("2");
 
-	edu.jhu.hlt.concrete.Concrete.EntityMention entityMention = edu.jhu.hlt.concrete.Concrete.EntityMention.newBuilder()
-		.setUuid(entityMentionUuid)
-		.setTokens(tokenRefSequence)
-		.setText("Baltimore, Maryland.")
-		.build();
+	edu.jhu.hlt.concrete.EntityMention entityMention = new edu.jhu.hlt.concrete.EntityMention();
+		entityMention.setUuid(entityMentionUuid);
+		entityMention.setTokens(tokenRefSequence);
+		entityMention.setText("Baltimore, Maryland.");
 
-	edu.jhu.hlt.concrete.Concrete.Communication.Builder communicationBuilder = edu.jhu.hlt.concrete.Concrete.Communication.newBuilder();
+	edu.jhu.hlt.concrete.Communication communication = new edu.jhu.hlt.concrete.Communication();
 
-	edu.jhu.hlt.concrete.Concrete.SectionSegmentation.Builder sectionSegmentationBuilder = edu.jhu.hlt.concrete.Concrete.SectionSegmentation.newBuilder();
+	edu.jhu.hlt.concrete.SectionSegmentation sectionSegmentation = new edu.jhu.hlt.concrete.SectionSegmentation();
 
-	edu.jhu.hlt.concrete.Concrete.Section.Builder sectionBuilder = edu.jhu.hlt.concrete.Concrete.Section.newBuilder();
+	edu.jhu.hlt.concrete.Section section = new edu.jhu.hlt.concrete.Section();
 
-	edu.jhu.hlt.concrete.Concrete.SentenceSegmentation.Builder sentenceSegmentationBuilder = edu.jhu.hlt.concrete.Concrete.SentenceSegmentation.newBuilder();
+	edu.jhu.hlt.concrete.SentenceSegmentation sentenceSegmentation = new edu.jhu.hlt.concrete.SentenceSegmentation();
 
-	edu.jhu.hlt.concrete.Concrete.Sentence.Builder sentenceBuilder = edu.jhu.hlt.concrete.Concrete.Sentence.newBuilder(comm.getSectionSegmentation(0)
-                                .getSection(0)
-                                .getSentenceSegmentation(0)
-                                .getSentence(0));
+/*	edu.jhu.hlt.concrete.Sentence sentence = new edu.jhu.hlt.concrete.Sentence(comm.getSectionSegmentations()
+				.get(0)
+                                .getSectionList().get(0)
+                                .getSentenceSegmentation().get(0)
+                                .getSentenceList().get(0));
+*/
+	
+	edu.jhu.hlt.concrete.Sentence sentence = new edu.jhu.hlt.concrete.Sentence();
 
-	edu.jhu.hlt.concrete.Concrete.Sentence sentence = sentenceBuilder.addTokenization(tkn).build();
+	sentence.addToTokenizationList(tkn);
 
-	edu.jhu.hlt.concrete.Concrete.SentenceSegmentation sentenceSegmentation = sentenceSegmentationBuilder.setUuid(comm.getSectionSegmentation(0)
-                                .getSection(0)
-                                .getSentenceSegmentation(0)
-				.getUuid())
-				.addSentence(sentence)
-				.build();
+/*	sentenceSegmentation.setUuid(comm.getSectionSegmentations().get(0)
+                                .getSectionList().get(0)
+                                .getSentenceSegmentation().get(0)
+				.getUuid());
+*/
+	sentenceSegmentation.addToSentenceList(sentence);
 
-	edu.jhu.hlt.concrete.Concrete.Section section = sectionBuilder.setUuid(comm.getSectionSegmentation(0)
-                                .getSection(0)
-				.getUuid())
-				.setKind(comm.getSectionSegmentation(0)
-                                .getSection(0)
-				.getKind())
-				.addSentenceSegmentation(sentenceSegmentation)
-				.build();
+/*	section.setUuid(comm.getSectionSegmentations().get(0)
+                                .getSectionList().get(0)
+				.getUuid());
+	section.setKind(comm.getSectionSegmentations().get(0)
+                                .getSectionList().get(0)
+				.getKind());
+*/
+	section.addToSentenceSegmentation(sentenceSegmentation);
+/*
+	sectionSegmentation.setUuid(comm.getSectionSegmentations().get(0)
+				.getUuid());
+*/
+	sectionSegmentation.addToSectionList(section);
 
-	edu.jhu.hlt.concrete.Concrete.SectionSegmentation sectionSegmentation = sectionSegmentationBuilder.setUuid(comm.getSectionSegmentation(0)
-				.getUuid())
-				.addSection(section)
-				.build();
-
-	edu.jhu.hlt.concrete.Concrete.Communication communication = communicationBuilder.setGuid(comm.getGuid())
-				.setUuid(comm.getUuid())
-				.addSectionSegmentation(sectionSegmentation)
-				.build();
+				communication.setUuid(comm.getUuid());
+				comm.addToSectionSegmentations(sectionSegmentation);
 
 
-	edu.jhu.hlt.concrete.ConcreteEntityMention concreteEntityMention = new edu.jhu.hlt.concrete.ConcreteEntityMention(entityMention, communication);
+	edu.jhu.hlt.concrete.EntityMention concreteEntityMention = new edu.jhu.hlt.concrete.EntityMention(entityMention);
 
-	System.out.println("Made Concrete Entity Mention");
 
-	System.out.println(concreteEntityMention.getTokensAsStrings());
+	System.out.println("Concrete Entity Mention Value: " + concreteEntityMention.getText());
 
-	adept.common.EntityMention adeptEntityMention = mapper.map(concreteEntityMention);
+	adept.common.EntityMention adeptEntityMention = mapper.map(comm, concreteEntityMention);
 
 	System.out.println("Mapped Concrete Entity Mention");
 
-	System.out.println("Adept Entity Mention Value: " + adeptEntityMention.getTokenStream().getDocument().getValue());
+	System.out.println("Adept Entity Mention Value: " + adeptEntityMention.getValue());
 
 	} catch(Exception e){
-	    System.err.println(e.getMessage());
+	    e.printStackTrace();
 	    System.exit(1);
 	}
     }
 }
+	

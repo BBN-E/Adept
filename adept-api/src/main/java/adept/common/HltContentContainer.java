@@ -1,23 +1,15 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
 
 import com.google.common.collect.ImmutableList;
@@ -27,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO: Auto-generated Javadoc
+// TODO: Check for nulls if needed in future.
 /**
  * The Class HltContentContainer, which contains the 
  * full annotation of an input Document, including 
@@ -35,10 +28,14 @@ import java.util.List;
  */
 public class HltContentContainer extends HltContent {
        
-        /** The coreferences. */
+    /** The coreferences. */
 	// Keep these first so that XSLT will find complete EntityMention elements
 	// inside the <resolvedEntityMentions> element, rather than only references to EntityMentions.
 	private List<Coreference> coreferences;
+	
+	/** The sentence similarities */
+	// Keep these before sentences for the same reason as above comment
+	private List<SentenceSimilarity> sentenceSimilarities;
 
 	/** The sentences. */
 	private List<Sentence> sentences;
@@ -73,8 +70,6 @@ public class HltContentContainer extends HltContent {
 	/** The opinions. */
 	private List<Opinion> opinions;
 
-	/** The posts. */
-	private List<Post> posts;
 
 	/** The prosodic phrases. */
 	private List<ProsodicPhrase> prosodicPhrases;
@@ -88,8 +83,6 @@ public class HltContentContainer extends HltContent {
 	/** Utterances. */
 	private List<Utterance> utterances;
 
-    /** The messages. */
-    private List<Message> messages;
 
 	/** The inter pausal units. */
 	private List<InterPausalUnit> interPausalUnits;
@@ -109,20 +102,25 @@ public class HltContentContainer extends HltContent {
 
 	/** The events relations. */
 	private List<EventRelations> eventRelations;
+	
+	/** The events phrases. */
+	private List<EventPhrase> eventPhrases;
 
 	/** The sessions. */
 	private List<Session> sessions;
 
-        /** The triples */
-        private List<Triple> triples;
+    /** The triples */
+    private List<Triple> triples;
 
-        /** The paraphrases */
-        private List<Paraphrase> paraphrases;
+    /** The paraphrases */
+    private List<Paraphrase> paraphrases;
 
 	/** The time phrases. */
 	private List<TimePhrase> timePhrases;
-		
-	private List<SentenceSimilarity> sentenceSimilarities;
+	
+	/** The conversations. */
+	private List<ConversationElement> conversationElements;
+	
 	
 	/**
 	 * Instantiates a new hlt content container.
@@ -189,24 +187,6 @@ public class HltContentContainer extends HltContent {
 		this.opinions = opinions;
 	}
 
-	/**
-	 * Gets the posts.
-	 * 
-	 * @return the posts
-	 */
-	public List<Post> getPosts() {
-		return posts;
-	}
-
-	/**
-	 * Sets the posts.
-	 * 
-	 * @param posts
-	 *            the new posts
-	 */
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
-	}
 
 	/**
 	 * Gets the prosodic phrases.
@@ -301,6 +281,11 @@ public class HltContentContainer extends HltContent {
         this.documentEventArguments = ImmutableList.copyOf(documentEventArguments);
     }
 
+
+    public Iterable<DocumentEventArgument> getDocumentEventArguments() {
+        return documentEventArguments;
+    }
+
     public List<EventTextSet> getEventTextSets() {
         return eventTextSets;
     }
@@ -383,26 +368,6 @@ public class HltContentContainer extends HltContent {
 	 */
 	public void setPassages(List<Passage> passages) {
 		this.passages = passages;
-	}
-
-	/**
-	 * Gets the messages.
-	 * 
-	 * @return the messages
-	 */
-	public List<Message> getMessages() {
-		return messages;
-	}
-
-	/**
-	 * Sets the messages.
-	 *
-	 * @param messages the new messages
-	 * @meram messages
-	 * the new messages
-	 */
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
 	}
 
 	/**
@@ -635,6 +600,28 @@ public class HltContentContainer extends HltContent {
 	public void setEventRelations(List<EventRelations> eventRelations) {
 		this.eventRelations = eventRelations;
 	}
+    
+    /**
+	 * Gets the event phrase.
+	 *
+     * @deprecated
+	 * @return the event phrases
+	 */
+    @Deprecated
+	public List<EventPhrase> getEventPhrases() {
+		return eventPhrases;
+	}
+
+	/**
+	 * Sets the eventRelations.
+	 *
+	 * @param eventRelations the new eventRelations
+     * @deprecated
+	 */
+    @Deprecated
+	public void setEventPhrase(List<EventPhrase> eventPhrases) {
+		this.eventPhrases = eventPhrases;
+	}
 
 	/**
 	 * Gets the time phrases.
@@ -665,8 +652,8 @@ public class HltContentContainer extends HltContent {
 			document = this.passages.get(0).tokenStream.getDocument();
 		} else if (this.sentences != null && this.sentences.size() > 0) {
 			document = this.sentences.get(0).tokenStream.getDocument();
-		} else if (this.posts!=null && this.posts.size() > 0) {
-			document = this.posts.get(0).tokenStream.getDocument();
+		} else if (this.conversationElements != null && this.conversationElements.size() > 0) {
+			document = this.conversationElements.get(0).getMessageChunk().getTokenStream().getDocument();
 		}
 		return document;
 	}
@@ -694,5 +681,14 @@ public class HltContentContainer extends HltContent {
 		this.sentenceSimilarities = sentenceSimilarities;
 	}
 	
+	public List<ConversationElement> getConversationElements() {
+		return conversationElements;
+	}
+
+	public void setConversationElements(List<ConversationElement> conversationElements) {
+		this.conversationElements = conversationElements;
+	}
+	
 
 }
+

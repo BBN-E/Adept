@@ -1,23 +1,3 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
 /*******************************************************************************
  * Raytheon BBN Technologies Corp., November 2013
  *
@@ -39,6 +19,8 @@ import java.nio.charset.Charset;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.commons.io.input.BOMInputStream;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -116,9 +98,10 @@ public class Reader {
     public org.w3c.dom.Document readXML(String path) {
         try {
             InputStream is = findStreamInClasspathOrFileSystem(path);
+	    BOMInputStream bis = new BOMInputStream(is, false);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            org.w3c.dom.Document doc = dBuilder.parse(is);
+            org.w3c.dom.Document doc = dBuilder.parse(bis);
             // TODO - might have backslashes.
             doc.setDocumentURI(path);
             return doc;
@@ -1011,59 +994,51 @@ public class Reader {
      * @return an HLTContentContainer
      */
     public HltContentContainer LDCForumtoHltContentContainer(String filepath, String XMLPath, String language) {
-        org.w3c.dom.Document xmlDoc = readXML(XMLPath);
+    	try
+    	{
+    		org.w3c.dom.Document xmlDoc = readXML(XMLPath);
 
-        // This HLTCC is discarded.
-        HltContentContainer hltContentContainer = new HltContentContainer();
-        Document document = DocumentMaker.getInstance().createDefaultDocument(filepath, hltContentContainer);
-        String text = null;
-        text = fileToString(filepath);
-        document.setValue(text);
-        List<PassageAttributes> passageAttributesList = new ArrayList<PassageAttributes>();
-//	Pair<List<Tag>,adept.common.Document> documentPairs = LDCCorpusReader.getInstance()
-//								.readCorpus(text, passageAttributesList, null,
-//													null,
-//													null);
-        HltContentContainer hltcc = LDCCorpusReader.getInstance().readPosts(text, passageAttributesList, null,
-                null,
-                language);
-        if (hltcc.getPassages() == null) {
-            hltcc.setPassages(new ArrayList<Passage>());
-        }
-        if (hltcc.getSentences() == null) {
-            hltcc.setSentences(new ArrayList<Sentence>());
-        }
-
-        document = hltcc.getDocument();
-
-        if (xmlDoc != null) {
-            List<EntityMention> entityMentions = getEntityMentions(document, xmlDoc);
-            if (entityMentions != null) {
-                hltcc.setEntityMentions(entityMentions);
-                hltcc.setNamedEntities(getNamedEntities(entityMentions));
-                hltcc.setRelations(getRelations(document, xmlDoc, entityMentions));
-                hltcc.setCoreferences(getCoreferences(document, xmlDoc, entityMentions));
-                List<Event> eventList = getEvents(document, xmlDoc, entityMentions);
-                hltcc.setEvents(eventList);
-//                hltcc.setEventRelations(getEventRelations(document));
+            // This HLTCC is discarded.
+            HltContentContainer hltContentContainer = new HltContentContainer();
+            Document document = DocumentMaker.getInstance().createDefaultDocument(filepath, hltContentContainer);
+            String text = null;
+            text = fileToString(filepath);
+            document.setValue(text);
+            List<PassageAttributes> passageAttributesList = new ArrayList<PassageAttributes>();
+//    	Pair<List<Tag>,adept.common.Document> documentPairs = LDCCorpusReader.getInstance()
+//    								.readCorpus(text, passageAttributesList, null,
+//    													null,
+//    													null);
+            HltContentContainer hltcc = LDCCorpusReader.getInstance().readPosts(text, passageAttributesList, null,
+                    null,
+                    language);
+            if (hltcc.getPassages() == null) {
+                hltcc.setPassages(new ArrayList<Passage>());
             }
+            if (hltcc.getSentences() == null) {
+                hltcc.setSentences(new ArrayList<Sentence>());
+            }
+
+
+            if (xmlDoc != null) {
+                List<EntityMention> entityMentions = getEntityMentions(document, xmlDoc);
+                if (entityMentions != null) {
+                    hltcc.setEntityMentions(entityMentions);
+                    hltcc.setNamedEntities(getNamedEntities(entityMentions));
+                    hltcc.setRelations(getRelations(document, xmlDoc, entityMentions));
+                    hltcc.setCoreferences(getCoreferences(document, xmlDoc, entityMentions));
+                    List<Event> eventList = getEvents(document, xmlDoc, entityMentions);
+                    hltcc.setEvents(eventList);
+//                    hltcc.setEventRelations(getEventRelations(document));
+                }
+            }
+            return hltcc;
+    	}
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        	return null;
         }
-//	System.out.println("Passages: " + hltcc.getPassages().size());
-//	System.out.println("Sentences: " + hltcc.getSentences().size());
-//	System.out.println("Posts: " + hltcc.getPosts().size());
-//	System.out.println("DocValue: " + hltcc.getDocument().getValue());
-//	for (EntityMention mention : hltcc.getEntityMentions()) {
-//		System.out.println("Entity Mention: " + mention.getValue() + " " + mention.getTokenOffset().getBegin() + " " + mention.getTokenOffset().getEnd());
-//	}
-//	for (Relation relation : hltcc.getRelations()) {
-//		System.out.println("Relation: " + relation.getArguments().get(0).getArgumentDistribution().get(0).getL().getValue() + " " + relation.getRelationType() + " " + relation.getArguments().get(1).getArgumentDistribution().get(0).getL().getValue());
-//	}
-
-//	for (Token tok : hltcc.getDocument().getDefaultTokenStream()) {
-//		System.out.println("Token: " + tok.getSequenceId() + " " + tok.getValue() + " " + tok.getCharOffset().getBegin() + " " + tok.getCharOffset().getEnd());
-//	}
-
-        return hltcc;
     }
 
     /**
@@ -1073,16 +1048,19 @@ public class Reader {
      * @return the input stream
      * @throws FileNotFoundException the file not found exception
      */
-    public static InputStream findStreamInClasspathOrFileSystem(String name) throws FileNotFoundException {
+    public static BOMInputStream findStreamInClasspathOrFileSystem(String name) throws FileNotFoundException {
         InputStream is = Reader.class.getClassLoader().getResourceAsStream(name);
+	BOMInputStream bis = new BOMInputStream(is, false);
         if (is == null) {
             is = Reader.class.getClassLoader().getResourceAsStream(name.replaceAll("\\\\", "/"));
+	    bis = new BOMInputStream(is, false);
             if (is == null) {
                 File f = new File(name);
                 if (!f.exists()) {
                     System.out.println("Warning - creating FileInputStream: " + f.getAbsolutePath());
                 }
                 is = new FileInputStream(name);
+		bis = new BOMInputStream(is, false);
                 //System.out.println("Reading InputStream: " + f.getAbsolutePath());
             } else {
                 System.out.println("InputStream found in Class Loader after adjusting separators.");
@@ -1090,7 +1068,7 @@ public class Reader {
         } else {
             //System.out.println("InputStream found in Class Loader.");
         }
-        return is;
+        return bis;
     }
 
     /**
@@ -1228,7 +1206,7 @@ public class Reader {
         String line = "";
         StringBuffer sb = new StringBuffer();
         try {
-            BufferedReader in = new BufferedReader(new FileReader(new java.io.File(filename).getAbsolutePath()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(new BOMInputStream(new FileInputStream(new File(filename)), false), "UTF-8"));
             while ((line = in.readLine()) != null) {
                 if (!line.isEmpty()) {
                     String surrogatesRemoved = checkSurrogates(line);
@@ -1241,7 +1219,7 @@ public class Reader {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        return sb.toString().trim();
+        return sb.toString();
 
     }
 
@@ -1255,7 +1233,7 @@ public class Reader {
         List<String> lines = new LinkedList<String>();
         String line = "";
         try {
-            BufferedReader in = new BufferedReader(new FileReader(new java.io.File(filename).getAbsolutePath()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(new BOMInputStream(new FileInputStream(new File(filename)), false), "UTF-8"));
             while ((line = in.readLine()) != null) {
                 lines.add(checkSurrogates(line));
             }
@@ -1317,7 +1295,7 @@ public class Reader {
         String lines = "";
         String line = "";
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(new File(filename)), "UTF-8"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(new BOMInputStream(new FileInputStream(new File(filename)), false), "UTF-8"));
             while ((line = in.readLine()) != null) {
                 lines = lines + line + "\n";
             }
@@ -1329,3 +1307,4 @@ public class Reader {
     }
 
 }
+

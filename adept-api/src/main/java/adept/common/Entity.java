@@ -1,28 +1,23 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.InvalidPropertiesFormatException;
 
 import adept.data.IEntity;
 
@@ -36,7 +31,7 @@ import adept.data.IEntity;
  * Modified to allow additional type information (a string from an open-ended set of types)
  *   and categories (similarly open-ended).
  */
-public class Entity extends HltContent implements IEntity {
+public class Entity extends HltContent implements IEntity, HasOntologizedAttributes, HasFreeTextAttributes {
 
 	/** The entity id. */
 	private final long entityId;
@@ -50,8 +45,16 @@ public class Entity extends HltContent implements IEntity {
 	/** The entity id distribution. */
 	Map<KBEntity, Float> kbEntityDistribution;
 
+	/** A set of ontology based attribute-value pairs */
+	private Map<IType, IType> ontologizedAttributes;
+	
+	/** A set of ontology based attribute, and free text value pairs */
+	private Map<IType, String> freeTextAttributes;
+		
 	/** A set of attributes relating to additional type information, from open ontology */
 	private Map< String, Set< String > > typeInformation;
+	
+	
 	
 	/**
 	 * Instantiates a new entity.
@@ -63,10 +66,14 @@ public class Entity extends HltContent implements IEntity {
 	 */
 	public Entity(long entityId, IType entityType) {
 		this.entityId = entityId;
+ 
+                checkArgument(entityType != null);
 		this.entityType = entityType;
+
 		this.kbEntityDistribution = new HashMap<KBEntity, Float>();
 		this.setTypeInformation(new HashMap< String, Set< String > >());
 	}
+	
 	
 	/**
 	 * Gets the kb entity distribution.
@@ -102,6 +109,7 @@ public class Entity extends HltContent implements IEntity {
 	 *            the kb entity distribution
 	 */
 	public void setKBEntityDistribution(Map<KBEntity, Float> kbEntityDistribution) {
+                checkArgument(kbEntityDistribution!=null);
 		this.kbEntityDistribution = kbEntityDistribution;
 	}
 
@@ -111,7 +119,8 @@ public class Entity extends HltContent implements IEntity {
 	 * @param kbEntity the kb entity
 	 * @param confidence the confidence
 	 */
-	public void addKBEntityConfidencePair(KBEntity kbEntity, float confidence) {		
+	public void addKBEntityConfidencePair(KBEntity kbEntity, float confidence) {
+                checkArgument(kbEntity != null);		
 		this.kbEntityDistribution.put(kbEntity, new Float(confidence));
 	}
 
@@ -122,6 +131,7 @@ public class Entity extends HltContent implements IEntity {
 	 *            the new canonical mentions
 	 */
 	public void setCanonicalMentions(EntityMention canonicalMention) {
+                checkArgument(canonicalMention != null);
 		this.canonicalMention = canonicalMention;
 		this.value = canonicalMention.getValue();
 	}
@@ -199,7 +209,8 @@ public class Entity extends HltContent implements IEntity {
 	 */
 
 	public void setTypeInformation(HashMap<String, Set<String>> mapStringToSetString ) {
-		this.typeInformation = mapStringToSetString ;
+                // TODO: Add null check?
+		this.typeInformation = mapStringToSetString;
 	}
 
 	/**
@@ -211,6 +222,9 @@ public class Entity extends HltContent implements IEntity {
 
 	public void setTypeAttribute( String attribute, Set< String > attributeValues )
 	{
+                checkArgument(attribute!=null && attribute.trim().length()>0);
+                checkArgument(attributeValues!=null);
+
 		this.typeInformation.put(attribute, attributeValues);
 	}
 	
@@ -248,6 +262,155 @@ public class Entity extends HltContent implements IEntity {
 		String code = String.format("%s_%s", this.value, this.entityType.getType());				
 		return code.hashCode();
 	}
-
+	
+	/**
+	 * Get ontologized attributes
+	 * 
+	 * @return ontologized attributes map
+	 */
+	public Map<IType,IType> getOntologizedAttributes()
+	{
+		return ontologizedAttributes;
+	}
+	
+	/**
+	 * Sets ontologized attributes
+	 */
+	public void setOntologizedAttributes(Map<IType,IType> ontologizedAttributes)
+	{
+		this.ontologizedAttributes = ontologizedAttributes;
+	}
+	
+	/**
+	 * Gets free text attributes
+	 * 
+	 * @return free text attributes map
+	 */
+	public Map<IType,String> getFreeTextAttributes()
+	{
+		return freeTextAttributes;
+	}
+	
+	/**
+	 * Sets free text attributes
+	 */
+	public void setFreeTextAttributes(Map<IType,String> freetextAttributes)
+	{
+		this.freeTextAttributes = freeTextAttributes;
+	}
+	
+	
+    /**
+     * The methods below are convenience methods, added to be
+     * easily used by algorithms producing gender, native language
+     * and email address information. Note that the same functionality
+     * can be achieved by the direct use of setters and getters for the
+     * ontologizedAttributes and freeTextAttributes maps.
+     */
+	
+	/**
+	 * Gets gender.
+	 * 
+	 * @return gender.
+	 */
+	public IType getGender()
+	{
+		try
+		{
+			return ontologizedAttributes.get(EntityAttributesTypeFactory.getInstance().getType("GENDER"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	/**
+	 * Sets gender.
+	 */
+	public void setGender(IType gender)
+	{
+		try
+		{
+			ontologizedAttributes.put(EntityAttributesTypeFactory.getInstance().getType("GENDER"), gender);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * Gets native language.
+	 * 
+	 * @return nativeLanguage.
+	 */
+	public IType getNativeLanguage()
+	{
+		try
+		{
+			return ontologizedAttributes.get(EntityAttributesTypeFactory.getInstance().getType("NATIVE LANGUAGE"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	/**
+	 * Sets native language.
+	 */
+	public void setNativeLanguage(IType nativeLanguage)
+	{
+		try
+		{
+			ontologizedAttributes.put(EntityAttributesTypeFactory.getInstance().getType("NATIVE LANGUAGE"), nativeLanguage);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * Gets email address.
+	 * 
+	 * @return emailAddress.
+	 */
+	public String getEmailAddress()
+	{
+		try
+		{
+			return freeTextAttributes.get(EntityAttributesTypeFactory.getInstance().getType("EMAIL ADDRESS"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	/**
+	 * Sets email address.
+	 */
+	public void setEmailAddress(String emailAddress)
+	{
+		try
+		{
+			freeTextAttributes.put(EntityAttributesTypeFactory.getInstance().getType("EMAIL ADDRESS"), emailAddress);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
 
 }

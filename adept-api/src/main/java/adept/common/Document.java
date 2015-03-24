@@ -1,27 +1,23 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -79,6 +75,8 @@ public class Document extends Item {
 	/** The source language. */
 	private String sourceLanguage;
 	
+	/** The default TokenStream. */
+	private TokenStream defaultTokenStream = null;
 
     /**
      * Instantiates a new document.
@@ -107,11 +105,18 @@ public class Document extends Item {
 	 */
 	public Document(String docId, Corpus corpus, String docType, String uri,
 			String language) {
-		this.docId = docId;
+
+        checkArgument(docId!=null && docId.trim().length() > 0);
+        checkArgument(docType!=null && docType.trim().length() > 0);
+        checkArgument(language!=null && language.trim().length() > 0);
+        this.docId = docId.trim();
+        
+        //TODO: Add checks for any of the other fields?
+
 		this.corpus = corpus;
-		this.docType = docType;
+		this.docType = docType.trim();
 		this.uri = uri;
-		this.language = language;
+		this.language = language.trim();
 		this.tokenStreamList = null;
 	}
 
@@ -130,6 +135,7 @@ public class Document extends Item {
 	 * @param tokenStreamList the new token stream list
 	 */
 	public void setTokenStreamList(List<TokenStream> tokenStreamList) {
+                checkArgument(tokenStreamList!=null);
 		this.tokenStreamList = tokenStreamList;
 	}
 
@@ -139,6 +145,7 @@ public class Document extends Item {
 	 * @param value the new value
 	 */
     public void setValue(String value) {
+                checkArgument(value!=null && value.trim().length()>0);
 		this.value = value;
     }
 
@@ -202,6 +209,7 @@ public class Document extends Item {
 	 * @param headline the new headline
 	 */
 	public void setHeadline(String headline) {
+                //TODO: Add NULL check to headline?
 		this.headline = headline;
 	}
 	
@@ -220,6 +228,7 @@ public class Document extends Item {
 	 * @param captureDate the new captureDate
 	 */
 	public void setCaptureDate(String captureDate) {
+                //TODO: check for null or empty?
 		this.captureDate = captureDate;
 	}
 	
@@ -228,7 +237,7 @@ public class Document extends Item {
 	 *
 	 * @return the publicationDate
 	 */
-	public String getPublicationDate() {
+	public String getPublicationDate() {                
 		return publicationDate;
 	}
 
@@ -238,7 +247,8 @@ public class Document extends Item {
 	 * @param publicationDate the new publicationDate
 	 */
 	public void setPublicationDate(String publicationDate) {
-		this.publicationDate = publicationDate;
+                //TODO: check for null or empty?
+                this.publicationDate = publicationDate;
 	}
 
 	/**
@@ -256,6 +266,7 @@ public class Document extends Item {
 	 * @param name the new name
 	 */
 	public void setName(String name) {
+                //TODO: check for null or empty?
 		this.name = name;
 	}
 
@@ -292,6 +303,7 @@ public class Document extends Item {
 	 * @param sourceLanguage the new sourceLanguage
 	 */
 	public void setSourceLanguage(String sourceLanguage) {
+                //TODO: check for null or empty?
 		this.sourceLanguage = sourceLanguage;
 	}
 	
@@ -310,6 +322,7 @@ public class Document extends Item {
 	 * @param sourceUri the new sourceUri
 	 */
 	public void setSourceUri(String sourceUri) {
+                //TODO: check for null or empty?
 		this.sourceUri = sourceUri;
 	}
 
@@ -322,8 +335,8 @@ public class Document extends Item {
 		if (tokenStreamList == null) {
 			tokenStreamList = new ArrayList<TokenStream>(1);
 		}
-		// add reference to this document in the tokenstream
-//		tokenStream.setDocument(this);
+		
+                checkArgument(tokenStream!=null);
 		tokenStreamList.add(tokenStream);
 	}
 
@@ -333,7 +346,17 @@ public class Document extends Item {
 	 * @return the token stream
 	 */
 	public TokenStream getDefaultTokenStream() {
-		return getTokenStream( TokenizerType.STANFORD_CORENLP );
+		if(defaultTokenStream == null)
+		  return getTokenStream( TokenizerType.STANFORD_CORENLP );
+		else return defaultTokenStream;
+	}
+	
+	/**
+	 * Set the deafult TokenStream
+	 */
+	public void setDefaultTokenStream(TokenStream tokenstream) {
+		this.defaultTokenStream = tokenstream;
+		
 	}
 	
 	/**
@@ -369,6 +392,7 @@ public class Document extends Item {
 	 * @param genre the new genre
 	 */
 	public void setGenre(String genre) {
+                //TODO: check for null or empty?
 		this.genre = genre;
 	}
 
@@ -387,6 +411,7 @@ public class Document extends Item {
 	 * @param audio the new audio
 	 */
 	public void setAudio(Audio audio) {
+                //TODO: check for null or empty?
 		this.audio = audio;
 	}
 
@@ -405,6 +430,7 @@ public class Document extends Item {
 	 * @param tokenLattice the new token lattice
 	 */
 	public void setTokenLattice(List<TokenLattice> tokenLattice) {
+                //TODO: check for null or empty?
 		this.tokenLattice = tokenLattice;
 	}
 

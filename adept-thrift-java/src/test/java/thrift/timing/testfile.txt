@@ -1,3 +1,0 @@
-Hello
-This is just a test document
-Used for timing comparisons of various server implementations

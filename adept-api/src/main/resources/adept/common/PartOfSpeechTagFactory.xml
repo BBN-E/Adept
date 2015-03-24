@@ -1,9 +1,5 @@
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-
-
 <properties version="1.0">
 	<comment></comment>
 	<entry key="CC">CC</entry>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+	<comment>quantified chunk attributes</comment>	
+	<entry key="MEASUREMENT TYPE">MEASUREMENT TYPE</entry>
+	<entry key="MEASUREMENT UNIT">MEASUREMENT UNIT</entry>
+	<entry key="MEASUREMENT VALUE">MEASUREMENT VALUE</entry>
+	<entry key="NUMERATOR UNIT">NUMERATOR UNIT</entry>
+	<entry key="NUMERATOR VALUE">NUMERATOR VALUE</entry>
+	<entry key="DENOMINATOR UNIT">DENOMINATOR UNIT</entry>
+	<entry key="DENOMINATOR VALUE">DENOMINATOR VALUE</entry>
+	<entry key="NUMERATOR BOUND">NUMERATOR BOUND</entry>
+	<entry key="DENOMINATOR BOUND">DENOMINATOR BOUND</entry>
+</properties>

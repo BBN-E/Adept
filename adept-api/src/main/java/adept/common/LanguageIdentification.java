@@ -1,23 +1,3 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
 /*******************************************************************************
  * Raytheon BBN Technologies Corp., November 2013
  * 
@@ -31,6 +11,8 @@
  * 
  */
 package adept.common;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Map;
 
@@ -66,6 +48,7 @@ public class LanguageIdentification extends HltContent {
 	 */
 	public void setLanguageProbabilityDistribution(
 			Map<String,Float> languageProbabilityDistribution) {
+                //TODO: Check not null
 		this.languageProbabilityDistribution = languageProbabilityDistribution;
 	}
 	
@@ -75,7 +58,10 @@ public class LanguageIdentification extends HltContent {
 	 * @param language the language
 	 * @param probability the probability
 	 */
-	public void addPair(String language, float probability) {		
+	public void addPair(String language, float probability) {
+                checkArgument(language!=null && language.trim().length()>0);
+		checkArgument((probability >= 0f && probability <= 1f), 
+			"Probability was %f but must be between 0 and 1", probability);
 		this.languageProbabilityDistribution.put(language, probability);
 	}
 	

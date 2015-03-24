@@ -1,14 +1,10 @@
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <?xml version="1.0" encoding="UTF-8"?>
-
-
-<structure version="16" xsltversion="1" html-doctype="HTML4 Transitional" compatibility-view="IE9" relativeto="*SPS" encodinghtml="UTF-8" encodingrtf="ISO-8859-1" encodingpdf="UTF-8" useimportschema="1" embed-images="1" enable-authentic-scripts="1" authentic-scripts-in-debug-mode-external="0" generated-file-location="DEFAULT">
+<structure version="17" xsltversion="1" html-doctype="HTML4 Transitional" compatibility-view="IE9" html-outputextent="Complete" relativeto="*SPS" encodinghtml="UTF-8" encodingrtf="ISO-8859-1" encodingpdf="UTF-8" useimportschema="1" embed-images="1" enable-authentic-scripts="1" authentic-scripts-in-debug-mode-external="0" generated-file-location="DEFAULT">
 	<parameters/>
 	<schemasources>
 		<namespaces/>
 		<schemasources>
-			<xsdschemasource name="XML" main="1" schemafile="HLTCC.xsd" workingxmlfile="AFP_ENG_20040206.0151.xml.output.xml"/>
+			<xsdschemasource name="XML" main="1" schemafile="HLTCC.xsd" workingxmlfile="\\mercury-04\u40\deft\apache-tomcat-7.0.47\webapps\adept-webservices\out5737679400444372459.xml"/>
 		</schemasources>
 	</schemasources>
 	<modules/>
@@ -243,6 +239,21 @@
 													</link>
 												</children>
 											</listrow>
+											<listrow>
+												<children>
+													<link conditional-processing="count(/descendant::tokenStream[1]) &gt; 0">
+														<children>
+															<text fixtext="Sentence Similarities"/>
+														</children>
+														<action>
+															<none/>
+														</action>
+														<hyperlink>
+															<fixtext value="#Sentence Similarities"/>
+														</hyperlink>
+													</link>
+												</children>
+											</listrow>
 										</children>
 									</list>
 									<template subtype="userdefined" match="//tokenStream">
@@ -289,14 +300,6 @@
 																	<newline/>
 																	<text fixtext="Type: "/>
 																	<template subtype="element" match="docType">
-																		<children>
-																			<content subtype="regular"/>
-																		</children>
-																		<variables/>
-																	</template>
-																	<newline/>
-																	<text fixtext="URI: "/>
-																	<template subtype="element" match="uri">
 																		<children>
 																			<content subtype="regular"/>
 																		</children>
@@ -2370,6 +2373,8 @@
 													</tgrid>
 												</children>
 											</paragraph>
+											<newline/>
+											<newline/>
 											<link>
 												<children>
 													<paragraph paragraphtag="center">
@@ -2385,28 +2390,28 @@
 													<fixtext value="#Table of Contents"/>
 												</hyperlink>
 											</link>
+											<newline/>
 										</children>
 										<variables/>
 									</template>
 									<text fixtext=" "/>
-									<bookmark>
-										<action>
-											<none/>
-										</action>
-										<bookmark>
-											<fixtext value="Tokens"/>
-										</bookmark>
-									</bookmark>
-									<template subtype="userdefined" match="/descendant::tokenStream[1]">
+									<template subtype="element" match="sentenceSimilarities">
 										<children>
+											<bookmark>
+												<action>
+													<none/>
+												</action>
+												<bookmark>
+													<fixtext value="Sentence Similarities"/>
+												</bookmark>
+											</bookmark>
 											<newline/>
 											<paragraph paragraphtag="center">
 												<styles background="#323d40" color="white"/>
 												<children>
-													<text fixtext="Tokens">
-														<styles font-family="arial" font-size="14pt" font-weight="bolder"/>
+													<text fixtext="Sentence Similarities   ">
+														<styles font-size="14pt" font-weight="bold"/>
 													</text>
-													<text fixtext="   "/>
 													<link>
 														<children>
 															<image>
@@ -2420,7 +2425,7 @@
 															<none/>
 														</action>
 														<hyperlink>
-															<fixtext value="help.htm#Tokens"/>
+															<fixtext value="help.htm#Sentence Similarities"/>
 														</hyperlink>
 													</link>
 												</children>
@@ -2428,162 +2433,115 @@
 											<paragraph paragraphtag="center">
 												<children>
 													<tgrid>
-														<properties border="0" width="auto"/>
-														<styles border-color="transparent" border-left-color="transparent" border-right-color="transparent" border-top-color="transparent" vertical-align="top"/>
+														<properties border="2" frame="border"/>
+														<styles border-bottom="solid gray thin" border-collapse="collapse" border-left="solid gray thin" border-right="solid gray thin" border-top="solid gray thin" margin-top="10px"/>
 														<children>
 															<tgridbody-cols>
 																<children>
 																	<tgridcol>
-																		<styles border-left-color="black" border-left-style="solid" border-left-width="thin" border-right-color="black" border-right-style="solid" border-right-width="thin" border-top-color="black" border-top-style="solid" border-top-width="thin"/>
+																		<properties width="384"/>
 																	</tgridcol>
 																	<tgridcol>
-																		<styles border-right-color="black" border-right-style="solid" border-right-width="thin" border-top-color="black" border-top-style="solid" border-top-width="thin"/>
+																		<properties align="center" width="384"/>
 																	</tgridcol>
 																	<tgridcol>
-																		<styles border-right-color="black" border-right-style="solid" border-right-width="thin" border-top-color="black" border-top-style="solid" border-top-width="thin"/>
+																		<properties align="center"/>
+																	</tgridcol>
+																	<tgridcol>
+																		<properties align="center"/>
 																	</tgridcol>
 																</children>
 															</tgridbody-cols>
-															<tgridbody-rows>
+															<tgridheader-rows>
+																<properties align="center"/>
 																<children>
 																	<tgridrow>
-																		<styles text-align="center" vertical-align="top"/>
+																		<properties align="left" bgcolor="#697376"/>
 																		<children>
 																			<tgridcell>
+																				<styles text-align="left"/>
 																				<children>
-																					<tgrid>
-																						<properties border="0" width="auto"/>
-																						<styles border-bottom-color="transparent" border-color="transparent" border-left-color="transparent" border-left-style="solid" border-left-width="thin" border-right-color="transparent" border-right-style="solid" border-right-width="thin" border-top-color="transparent" display="inline" margin-top="10px"/>
+																					<text fixtext="                                     Sentence 1">
+																						<styles color="white"/>
+																					</text>
+																				</children>
+																			</tgridcell>
+																			<tgridcell>
+																				<children>
+																					<text fixtext="Sentence 2">
+																						<styles color="white"/>
+																					</text>
+																				</children>
+																			</tgridcell>
+																			<tgridcell>
+																				<children>
+																					<text fixtext="Similarity Metric">
+																						<styles color="white"/>
+																					</text>
+																				</children>
+																			</tgridcell>
+																			<tgridcell>
+																				<children>
+																					<text fixtext="Similarity Score">
+																						<styles color="white"/>
+																					</text>
+																				</children>
+																			</tgridcell>
+																		</children>
+																	</tgridrow>
+																</children>
+															</tgridheader-rows>
+															<tgridbody-rows>
+																<children>
+																	<template subtype="element" match="adept.common.SentenceSimilarity">
+																		<children>
+																			<tgridrow expand-collapse-level="1">
+																				<properties bgcolor="white"/>
+																				<children>
+																					<tgridcell>
+																						<styles text-align="left"/>
 																						<children>
-																							<tgridbody-cols>
+																							<template subtype="element" match="sentence1">
 																								<children>
-																									<tgridcol/>
-																									<tgridcol/>
-																									<tgridcol/>
-																								</children>
-																							</tgridbody-cols>
-																							<tgridheader-rows>
-																								<styles border-top-color="black" border-top-style="solid"/>
-																								<children>
-																									<tgridrow>
-																										<properties bgcolor="#697376"/>
-																										<styles text-align="center" vertical-align="top"/>
+																									<template subtype="element" match="value">
 																										<children>
-																											<tgridcell>
-																												<children>
-																													<text fixtext="SequenceId">
-																														<styles color="white"/>
-																													</text>
-																												</children>
-																											</tgridcell>
-																											<tgridcell>
-																												<children>
-																													<text fixtext="Value">
-																														<styles color="white"/>
-																													</text>
-																												</children>
-																											</tgridcell>
-																											<tgridcell>
-																												<children>
-																													<text fixtext="CharOffset">
-																														<styles color="white"/>
-																													</text>
-																												</children>
-																											</tgridcell>
+																											<content subtype="regular">
+																												<format basic-type="xsd" datatype="long"/>
+																											</content>
 																										</children>
-																									</tgridrow>
+																										<variables/>
+																									</template>
 																								</children>
-																							</tgridheader-rows>
-																							<tgridbody-rows>
+																								<variables/>
+																							</template>
+																						</children>
+																					</tgridcell>
+																					<tgridcell>
+																						<children>
+																							<template subtype="element" match="sentence2">
 																								<children>
-																									<template subtype="element" match="list">
+																									<template subtype="element" match="value">
 																										<children>
-																											<template subtype="element" match="adept.common.Token">
+																											<content subtype="regular">
+																												<format basic-type="xsd" datatype="long"/>
+																											</content>
+																										</children>
+																										<variables/>
+																									</template>
+																								</children>
+																								<variables/>
+																							</template>
+																						</children>
+																					</tgridcell>
+																					<tgridcell>
+																						<children>
+																							<template subtype="element" match="similarity">
+																								<children>
+																									<template subtype="element" match="entry">
+																										<children>
+																											<template subtype="element" match="string">
 																												<children>
-																													<tgridrow conditional-processing="(position() &lt;=  ceiling(//tokenStream/adept.common.TokenStream/default/document/tokenStreamList/adept.common.TokenStream/list/default/size) div 3)
-or
-(position() &lt;=  ceiling(//tokenStream//list/default/size) div 3)">
-																														<styles text-align="center" vertical-align="top"/>
-																														<children>
-																															<tgridcell>
-																																<children>
-																																	<template subtype="element" match="sequenceId">
-																																		<children>
-																																			<content subtype="regular">
-																																				<format basic-type="xsd" datatype="long"/>
-																																			</content>
-																																		</children>
-																																		<variables/>
-																																	</template>
-																																</children>
-																															</tgridcell>
-																															<tgridcell>
-																																<styles text-align="left"/>
-																																<children>
-																																	<template subtype="element" match="value">
-																																		<children>
-																																			<content subtype="regular"/>
-																																		</children>
-																																		<variables/>
-																																	</template>
-																																</children>
-																															</tgridcell>
-																															<tgridcell>
-																																<children>
-																																	<template subtype="element" match="charOffset">
-																																		<children>
-																																			<tgrid>
-																																				<properties border="0" width="auto"/>
-																																				<styles border-color="transparent" display="inline" margin-top="10px"/>
-																																				<children>
-																																					<tgridbody-cols>
-																																						<children>
-																																							<tgridcol/>
-																																							<tgridcol/>
-																																						</children>
-																																					</tgridbody-cols>
-																																					<tgridbody-rows>
-																																						<children>
-																																							<tgridrow>
-																																								<styles text-align="center" vertical-align="top"/>
-																																								<children>
-																																									<tgridcell>
-																																										<children>
-																																											<template subtype="element" match="begin">
-																																												<children>
-																																													<content subtype="regular">
-																																														<format basic-type="xsd" datatype="long"/>
-																																													</content>
-																																												</children>
-																																												<variables/>
-																																											</template>
-																																										</children>
-																																									</tgridcell>
-																																									<tgridcell>
-																																										<children>
-																																											<template subtype="element" match="end">
-																																												<children>
-																																													<content subtype="regular">
-																																														<format basic-type="xsd" datatype="long"/>
-																																													</content>
-																																												</children>
-																																												<variables/>
-																																											</template>
-																																										</children>
-																																									</tgridcell>
-																																								</children>
-																																							</tgridrow>
-																																						</children>
-																																					</tgridbody-rows>
-																																				</children>
-																																			</tgrid>
-																																		</children>
-																																		<variables/>
-																																	</template>
-																																</children>
-																															</tgridcell>
-																														</children>
-																													</tgridrow>
+																													<content subtype="regular"/>
 																												</children>
 																												<variables/>
 																											</template>
@@ -2591,63 +2549,330 @@ or
 																										<variables/>
 																									</template>
 																								</children>
-																							</tgridbody-rows>
+																								<variables/>
+																							</template>
 																						</children>
-																					</tgrid>
-																				</children>
-																			</tgridcell>
-																			<tgridcell>
-																				<children>
-																					<tgrid>
-																						<properties border="0" width="auto"/>
-																						<styles border-left-color="transparent" border-left-style="solid" border-left-width="thin" border-right-color="transparent" border-right-style="solid" border-right-width="thin" display="inline" margin-top="10px"/>
+																					</tgridcell>
+																					<tgridcell>
 																						<children>
-																							<tgridbody-cols>
+																							<template subtype="element" match="similarity">
 																								<children>
-																									<tgridcol/>
-																									<tgridcol/>
-																									<tgridcol/>
-																								</children>
-																							</tgridbody-cols>
-																							<tgridheader-rows>
-																								<styles border-top-color="black"/>
-																								<children>
-																									<tgridrow>
-																										<properties bgcolor="#697376"/>
-																										<styles text-align="center" vertical-align="top"/>
+																									<template subtype="element" match="entry">
 																										<children>
-																											<tgridcell>
+																											<template subtype="element" match="float">
 																												<children>
-																													<text fixtext="SequenceId">
-																														<styles color="white"/>
-																													</text>
+																													<content subtype="regular">
+																														<format basic-type="xsd" datatype="decimal"/>
+																													</content>
 																												</children>
-																											</tgridcell>
-																											<tgridcell>
-																												<children>
-																													<text fixtext="Value">
-																														<styles color="white"/>
-																													</text>
-																												</children>
-																											</tgridcell>
-																											<tgridcell>
-																												<children>
-																													<text fixtext="CharOffset">
-																														<styles color="white"/>
-																													</text>
-																												</children>
-																											</tgridcell>
+																												<variables/>
+																											</template>
 																										</children>
-																									</tgridrow>
+																										<variables/>
+																									</template>
 																								</children>
-																							</tgridheader-rows>
-																							<tgridbody-rows>
+																								<variables/>
+																							</template>
+																						</children>
+																					</tgridcell>
+																				</children>
+																			</tgridrow>
+																		</children>
+																		<variables>
+																			<variable name="color" value="concat(substring(&quot;white&quot;, 1 div ( position() mod 2 = 0 )), substring(&quot;lightgray&quot;, 1 div not(( position() mod 2 = 0 ))))" valuetype="&lt;auto&gt;"/>
+																		</variables>
+																	</template>
+																</children>
+															</tgridbody-rows>
+														</children>
+													</tgrid>
+												</children>
+											</paragraph>
+											<newline/>
+											<newline/>
+											<link>
+												<children>
+													<paragraph paragraphtag="center">
+														<children>
+															<text fixtext="Go to Top of Page"/>
+														</children>
+													</paragraph>
+												</children>
+												<action>
+													<none/>
+												</action>
+												<hyperlink>
+													<fixtext value="#Table of Contents"/>
+												</hyperlink>
+											</link>
+											<newline/>
+										</children>
+										<variables/>
+									</template>
+									<template subtype="userdefined" match="/descendant::tokenStream[1]">
+										<children>
+											<bookmark>
+												<action>
+													<none/>
+												</action>
+												<bookmark>
+													<fixtext value="Tokens"/>
+												</bookmark>
+											</bookmark>
+											<newline/>
+											<newline/>
+											<newline/>
+											<link>
+												<children>
+													<newline/>
+													<paragraph paragraphtag="center">
+														<styles background="#323d40" color="white"/>
+														<children>
+															<text fixtext="Tokens">
+																<styles font-family="arial" font-size="14pt" font-weight="bolder"/>
+															</text>
+															<text fixtext="   "/>
+															<link>
+																<children>
+																	<image>
+																		<properties align="bottom"/>
+																		<target>
+																			<fixtext value="C:\Users\jwatson\Documents\information_icon_small.svg.png"/>
+																		</target>
+																	</image>
+																</children>
+																<action>
+																	<none/>
+																</action>
+																<hyperlink>
+																	<fixtext value="help.htm#Tokens"/>
+																</hyperlink>
+															</link>
+														</children>
+													</paragraph>
+													<paragraph paragraphtag="center">
+														<children>
+															<tgrid>
+																<properties bgcolor="white" border="0" width="auto"/>
+																<styles border-color="transparent" border-left-color="transparent" border-right-color="transparent" border-top-color="transparent" vertical-align="top"/>
+																<children>
+																	<tgridbody-cols>
+																		<children>
+																			<tgridcol>
+																				<styles border-left-color="black" border-left-style="solid" border-left-width="thin" border-right-color="black" border-right-style="solid" border-right-width="thin" border-top-color="black" border-top-style="solid" border-top-width="thin"/>
+																			</tgridcol>
+																			<tgridcol>
+																				<styles border-right-color="black" border-right-style="solid" border-right-width="thin" border-top-color="black" border-top-style="solid" border-top-width="thin"/>
+																			</tgridcol>
+																			<tgridcol>
+																				<styles border-right-color="black" border-right-style="solid" border-right-width="thin" border-top-color="black" border-top-style="solid" border-top-width="thin"/>
+																			</tgridcol>
+																		</children>
+																	</tgridbody-cols>
+																	<tgridbody-rows>
+																		<children>
+																			<tgridrow>
+																				<styles text-align="center" vertical-align="top"/>
+																				<children>
+																					<tgridcell>
+																						<children>
+																							<tgrid>
+																								<properties border="0" width="auto"/>
+																								<styles border-bottom-color="transparent" border-color="transparent" border-left-color="transparent" border-left-style="solid" border-left-width="thin" border-right-color="transparent" border-right-style="solid" border-right-width="thin" border-top-color="transparent" display="inline" margin-top="10px"/>
 																								<children>
-																									<template subtype="element" match="list">
+																									<tgridbody-cols>
 																										<children>
-																											<template subtype="element" match="adept.common.Token">
+																											<tgridcol/>
+																											<tgridcol/>
+																											<tgridcol/>
+																										</children>
+																									</tgridbody-cols>
+																									<tgridheader-rows>
+																										<styles border-top-color="black" border-top-style="solid"/>
+																										<children>
+																											<tgridrow>
+																												<properties bgcolor="#697376"/>
+																												<styles text-align="center" vertical-align="top"/>
 																												<children>
-																													<tgridrow conditional-processing="(	
+																													<tgridcell>
+																														<children>
+																															<text fixtext="SequenceId">
+																																<styles color="white"/>
+																															</text>
+																														</children>
+																													</tgridcell>
+																													<tgridcell>
+																														<children>
+																															<text fixtext="Value">
+																																<styles color="white"/>
+																															</text>
+																														</children>
+																													</tgridcell>
+																													<tgridcell>
+																														<children>
+																															<text fixtext="CharOffset">
+																																<styles color="white"/>
+																															</text>
+																														</children>
+																													</tgridcell>
+																												</children>
+																											</tgridrow>
+																										</children>
+																									</tgridheader-rows>
+																									<tgridbody-rows>
+																										<children>
+																											<template subtype="element" match="list">
+																												<children>
+																													<template subtype="element" match="adept.common.Token">
+																														<children>
+																															<tgridrow conditional-processing="(position() &lt;=  ceiling(//tokenStream/adept.common.TokenStream/default/document/tokenStreamList/adept.common.TokenStream/list/default/size) div 3)
+or
+(position() &lt;=  ceiling(//tokenStream//list/default/size) div 3)">
+																																<styles text-align="center" vertical-align="top"/>
+																																<children>
+																																	<tgridcell>
+																																		<children>
+																																			<template subtype="element" match="sequenceId">
+																																				<children>
+																																					<content subtype="regular">
+																																						<format basic-type="xsd" datatype="long"/>
+																																					</content>
+																																				</children>
+																																				<variables/>
+																																			</template>
+																																		</children>
+																																	</tgridcell>
+																																	<tgridcell>
+																																		<styles text-align="left"/>
+																																		<children>
+																																			<template subtype="element" match="value">
+																																				<children>
+																																					<content subtype="regular"/>
+																																				</children>
+																																				<variables/>
+																																			</template>
+																																		</children>
+																																	</tgridcell>
+																																	<tgridcell>
+																																		<children>
+																																			<template subtype="element" match="charOffset">
+																																				<children>
+																																					<tgrid>
+																																						<properties border="0" width="auto"/>
+																																						<styles border-color="transparent" display="inline" margin-top="10px"/>
+																																						<children>
+																																							<tgridbody-cols>
+																																								<children>
+																																									<tgridcol/>
+																																									<tgridcol/>
+																																								</children>
+																																							</tgridbody-cols>
+																																							<tgridbody-rows>
+																																								<children>
+																																									<tgridrow>
+																																										<styles text-align="center" vertical-align="top"/>
+																																										<children>
+																																											<tgridcell>
+																																												<children>
+																																													<template subtype="element" match="begin">
+																																														<children>
+																																															<content subtype="regular">
+																																																<format basic-type="xsd" datatype="long"/>
+																																															</content>
+																																														</children>
+																																														<variables/>
+																																													</template>
+																																												</children>
+																																											</tgridcell>
+																																											<tgridcell>
+																																												<children>
+																																													<template subtype="element" match="end">
+																																														<children>
+																																															<content subtype="regular">
+																																																<format basic-type="xsd" datatype="long"/>
+																																															</content>
+																																														</children>
+																																														<variables/>
+																																													</template>
+																																												</children>
+																																											</tgridcell>
+																																										</children>
+																																									</tgridrow>
+																																								</children>
+																																							</tgridbody-rows>
+																																						</children>
+																																					</tgrid>
+																																				</children>
+																																				<variables/>
+																																			</template>
+																																		</children>
+																																	</tgridcell>
+																																</children>
+																															</tgridrow>
+																														</children>
+																														<variables/>
+																													</template>
+																												</children>
+																												<variables/>
+																											</template>
+																										</children>
+																									</tgridbody-rows>
+																								</children>
+																							</tgrid>
+																						</children>
+																					</tgridcell>
+																					<tgridcell>
+																						<children>
+																							<tgrid>
+																								<properties border="0" width="auto"/>
+																								<styles border-left-color="transparent" border-left-style="solid" border-left-width="thin" border-right-color="transparent" border-right-style="solid" border-right-width="thin" display="inline" margin-top="10px"/>
+																								<children>
+																									<tgridbody-cols>
+																										<children>
+																											<tgridcol/>
+																											<tgridcol/>
+																											<tgridcol/>
+																										</children>
+																									</tgridbody-cols>
+																									<tgridheader-rows>
+																										<styles border-top-color="black"/>
+																										<children>
+																											<tgridrow>
+																												<properties bgcolor="#697376"/>
+																												<styles text-align="center" vertical-align="top"/>
+																												<children>
+																													<tgridcell>
+																														<children>
+																															<text fixtext="SequenceId">
+																																<styles color="white"/>
+																															</text>
+																														</children>
+																													</tgridcell>
+																													<tgridcell>
+																														<children>
+																															<text fixtext="Value">
+																																<styles color="white"/>
+																															</text>
+																														</children>
+																													</tgridcell>
+																													<tgridcell>
+																														<children>
+																															<text fixtext="CharOffset">
+																																<styles color="white"/>
+																															</text>
+																														</children>
+																													</tgridcell>
+																												</children>
+																											</tgridrow>
+																										</children>
+																									</tgridheader-rows>
+																									<tgridbody-rows>
+																										<children>
+																											<template subtype="element" match="list">
+																												<children>
+																													<template subtype="element" match="adept.common.Token">
+																														<children>
+																															<tgridrow conditional-processing="(	
 	position() &gt; ceiling ((//tokenStream/adept.common.TokenStream/default/document/tokenStreamList/adept.common.TokenStream/list/default/size) div 3)
 	and
 	position() &lt; ceiling ((//tokenStream/adept.common.TokenStream/default/document/tokenStreamList/adept.common.TokenStream/list/default/size) div 3) * 2
@@ -2658,265 +2883,277 @@ or
 		and
 		position() &lt;  ceiling((//tokenStream//list/default/size)  div 3) * 2
 )">
-																														<styles text-align="center" vertical-align="top"/>
-																														<children>
-																															<tgridcell>
+																																<styles text-align="center" vertical-align="top"/>
 																																<children>
-																																	<template subtype="element" match="sequenceId">
+																																	<tgridcell>
 																																		<children>
-																																			<content subtype="regular">
-																																				<format basic-type="xsd" datatype="long"/>
-																																			</content>
-																																		</children>
-																																		<variables/>
-																																	</template>
-																																</children>
-																															</tgridcell>
-																															<tgridcell>
-																																<styles text-align="left"/>
-																																<children>
-																																	<template subtype="element" match="value">
-																																		<children>
-																																			<content subtype="regular"/>
-																																		</children>
-																																		<variables/>
-																																	</template>
-																																</children>
-																															</tgridcell>
-																															<tgridcell>
-																																<children>
-																																	<template subtype="element" match="charOffset">
-																																		<children>
-																																			<tgrid>
-																																				<properties border="0" width="auto"/>
-																																				<styles display="inline" margin-top="10px"/>
+																																			<template subtype="element" match="sequenceId">
 																																				<children>
-																																					<tgridbody-cols>
-																																						<children>
-																																							<tgridcol/>
-																																							<tgridcol/>
-																																						</children>
-																																					</tgridbody-cols>
-																																					<tgridbody-rows>
-																																						<children>
-																																							<tgridrow>
-																																								<styles text-align="center" vertical-align="top"/>
-																																								<children>
-																																									<tgridcell>
-																																										<children>
-																																											<template subtype="element" match="begin">
-																																												<children>
-																																													<content subtype="regular">
-																																														<format basic-type="xsd" datatype="long"/>
-																																													</content>
-																																												</children>
-																																												<variables/>
-																																											</template>
-																																										</children>
-																																									</tgridcell>
-																																									<tgridcell>
-																																										<children>
-																																											<template subtype="element" match="end">
-																																												<children>
-																																													<content subtype="regular">
-																																														<format basic-type="xsd" datatype="long"/>
-																																													</content>
-																																												</children>
-																																												<variables/>
-																																											</template>
-																																										</children>
-																																									</tgridcell>
-																																								</children>
-																																							</tgridrow>
-																																						</children>
-																																					</tgridbody-rows>
+																																					<content subtype="regular">
+																																						<format basic-type="xsd" datatype="long"/>
+																																					</content>
 																																				</children>
-																																			</tgrid>
+																																				<variables/>
+																																			</template>
 																																		</children>
-																																		<variables/>
-																																	</template>
+																																	</tgridcell>
+																																	<tgridcell>
+																																		<styles text-align="left"/>
+																																		<children>
+																																			<template subtype="element" match="value">
+																																				<children>
+																																					<content subtype="regular"/>
+																																				</children>
+																																				<variables/>
+																																			</template>
+																																		</children>
+																																	</tgridcell>
+																																	<tgridcell>
+																																		<children>
+																																			<template subtype="element" match="charOffset">
+																																				<children>
+																																					<tgrid>
+																																						<properties border="0" width="auto"/>
+																																						<styles display="inline" margin-top="10px"/>
+																																						<children>
+																																							<tgridbody-cols>
+																																								<children>
+																																									<tgridcol/>
+																																									<tgridcol/>
+																																								</children>
+																																							</tgridbody-cols>
+																																							<tgridbody-rows>
+																																								<children>
+																																									<tgridrow>
+																																										<styles text-align="center" vertical-align="top"/>
+																																										<children>
+																																											<tgridcell>
+																																												<children>
+																																													<template subtype="element" match="begin">
+																																														<children>
+																																															<content subtype="regular">
+																																																<format basic-type="xsd" datatype="long"/>
+																																															</content>
+																																														</children>
+																																														<variables/>
+																																													</template>
+																																												</children>
+																																											</tgridcell>
+																																											<tgridcell>
+																																												<children>
+																																													<template subtype="element" match="end">
+																																														<children>
+																																															<content subtype="regular">
+																																																<format basic-type="xsd" datatype="long"/>
+																																															</content>
+																																														</children>
+																																														<variables/>
+																																													</template>
+																																												</children>
+																																											</tgridcell>
+																																										</children>
+																																									</tgridrow>
+																																								</children>
+																																							</tgridbody-rows>
+																																						</children>
+																																					</tgrid>
+																																				</children>
+																																				<variables/>
+																																			</template>
+																																		</children>
+																																	</tgridcell>
 																																</children>
-																															</tgridcell>
+																															</tgridrow>
 																														</children>
-																													</tgridrow>
+																														<variables/>
+																													</template>
 																												</children>
 																												<variables/>
 																											</template>
 																										</children>
-																										<variables/>
-																									</template>
+																									</tgridbody-rows>
 																								</children>
-																							</tgridbody-rows>
+																							</tgrid>
 																						</children>
-																					</tgrid>
-																				</children>
-																			</tgridcell>
-																			<tgridcell>
-																				<children>
-																					<tgrid>
-																						<properties border="0" width="auto"/>
-																						<styles border-left-color="transparent" border-left-style="solid" border-left-width="thin" border-right-color="transparent" border-right-style="solid" border-right-width="thin" display="inline" margin-top="10px"/>
+																					</tgridcell>
+																					<tgridcell>
 																						<children>
-																							<tgridbody-cols>
+																							<tgrid>
+																								<properties border="0" width="auto"/>
+																								<styles border-left-color="transparent" border-left-style="solid" border-left-width="thin" border-right-color="transparent" border-right-style="solid" border-right-width="thin" display="inline" margin-top="10px"/>
 																								<children>
-																									<tgridcol/>
-																									<tgridcol/>
-																									<tgridcol/>
-																								</children>
-																							</tgridbody-cols>
-																							<tgridheader-rows>
-																								<styles border-top-color="black"/>
-																								<children>
-																									<tgridrow>
-																										<properties bgcolor="#697376"/>
-																										<styles text-align="center" vertical-align="top"/>
+																									<tgridbody-cols>
 																										<children>
-																											<tgridcell>
-																												<children>
-																													<text fixtext="SequenceId">
-																														<styles color="white"/>
-																													</text>
-																												</children>
-																											</tgridcell>
-																											<tgridcell>
-																												<children>
-																													<text fixtext="Value">
-																														<styles color="white"/>
-																													</text>
-																												</children>
-																											</tgridcell>
-																											<tgridcell>
-																												<children>
-																													<text fixtext="CharOffset">
-																														<styles color="white"/>
-																													</text>
-																												</children>
-																											</tgridcell>
+																											<tgridcol/>
+																											<tgridcol/>
+																											<tgridcol/>
 																										</children>
-																									</tgridrow>
-																								</children>
-																							</tgridheader-rows>
-																							<tgridbody-rows>
-																								<children>
-																									<template subtype="element" match="list">
+																									</tgridbody-cols>
+																									<tgridheader-rows>
+																										<styles border-top-color="black"/>
 																										<children>
-																											<template subtype="element" match="adept.common.Token">
+																											<tgridrow>
+																												<properties bgcolor="#697376"/>
+																												<styles text-align="center" vertical-align="top"/>
 																												<children>
-																													<tgridrow conditional-processing="(
+																													<tgridcell>
+																														<children>
+																															<text fixtext="SequenceId">
+																																<styles color="white"/>
+																															</text>
+																														</children>
+																													</tgridcell>
+																													<tgridcell>
+																														<children>
+																															<text fixtext="Value">
+																																<styles color="white"/>
+																															</text>
+																														</children>
+																													</tgridcell>
+																													<tgridcell>
+																														<children>
+																															<text fixtext="CharOffset">
+																																<styles color="white"/>
+																															</text>
+																														</children>
+																													</tgridcell>
+																												</children>
+																											</tgridrow>
+																										</children>
+																									</tgridheader-rows>
+																									<tgridbody-rows>
+																										<children>
+																											<template subtype="element" match="list">
+																												<children>
+																													<template subtype="element" match="adept.common.Token">
+																														<children>
+																															<tgridrow conditional-processing="(
 	position() &gt;= ceiling ((//tokenStream/adept.common.TokenStream/default/document/tokenStreamList/adept.common.TokenStream/list/default/size) div 3) * 2
 )
 or
 (
 	position() &gt;= ceiling ((//tokenStream//list/default/size) div 3) * 2
 )">
-																														<styles text-align="center" vertical-align="top"/>
-																														<children>
-																															<tgridcell>
+																																<styles text-align="center" vertical-align="top"/>
 																																<children>
-																																	<template subtype="element" match="sequenceId">
+																																	<tgridcell>
 																																		<children>
-																																			<content subtype="regular">
-																																				<format basic-type="xsd" datatype="long"/>
-																																			</content>
-																																		</children>
-																																		<variables/>
-																																	</template>
-																																</children>
-																															</tgridcell>
-																															<tgridcell>
-																																<styles text-align="left"/>
-																																<children>
-																																	<template subtype="element" match="value">
-																																		<children>
-																																			<content subtype="regular"/>
-																																		</children>
-																																		<variables/>
-																																	</template>
-																																</children>
-																															</tgridcell>
-																															<tgridcell>
-																																<children>
-																																	<template subtype="element" match="charOffset">
-																																		<children>
-																																			<tgrid>
-																																				<properties border="0" width="auto"/>
-																																				<styles display="inline" margin-top="10px"/>
+																																			<template subtype="element" match="sequenceId">
 																																				<children>
-																																					<tgridbody-cols>
-																																						<children>
-																																							<tgridcol/>
-																																							<tgridcol/>
-																																						</children>
-																																					</tgridbody-cols>
-																																					<tgridbody-rows>
-																																						<children>
-																																							<tgridrow>
-																																								<styles text-align="center" vertical-align="top"/>
-																																								<children>
-																																									<tgridcell>
-																																										<children>
-																																											<template subtype="element" match="begin">
-																																												<children>
-																																													<content subtype="regular">
-																																														<format basic-type="xsd" datatype="long"/>
-																																													</content>
-																																												</children>
-																																												<variables/>
-																																											</template>
-																																										</children>
-																																									</tgridcell>
-																																									<tgridcell>
-																																										<children>
-																																											<template subtype="element" match="end">
-																																												<children>
-																																													<content subtype="regular">
-																																														<format basic-type="xsd" datatype="long"/>
-																																													</content>
-																																												</children>
-																																												<variables/>
-																																											</template>
-																																										</children>
-																																									</tgridcell>
-																																								</children>
-																																							</tgridrow>
-																																						</children>
-																																					</tgridbody-rows>
+																																					<content subtype="regular">
+																																						<format basic-type="xsd" datatype="long"/>
+																																					</content>
 																																				</children>
-																																			</tgrid>
+																																				<variables/>
+																																			</template>
 																																		</children>
-																																		<variables/>
-																																	</template>
+																																	</tgridcell>
+																																	<tgridcell>
+																																		<styles text-align="left"/>
+																																		<children>
+																																			<template subtype="element" match="value">
+																																				<children>
+																																					<content subtype="regular"/>
+																																				</children>
+																																				<variables/>
+																																			</template>
+																																		</children>
+																																	</tgridcell>
+																																	<tgridcell>
+																																		<children>
+																																			<template subtype="element" match="charOffset">
+																																				<children>
+																																					<tgrid>
+																																						<properties border="0" width="auto"/>
+																																						<styles display="inline" margin-top="10px"/>
+																																						<children>
+																																							<tgridbody-cols>
+																																								<children>
+																																									<tgridcol/>
+																																									<tgridcol/>
+																																								</children>
+																																							</tgridbody-cols>
+																																							<tgridbody-rows>
+																																								<children>
+																																									<tgridrow>
+																																										<styles text-align="center" vertical-align="top"/>
+																																										<children>
+																																											<tgridcell>
+																																												<children>
+																																													<template subtype="element" match="begin">
+																																														<children>
+																																															<content subtype="regular">
+																																																<format basic-type="xsd" datatype="long"/>
+																																															</content>
+																																														</children>
+																																														<variables/>
+																																													</template>
+																																												</children>
+																																											</tgridcell>
+																																											<tgridcell>
+																																												<children>
+																																													<template subtype="element" match="end">
+																																														<children>
+																																															<content subtype="regular">
+																																																<format basic-type="xsd" datatype="long"/>
+																																															</content>
+																																														</children>
+																																														<variables/>
+																																													</template>
+																																												</children>
+																																											</tgridcell>
+																																										</children>
+																																									</tgridrow>
+																																								</children>
+																																							</tgridbody-rows>
+																																						</children>
+																																					</tgrid>
+																																				</children>
+																																				<variables/>
+																																			</template>
+																																		</children>
+																																	</tgridcell>
 																																</children>
-																															</tgridcell>
+																															</tgridrow>
 																														</children>
-																													</tgridrow>
+																														<variables/>
+																													</template>
 																												</children>
 																												<variables/>
 																											</template>
 																										</children>
-																										<variables/>
-																									</template>
+																									</tgridbody-rows>
 																								</children>
-																							</tgridbody-rows>
+																							</tgrid>
 																						</children>
-																					</tgrid>
+																					</tgridcell>
 																				</children>
-																			</tgridcell>
+																			</tgridrow>
 																		</children>
-																	</tgridrow>
+																	</tgridbody-rows>
 																</children>
-															</tgridbody-rows>
-														</children>
-													</tgrid>
-												</children>
-											</paragraph>
-											<link>
-												<children>
-													<paragraph paragraphtag="center">
-														<children>
-															<text fixtext="Go to Top of Page"/>
+															</tgrid>
 														</children>
 													</paragraph>
+													<newline/>
+													<link>
+														<children>
+															<paragraph paragraphtag="center">
+																<children>
+																	<text fixtext="Go to Top of Page"/>
+																</children>
+															</paragraph>
+														</children>
+														<action>
+															<none/>
+														</action>
+														<hyperlink>
+															<fixtext value="#Table of Contents"/>
+														</hyperlink>
+													</link>
+													<newline/>
+													<newline/>
+													<newline/>
 												</children>
 												<action>
 													<none/>

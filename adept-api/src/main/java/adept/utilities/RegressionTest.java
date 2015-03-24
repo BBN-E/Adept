@@ -1,24 +1,13 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
 package adept.utilities;
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 
 import java.io.*;
 import java.text.DateFormat;
@@ -243,16 +232,28 @@ public abstract class RegressionTest
         int fileCount = 0;
         String className = this.getClass().getName();
         String endTime;
-        String result;
+        String result = null;
         boolean redirect = false;
+        String language = "en-US";
         System.out.println("[INFO] Started Regression Test");
         PrintStream console = System.out;
         try {
             if (args != null) {
                 if (args.length > 0) {
-                    // args are only "redirect" so far.
+                    // args are "language" and "redirect" so far.
                     //System.out.println("redirect is " + args[0]);
-                    redirect = (args[0].toLowerCase().equals("true"));
+                	for(String arg : args)
+                	{
+                		if(arg.matches("[a-zA-z][a-zA-z]-[a-zA-z][a-zA-z]"))
+                		{
+                		    language = arg;	   
+                		}
+                		else
+                		{
+                			redirect = (arg.toLowerCase().equals("true"));
+                		}
+                	}
+                    
                 }
             }
             if (redirect) {
@@ -278,18 +279,17 @@ public abstract class RegressionTest
                 if (bFirst) doActivate(workingDirectory, algorithmConfig);
                 bFirst = false;
                 //
-                boolean bOK = processInputFile(filename);
-                if (!bOK) bSuccess = false;
+                bSuccess = processInputFile(filename);
                 ++fileCount;
-                System.out.format("File %d %s %s\n", fileCount, filename, bOK ? "pass" : "fail");
             }
-            printStatistics(className);
+            if(bSuccess) printStatistics(className);
             String filename = outputDirectory + differencesFilename;
             theWriter.linesToFile(filename, diffLineList);
             doDeactivate();
         }
         catch(Exception ex) {
             result = ex.getMessage();
+            bSuccess = false;
         }
         finally{
             if (redirect) {
@@ -300,11 +300,16 @@ public abstract class RegressionTest
         long totalSeconds = TimeUnit.SECONDS.convert(System.nanoTime() - totalStart, TimeUnit.NANOSECONDS);
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         endTime=dateFormat.format(new Date());
-        result = bSuccess ? "SUCCESS" : "ERROR";
+        //result = bSuccess ? "SUCCESS" : "ERROR";
         String report = String.format("%s  %s processed %d files in %d seconds: %s\n",
-                                endTime, className, fileCount, totalSeconds, result);
+                                endTime, className, fileCount, totalSeconds, bSuccess ? "SUCCESS" : "ERROR");
+        
         System.out.format(report);
-
+        if(result!=null)
+        {
+        	System.out.println(result);
+        }
+        
         try
         {
             // Append to shared log file in DEFT folder.  Go up enough levels in directory tree.
@@ -313,7 +318,8 @@ public abstract class RegressionTest
             int count;
             if ( className.startsWith("edu.columbia")
                     || className.startsWith("edu.cornell")
-                    || className.startsWith("edu.qccuny")) {
+                    || className.startsWith("edu.qccuny")
+                    || className.startsWith("edu.rpi")) {
                 count = 4;
             }
             else {
@@ -463,7 +469,7 @@ public abstract class RegressionTest
 	 * @return true, if successful
 	 */
 	private boolean processInputFile( String filename) {
-		boolean bSuccess;
+		boolean bSuccess = true;
 		long totalStart = System.nanoTime();    
 		testFile = new TestFile(filename);
 		String baseFilename = filename.replace(".sgm", "");
@@ -499,34 +505,42 @@ public abstract class RegressionTest
 
 		/** serialization */
 		serialize(hltContentContainer);
-		System.out.println("Serialized file: " + filename);
-		testFile.totalSeconds = TimeUnit.SECONDS.convert(System.nanoTime() - totalStart, TimeUnit.NANOSECONDS);
-
-		// Load reference. Compute diff. Get the Patch object. Patch is the container for computed deltas.
-		List<String> xmlOutput = theReader.fileToLines(xmlFilename);
-		List<String> xmlOutputNormalized = normalizeGuidAndUri( xmlOutput);
-		String xmlReferenceName = referenceDirectory + baseFilename + ".reference.xml";
-		List<String> xmlReference  = theReader.fileToLines(xmlReferenceName);
-		List<String> xmlReferenceNormalized = normalizeGuidAndUri(xmlReference);
-		Patch patch = DiffUtils.diff(xmlOutputNormalized , xmlReferenceNormalized );
-		bSuccess = ( patch.getDeltas().size() == 0 );
-		if ( bSuccess )
+		if(hltContentContainer ==null)
 		{
-			testFile.result = "pass";
+			bSuccess = false;
 		}
 		else
 		{
-			testFile.result =  "fail";	
-			diffLineList.add(filename);
-			for (Delta delta: patch.getDeltas()) {
-				String d = delta.toString();
-				{
-					diffLineList.add(d);
-					//System.out.println(delta);
+			System.out.println("Serialized file: " + filename);
+			testFile.totalSeconds = TimeUnit.SECONDS.convert(System.nanoTime() - totalStart, TimeUnit.NANOSECONDS);
+
+			// Load reference. Compute diff. Get the Patch object. Patch is the container for computed deltas.
+			List<String> xmlOutput = theReader.fileToLines(xmlFilename);
+			List<String> xmlOutputNormalized = normalizeGuidAndUri( xmlOutput);
+			String xmlReferenceName = referenceDirectory + baseFilename + ".reference.xml";
+			List<String> xmlReference  = theReader.fileToLines(xmlReferenceName);
+			List<String> xmlReferenceNormalized = normalizeGuidAndUri(xmlReference);
+			Patch patch = DiffUtils.diff(xmlOutputNormalized , xmlReferenceNormalized );
+			boolean bIdentical = ( patch.getDeltas().size() == 0 );
+			if ( bIdentical )
+			{
+				testFile.result = "pass";
+			}
+			else
+			{
+				testFile.result =  "fail";	
+				diffLineList.add(filename);
+				for (Delta delta: patch.getDeltas()) {
+					String d = delta.toString();
+					{
+						diffLineList.add(d);
+						//System.out.println(delta);
+					}
 				}
 			}
+			testFileList.add(testFile);
 		}
-		testFileList.add(testFile);
+		
 		return bSuccess;
 	}
 	

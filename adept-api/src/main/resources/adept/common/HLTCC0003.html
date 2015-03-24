@@ -1,0 +1,544 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title></title><meta name="generator" content="Altova StyleVision Enterprise Edition 2015 sp1 (x64) (http://www.altova.com)"><meta http-equiv="X-UA-Compatible" content="IE=9"><!--[if IE]><STYLE type="text/css">.altova-rotate-left-textbox{filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3)} .altova-rotate-right-textbox{filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1)} </STYLE><![endif]--><!--[if !IE]><!--><style type="text/css">.altova-rotate-left-textbox{-webkit-transform: rotate(-90deg) translate(-100%, 0%); -webkit-transform-origin: 0% 0%;-moz-transform: rotate(-90deg) translate(-100%, 0%); -moz-transform-origin: 0% 0%;-ms-transform: rotate(-90deg) translate(-100%, 0%); -ms-transform-origin: 0% 0%;}.altova-rotate-right-textbox{-webkit-transform: rotate(90deg) translate(0%, -100%); -webkit-transform-origin: 0% 0%;-moz-transform: rotate(90deg) translate(0%, -100%); -moz-transform-origin: 0% 0%;-ms-transform: rotate(90deg) translate(0%, -100%); -ms-transform-origin: 0% 0%;}</style><!--<![endif]--><script type="text/javascript"><!--
+var Altova = {};
+Altova.ADD_ROW_EXPAND_COLLAPSE_BUTTONS_CLASS = "altova-add-row-expand-collapse-buttons";
+Altova.ADD_COLUMN_CLOSE_BUTTONS_CLASS = "altova-add-column-close-buttons";
+Altova.EXPAND_COLLAPSE_LEVEL_CLASS = "altova-expand-collapse-level-";
+Altova.COLLAPSED_ATTR = "altova_collapsed";
+Altova.HIDDEN_ATTR = "altova_hidden";
+Altova.init = function() {
+    var tables = document.getElementsByTagName( "table" );
+	if ( tables.length == 0 )
+	    tables = document.getElementsByTagName( "TABLE" );
+	for (var i = tables.length - 1; i >= 0; i = i - 1)
+	{
+		var table = tables[ i ];
+		Altova.Button.initRowExpandCollapseButtons( table );
+		Altova.Button.initColumnCloseButtons( table );
+	}
+};
+Altova.canAddRowExpandCollapseButtons = function(node) {
+    try {
+        var classNames = node.className.split(' ');
+        for (var i = 0; i < classNames.length; ++i) {
+            if (classNames[i] == Altova.ADD_ROW_EXPAND_COLLAPSE_BUTTONS_CLASS)
+                return true;
+        }
+        return false;
+    }
+    catch (e) {
+        return false;
+    }
+};
+Altova.canAddColumnCloseButtons = function( node ) {
+	try {
+	    var classNames = node.className.split(' ');
+	    for (var i = 0; i < classNames.length; ++i) {
+	        if (classNames[i] == Altova.ADD_COLUMN_CLOSE_BUTTONS_CLASS)
+	            return true;
+	    }
+	    return false;
+	}
+	catch ( e )
+	{
+		return false;
+	}
+};
+Altova.getExpandCollapseLevel = function( node ) {
+	try {
+	    var classNames = node.className.split(' ');
+	    for (var i = 0; i < classNames.length; ++i) {
+	        if (classNames[i].indexOf( Altova.EXPAND_COLLAPSE_LEVEL_CLASS ) == 0 )
+	            return classNames[i].substr( Altova.EXPAND_COLLAPSE_LEVEL_CLASS.length ) * 1;
+	    }
+	    return 0;
+	}
+	catch ( e )
+	{
+		return 0;
+	}
+};
+Altova.isCollapsed = function( node ) {
+	try
+	{
+		if ( node.getAttribute( Altova.COLLAPSED_ATTR ) != null && node.getAttribute( Altova.COLLAPSED_ATTR ) != "" )
+			return node.getAttribute( Altova.COLLAPSED_ATTR ) == "true";
+		else
+			return false;
+	}
+	catch ( e )
+	{
+		return false;
+	}
+};
+Altova.setIsCollapsed = function( node, isCollapsed ) {
+	node.setAttribute( Altova.COLLAPSED_ATTR, isCollapsed ? "true" : "false" );
+};
+Altova.isHidden = function( node ) {
+	try
+	{
+		if ( node.getAttribute( Altova.HIDDEN_ATTR ) != null && node.getAttribute( Altova.HIDDEN_ATTR ) != "" )
+			return node.getAttribute( Altova.HIDDEN_ATTR ) == "true";
+		else
+			return false;
+	}
+	catch ( e )
+	{
+		return false;
+	}
+};
+Altova.setIsHidden = function( node, isHidden ) {
+	node.setAttribute( Altova.HIDDEN_ATTR, isHidden ? "true" : "false" );
+};
+Altova.Button = {};
+Altova.Button.BUTTON_EXPAND = 0;
+Altova.Button.BUTTON_COLLAPSE = 1;
+Altova.Button.BUTTON_CLOSE = 2;
+Altova.Button.BUTTON_ADD = 3;
+Altova.Button.BUTTON_TYPE_ATTR = "altova_button-type";
+Altova.Button.createNewButton = function( type, containerType ) {
+	var button = document.createElement( containerType );
+	Altova.Button.changeButtonTo( button, type );
+	return button;
+};
+Altova.Button.changeButtonTo = function( button, type ) {
+	button.setAttribute( Altova.Button.BUTTON_TYPE_ATTR, type );
+	if ( type == Altova.Button.BUTTON_EXPAND )
+	{
+		button.innerHTML =
+			"<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr><td style=\"font-size: 0pt; width: 9px; height: 9px\">" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 9px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 5px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +	
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +	
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 9px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+			"</td></tr></tbody></table>";
+	}
+	else if ( type == Altova.Button.BUTTON_COLLAPSE )
+	{
+		button.innerHTML =
+			"<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr><td style=\"font-size: 0pt; width: 9px; height: 9px\">" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 9px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 5px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +	
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+					"<td style=\"font-size: 0pt; width: 7px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +	
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"9\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 9px; height: 1px; background-color: rgb(204, 204, 204);\"/>" +
+				"</tr></tbody></table>" +
+			"</td></tr></tbody></table>";
+	}
+	else if ( type == Altova.Button.BUTTON_CLOSE )
+	{
+		button.innerHTML =
+			"<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr><td style=\"font-size: 0pt; width: 7px; height: 7px\">" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 5px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 5px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 1px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"7\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+			"</td></tr></tbody></table>";
+	}
+	else if ( type == Altova.Button.BUTTON_ADD )
+	{
+		button.innerHTML =
+			"<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr><td style=\"font-size: 0pt; width: 8px; height: 8px\">" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 8px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 8px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+				"<table cellspacing=\"0\" cellpadding=\"0\" width=\"8\"><tbody><tr>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+					"<td style=\"font-size: 0pt; width: 2px; height: 1px; background-color: rgb(153, 153, 153);\"/>" +
+					"<td style=\"font-size: 0pt; width: 3px; height: 1px;\"/>" +
+				"</tr></tbody></table>" +
+			"</td></tr></tbody></table>";
+	}
+};
+Altova.Button.containsButton = function( node, type ) {
+	for ( var i = 0; i < node.childNodes.length; ++i )
+	{
+		var child = node.childNodes[ i ];
+		try
+		{
+			if ( child.getAttribute( Altova.Button.BUTTON_TYPE_ATTR ) != null && child.getAttribute( Altova.Button.BUTTON_TYPE_ATTR ) != "" )
+					if ( child.getAttribute( Altova.Button.BUTTON_TYPE_ATTR ) == type )
+						return true;
+		}
+		catch ( e )
+		{
+		}
+	}
+	return false;
+};
+Altova.Button.makeButtonHot = function( button, hot ) {
+	var maincell = button.firstChild.rows[ 0 ].cells[ 0 ];
+	for ( var i = 0; i < maincell.childNodes.length; ++i )
+	{
+		var cells = maincell.childNodes[ i ].rows[ 0 ].cells;
+		for ( var j = 0; j < cells.length; ++j )
+		{
+			var cell = cells[ j ];
+			if ( cell.style.backgroundColor != "" )
+			{
+				if ( hot )
+					cell.style.backgroundColor = "#E71818";
+				else
+					cell.style.backgroundColor = "#999999";
+			}
+		}
+	}
+};
+Altova.Button.isButtonOfType = function( button, type ) {
+	return button.getAttribute( Altova.Button.BUTTON_TYPE_ATTR ) == type;
+};
+Altova.Button.generateOnClickExpandOrCollapseButton = function( row, button ) {
+	return function() { Altova.Button.onRowExpandOrCollapse( row, button ); }
+};
+Altova.Button.generateOnClickCloseButton = function( table, index, button ) {
+	return function() { Altova.Button.onColumnHide( table, index, button ); }
+};
+Altova.Button.generateOnClickAddButton = function( table ) {
+	return function() { Altova.Button.onColumnAddAll( table ); }
+};
+Altova.Button.generateOnMouseOverButton = function( button ) {
+	return function() { Altova.Button.makeButtonHot( button, true ); }
+};
+Altova.Button.generateOnMouseOutButton = function( button ) {
+	return function() { Altova.Button.makeButtonHot( button, false ); }
+};
+Altova.Button.onRowExpandOrCollapse = function( row, button ) {
+	var bCollapse = Altova.Button.isButtonOfType( button, Altova.Button.BUTTON_COLLAPSE );
+	if ( bCollapse )
+		Altova.Button.changeButtonTo( button, Altova.Button.BUTTON_EXPAND );
+	else
+		Altova.Button.changeButtonTo( button, Altova.Button.BUTTON_COLLAPSE );
+
+	Altova.setIsCollapsed( row, bCollapse );
+
+	var nLevel = Altova.getExpandCollapseLevel( row );
+
+	var nStopAtLevel = -1;
+	var nextRow = row;
+	while ( true )
+	{
+		nextRow = nextRow.nextSibling;
+		while ( nextRow && nextRow.nodeName != "tr" && nextRow.nodeName != "TR" )
+			nextRow = nextRow.nextSibling;
+		if ( !nextRow )
+			break;
+		
+		var nOtherLevel = Altova.getExpandCollapseLevel( nextRow );
+
+		if ( nOtherLevel <= nLevel  )
+			break;
+
+		if ( !Altova.isHidden( nextRow ) )
+		{
+			if ( nStopAtLevel == -1 || nOtherLevel < nStopAtLevel )
+			{
+				if ( bCollapse )
+					nextRow.style.display = "none";
+				else
+					nextRow.style.display = "";
+
+				if ( Altova.isCollapsed( nextRow ) )
+					nStopAtLevel = nOtherLevel + 1;
+				else
+					nStopAtLevel = -1;
+			}
+		}
+	}
+};
+Altova.Button.onColumnHide = function( table, index, button ) {
+	table.rows[ 0 ].cells[ 0 ].firstChild.style.display = "";
+
+	var rows = table.rows;
+	for ( var i = 0; i < rows.length; ++i )
+	{
+		var cell = rows[ i ].cells[ index ];
+		Altova.setIsHidden( cell, true );
+		cell.style.display = "none";
+	}
+
+	var lastVisibleCell = null;
+	for ( var i = 1; i < table.rows[ 0 ].cells.length; ++i )
+	{
+		var cell = table.rows[ 0 ].cells[ i ];
+		if ( !Altova.isHidden( cell ) )
+		{
+			if ( lastVisibleCell == null )
+				lastVisibleCell = cell;
+			else
+			{
+				lastVisibleCell = null;
+				break;
+			}
+		}
+	}	
+	if ( lastVisibleCell != null )
+		lastVisibleCell.firstChild.style.display = "none";
+};
+Altova.Button.onColumnAddAll = function( table ) {
+	table.rows[ 0 ].cells[ 0 ].firstChild.style.display = "none";
+
+	var rows = table.rows;
+	for ( var i = 0; i < rows.length; ++i )
+	{
+		var row = rows[ i ];
+		for ( var j = 1; j < row.cells.length; ++j )
+		{
+			var cell = row.cells[ j ];
+	
+			Altova.setIsHidden( cell, false );
+			cell.style.display = "";
+			
+			if ( i == 0 )
+				cell.firstChild.style.display = "";
+		}
+	}
+};
+Altova.Button.initRowExpandCollapseButtons = function( table ) {
+	if ( Altova.canAddRowExpandCollapseButtons( table ) )
+	{
+		var rows = table.tBodies[ 0 ].rows;
+		for ( var i = 0; i < rows.length; ++i )
+		{
+			var cell = rows[ i ].cells[ 0 ];
+			var button = null;
+	
+			if ( i + 1 < rows.length )
+			{
+				var nLevel = Altova.getExpandCollapseLevel( rows[ i ] );
+				var nNextLevel = Altova.getExpandCollapseLevel( rows[ i + 1 ] );
+	
+				if ( nNextLevel > nLevel )
+				{
+					button = Altova.Button.createNewButton( Altova.Button.BUTTON_COLLAPSE, "span" );
+					button.style.marginRight = "3px";
+					button.onclick = Altova.Button.generateOnClickExpandOrCollapseButton( rows[ i ], button );
+					cell.insertBefore( button, cell.firstChild );
+				}
+			}
+	
+			if ( button == null )
+			{
+				button = document.createElement( "span" );
+				button.innerHTML = "<table style=\"display: inline;\" cellspacing=\"0\" cellpadding=\"0\" width=\"12\"><tbody><tr><td style=\"font-size: 0pt; width: 12px; height: 1px\"></td></tr></tbody></table>";
+				cell.insertBefore( button, cell.firstChild );
+			}
+		}
+	}
+};
+Altova.Button.initColumnCloseButtons = function( table ) {
+	if ( Altova.canAddColumnCloseButtons( table ) )
+	{
+		if ( table.rows[ 0 ].cells.length > 2 )
+		{				
+			var cells = table.rows[ 0 ].cells;
+			for ( var i = 0; i < cells.length; ++i )
+			{
+				var cell = cells[ i ];
+				var button = null;
+				
+				cell.vAlign = "top";
+				
+				if ( i == 0 )
+				{
+					button = Altova.Button.createNewButton( Altova.Button.BUTTON_ADD, "div" );
+					button.onclick = Altova.Button.generateOnClickAddButton( table );
+					button.onmouseover = Altova.Button.generateOnMouseOverButton( button );
+					button.onmouseout = Altova.Button.generateOnMouseOutButton( button );
+					button.style.display = "none";
+					button.style.textAlign = "right";
+					button.title = "Show all columns";
+					table.rows[ 0 ].cells[ 0 ].insertBefore( button, table.rows[ 0 ].cells[ 0 ].firstChild );
+				}
+				else
+				{
+					button = Altova.Button.createNewButton( Altova.Button.BUTTON_CLOSE, "div" );
+					button.onclick = Altova.Button.generateOnClickCloseButton( table, i, button );
+					button.onmouseover = Altova.Button.generateOnMouseOverButton( button );
+					button.onmouseout = Altova.Button.generateOnMouseOutButton( button );
+					button.style.textAlign = "right";
+					button.title = "Hide column";
+				}
+
+				if ( cell.firstChild )
+					cell.insertBefore( button, cell.firstChild );
+				else
+					cell.appendChild( button );
+			}
+		}
+	}
+};
+//--></script><script type="text/javascript"><!--
+function highlightSource(row) {
+	var content = document.getElementById("documentContent");
+	var regex = /(<([^>]+)>)/ig;
+	var cleanedContent = content.innerHTML.replace(regex, "");
+	
+	var startIndex = row.children[1].innerHTML;
+	startIndex = parseInt(startIndex);
+	var endIndex = row.children[2].innerHTML;
+	endIndex = parseInt(endIndex);
+
+	var contentArray = cleanedContent.split(/\s+/);
+	
+	var highlightedContent = "";
+	for(var i = 0; i < contentArray.length; i++) {
+		if(i == startIndex) {
+			highlightedContent += "<span style=\"background-color: yellow\">";
+		} 
+		if (i  == (1 + endIndex) ) {
+			highlightedContent += "</span>";
+		}
+		highlightedContent += (" " + contentArray[i]);
+	}
+
+	content.innerHTML = highlightedContent;
+	
+}
+//--></script><style type="text/css">@page { margin-left:0.60in; margin-right:0.60in; margin-top:0.79in; margin-bottom:0.79in } @media print { br.altova-page-break { page-break-before: always; } }</style></head><body style="color:#222222; " onload="Altova.init();"><br><a name="Table of Contents"></a><span style="font-family:arial; font-size:14pt; font-weight:bolder; ">Table of Contents</span><ul><li><a href="#Document Value"><span>Document</span></a></li><li><span>Entity Mentions and Coreferences</span></li><li><span>Relations</span><span>&nbsp;</span></li><li><span>Sarcasms</span><span>&nbsp;</span></li><li><span>Opinions</span><span>&nbsp;</span></li><li><span>Committed Beliefs</span><span>&nbsp;</span></li><li><span>Syntactic Chunks</span><span>&nbsp;</span></li><li><span>Paraphrases</span><span>&nbsp;</span></li><li><span>Triples</span><span>&nbsp;</span></li><li><a href="#Tokens"><span>Tokens</span></a></li><li><a href="#Sentence Similarities"><span>Sentence Similarities</span></a></li></ul><center style="background:#323d40; color:white; "><span style="font-family:arial; font-size:14pt; font-weight:bolder; ">Document</span><span>&nbsp;&nbsp; </span><a href="help.htm#Document"><img align="bottom" src="file:///C:/Users/jwatson/Documents/information_icon_small.svg.png" alt=""></a></center><a name="Document Value"></a><br><span>Type: </span>Text<br><span>Language: </span>English<br><span>Headline: </span><br><br><span id="documentContent">mexico wishes to guarantee citizens' safety. 	mexico wishes to avoid more violence.
+spain currently holds the rotating presidency of the osce. 	spain currently holds the osce's presidency.
+the treaty was first signed in 1990. 	the cfe treaty was signed in 1990.
+gorgich and pashtoon were executed in prison. 	gorgich and pashtoon were executed for trafficking heroin in sistan-baluchestan province.
+safe bourada was sentenced to 15 years in prison. 	djamel badaoui was sentenced to five years.
+santos stated the radioactive material was the primary basis for generating crude weapons of mass destruction and terrorism. 	uranium is a radioactive material which is the primary basis for generating dirty weapons of mass destruction and terrorism.</span><br><br><a href="#Table of Contents"><center><span>Go to Top of Page</span></center></a><span>&nbsp;</span><a name="Sentence Similarities"></a><br><center style="background:#323d40; color:white; "><span style="font-size:14pt; font-weight:bold; ">Sentence Similarities&nbsp;&nbsp; </span><a href="help.htm#Sentence Similarities"><img align="bottom" src="file:///C:/Users/jwatson/Documents/information_icon_small.svg.png" alt=""></a></center><center><table style="border-bottom:solid gray thin; border-collapse:collapse; border-left:solid gray thin; border-right:solid gray thin; border-top:solid gray thin; margin-top:10px; " border="2" frame="border"><thead align="center"><tr align="left" bgcolor="#697376"><th style="text-align:left; " width="384"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sentence 1</span></th><th width="384"><span>Sentence 2</span></th><th><span>Similarity Metric</span></th><th><span>Similarity Score</span></th></tr></thead><tbody><tr bgcolor="white" class="altova-expand-collapse-level-1"><td style="text-align:left; " width="384">mexico wishes to guarantee citizens' safety.</td><td align="center" width="384">mexico wishes to avoid more violence.</td><td align="center">ESA</td><td align="center">0.40137583</td></tr><tr bgcolor="white" class="altova-expand-collapse-level-1"><td style="text-align:left; " width="384">spain currently holds the rotating presidency of the osce.</td><td align="center" width="384">spain currently holds the osce's presidency.</td><td align="center">ESA</td><td align="center">0.90341026</td></tr><tr bgcolor="white" class="altova-expand-collapse-level-1"><td style="text-align:left; " width="384">the treaty was first signed in 1990.</td><td align="center" width="384">the cfe treaty was signed in 1990.</td><td align="center">ESA</td><td align="center">0.8809032</td></tr><tr bgcolor="white" class="altova-expand-collapse-level-1"><td style="text-align:left; " width="384">gorgich and pashtoon were executed in prison.</td><td align="center" width="384">gorgich and pashtoon were executed for trafficking heroin in sistan-baluchestan province.</td><td align="center">ESA</td><td align="center">0.529666</td></tr><tr bgcolor="white" class="altova-expand-collapse-level-1"><td style="text-align:left; " width="384">safe bourada was sentenced to 15 years in prison.</td><td align="center" width="384">djamel badaoui was sentenced to five years.</td><td align="center">ESA</td><td align="center">0.5975768</td></tr><tr bgcolor="white" class="altova-expand-collapse-level-1"><td style="text-align:left; " width="384">santos stated the radioactive material was the primary basis for generating crude weapons of mass destruction and terrorism.</td><td align="center" width="384">uranium is a radioactive material which is the primary basis for generating dirty weapons of mass destruction and terrorism.</td><td align="center">ESA</td><td align="center">0.85997117</td></tr></tbody></table></center><br><br><a href="#Table of Contents"><center><span>Go to Top of Page</span></center></a><br><a name="Tokens"></a><br><br><br><a href="#Table of Contents"><br><center style="background:#323d40; color:white; "><span style="font-family:arial; font-size:14pt; font-weight:bolder; ">Tokens</span><span>&nbsp;&nbsp; </span><a href="help.htm#Tokens"><img align="bottom" src="file:///C:/Users/jwatson/Documents/information_icon_small.svg.png" alt=""></a></center><center><table style="border-color:transparent; border-left-color:transparent; border-right-color:transparent; border-top-color:transparent; vertical-align:top; " bgcolor="white" border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td style="border-left-color:black; border-left-style:solid; border-left-width:thin; border-right-color:black; border-right-style:solid; border-right-width:thin; border-top-color:black; border-top-style:solid; border-top-width:thin; "><table style="border-bottom-color:transparent; border-color:transparent; border-left-color:transparent; border-left-style:solid; border-left-width:thin; border-right-color:transparent; border-right-style:solid; border-right-width:thin; border-top-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><thead style="border-top-color:black; border-top-style:solid; "><tr style="text-align:center; vertical-align:top; " bgcolor="#697376"><th><span style="color:white; ">SequenceId</span></th><th><span style="color:white; ">Value</span></th><th><span style="color:white; ">CharOffset</span></th></tr></thead><tbody><tr style="text-align:center; vertical-align:top; "><td>0</td><td style="text-align:left; ">mexico</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>0</td><td>6</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>1</td><td style="text-align:left; ">wishes</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>7</td><td>13</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>2</td><td style="text-align:left; ">to</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>14</td><td>16</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>3</td><td style="text-align:left; ">guarantee</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>17</td><td>26</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>4</td><td style="text-align:left; ">citizens</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>27</td><td>35</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>5</td><td style="text-align:left; ">'</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>35</td><td>36</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>6</td><td style="text-align:left; ">safety</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>37</td><td>43</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>7</td><td style="text-align:left; ">.</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>43</td><td>44</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>8</td><td style="text-align:left; ">mexico</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>46</td><td>52</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>9</td><td style="text-align:left; ">wishes</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>53</td><td>59</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>10</td><td style="text-align:left; ">to</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>60</td><td>62</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>11</td><td style="text-align:left; ">avoid</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>63</td><td>68</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>12</td><td style="text-align:left; ">more</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>69</td><td>73</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>13</td><td style="text-align:left; ">violence</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>74</td><td>82</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>14</td><td style="text-align:left; ">.</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>82</td><td>83</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>15</td><td style="text-align:left; ">spain</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>84</td><td>89</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>16</td><td style="text-align:left; ">currently</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>90</td><td>99</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>17</td><td style="text-align:left; ">holds</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>100</td><td>105</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>18</td><td style="text-align:left; ">the</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>106</td><td>109</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>19</td><td style="text-align:left; ">rotating</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>110</td><td>118</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>20</td><td style="text-align:left; ">presidency</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>119</td><td>129</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>21</td><td style="text-align:left; ">of</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>130</td><td>132</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>22</td><td style="text-align:left; ">the</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>133</td><td>136</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>23</td><td style="text-align:left; ">osce</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>137</td><td>141</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>24</td><td style="text-align:left; ">.</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>141</td><td>142</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>25</td><td style="text-align:left; ">spain</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>144</td><td>149</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>26</td><td style="text-align:left; ">currently</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>150</td><td>159</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>27</td><td style="text-align:left; ">holds</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>160</td><td>165</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>28</td><td style="text-align:left; ">the</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>166</td><td>169</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>29</td><td style="text-align:left; ">osce</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>170</td><td>174</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>30</td><td style="text-align:left; ">'s</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>174</td><td>176</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>31</td><td style="text-align:left; ">presidency</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>177</td><td>187</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>32</td><td style="text-align:left; ">.</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>187</td><td>188</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>33</td><td style="text-align:left; ">the</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>189</td><td>192</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>34</td><td style="text-align:left; ">treaty</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>193</td><td>199</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>35</td><td style="text-align:left; ">was</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>200</td><td>203</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>36</td><td style="text-align:left; ">first</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>204</td><td>209</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>37</td><td style="text-align:left; ">signed</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>210</td><td>216</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>38</td><td style="text-align:left; ">in</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>217</td><td>219</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>39</td><td style="text-align:left; ">1990</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>220</td><td>224</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>40</td><td style="text-align:left; ">.</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>224</td><td>225</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>41</td><td style="text-align:left; ">the</td><td><table style="border-color:transparent; display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>227</td><td>230</td></tr></tbody></table></td></tr></tbody></table></td><td style="border-right-color:black; border-right-style:solid; border-right-width:thin; border-top-color:black; border-top-style:solid; border-top-width:thin; "><table style="border-left-color:transparent; border-left-style:solid; border-left-width:thin; border-right-color:transparent; border-right-style:solid; border-right-width:thin; display:inline; margin-top:10px; " border="0" width="auto"><thead style="border-top-color:black; "><tr style="text-align:center; vertical-align:top; " bgcolor="#697376"><th><span style="color:white; ">SequenceId</span></th><th><span style="color:white; ">Value</span></th><th><span style="color:white; ">CharOffset</span></th></tr></thead><tbody><tr style="text-align:center; vertical-align:top; "><td>42</td><td style="text-align:left; ">cfe</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>231</td><td>234</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>43</td><td style="text-align:left; ">treaty</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>235</td><td>241</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>44</td><td style="text-align:left; ">was</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>242</td><td>245</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>45</td><td style="text-align:left; ">signed</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>246</td><td>252</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>46</td><td style="text-align:left; ">in</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>253</td><td>255</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>47</td><td style="text-align:left; ">1990</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>256</td><td>260</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>48</td><td style="text-align:left; ">.</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>260</td><td>261</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>49</td><td style="text-align:left; ">gorgich</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>262</td><td>269</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>50</td><td style="text-align:left; ">and</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>270</td><td>273</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>51</td><td style="text-align:left; ">pashtoon</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>274</td><td>282</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>52</td><td style="text-align:left; ">were</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>283</td><td>287</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>53</td><td style="text-align:left; ">executed</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>288</td><td>296</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>54</td><td style="text-align:left; ">in</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>297</td><td>299</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>55</td><td style="text-align:left; ">prison</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>300</td><td>306</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>56</td><td style="text-align:left; ">.</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>306</td><td>307</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>57</td><td style="text-align:left; ">gorgich</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>309</td><td>316</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>58</td><td style="text-align:left; ">and</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>317</td><td>320</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>59</td><td style="text-align:left; ">pashtoon</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>321</td><td>329</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>60</td><td style="text-align:left; ">were</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>330</td><td>334</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>61</td><td style="text-align:left; ">executed</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>335</td><td>343</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>62</td><td style="text-align:left; ">for</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>344</td><td>347</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>63</td><td style="text-align:left; ">trafficking</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>348</td><td>359</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>64</td><td style="text-align:left; ">heroin</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>360</td><td>366</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>65</td><td style="text-align:left; ">in</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>367</td><td>369</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>66</td><td style="text-align:left; ">sistan-baluchestan</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>370</td><td>388</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>67</td><td style="text-align:left; ">province</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>389</td><td>397</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>68</td><td style="text-align:left; ">.</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>397</td><td>398</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>69</td><td style="text-align:left; ">safe</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>399</td><td>403</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>70</td><td style="text-align:left; ">bourada</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>404</td><td>411</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>71</td><td style="text-align:left; ">was</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>412</td><td>415</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>72</td><td style="text-align:left; ">sentenced</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>416</td><td>425</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>73</td><td style="text-align:left; ">to</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>426</td><td>428</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>74</td><td style="text-align:left; ">15</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>429</td><td>431</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>75</td><td style="text-align:left; ">years</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>432</td><td>437</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>76</td><td style="text-align:left; ">in</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>438</td><td>440</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>77</td><td style="text-align:left; ">prison</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>441</td><td>447</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>78</td><td style="text-align:left; ">.</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>447</td><td>448</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>79</td><td style="text-align:left; ">djamel</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>450</td><td>456</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>80</td><td style="text-align:left; ">badaoui</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>457</td><td>464</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>81</td><td style="text-align:left; ">was</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>465</td><td>468</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>82</td><td style="text-align:left; ">sentenced</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>469</td><td>478</td></tr></tbody></table></td></tr></tbody></table></td><td style="border-right-color:black; border-right-style:solid; border-right-width:thin; border-top-color:black; border-top-style:solid; border-top-width:thin; "><table style="border-left-color:transparent; border-left-style:solid; border-left-width:thin; border-right-color:transparent; border-right-style:solid; border-right-width:thin; display:inline; margin-top:10px; " border="0" width="auto"><thead style="border-top-color:black; "><tr style="text-align:center; vertical-align:top; " bgcolor="#697376"><th><span style="color:white; ">SequenceId</span></th><th><span style="color:white; ">Value</span></th><th><span style="color:white; ">CharOffset</span></th></tr></thead><tbody><tr style="text-align:center; vertical-align:top; "><td>83</td><td style="text-align:left; ">to</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>479</td><td>481</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>84</td><td style="text-align:left; ">five</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>482</td><td>486</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>85</td><td style="text-align:left; ">years</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>487</td><td>492</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>86</td><td style="text-align:left; ">.</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>492</td><td>493</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>87</td><td style="text-align:left; ">santos</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>494</td><td>500</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>88</td><td style="text-align:left; ">stated</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>501</td><td>507</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>89</td><td style="text-align:left; ">the</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>508</td><td>511</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>90</td><td style="text-align:left; ">radioactive</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>512</td><td>523</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>91</td><td style="text-align:left; ">material</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>524</td><td>532</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>92</td><td style="text-align:left; ">was</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>533</td><td>536</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>93</td><td style="text-align:left; ">the</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>537</td><td>540</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>94</td><td style="text-align:left; ">primary</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>541</td><td>548</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>95</td><td style="text-align:left; ">basis</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>549</td><td>554</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>96</td><td style="text-align:left; ">for</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>555</td><td>558</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>97</td><td style="text-align:left; ">generating</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>559</td><td>569</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>98</td><td style="text-align:left; ">crude</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>570</td><td>575</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>99</td><td style="text-align:left; ">weapons</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>576</td><td>583</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>100</td><td style="text-align:left; ">of</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>584</td><td>586</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>101</td><td style="text-align:left; ">mass</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>587</td><td>591</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>102</td><td style="text-align:left; ">destruction</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>592</td><td>603</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>103</td><td style="text-align:left; ">and</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>604</td><td>607</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>104</td><td style="text-align:left; ">terrorism</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>608</td><td>617</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>105</td><td style="text-align:left; ">.</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>617</td><td>618</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>106</td><td style="text-align:left; ">uranium</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>620</td><td>627</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>107</td><td style="text-align:left; ">is</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>628</td><td>630</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>108</td><td style="text-align:left; ">a</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>631</td><td>632</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>109</td><td style="text-align:left; ">radioactive</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>633</td><td>644</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>110</td><td style="text-align:left; ">material</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>645</td><td>653</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>111</td><td style="text-align:left; ">which</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>654</td><td>659</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>112</td><td style="text-align:left; ">is</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>660</td><td>662</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>113</td><td style="text-align:left; ">the</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>663</td><td>666</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>114</td><td style="text-align:left; ">primary</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>667</td><td>674</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>115</td><td style="text-align:left; ">basis</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>675</td><td>680</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>116</td><td style="text-align:left; ">for</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>681</td><td>684</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>117</td><td style="text-align:left; ">generating</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>685</td><td>695</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>118</td><td style="text-align:left; ">dirty</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>696</td><td>701</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>119</td><td style="text-align:left; ">weapons</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>702</td><td>709</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>120</td><td style="text-align:left; ">of</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>710</td><td>712</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>121</td><td style="text-align:left; ">mass</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>713</td><td>717</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>122</td><td style="text-align:left; ">destruction</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>718</td><td>729</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>123</td><td style="text-align:left; ">and</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>730</td><td>733</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>124</td><td style="text-align:left; ">terrorism</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>734</td><td>743</td></tr></tbody></table></td></tr><tr style="text-align:center; vertical-align:top; "><td>125</td><td style="text-align:left; ">.</td><td><table style="display:inline; margin-top:10px; " border="0" width="auto"><tbody><tr style="text-align:center; vertical-align:top; "><td>743</td><td>744</td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></center><br><a href="#Table of Contents"><center><span>Go to Top of Page</span></center></a><br><br><br></a><br></body></html>

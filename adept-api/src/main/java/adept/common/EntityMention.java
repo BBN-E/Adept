@@ -1,24 +1,18 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -107,6 +101,7 @@ public class EntityMention extends Chunk {
 	 *            the entity id distribution
 	 */
 	public void setEntityIdDistribution(Map<Long, Float> entityIdDistribution) {
+                checkArgument(entityIdDistribution!=null);
 		this.entityIdDistribution = entityIdDistribution;
 	}
 
@@ -149,6 +144,7 @@ public class EntityMention extends Chunk {
 	 *            the new mention type
 	 */
 	public void setMentionType(IType mentionType) {
+                checkArgument(mentionType!=null);
 		this.mentionType = mentionType;
 	}
 
@@ -177,6 +173,7 @@ public class EntityMention extends Chunk {
 	 *            the new entity type
 	 */
 	public void setEntityType(IType entityType) {
+                checkArgument(entityType!=null);
 		this.entityType = entityType;
 	}
 
@@ -208,6 +205,7 @@ public class EntityMention extends Chunk {
 	 *            the new doc id
 	 */
 	public void setDocId(String docId) {
+                checkArgument(docId!=null && docId.trim().length()>0);
 		this.docId = docId;
 	}
 
@@ -217,6 +215,7 @@ public class EntityMention extends Chunk {
 	 * @param tokenizerType the new tokenizer type
 	 */
 	public void setTokenizerType(TokenizerType tokenizerType) {
+                checkArgument(tokenizerType!=null);
 		this.tokenizerType = tokenizerType;
 	}
 
@@ -283,6 +282,7 @@ public class EntityMention extends Chunk {
 	 */
 	
 	public void setAttributes(Map< String, String > attributes) {
+                checkArgument(attributes!=null);
 		this.attributes = attributes;
 	}
 
@@ -295,6 +295,8 @@ public class EntityMention extends Chunk {
 	
 	public void setAttribute(String attribute, String value) 
 	{
+                checkArgument(attribute!=null && attribute.trim().length()>0);
+                checkArgument(value!=null && value.trim().length()>0);
 		this.attributes.put( attribute, value );
 	}
 	

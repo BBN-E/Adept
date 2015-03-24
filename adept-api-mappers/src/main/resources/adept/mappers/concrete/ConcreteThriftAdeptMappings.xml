@@ -1,5 +1,3 @@
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
     xsi:schemaLocation="http://dozer.sourceforge.net schema/beanmapping.xsd">
   <mapping map-null="false">
@@ -8,27 +6,27 @@
   </mapping>
   <mapping map-null="false">
     <class-a is-accessible="true">adept.mappers.concrete.ID</class-a>
-    <class-b is-accessible="true">edu.jhu.hlt.concrete.Concrete.UUID</class-b>
+    <class-b is-accessible="true">edu.jhu.hlt.concrete.UUID</class-b>
     <field>
       <a is-accessible="true">high</a>
-      <b is-accessible="true">high_</b>
-    </field>
+      <b is-accessible="true">high</b>
+    </field
     <field>
       <a is-accessible="true">low</a>
-      <b is-accessible="true">low_</b>
+      <b is-accessible="true">low</b>
     </field>
     <field>
       <a is-accessible="true">bitField</a>
-      <b is-accessible="true">bitField0_</b>
+      <b is-accessible="true">bitField0</b>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.LanguageIdentification</class-a>
+    <class-a>edu.jhu.hlt.concrete.LanguageIdentification</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.LanguageIdentificationFactory">adept.common.LanguageIdentification</class-b>
     <field custom-converter="adept.mappers.concrete.converters.IDConverter">
       <a is-accessible="true">uuid</a>
       <b is-accessible="true">id.idStr</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.UUID</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.UUID</a-hint>
       <b-hint>adept.common.ID</b-hint>
     </field>
     <field>
@@ -41,31 +39,31 @@
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Tokenization.TokenLattice</class-a>
+    <class-a>edu.jhu.hlt.concrete.Tokenization.TokenLattice</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.TokenLatticeFactory">adept.common.TokenLattice</class-b>
     <field>
-      <a is-accessible="true">startState_</a>
+      <a is-accessible="true">startState</a>
       <b is-accessible="true">startState</b>
     </field>
     <field>
-      <a is-accessible="true">endState_</a>
+      <a is-accessible="true">endState</a>
       <b is-accessible="true">endState</b>
     </field>
     <field>
-      <a is-accessible="true">arc_</a>
+      <a is-accessible="true">arc</a>
       <b is-accessible="true">arcs</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.Tokenization.TokenLattice.Arc</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.Tokenization.TokenLattice.Arc</a-hint>
       <b-hint>adept.common.LatticeArc</b-hint>
     </field>
     <field>
-      <a is-accessible="true">cachedBestPath_</a>
+      <a is-accessible="true">cachedBestPath</a>
       <b is-accessible="true">cached_best_path</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.Tokenization.TokenLattice.LatticePath</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.Tokenization.TokenLattice.LatticePath</a-hint>
       <b-hint>adept.common.LatticePath</b-hint>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Tokenization.Arc</class-a>
+    <class-a>edu.jhu.hlt.concrete.Tokenization.Arc</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.ArcFactory">adept.common.LatticeArc</class-b>
     <field>
       <a is-accessible="true">src</a>
@@ -78,7 +76,7 @@
     <field>
       <a is-accessible="true">token</a>
       <b is-accessible="true">token</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.Token</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.Token</a-hint>
       <b-hint>adept.common.Token</b-hint>
     </field>
     <field>
@@ -87,74 +85,74 @@
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Tokenization.TokenLattice.LatticePath</class-a>
+    <class-a>edu.jhu.hlt.concrete.Tokenization.TokenLattice.LatticePath</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.LatticePathFactory">adept.common.LatticePath</class-b>
 
     <field>
-      <a is-accessible="true">weight_</a>
+      <a is-accessible="true">weight</a>
       <b is-accessible="true">weight</b>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.EmailCommunicationInfo</class-a>
+    <class-a>edu.jhu.hlt.concrete.EmailCommunicationInfo</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.MessageFactory">adept.common.Message</class-b>
     <field>
-      <a is-accessible="true">senderAddress_.displayName_</a>
+      <a is-accessible="true">senderAddress_.displayName</a>
       <b is-accessible="true">sender</b>
     </field>
     <field>
-      <a is-accessible="true">toAddress_</a>
+      <a is-accessible="true">toAddress</a>
       <b is-accessible="true">recipients</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.EmailAddress</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.EmailAddress</a-hint>
       <b-hint>adept.common.EmailAddress</b-hint>
     </field>
     <field>
-      <a is-accessible="true">ccAddress_</a>
+      <a is-accessible="true">ccAddress</a>
       <b is-accessible="true">ccRecipients</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.EmailAddress</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.EmailAddress</a-hint>
       <b-hint>adept.common.EmailAddress</b-hint>
     </field>
     <field>
-      <a is-accessible="true">bccAddress_</a>
+      <a is-accessible="true">bccAddress</a>
       <b is-accessible="true">bccRecipients</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.EmailAddress</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.EmailAddress</a-hint>
       <b-hint>adept.common.EmailAddress</b-hint>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.EmailAddress</class-a>
+    <class-a>edu.jhu.hlt.concrete.EmailAddress</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.EmailAddressFactory">adept.common.EmailAddress</class-b>
     <field>
-      <a is-accessible="true">address_</a>
+      <a is-accessible="true">address</a>
       <b is-accessible="true">address</b>
     </field>
     <field>
-      <a is-accessible="true">displayName_</a>
+      <a is-accessible="true">displayName</a>
       <b is-accessible="true">displayName</b>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Sound</class-a>
+    <class-a>edu.jhu.hlt.concrete.Sound</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.AudioFactory">adept.common.Audio</class-b>
     <field>
-      <a is-accessible="true">path_</a>
+      <a is-accessible="true">path</a>
       <b is-accessible="true">uri</b>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.TextSpan</class-a>
+    <class-a>edu.jhu.hlt.concrete.TextSpan</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.CharOffsetFactory">adept.common.CharOffset</class-b>
     <field>
-      <a is-accessible="true">start_</a>
+      <a is-accessible="true">start</a>
       <b is-accessible="true">begin</b>
     </field>
     <field>
-      <a is-accessible="true">end_</a>
+      <a is-accessible="true">end</a>
       <b is-accessible="true">end</b>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.AudioSpan</class-a>
+    <class-a>edu.jhu.hlt.concrete.AudioSpan</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.AudioOffsetFactory">adept.common.AudioOffset</class-b>
     <field>
       <a is-accessible="true">start</a>
@@ -166,108 +164,108 @@
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Sentence</class-a>
+    <class-a>edu.jhu.hlt.concrete.Sentence</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.SentenceFactory">adept.common.Sentence</class-b>
     <field custom-converter="adept.mappers.concrete.converters.IDConverter">
-      <a is-accessible="true">uuid_</a>
+      <a is-accessible="true">uuid</a>
       <b is-accessible="true">id</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.UUID</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.UUID</a-hint>
       <b-hint>adept.common.ID</b-hint>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.SentenceSegmentation</class-a>
+    <class-a>edu.jhu.hlt.concrete.SentenceSegmentation</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.SessionFactory">adept.common.Session</class-b>
     <field custom-converter="adept.mappers.concrete.converters.IDConverter">
-      <a is-accessible="true">uuid_</a>
+      <a is-accessible="true">uuid</a>
       <b is-accessible="true">id</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.UUID</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.UUID</a-hint>
       <b-hint>adept.common.ID</b-hint>
     </field>
     <field>
-      <a is-accessible="true">metadata_</a>
+      <a is-accessible="true">metadata</a>
       <b is-accessible="true">algorithmName</b>
     </field>
     <field>
-      <a is-accessible="true">sentence_</a>
+      <a is-accessible="true">sentence</a>
       <b is-accessible="true">sentences</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.Sentence</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.Sentence</a-hint>
       <b-hint>adept.common.Sentence</b-hint>
     </field>
   </mapping>
   <mapping>
-    <class-a>edu.jhu.hlt.concrete.Concrete.Section</class-a>
+    <class-a>edu.jhu.hlt.concrete.Section</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.SessionFactory">adept.common.Session</class-b>
     <field custom-converter="adept.mappers.concrete.converters.IDConverter">
-      <a is-accessible="true">uuid_</a>
+      <a is-accessible="true">uuid</a>
       <b is-accessible="true">id</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.UUID</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.UUID</a-hint>
       <b-hint>adept.common.ID</b-hint>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Communication</class-a>
+    <class-a>edu.jhu.hlt.concrete.Communication</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.HltContentContainerFactory">adept.common.HltContentContainer</class-b>
     <field custom-converter="adept.mappers.concrete.converters.IDConverter">
-      <a is-accessible="true">uuid_</a>
+      <a is-accessible="true">uuid</a>
       <b is-accessible="true">id</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.UUID</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.UUID</a-hint>
       <b-hint>adept.common.ID</b-hint>
     </field>
     <field>
-      <a is-accessible="true">metadata_</a>
+      <a is-accessible="true">metadata</a>
       <b is-accessible="true">algorithmName</b>
     </field>
     <field>
-      <a is-accessible="true">text_</a>
+      <a is-accessible="true">text</a>
       <b is-accessible="true">value</b>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Token</class-a>
+    <class-a>edu.jhu.hlt.concrete.Token</class-a>
     <class-b>adept.common.Token</class-b>
     <field>
-      <a is-accessible="true">textSpan_</a>
+      <a is-accessible="true">textSpan</a>
       <b is-accessible="true">charOffset</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.TextSpan</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.TextSpan</a-hint>
       <b-hint>adept.common.CharOffset</b-hint>
     </field>
     <field>
-      <a is-accessible="true">audioSpan_</a>
+      <a is-accessible="true">audioSpan</a>
       <b is-accessible="true">audioOffset</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.AudioSpan</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.AudioSpan</a-hint>
       <b-hint>adept.common.AudioOffset</b-hint>
     </field>
     <field>
-      <a is-accessible="true">text_</a>
+      <a is-accessible="true">text</a>
       <b is-accessible="true">value</b>
     </field>
     <field>
-      <a is-accessible="true">tokenIndex_</a>
+      <a is-accessible="true">tokenIndex</a>
       <b is-accessible="true">sequenceId</b>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Tokenization</class-a>
+    <class-a>edu.jhu.hlt.concrete.Tokenization</class-a>
     <class-b>adept.common.TokenStream</class-b>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.SituationMention</class-a>
+    <class-a>edu.jhu.hlt.concrete.SituationMention</class-a>
     <class-b>adept.common.EntityMention</class-b>
     <field custom-converter="adept.mappers.concrete.converters.IDConverter">
-      <a is-accessible="true">uuid_</a>
+      <a is-accessible="true">uuid</a>
       <b is-accessible="true">id</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.UUID</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.UUID</a-hint>
       <b-hint>adept.common.ID</b-hint>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.EntityMention</class-a>
+    <class-a>edu.jhu.hlt.concrete.EntityMention</class-a>
     <class-b>adept.common.EntityMention</class-b>
     <field custom-converter="adept.mappers.concrete.converters.IDConverter">
-      <a is-accessible="true">uuid_</a>
+      <a is-accessible="true">uuid</a>
       <b is-accessible="true">id</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.UUID</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.UUID</a-hint>
       <b-hint>adept.common.ID</b-hint>
     </field>
     <field-exclude>
@@ -276,26 +274,26 @@
     </field-exclude>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Entity</class-a>
+    <class-a>edu.jhu.hlt.concrete.Entity</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.TimePhraseFactory">adept.common.TimePhrase</class-b>
     <field custom-converter="adept.mappers.concrete.converters.IDConverter">
-      <a is-accessible="true">uuid_</a>
+      <a is-accessible="true">uuid</a>
       <b is-accessible="true">id</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.UUID</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.UUID</a-hint>
       <b-hint>adept.common.ID</b-hint>
     </field>
     <field>
-      <a is-accessible="true">canonicalName_</a>
+      <a is-accessible="true">canonicalName</a>
       <b is-accessible="true">resolution</b>
     </field>
   </mapping>
   <mapping map-null="false">
-    <class-a>edu.jhu.hlt.concrete.Concrete.Situation</class-a>
+    <class-a>edu.jhu.hlt.concrete.Situation</class-a>
     <class-b bean-factory="adept.mappers.concrete.factories.EventPhraseFactory">adept.common.EventPhrase</class-b>
     <field custom-converter="adept.mappers.concrete.converters.IDConverter">
-      <a is-accessible="true">uuid_</a>
+      <a is-accessible="true">uuid</a>
       <b is-accessible="true">id</b>
-      <a-hint>edu.jhu.hlt.concrete.Concrete.UUID</a-hint>
+      <a-hint>edu.jhu.hlt.concrete.UUID</a-hint>
       <b-hint>adept.common.ID</b-hint>
     </field>
   </mapping>

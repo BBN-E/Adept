@@ -1,23 +1,12 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 package adept.restapi;
 
 import java.io.DataInputStream;
@@ -27,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -94,6 +84,27 @@ public abstract class RestServlet extends HttpServlet
 	 */
 	protected  abstract HltContentContainer doProcess(Document document, HltContentContainer hltContentContainer);
 	
+	protected void setState(ServerState serverState) {
+		state = serverState;
+	}
+
+	/** Locking mechanism for 
+     * algorithms that do not support 
+     * concurrent execution
+     */
+    private boolean locked = false;
+    private final ReentrantLock lock = new ReentrantLock();
+    
+    public boolean isLocked()
+    {
+    	return locked;
+    }
+    
+    public boolean isThreadSafe()
+    {
+    	return true;
+    }
+    	
 	/**
 	 * Instantiates a new stanford core nlp servlet.
 	 */
@@ -123,7 +134,7 @@ public abstract class RestServlet extends HttpServlet
 	{
 		super.init();
 		try {
-                        state = ServerState.INITIALIZING;
+            state = ServerState.INITIALIZING;
  	
 			/** The log config file path. */
 			String packageName = new Object(){}.getClass().getPackage().getName();
@@ -237,23 +248,43 @@ public abstract class RestServlet extends HttpServlet
 							hltcc,
                             tokenizerType);
     				System.out.println("Created document length = " + byteCount);
-        			HltContentContainer hltcontentcontainer = doSuperclassProcess(document,hltcc);
-        			if (hltcontentcontainer == null) 
-        			{
-        				// set response fields
-        				System.out.println("ERROR: Unable to create HltContentContainer.");
-    	    			response.setContentType("application/octet-stream");
-    	    			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	    
-        			}
-        			else 
-        			{
-        				// set response fields
-        				System.out.println("Returning HltContentContainer.");
-    	    			response.setContentType("application/octet-stream");
-    	    			response.setStatus(HttpServletResponse.SC_OK);
-    	    			response.getWriter().write(serializer.serializeAsString(hltcontentcontainer));
-    	    			response.getWriter().flush();	    				    			
-        			}    				
+    				
+    				if(this.isLocked())
+    				{
+    					response.setContentType("application/octet-stream");
+    	    			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    				}
+    				else
+    				{
+    					boolean lockstate = false;
+    					HltContentContainer hltcontentcontainer = doSuperclassProcess(document,hltcc,lockstate);
+            			if (hltcontentcontainer == null) 
+            			{
+            				// set response fields
+            				if(lockstate)
+            				{
+            					response.setContentType("application/octet-stream");
+            	    			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            				}
+            				else
+            				{
+            					System.out.println("ERROR: Unable to create HltContentContainer.");
+            	    			response.setContentType("application/octet-stream");
+            	    			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            				}
+            					    
+            			}
+            			else 
+            			{
+            				// set response fields
+            				System.out.println("Returning HltContentContainer.");
+        	    			response.setContentType("application/octet-stream");
+        	    			response.setStatus(HttpServletResponse.SC_OK);
+        	    			response.getWriter().write(serializer.serializeAsString(hltcontentcontainer));
+        	    			response.getWriter().flush();	    				    			
+            			}    				
+    				}
+        			
         		}
         		else if (decodedMethodName.equals("/processAsync"))
         		{
@@ -303,24 +334,52 @@ public abstract class RestServlet extends HttpServlet
         return bOK;
     }
     
+
+    
     /**
      * Do process.
      *
      * @param document the document
      * @return the hlt content container
      */
-    private HltContentContainer doSuperclassProcess(Document document, HltContentContainer hltcontentcontainer)  
+    private HltContentContainer doSuperclassProcess(Document document, HltContentContainer hltcontentcontainer, boolean lockstate)  
     {
-    	// call process function in AdeptModule
-        if(hltcontentcontainer==null) hltcontentcontainer = new HltContentContainer();
-        long start = System.currentTimeMillis();
-        // call to subclass.
-        hltcontentcontainer = doProcess( document, hltcontentcontainer);
-	    long end = System.currentTimeMillis();
-            state = ServerState.IDLE;
-	    System.out.println("Processing took: " + (end - start) + "ms");
-	    logger.info("Processing took: " + (end - start) + "ms");
-	    return hltcontentcontainer;
+    	if(!this.isThreadSafe())
+    	{
+    		boolean result = lock.tryLock();
+    		if(!result)
+    		{
+    			lockstate = true;
+    			return null;
+    		}
+    		else locked = true;
+    	}
+    	try
+    	{
+    		// call process function in AdeptModule
+            if(hltcontentcontainer==null) hltcontentcontainer = new HltContentContainer();
+        	long start = System.currentTimeMillis();
+        	
+        	
+        	// call to subclass.
+        	hltcontentcontainer = doProcess( document, hltcontentcontainer);
+        	if (hltcontentcontainer ==null) state = ServerState.ERROR;
+        	else state=ServerState.IDLE;
+            long end = System.currentTimeMillis();
+        	        
+            System.out.println("Processing took: " + (end - start) + "ms");
+            logger.info("Processing took: " + (end - start) + "ms");
+            return hltcontentcontainer;
+
+    	}
+        finally
+        {
+        	if(!this.isThreadSafe())
+        	{
+        		lock.unlock();
+        		locked = false;
+        	}
+        }
     }   
     
 }
