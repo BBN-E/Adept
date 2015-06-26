@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>adept</groupId>
     <artifactId>adept</artifactId>
     <relativePath>..</relativePath>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.11-SNAPSHOT</version>
   </parent>
   <artifactId>adept-api</artifactId>
   <name>adept-api</name>
@@ -76,8 +74,8 @@
  			<docletPath>/nfs/raid59/u12/DEFT/tools/docflex-doclet-1.6.1/lib/docflex-doclet.jar</docletPath> 
  			<additionalparam> 
  			-template /nfs/raid59/u12/DEFT/tools/docflex-doclet-1.6.1/templates/javadoc/PlainDoc.tpl 
- 			-p:windowTitle "ADEPT API Specifications v3.2" 
- 			-p:docTitle "ADEPT API Specifications v3.2" 
+ 			-p:windowTitle "ADEPT API Specifications v3.4" 
+ 			-p:docTitle "ADEPT API Specifications v3.4" 
  			-format RTF 
  			-nodialog 
  			-launchviewer=false 
@@ -87,7 +85,7 @@
  			<destDir>site</destDir> 
  			<name>site</name> 
  			<description> 
- 			ADEPT API Specifications v3.2 
+ 			ADEPT API Specifications v3.4 
  			</description> 
  		</configuration> 
 		-->
@@ -145,22 +143,30 @@
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>1.4.5</version>
+      <version>1.4.8</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.2</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <version>1.7.2</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-core</artifactId>
       <version>2.10.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.jena</groupId>

@@ -1,5 +1,3 @@
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <?xml version="1.0" encoding="UTF-8"?>
 <structure version="17" xsltversion="1" html-doctype="HTML4 Transitional" compatibility-view="IE9" html-outputextent="Complete" relativeto="*SPS" encodinghtml="UTF-8" encodingrtf="ISO-8859-1" encodingpdf="UTF-8" useimportschema="1" embed-images="1" enable-authentic-scripts="1" authentic-scripts-in-debug-mode-external="0" generated-file-location="DEFAULT">
 	<parameters/>

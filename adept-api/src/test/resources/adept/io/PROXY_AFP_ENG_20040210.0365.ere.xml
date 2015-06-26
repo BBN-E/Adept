@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deft_ere docid="PROXY_AFP_ENG_20040210.0365" source_type="narrative" kit_id="518289fa0000000000000085">
+  <entities>
+    <entity id="ent-59392720" name="entity-PER-2" type="PER">
+      <entity_mention id="m-23" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="123" length="20">ABDEL RAHMAN SHALGAM</entity_mention>
+      <entity_mention id="m-177" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="223" length="7">SHALGAM</entity_mention>
+      <entity_mention id="m-294" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="423" length="20">ABDEL RAHMAN SHALGAM</entity_mention>
+      <entity_mention id="m-346" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="617" length="7">SHALGAM</entity_mention>
+      <entity_mention id="m-411" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="701" length="7">SHALGAM</entity_mention>
+      <entity_mention id="m-502" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="920" length="7">SHALGAM</entity_mention>
+      <entity_mention id="m-619" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1202" length="7">SHALGAM</entity_mention>
+      <entity_mention id="m-658" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1283" length="7">SHALGAM</entity_mention>
+    </entity>
+    <entity id="ent-59411920" name="entity-PER-3" type="PER">
+      <entity_mention id="m-463" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="777" length="10">JACK STRAW</entity_mention>
+      <entity_mention id="m-736" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1429" length="5">STRAW</entity_mention>
+      <entity_mention id="m-801" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1641" length="5">STRAW</entity_mention>
+      <entity_mention id="m-814" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1782" length="5">STRAW</entity_mention>
+      <entity_mention id="m-853" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1895" length="5">STRAW</entity_mention>
+    </entity>
+    <entity id="ent-59419620" name="entity-PER-4" type="PER">
+      <entity_mention id="m-580" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1170" length="26">BRITISH AND U.S. OFFICIALS</entity_mention>
+      <entity_mention id="m-671" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1298" length="16">LIBYAN OFFICIALS</entity_mention>
+    </entity>
+    <entity id="ent-59432140" name="entity-PER-6" type="PER">
+      <entity_mention id="m-515" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1000" length="9">OFFICIALS</entity_mention>
+    </entity>
+    <entity id="ent-59429880" name="entity-PER-7" type="PER">
+      <entity_mention id="m-1606" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1609" length="27">THE INTERNATIONAL COMMUNITY</entity_mention>
+    </entity>
+    <entity id="ent-59427580" name="entity-PER-1" type="PER">
+      <entity_mention id="m-229" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="243" length="16">LIBYAN OFFICIALS</entity_mention>
+      <entity_mention id="m-333" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="501" length="16">LIBYAN OFFICIALS</entity_mention>
+      <entity_mention id="m-476" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="793" length="16">LIBYAN OFFICIALS</entity_mention>
+    </entity>
+    <entity id="ent-59438620" name="entity-PER-8" type="PER">
+      <entity_mention id="m-541" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1053" length="16">LIBYAN OFFICIALS</entity_mention>
+      <entity_mention id="m-762" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1442" length="20">THE LIBYAN OFFICIALS</entity_mention>
+      <entity_mention id="m-827" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1795" length="20">THE LIBYAN OFFICIALS</entity_mention>
+    </entity>
+    <entity id="ent-59433280" name="entity-PER-9" type="PER">
+      <entity_mention id="m-632" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1262" length="16">LIBYAN OFFICIALS</entity_mention>
+    </entity>
+    <entity id="ent-59447400" name="entity-ORG-2" type="ORG">
+      <entity_mention id="m-437" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="760" length="7">FOREIGN</entity_mention>
+    </entity>
+    <entity id="ent-59445380" name="entity-ORG-3" type="ORG">
+      <entity_mention id="m-138" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="106" length="7">FOREIGN</entity_mention>
+      <entity_mention id="m-268" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="406" length="7">FOREIGN</entity_mention>
+      <entity_mention id="m-385" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="668" length="7">FOREIGN</entity_mention>
+      <entity_mention id="m-216" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="187" length="14">LIBYAN FOREIGN</entity_mention>
+    </entity>
+    <entity id="ent-59456020" name="entity-ORG-4" type="ORG">
+      <entity_mention id="m-567" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1086" length="7">TRIPOLI</entity_mention>
+    </entity>
+    <entity id="ent-19459580" name="entity-GPE-2" type="GPE">
+      <entity_mention id="m-125" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="99" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-203" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="187" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-242" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="243" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-320" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="501" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-372" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="661" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-489" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="793" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-554" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1053" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-645" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1262" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-684" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1298" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-723" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1379" length="5">LIBYA</entity_mention>
+      <entity_mention id="m-749" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1446" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-775" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1582" length="5">LIBYA</entity_mention>
+      <entity_mention id="m-788" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1555" length="23">THE FORMER PARIAH STATE</entity_mention>
+      <entity_mention id="m-840" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1799" length="6">LIBYAN</entity_mention>
+      <entity_mention id="m-866" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1959" length="5">LIBYA</entity_mention>
+    </entity>
+    <entity id="ent-20728120" name="entity-GPE-3" type="GPE">
+      <entity_mention id="m-164" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="152" length="6">LONDON</entity_mention>
+      <entity_mention id="m-307" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="489" length="6">LONDON</entity_mention>
+      <entity_mention id="m-359" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="636" length="6">LONDON</entity_mention>
+    </entity>
+    <entity id="ent-20751560" name="entity-GPE-4" type="GPE">
+      <entity_mention id="m-255" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="350" length="7">TRIPOLI</entity_mention>
+      <entity_mention id="m-528" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1013" length="7">TRIPOLI</entity_mention>
+    </entity>
+    <entity id="ent-20885540" name="entity-GPE-5" type="GPE">
+      <entity_mention id="m-424" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="752" length="7">BRITISH</entity_mention>
+      <entity_mention id="m-593" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1170" length="7">BRITISH</entity_mention>
+      <entity_mention id="m-710" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1333" length="7">BRITISH</entity_mention>
+    </entity>
+    <entity id="ent-21091220" name="entity-GPE-6" type="GPE">
+      <entity_mention id="m-606" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1182" length="4">U.S.</entity_mention>
+      <entity_mention id="m-697" noun_type="NAM" source="PROXY_AFP_ENG_20040210.0365" offset="1320" length="8">AMERICAN</entity_mention>
+    </entity>
+    <entity id="ent-23011700" name="entity-LOC-2" type="LOC">
+      <entity_mention id="m-1593" noun_type="NOM" source="PROXY_AFP_ENG_20040210.0365" offset="1871" length="5">WORLD</entity_mention>
+    </entity>
+    <entity id="ent-23270500" name="entity-TITLE-2" type="TITLE">
+      <entity_mention id="m-151" noun_type="NA" source="PROXY_AFP_ENG_20040210.0365" offset="114" length="8">MINISTER</entity_mention>
+      <entity_mention id="m-281" noun_type="NA" source="PROXY_AFP_ENG_20040210.0365" offset="414" length="8">MINISTER</entity_mention>
+      <entity_mention id="m-398" noun_type="NA" source="PROXY_AFP_ENG_20040210.0365" offset="676" length="8">MINISTER</entity_mention>
+    </entity>
+    <entity id="ent-23587040" name="entity-TITLE-3" type="TITLE">
+      <entity_mention id="m-450" noun_type="NA" source="PROXY_AFP_ENG_20040210.0365" offset="768" length="8">MINISTER</entity_mention>
+    </entity>
+  </entities>
+  <relations>
+    <relation id="r-33372720" type="social" subtype="role">
+      <relation_mention id="relm-40">
+        <arg type="role" entity_id="ent-23270500" entity_mention_id="m-151">MINISTER</arg>
+        <arg type="per" entity_id="ent-59392720" entity_mention_id="m-23">ABDEL RAHMAN SHALGAM</arg>
+      </relation_mention>
+      <relation_mention id="relm-1024">
+        <arg type="role" entity_id="ent-23270500" entity_mention_id="m-281">MINISTER</arg>
+        <arg type="per" entity_id="ent-59392720" entity_mention_id="m-294">ABDEL RAHMAN SHALGAM</arg>
+      </relation_mention>
+    </relation>
+    <relation id="r-33372540" type="affiliation" subtype="leadership">
+      <relation_mention id="relm-874">
+        <arg type="leader" entity_id="ent-59392720" entity_mention_id="m-23">ABDEL RAHMAN SHALGAM</arg>
+        <arg type="entity" entity_id="ent-59445380" entity_mention_id="m-138">FOREIGN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="114" length="8">MINISTER</trigger>
+      </relation_mention>
+      <relation_mention id="relm-1054">
+        <arg type="leader" entity_id="ent-59392720" entity_mention_id="m-294">ABDEL RAHMAN SHALGAM</arg>
+        <arg type="entity" entity_id="ent-59445380" entity_mention_id="m-268">FOREIGN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="414" length="8">MINISTER</trigger>
+      </relation_mention>
+    </relation>
+    <relation id="r-33372200" type="partwhole" subtype="subsidiary">
+      <relation_mention id="relm-904">
+        <arg type="suborg" entity_id="ent-59445380" entity_mention_id="m-138">FOREIGN</arg>
+        <arg type="parent" entity_id="ent-19459580" entity_mention_id="m-125">LIBYAN</arg>
+      </relation_mention>
+      <relation_mention id="relm-964">
+        <arg type="suborg" entity_id="ent-59445380" entity_mention_id="m-216">LIBYAN FOREIGN</arg>
+        <arg type="parent" entity_id="ent-19459580" entity_mention_id="m-203">LIBYAN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="187" length="6">LIBYAN</trigger>
+      </relation_mention>
+      <relation_mention id="relm-1174">
+        <arg type="suborg" entity_id="ent-59445380" entity_mention_id="m-385">FOREIGN</arg>
+        <arg type="parent" entity_id="ent-19459580" entity_mention_id="m-372">LIBYAN</arg>
+      </relation_mention>
+    </relation>
+    <relation id="r-33372060" type="physical" subtype="located">
+      <relation_mention id="relm-934">
+        <arg type="entity" entity_id="ent-59392720" entity_mention_id="m-23">ABDEL RAHMAN SHALGAM</arg>
+        <arg type="loc" entity_id="ent-20728120" entity_mention_id="m-164">LONDON</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="144" length="7">VISITED</trigger>
+      </relation_mention>
+      <relation_mention id="relm-1084">
+        <arg type="entity" entity_id="ent-59392720" entity_mention_id="m-294">ABDEL RAHMAN SHALGAM</arg>
+        <arg type="loc" entity_id="ent-20728120" entity_mention_id="m-307">LONDON</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="480" length="5">VISIT</trigger>
+      </relation_mention>
+      <relation_mention id="relm-1144">
+        <arg type="entity" entity_id="ent-59392720" entity_mention_id="m-346">SHALGAM</arg>
+        <arg type="loc" entity_id="ent-20728120" entity_mention_id="m-359">LONDON</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="627" length="5">VISIT</trigger>
+      </relation_mention>
+    </relation>
+    <relation id="r-33371960" type="affiliation" subtype="employmentmembership">
+      <relation_mention id="relm-994">
+        <arg type="employeemember" entity_id="ent-59427580" entity_mention_id="m-229">LIBYAN OFFICIALS</arg>
+        <arg type="org" entity_id="ent-19459580" entity_mention_id="m-242">LIBYAN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="250" length="9">OFFICIALS</trigger>
+      </relation_mention>
+      <relation_mention id="relm-1114">
+        <arg type="employeemember" entity_id="ent-59427580" entity_mention_id="m-333">LIBYAN OFFICIALS</arg>
+        <arg type="org" entity_id="ent-19459580" entity_mention_id="m-320">LIBYAN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="508" length="9">OFFICIALS</trigger>
+      </relation_mention>
+      <relation_mention id="relm-1294">
+        <arg type="employeemember" entity_id="ent-59427580" entity_mention_id="m-476">LIBYAN OFFICIALS</arg>
+        <arg type="org" entity_id="ent-19459580" entity_mention_id="m-489">LIBYAN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="800" length="9">OFFICIALS</trigger>
+      </relation_mention>
+    </relation>
+    <relation id="r-33371520" type="social" subtype="role">
+      <relation_mention id="relm-1204">
+        <arg type="role" entity_id="ent-23270500" entity_mention_id="m-398">MINISTER</arg>
+        <arg type="per" entity_id="ent-59411920" entity_mention_id="m-463">JACK STRAW</arg>
+      </relation_mention>
+    </relation>
+    <relation id="r-33371340" type="affiliation" subtype="leadership">
+      <relation_mention id="relm-1234">
+        <arg type="leader" entity_id="ent-59411920" entity_mention_id="m-463">JACK STRAW</arg>
+        <arg type="entity" entity_id="ent-59447400" entity_mention_id="m-437">FOREIGN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="768" length="8">MINISTER</trigger>
+      </relation_mention>
+    </relation>
+    <relation id="r-33371100" type="partwhole" subtype="subsidiary">
+      <relation_mention id="relm-1264">
+        <arg type="suborg" entity_id="ent-59447400" entity_mention_id="m-437">FOREIGN</arg>
+        <arg type="parent" entity_id="ent-20885540" entity_mention_id="m-424">BRITISH</arg>
+      </relation_mention>
+    </relation>
+    <relation id="r-33370780" type="physical" subtype="located">
+      <relation_mention id="relm-1324">
+        <arg type="entity" entity_id="ent-59432140" entity_mention_id="m-515">OFFICIALS</arg>
+        <arg type="loc" entity_id="ent-20751560" entity_mention_id="m-528">TRIPOLI</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="1010" length="2">IN</trigger>
+      </relation_mention>
+    </relation>
+    <relation id="r-33370600" type="affiliation" subtype="employmentmembership">
+      <relation_mention id="relm-1354">
+        <arg type="employeemember" entity_id="ent-59438620" entity_mention_id="m-541">LIBYAN OFFICIALS</arg>
+        <arg type="org" entity_id="ent-19459580" entity_mention_id="m-554">LIBYAN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="1060" length="9">OFFICIALS</trigger>
+      </relation_mention>
+      <relation_mention id="relm-1444">
+        <arg type="employeemember" entity_id="ent-59438620" entity_mention_id="m-762">THE LIBYAN OFFICIALS</arg>
+        <arg type="org" entity_id="ent-19459580" entity_mention_id="m-749">LIBYAN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="1453" length="9">OFFICIALS</trigger>
+      </relation_mention>
+      <relation_mention id="relm-1474">
+        <arg type="employeemember" entity_id="ent-59438620" entity_mention_id="m-827">THE LIBYAN OFFICIALS</arg>
+        <arg type="org" entity_id="ent-19459580" entity_mention_id="m-840">LIBYAN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="1806" length="9">OFFICIALS</trigger>
+      </relation_mention>
+    </relation>
+    <relation id="r-33370420" type="affiliation" subtype="employmentmembership">
+      <relation_mention id="relm-1384">
+        <arg type="employeemember" entity_id="ent-59433280" entity_mention_id="m-632">LIBYAN OFFICIALS</arg>
+        <arg type="org" entity_id="ent-19459580" entity_mention_id="m-645">LIBYAN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="1269" length="9">OFFICIALS</trigger>
+      </relation_mention>
+    </relation>
+    <relation id="r-33370280" type="affiliation" subtype="employmentmembership">
+      <relation_mention id="relm-1414">
+        <arg type="employeemember" entity_id="ent-59419620" entity_mention_id="m-671">LIBYAN OFFICIALS</arg>
+        <arg type="org" entity_id="ent-19459580" entity_mention_id="m-684">LIBYAN</arg>
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="1305" length="9">OFFICIALS</trigger>
+      </relation_mention>
+    </relation>
+  </relations>
+  <events>
+    <event id="e-19416580" name="entity-EVENT-2">
+      <event_mention id="evm-84" type="movement" subtype="transportperson">
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="144" length="7">VISITED</trigger>
+        <args>
+          <arg type="agent" entity_mention_id="m-23" entity_id="ent-59392720">ABDEL RAHMAN SHALGAM</arg>
+        </args>
+        <places>
+          <place entity_mention_id="m-164">LONDON</place>
+        </places>
+        <date>
+          <date_extent source="" offset="0" length=""></date_extent>
+          <normalized_date>2004-XX-XX</normalized_date>
+        </date>
+      </event_mention>
+      <event_mention id="evm-1662" type="movement" subtype="transportperson">
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="480" length="5">VISIT</trigger>
+        <args>
+          <arg type="agent" entity_mention_id="m-294" entity_id="ent-59392720">ABDEL RAHMAN SHALGAM</arg>
+        </args>
+        <places>
+          <place entity_mention_id="m-307">LONDON</place>
+        </places>
+        <date>
+          <date_extent source="PROXY_AFP_ENG_20040210.0365" offset="454" length="16">10 FEBRUARY 2004</date_extent>
+          <normalized_date>2004-02-10</normalized_date>
+        </date>
+      </event_mention>
+      <event_mention id="evm-1704" type="movement" subtype="transportperson">
+        <trigger source="PROXY_AFP_ENG_20040210.0365" offset="627" length="5">VISIT</trigger>
+        <args>
+          <arg type="agent" entity_mention_id="m-346" entity_id="ent-59392720">SHALGAM</arg>
+        </args>
+        <places>
+          <place entity_mention_id="m-359">LONDON</place>
+        </places>
+      </event_mention>
+    </event>
+  </events>
+</deft_ere>

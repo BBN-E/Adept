@@ -1,23 +1,15 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
 
 import com.hp.hpl.jena.ontology.Individual;
@@ -79,27 +71,42 @@ public class OntTypeFactory implements ITypeFactory {
 	 * @throws InvalidPropertiesFormatException the invalid properties format exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static OntTypeFactory getInstance(String ontTypeCatalog)
-			throws InvalidPropertiesFormatException, IOException {
-		OntTypeFactory otFactory;
-		if (instances.get(ontTypeCatalog) == null) {
-			otFactory = new OntTypeFactory();
-			otFactory.models = new HashMap<String, OntModel>();
-			otFactory.loadOntTypeCatalog(ontTypeCatalog);
-			otFactory.loadOntURIDirectory("adept/common/IdentifierToURIMapping.xml");
-			// set up the reasoner to use
-			otFactory.ontModelSpec = OntModelSpec.OWL_MEM;
-			Reasoner reasoner = ReasonerRegistry.getOWLReasoner();
-			otFactory.ontModelSpec.setReasoner(reasoner);
-			
-			//insert into hashmap
-            instances.put(ontTypeCatalog, otFactory);
+	public static OntTypeFactory getInstance(String ontTypeCatalog) {
+		try
+		{
+			OntTypeFactory otFactory;
+			if (instances.get(ontTypeCatalog) == null) {
+				otFactory = new OntTypeFactory();
+				otFactory.models = new HashMap<String, OntModel>();
+				otFactory.loadOntTypeCatalog(ontTypeCatalog);
+				otFactory.loadOntURIDirectory("adept/common/IdentifierToURIMapping.xml");
+				// set up the reasoner to use
+				otFactory.ontModelSpec = OntModelSpec.OWL_MEM;
+				Reasoner reasoner = ReasonerRegistry.getOWLReasoner();
+				otFactory.ontModelSpec.setReasoner(reasoner);
+				
+				//insert into hashmap
+	            instances.put(ontTypeCatalog, otFactory);
+			}
+			else {
+				//System.out.println("Found a factory instance previously made!");
+				otFactory = instances.get(ontTypeCatalog);
+			}
+			return otFactory;
 		}
-		else {
-			//System.out.println("Found a factory instance previously made!");
-			otFactory = instances.get(ontTypeCatalog);
+		catch(InvalidPropertiesFormatException e)
+		{
+			System.out.println("Trouble loading ontology mapping file: " + ontTypeCatalog);
+			e.printStackTrace();
+			return null;
 		}
-		return otFactory;
+		catch(IOException e)
+		{
+			System.out.println("Trouble loading ontology mapping file: " + ontTypeCatalog);
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 	
 
@@ -110,17 +117,7 @@ public class OntTypeFactory implements ITypeFactory {
 	 */
 	public static OntTypeFactory getInstance()
 	{
-		try {
 			return getInstance("adept/common/OntologyMapping.xml");
-		} catch (InvalidPropertiesFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;
 	}
 	
 	
@@ -197,11 +194,23 @@ public class OntTypeFactory implements ITypeFactory {
 	 * @throws InvalidPropertiesFormatException the invalid properties format exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void loadOntTypeCatalog(String ontTypeCatalogName)
-			throws InvalidPropertiesFormatException, IOException {
-		ontTypeCatalog = new Properties();
-		InputStream is = Reader.getInstance().findStreamInClasspathOrFileSystem(ontTypeCatalogName);		
-		ontTypeCatalog.loadFromXML(is);
+	private void loadOntTypeCatalog(String ontTypeCatalogName) {
+		try
+		{
+			ontTypeCatalog = new Properties();
+			InputStream is = Reader.getInstance().findStreamInClasspathOrFileSystem(ontTypeCatalogName);		
+			ontTypeCatalog.loadFromXML(is);
+		}
+		catch(InvalidPropertiesFormatException e)
+		{
+			System.out.println("Failed to load ontology type catalog:" + ontTypeCatalogName);
+			e.printStackTrace();
+		}
+		catch(IOException e)
+		{
+			System.out.println("Failed to load ontology type catalog:" + ontTypeCatalogName);
+			e.printStackTrace();
+		}
 	}
 	
 	/**

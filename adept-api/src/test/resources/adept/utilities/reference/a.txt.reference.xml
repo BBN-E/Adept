@@ -1,0 +1,10 @@
+<adept.common.HltContentContainer>
+  <id>
+    <id>f1dca8db-47e5-4d12-9583-a0be1db8e0a2</id>
+    <idStr>f1dca8db-47e5-4d12-9583-a0be1db8e0a2</idStr>
+  </id>
+  <eventMentions class="com.google.common.collect.EmptyImmutableList" resolves-to="com.google.common.collect.ImmutableList$SerializedForm">
+    <elements/>
+  </eventMentions>
+  <eventTexts class="com.google.common.collect.EmptyImmutableList" reference="../eventMentions"/>
+</adept.common.HltContentContainer>

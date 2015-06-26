@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document document_name="albawaba_news_242533" document_type="text" document_genre="news" source_language="en" document_capture_date="2009-04-08T14:39:45.000000+00:00" 
+document_language="English" document_id="12345" document_split_id="0" document_headline="Lebanon approves first Syrian ambassador" document_uri="http://www.albawaba.com/en/news/242533" corpus_id="222" corpus_name="albawaba_news" corpus_type="website"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="\\mercury-04\u39\DEFT\users\jwatson\sandbox\deft\adept\adept-api\src\test\resources\adept\io\AWAKE.xsd" >
+	<passage passage_id="1" >Lebanon approves first Syrian ambassador
+
+	</passage>
+	<passage passage_id="2" >Posted: 24-03-2009 , 13:31 GMT
+
+	</passage>
+	<passage passage_id="3" >Lebanon approved on Tuesday Syria's nominee for its first ambassador to Beirut, five months after the two countries established diplomatic ties for the first time, an official said.
+	
+	</passage>
+	<passage passage_id="4" >"President Michel Sleiman on Tuesday approved the nomination of Ali Abdel Karim Ali as the Syrian Arab Republic's ambassador to Beirut," the official in the president's office said, according to AFP .
+	
+	</passage>
+	<passage passage_id="5" >Lebanon's ambassador to Damascus, diplomat Michel el-Khoury, was named at the start of the year and an embassy was opened in the Syrian capital earlier this month.
+	
+	</passage>
+	<passage passage_id="6" >The 56 year old Ali has been ambassador to Kuwait since November 2004 and has also served as the head of Syrian state radio and television and the official SANA news agency. In 1998, the married father of four published a collection of poems.
+	
+	</passage>
+	<passage passage_id="7" >© 2009 Al Bawaba (www.albawaba.com)
+	
+	</passage>
+	<passage passage_id="8" >Opinions - No Opinions found for this article Document Date: 2009-04-08" 
+
+</passage>
+<!-- test error cases -->
+	<passage passage_id="9" ></passage>
+	<passage passage_id="10" >قد غير زهاء لكون الخاسرة, انه عن الحكومة الضحايا. مرمى عرفها وصافرات عام أن. بل انه سليمان، الإحتلال, قِبل التحالف الأهداف وفي هو, اقتصّت والنرويج اليابانية قصف أن. الحروب باحتلال البشريةً و يبق, بها ٣٠ وسفن وسوء الساحل. تشكيل قائمة يتسنّى كلّ هو</passage>
+	<passage passage_id="11" > 	 	 	</passage>
+	<passage passage_id="20" >This one skips an ID" </passage>
+</document>
+

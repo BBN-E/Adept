@@ -1,23 +1,3 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
 package adept.io;
 
 import java.io.BufferedReader;
@@ -100,7 +80,7 @@ public class LDCCorpusReader {
         String docID = uri;
         if(docID == null)
         	docID = "UNKNOWN";
-        
+
         List<ConversationElementTag> tags = new ArrayList<ConversationElementTag>();
         //contains name, attributes, start
         //Stack<Pair<Pair<String, Map<String, String>>, Integer>> tagStack = new Stack<Pair<Pair<String, Map<String, String>>, Integer>>();
@@ -145,7 +125,7 @@ public class LDCCorpusReader {
 
             currTagBegin = tagStart;
             String contentString = text.substring(lastTagEnd, currTagBegin);
-//	    System.out.println("Content: " + contentString);					 
+//	    System.out.println("Content: " + contentString);
             TokenStream contentTokenStream = StanfordTokenizer.getInstance().tokenize(contentString, adeptDocument);
             for (Token t : contentTokenStream) {
                 CharOffset tOffset = t.getCharOffset();
@@ -200,7 +180,7 @@ public class LDCCorpusReader {
 
             if (isEnd) {
                 if (isQuote) {
-                    ConversationElement openQuote = quoteStack.pop();                    
+                    ConversationElement openQuote = quoteStack.pop();
                     ConversationElement newQuote = new ConversationElement(new TokenOffset(openQuote.getMessageChunk().getTokenOffset().getBegin(), tokenStream.size() - 1), tokenStream);
                     newQuote.getFreeTextAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID"),
                     		openQuote.getFreeTextAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID")));
@@ -278,7 +258,7 @@ public class LDCCorpusReader {
                         {
                         	sequenceId = "1";
                         }
-                        
+
                     }
                     if (tokenBegin > tokenStream.size() - 1) {
                         tokenBegin = tokenStream.size() - 1;
@@ -484,7 +464,7 @@ public class LDCCorpusReader {
             Element DOCElement = (Element) doc.getElementsByTagName("DOC").item(0);
             docID = DOCElement.getAttribute("id");
             docType = DOCElement.getAttribute("type");
-            if (docID.equals("")) {		
+            if (docID.equals("")) {
                 try {
                     System.out.println("DOCID was empty on the first attempt");
 		    /** Get Adept Document ID */
@@ -492,7 +472,7 @@ public class LDCCorpusReader {
 		    if (docElements != null && docElements.getLength() != 0) {
 			docID = docElements.item(0).getFirstChild().getNodeValue();
 		    }
-		    if (docElements == null || docElements.getLength() == 0 || docID == null || 
+		    if (docElements == null || docElements.getLength() == 0 || docID == null ||
 			(docID != null && docID.equals(""))) {
 			System.out.println("DOCID was empty in the second attempt (DOCID)");
 			docID = doc.getElementsByTagName("DOCNO").item(0).getFirstChild()
@@ -555,64 +535,60 @@ public class LDCCorpusReader {
         return adeptDocument;
     }
 
-    // TODO break passages at the end of one or more blank lines.
-    public int getPassages(List<PassageAttributes> passageAttributesList, String text) {
-
-//        PassageAttributes pa = new PassageAttributes();
-//        pa.setPassageId(0);
-//        pa.setValue(text.trim());
-//        passageAttributesList.add(pa);
-//        return 0;
-//    }
+    /**
+     * Get a {@link List} of passages given some input text {@code text}.
+     * @param passageAttributesList The empty list to which to add the passages.
+     * @param text The input text.
+     */
+    public void getPassages(List<PassageAttributes> passageAttributesList, String text) {
         BufferedReader bufReader = new BufferedReader(new StringReader(text));
-       String line = null;
-       int passageId = 0;
-        StringBuffer sb = new StringBuffer();
-        boolean wasPrevBlank = false;
-        char[] charList = text.toCharArray();
-        int offset = 0;
+        int postPassageOffset = 0; // used to count up the increasing postPassageOffset for each passage
+        StringBuffer value = new StringBuffer(); // used to build up the value string for each passage
+        String line; // used to hold each line as we read it in from the buffer
+        boolean wasPreviousLineBlank = false; // used to store whether the line before the one that we are currently reading was blank
         try {
-            while (true) {
-                line = bufReader.readLine();
-                boolean isBlank = ( line != null && line.trim().length()==0);
-
-                PassageAttributes pa = new PassageAttributes();
-		boolean addPassage = false;
-                if (line == null || (wasPrevBlank && ! isBlank)) {
-		    addPassage = true;
-                    pa.setPassageId(passageId++);
-                    pa.setValue(sb.toString().trim());
-                    sb = new StringBuffer();
+            while ((line = bufReader.readLine()) != null) {
+                boolean isCurrentLineBlank = line.trim().isEmpty();
+                // The defined condition for writing what we have so far (not including the current line) to a new
+                // passage is a transition from a blank line to a non-blank line.
+                if (wasPreviousLineBlank && !isCurrentLineBlank) {
+                    addPassageToList(passageAttributesList, value.toString().trim(), postPassageOffset);
+                    postPassageOffset = 0;
+                    value.setLength(0);
                 }
-                if (line == null) {
-                    passageAttributesList.add(pa);
-		    break;
-		}
-                wasPrevBlank = isBlank;
-                if ( !isBlank ) sb.append(line );
-                offset += line.length();
-               // Add EOL characters
-		int postOffset = 0;
-                while ( offset < charList.length ) {
-                    char c = charList[offset];
-                    if ( c=='\r' || c=='\n' ) {
-                        sb.append(c);
-                        ++offset;
-                        ++postOffset;
+                if (isCurrentLineBlank) {
+                    postPassageOffset += (1 + line.length()); // The blank line could still contain something like a space
+                } else {
+                    if (value.length() != 0) {
+                        value.append(" "); // Make sure to add spaces for line breaks within the same passage
                     }
-                    else break;
+                    value.append(line);
                 }
-		if (addPassage) {
-		    pa.setPostPassageOffset(postOffset);
-                    passageAttributesList.add(pa);
-		}
+                wasPreviousLineBlank = isCurrentLineBlank; // Get ready for the next loop iteration
             }
-        } catch (Exception ex) {
-            System.out.println(ex);
+            // We have reached the end of the buffer, but still need to add the final passage
+            // that we have been building up to this point.
+            if (text.endsWith("\n") || text.endsWith("\r")) {
+                // If the last line of the file is a newline or carriage return
+                // BufferedReader.readLine() will return null just before
+                // giving the last blank line. We correct for this simply by adding 1
+                // to the offset.
+                postPassageOffset++;
+            }
+            addPassageToList(passageAttributesList, value.toString().trim(), postPassageOffset);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1); // Consider an IOException here to be fatal
         }
+    }
 
-//        System.out.println("Breaking passages =" + passageId);
-        return passageId;
+    /* Utility method used by getPassages([...]) */
+    private void addPassageToList(List<PassageAttributes> passageAttributesList, String valueString, int postPassageOffset) {
+        PassageAttributes passageAttributes = new PassageAttributes();
+        passageAttributes.setValue(valueString);
+        passageAttributes.setPostPassageOffset(postPassageOffset);
+        passageAttributes.setPassageId(passageAttributesList.size());
+        passageAttributesList.add(passageAttributes);
     }
 
 }

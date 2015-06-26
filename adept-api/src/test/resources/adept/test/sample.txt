@@ -1,0 +1,4 @@
+this is a sample file. This is a sample file. This is a sample file. Danrae Pray
+Danrae Pray 6 months ago
+xml to json help
+Hi, I am new to Mule and I am trying to create a flow where XML files come in from a directory (on my local machine), get transformed into JSONs, and then are outputted in another directory (also on my local machine). I believe that I have setup the endpoints for the flow correctly, but as for the XML -> JSON transformer, I linked an XML to Object transformer to an Object to JSON transformer and placed them inbetween the two file endpoints in the flow. I can run the app (and it says that it has started), but when I drop a file (Person.xml) in the "input" directory, it gets picked up by MULE and never gets transformed / output as a JSON... I get this exception thrown when I do this:
