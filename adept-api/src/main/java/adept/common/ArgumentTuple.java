@@ -1,23 +1,15 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
 
 import java.util.ArrayList;
@@ -27,7 +19,7 @@ import com.hp.hpl.jena.ontology.OntClass;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Relation.
  */
@@ -36,19 +28,22 @@ public class ArgumentTuple extends HltContent {
 	/** The type. */
 	protected final IType tupleType;
 	
-	/** The attribute, if any. */
+	/** Attributes, if any. */
 	protected List<IType> attributes;
 
-	/** The arguments. */
+	/** The arguments belonging to the argument tuple. */
 	protected List<Argument> arguments = new ArrayList<Argument>();
 
-	/** The confidence. */
+	/** The overall confidence of the argument tuple. */
 	protected float confidence;
 
+	/** The within-text justifications. */
+	protected List<Chunk> justifications = new ArrayList<Chunk>(); 
+	
 	/** The textual context. */
 	protected Chunk context;
 
-	/** The size of the context. */
+	/** The size of the textual context to be set. */
 	protected int contextSize = 2;
 	
 	/**
@@ -85,7 +80,7 @@ public class ArgumentTuple extends HltContent {
 		}
 		catch(Exception e)
 		{
-			System.out.println("Exception thrown while trying to set context: ");
+			System.out.println("Exception thrown while trying to set context\n");
 			//e.printStackTrace();
 		}
 		return bOK;
@@ -220,4 +215,23 @@ public class ArgumentTuple extends HltContent {
 		return tupleType;
 	}
 	
+	/**
+	 * Adds justification chunk
+	 * 
+	 */
+	public void addJustification(Chunk justification)
+	{
+		//checkArgument(justification != null);
+		justifications.add(justification);
+	}
+	
+	/**
+	 * Gets justification chunks
+	 * 
+	 * @return List<Chunk> justifications
+	 */
+	public List<Chunk> getJustifications()
+	{
+		return this.justifications;
+	}
 }

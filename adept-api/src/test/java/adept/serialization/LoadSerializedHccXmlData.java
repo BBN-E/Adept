@@ -1,23 +1,3 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
 package adept.serialization;
 
 import java.io.File;
@@ -74,8 +54,8 @@ public class LoadSerializedHccXmlData {
 				Map.Entry<Long,Float> es = em.getEntityIdDistribution().entrySet().iterator().next();
 				long kbEntityId = es.getKey();
 				long entityId = kbEntityId;				
-				for(Entity e : hcc.getCoreferences().get(0).getEntities()) {
-					KBEntity kbe = e.getKBEntityDistribution().entrySet().iterator().next().getKey();
+				/*for(Entity e : hcc.getCoreferences().get(0).getEntities()) {
+					String kbe = e.getKBEntityDistribution().entrySet().iterator().next().getKey();
 					if (kbe.getEntityId() == kbEntityId) {
 						entityId = e.getEntityId();
 						System.out.println("Mention: " + em.getValue() + ", KBE: " + kbEntityId + ", E: " + entityId);
@@ -84,7 +64,7 @@ public class LoadSerializedHccXmlData {
 						kbe.setEntityType(entityType);
 						break;
 					}
-				}
+				}*/
 				Map<Long,Float> entityIdDist = new HashMap<Long,Float>();
 				entityIdDist.put(entityId, es.getValue());
 				em.setEntityIdDistribution(entityIdDist);

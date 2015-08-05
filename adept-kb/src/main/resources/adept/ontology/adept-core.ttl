@@ -1,0 +1,2279 @@
+@prefix : <http://adept-kb.bbn.com/adept-core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix adept-base: <http://adept-kb.bbn.com/adept-base#> .
+@base <http://adept-kb.bbn.com/adept-core> .
+
+<http://adept-kb.bbn.com/adept-core> rdf:type owl:Ontology ;
+                                     
+                                     owl:imports <http://adept-kb.bbn.com/adept-base> .
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://adept-kb.bbn.com/adept-base#argument
+
+adept-base:argument rdf:type owl:ObjectProperty .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#thing
+
+adept-base:thing rdf:type owl:ObjectProperty .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#adjudicator
+
+:adjudicator rdf:type owl:ObjectProperty ;
+             
+             rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#affiliatedEntity
+
+:affiliatedEntity rdf:type owl:ObjectProperty ;
+                  
+                  rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#age
+
+:age rdf:type owl:ObjectProperty ;
+     
+     rdfs:subPropertyOf adept-base:argument .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#agent
+
+:agent rdf:type owl:ObjectProperty ;
+       
+       rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#artifact
+
+:artifact rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf adept-base:thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#attacker
+
+:attacker rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#audience
+
+:audience rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#beneficiary
+
+:beneficiary rdf:type owl:ObjectProperty ;
+             
+             rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#broadcaster
+
+:broadcaster rdf:type owl:ObjectProperty ;
+             
+             rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#child
+
+:child rdf:type owl:ObjectProperty ;
+       
+       rdfs:subPropertyOf :person .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#crime
+
+:crime rdf:type owl:ObjectProperty ;
+       
+       rdfs:subPropertyOf adept-base:argument ;
+       
+       rdfs:range :Crime .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#defendant
+
+:defendant rdf:type owl:ObjectProperty ;
+           
+           rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#destination
+
+:destination rdf:type owl:ObjectProperty ;
+             
+             rdfs:subPropertyOf :location .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#employeeMember
+
+:employeeMember rdf:type owl:ObjectProperty ;
+                
+                rdfs:subPropertyOf :person .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#entity
+
+:entity rdf:type owl:ObjectProperty ;
+        
+        rdfs:subPropertyOf adept-base:thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#finedEntity
+
+:finedEntity rdf:type owl:ObjectProperty ;
+             
+             rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#founder
+
+:founder rdf:type owl:ObjectProperty ;
+         
+         rdfs:subPropertyOf :person .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#giver
+
+:giver rdf:type owl:ObjectProperty ;
+       
+       rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#instrument
+
+:instrument rdf:type owl:ObjectProperty ;
+            
+            rdfs:subPropertyOf adept-base:thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#investorShareholder
+
+:investorShareholder rdf:type owl:ObjectProperty ;
+                     
+                     rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#leader
+
+:leader rdf:type owl:ObjectProperty ;
+        
+        rdfs:subPropertyOf :person .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#locatedEntity
+
+:locatedEntity rdf:type owl:ObjectProperty ;
+               
+               rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#location
+
+:location rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf :entity ;
+          
+          owl:equivalentProperty :place .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#member
+
+:member rdf:type owl:ObjectProperty ;
+        
+        rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#money
+
+:money rdf:type owl:ObjectProperty ;
+       
+       rdfs:subPropertyOf adept-base:thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#number
+
+:number rdf:type owl:ObjectProperty .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#organization
+
+:organization rdf:type owl:ObjectProperty ;
+              
+              rdfs:range :Organization ;
+              
+              rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#origin
+
+:origin rdf:type owl:ObjectProperty ;
+        
+        rdfs:subPropertyOf :location .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#owner
+
+:owner rdf:type owl:ObjectProperty ;
+       
+       rdfs:subPropertyOf :person .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#parent
+
+:parent rdf:type owl:ObjectProperty ;
+        
+        rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#person
+
+:person rdf:type owl:ObjectProperty ;
+        
+        rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#place
+
+:place rdf:type owl:ObjectProperty ;
+       
+       rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#plaintiff
+
+:plaintiff rdf:type owl:ObjectProperty ;
+           
+           rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#position
+
+:position rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf adept-base:argument ;
+          
+          owl:equivalentProperty :role .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#prosecutor
+
+:prosecutor rdf:type owl:ObjectProperty ;
+            
+            rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#recipient
+
+:recipient rdf:type owl:ObjectProperty ;
+           
+           rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#role
+
+:role rdf:type owl:ObjectProperty ;
+      
+      rdfs:subPropertyOf adept-base:argument .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#sentence
+
+:sentence rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf adept-base:argument .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#sentimentHolder
+
+:sentimentHolder rdf:type owl:ObjectProperty ;
+                 
+                 rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#studentAlumni
+
+:studentAlumni rdf:type owl:ObjectProperty ;
+               
+               rdfs:subPropertyOf :person .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#subOrganization
+
+:subOrganization rdf:type owl:ObjectProperty ;
+                 
+                 rdfs:subPropertyOf :organization .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#target
+
+:target rdf:type owl:ObjectProperty ;
+        
+        rdfs:subPropertyOf adept-base:thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#time
+
+:time rdf:type owl:ObjectProperty ;
+      
+      rdfs:subPropertyOf adept-base:argument .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#transferredThing
+
+:transferredThing rdf:type owl:ObjectProperty ;
+                  
+                  rdfs:subPropertyOf adept-base:thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#url
+
+:url rdf:type owl:ObjectProperty ;
+     
+     rdfs:subPropertyOf adept-base:argument .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#victim
+
+:victim rdf:type owl:ObjectProperty ;
+        
+        rdfs:subPropertyOf :person .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#withinEntity
+
+:withinEntity rdf:type owl:ObjectProperty ;
+              
+              rdfs:subPropertyOf :entity .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://adept-kb.bbn.com/adept-base#Event
+
+adept-base:Event rdf:type owl:Class ;
+                 
+                 rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                   owl:onProperty :place ;
+                                   owl:onClass :Entity ;
+                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :time ;
+                                   owl:onClass adept-base:Date ;
+                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :time ;
+                                   owl:allValuesFrom adept-base:Date
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :place ;
+                                   owl:allValuesFrom :Entity
+                                 ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#Relation
+
+adept-base:Relation rdf:type owl:Class .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#Thing
+
+adept-base:Thing rdf:type owl:Class .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Acquit
+
+:Acquit rdf:type owl:Class ;
+        
+        rdfs:subClassOf :JusticeEvent ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:onClass :Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:allValuesFrom :Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :adjudicator ;
+                          owl:onClass :Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :adjudicator ;
+                          owl:allValuesFrom :Entity
+                        ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Actual
+
+:Actual rdf:type owl:Class .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Appeal
+
+:Appeal rdf:type owl:Class ;
+        
+        rdfs:subClassOf :JusticeEvent ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:allValuesFrom :Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :prosecutor ;
+                          owl:onClass :Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :adjudicator ;
+                          owl:onClass :Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :adjudicator ;
+                          owl:allValuesFrom :Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :prosecutor ;
+                          owl:allValuesFrom :Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:onClass :Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#ArrestJail
+
+:ArrestJail rdf:type owl:Class ;
+            
+            rdfs:subClassOf :JusticeEvent ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :person ;
+                              owl:allValuesFrom :Person
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :agent ;
+                              owl:allValuesFrom :Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :agent ;
+                              owl:onClass :Entity ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :person ;
+                              owl:onClass :Person ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Artifact
+
+:Artifact rdf:type owl:Class ;
+          
+          rdfs:subClassOf :Manufacture ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :agent ;
+                            owl:allValuesFrom :Entity
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :artifact ;
+                            owl:onClass adept-base:Thing ;
+                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :instrument ;
+                            owl:onClass adept-base:Thing ;
+                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :artifact ;
+                            owl:allValuesFrom adept-base:Thing
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :instrument ;
+                            owl:allValuesFrom adept-base:Thing
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :agent ;
+                            owl:onClass :Entity ;
+                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                          ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Attack
+
+:Attack rdf:type owl:Class ;
+        
+        rdfs:subClassOf :Conflict ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :attacker ;
+                          owl:allValuesFrom :Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :instrument ;
+                          owl:onClass adept-base:Thing ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :instrument ;
+                          owl:allValuesFrom adept-base:Thing
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :target ;
+                          owl:onClass adept-base:Thing ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :attacker ;
+                          owl:onClass :Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :target ;
+                          owl:allValuesFrom adept-base:Thing
+                        ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#BeBorn
+
+:BeBorn rdf:type owl:Class ;
+        
+        rdfs:subClassOf :LifeEvent .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Broadcast
+
+:Broadcast rdf:type owl:Class ;
+           
+           rdfs:subClassOf :Contact ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :audience ;
+                             owl:onClass :Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :broadcaster ;
+                             owl:onClass :Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#BusinessEvent
+
+:BusinessEvent rdf:type owl:Class ;
+               
+               rdfs:subClassOf adept-base:Event ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :organization ;
+                                 owl:allValuesFrom :Entity
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :organization ;
+                                 owl:onClass :Entity ;
+                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#BusinessRelationship
+
+:BusinessRelationship rdf:type owl:Class ;
+                      
+                      rdfs:subClassOf :InterpersonalRelationship ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty :person ;
+                                        owl:onClass :Person ;
+                                        owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
+                                      ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#CertainlyExpressedRelation
+
+:CertainlyExpressedRelation rdf:type owl:Class ;
+                            
+                            rdfs:subClassOf adept-base:Relation .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#ChargeIndict
+
+:ChargeIndict rdf:type owl:Class ;
+              
+              rdfs:subClassOf :JusticeEvent ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :prosecutor ;
+                                owl:allValuesFrom :Entity
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :prosecutor ;
+                                owl:onClass :Entity ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :adjudicator ;
+                                owl:onClass :Entity ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :defendant ;
+                                owl:onClass :Entity ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :adjudicator ;
+                                owl:allValuesFrom :Entity
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :defendant ;
+                                owl:allValuesFrom :Entity
+                              ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#City
+
+:City rdf:type owl:Class ;
+      
+      rdfs:subClassOf :GeoPoliticalEntity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Commodity
+
+:Commodity rdf:type owl:Class ;
+           
+           rdfs:subClassOf adept-base:Thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Conflict
+
+:Conflict rdf:type owl:Class ;
+          
+          rdfs:subClassOf adept-base:Event .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Contact
+
+:Contact rdf:type owl:Class ;
+         
+         rdfs:subClassOf adept-base:Event ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :entity ;
+                           owl:onClass :Entity ;
+                           owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :entity ;
+                           owl:allValuesFrom :Entity
+                         ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Convict
+
+:Convict rdf:type owl:Class ;
+         
+         rdfs:subClassOf :JusticeEvent ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :adjudicator ;
+                           owl:allValuesFrom :Entity
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :adjudicator ;
+                           owl:onClass :Entity ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :defendant ;
+                           owl:onClass :Entity ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :defendant ;
+                           owl:allValuesFrom :Entity
+                         ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Correspondence
+
+:Correspondence rdf:type owl:Class ;
+                
+                rdfs:subClassOf :Contact .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Country
+
+:Country rdf:type owl:Class ;
+         
+         rdfs:subClassOf :GeoPoliticalEntity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Crime
+
+:Crime rdf:type owl:Class ;
+       
+       rdfs:subClassOf adept-base:Thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#DeclareBankruptcy
+
+:DeclareBankruptcy rdf:type owl:Class ;
+                   
+                   rdfs:subClassOf :BusinessEvent .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Demonstrate
+
+:Demonstrate rdf:type owl:Class ;
+             
+             rdfs:subClassOf :Conflict ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :entity ;
+                               owl:allValuesFrom :Entity
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :entity ;
+                               owl:onClass :Entity ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                             ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Die
+
+:Die rdf:type owl:Class ;
+     
+     rdfs:subClassOf :LifeEvent ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :agent ;
+                       owl:allValuesFrom :Entity
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :instrument ;
+                       owl:allValuesFrom adept-base:Thing
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :agent ;
+                       owl:onClass :Entity ;
+                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :instrument ;
+                       owl:onClass adept-base:Thing ;
+                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :victim ;
+                       owl:onClass :Person ;
+                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                     ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Dislike
+
+:Dislike rdf:type owl:Class ;
+         
+         rdfs:subClassOf :Sentiment .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Divorce
+
+:Divorce rdf:type owl:Class ;
+         
+         rdfs:subClassOf :LifeEvent ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :person ;
+                           owl:onClass :Person ;
+                           owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
+                         ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Elect
+
+:Elect rdf:type owl:Class ;
+       
+       rdfs:subClassOf :PersonnelEvent ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty :agent ;
+                         owl:allValuesFrom :Entity
+                       ] ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty :agent ;
+                         owl:onClass :Entity ;
+                         owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                       ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#EmploymentMembership
+
+:EmploymentMembership rdf:type owl:Class ;
+                      
+                      rdfs:subClassOf :OrganizationalAffiliation ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty :employeeMember ;
+                                        owl:allValuesFrom :Person
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty :organization ;
+                                        owl:allValuesFrom :Entity
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty :organization ;
+                                        owl:onClass :Entity ;
+                                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty :employeeMember ;
+                                        owl:onClass :Person ;
+                                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                      ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#EndOrganization
+
+:EndOrganization rdf:type owl:Class ;
+                 
+                 rdfs:subClassOf :BusinessEvent ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :organization ;
+                                   owl:allValuesFrom :Organization
+                                 ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#EndPosition
+
+:EndPosition rdf:type owl:Class ;
+             
+             rdfs:subClassOf :PersonnelEvent ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :withinEntity ;
+                               owl:onClass :Entity ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :withinEntity ;
+                               owl:allValuesFrom :Entity
+                             ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Entity
+
+:Entity rdf:type owl:Class ;
+        
+        rdfs:subClassOf adept-base:Thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Execute
+
+:Execute rdf:type owl:Class ;
+         
+         rdfs:subClassOf :JusticeEvent ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :person ;
+                           owl:onClass :Person ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :agent ;
+                           owl:onClass :Entity ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :person ;
+                           owl:allValuesFrom :Person
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :agent ;
+                           owl:allValuesFrom :Entity
+                         ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Extradite
+
+:Extradite rdf:type owl:Class ;
+           
+           rdfs:subClassOf :JusticeEvent ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :agent ;
+                             owl:allValuesFrom :Entity
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :origin ;
+                             owl:onClass :Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :destination ;
+                             owl:onClass :Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :person ;
+                             owl:allValuesFrom :Person
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :agent ;
+                             owl:onClass :Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :person ;
+                             owl:onClass :Person ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Facility
+
+:Facility rdf:type owl:Class ;
+          
+          rdfs:subClassOf :Entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Failed
+
+:Failed rdf:type owl:Class ;
+        
+        rdfs:subClassOf :Negated ,
+                        :Planned .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#FamilyRelationship
+
+:FamilyRelationship rdf:type owl:Class ;
+                    
+                    rdfs:subClassOf :InterpersonalRelationship ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :person ;
+                                      owl:onClass :Person ;
+                                      owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
+                                    ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Fine
+
+:Fine rdf:type owl:Class ;
+      
+      rdfs:subClassOf :JusticeEvent ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :money ;
+                        owl:allValuesFrom :Money
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :adjudicator ;
+                        owl:onClass :Entity ;
+                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :finedEntity ;
+                        owl:onClass :Entity ;
+                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :adjudicator ;
+                        owl:allValuesFrom :Entity
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :money ;
+                        owl:onClass :Money ;
+                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :finedEntity ;
+                        owl:allValuesFrom :Entity
+                      ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Founder
+
+:Founder rdf:type owl:Class ;
+         
+         rdfs:subClassOf :OrganizationalAffiliation ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :organization ;
+                           owl:allValuesFrom :Organization
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :founder ;
+                           owl:onClass :Person ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :organization ;
+                           owl:onClass :Organization ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :founder ;
+                           owl:allValuesFrom :Person
+                         ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Future
+
+:Future rdf:type owl:Class ;
+        
+        rdfs:subClassOf :NonActual .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Generic
+
+:Generic rdf:type owl:Class ;
+         
+         rdfs:subClassOf :NonActual .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#GeoPoliticalEntity
+
+:GeoPoliticalEntity rdf:type owl:Class ;
+                    
+                    rdfs:subClassOf :Entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Hypothetical
+
+:Hypothetical rdf:type owl:Class ;
+              
+              rdfs:subClassOf :NonActual .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#InferredRelation
+
+:InferredRelation rdf:type owl:Class ;
+                  
+                  rdfs:subClassOf adept-base:Relation .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Injure
+
+:Injure rdf:type owl:Class ;
+        
+        rdfs:subClassOf :LifeEvent ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :agent ;
+                          owl:allValuesFrom :Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :victim ;
+                          owl:onClass :Person ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :instrument ;
+                          owl:onClass adept-base:Thing ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :agent ;
+                          owl:onClass :Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :instrument ;
+                          owl:allValuesFrom adept-base:Thing
+                        ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#InterpersonalRelationship
+
+:InterpersonalRelationship rdf:type owl:Class ;
+                           
+                           rdfs:subClassOf adept-base:Relation ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty :person ;
+                                             owl:onClass :Person ;
+                                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                           ] ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty :person ;
+                                             owl:allValuesFrom :Person
+                                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#InvestorShareholder
+
+:InvestorShareholder rdf:type owl:Class ;
+                     
+                     rdfs:subClassOf :OrganizationalAffiliation ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :organization ;
+                                       owl:allValuesFrom :Organization
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :investorShareholder ;
+                                       owl:allValuesFrom :Entity
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :organization ;
+                                       owl:onClass :Organization ;
+                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :investorShareholder ;
+                                       owl:onClass :Entity ;
+                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                     ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#JusticeEvent
+
+:JusticeEvent rdf:type owl:Class ;
+              
+              rdfs:subClassOf adept-base:Event ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :crime ;
+                                owl:onClass :Crime ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :crime ;
+                                owl:allValuesFrom :Crime
+                              ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Leadership
+
+:Leadership rdf:type owl:Class ;
+            
+            rdfs:subClassOf :OrganizationalAffiliation ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :leader ;
+                              owl:allValuesFrom :Person
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :leader ;
+                              owl:onClass :Person ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :affiliatedEntity ;
+                              owl:allValuesFrom :Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :affiliatedEntity ;
+                              owl:onClass :Entity ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#LifeEvent
+
+:LifeEvent rdf:type owl:Class ;
+           
+           rdfs:subClassOf adept-base:Event ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :person ;
+                             owl:onClass :Person ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :person ;
+                             owl:allValuesFrom :Person
+                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Like
+
+:Like rdf:type owl:Class ;
+      
+      rdfs:subClassOf :Sentiment .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#LocatedNear
+
+:LocatedNear rdf:type owl:Class ;
+             
+             rdfs:subClassOf :PhysicalLocation ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :locatedEntity ;
+                               owl:allValuesFrom :Entity
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :locatedEntity ;
+                               owl:onClass :Entity ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                             ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Location
+
+:Location rdf:type owl:Class ;
+          
+          rdfs:subClassOf :Entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Manufacture
+
+:Manufacture rdf:type owl:Class ;
+             
+             rdfs:subClassOf adept-base:Event .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Marry
+
+:Marry rdf:type owl:Class ;
+       
+       rdfs:subClassOf :LifeEvent ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty :person ;
+                         owl:onClass :Person ;
+                         owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
+                       ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Meet
+
+:Meet rdf:type owl:Class ;
+      
+      rdfs:subClassOf :Contact .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#MemberOriginReligionEthnicity
+
+:MemberOriginReligionEthnicity rdf:type owl:Class ;
+                               
+                               rdfs:subClassOf adept-base:Relation ,
+                                               [ rdf:type owl:Restriction ;
+                                                 owl:onProperty :affiliatedEntity ;
+                                                 owl:onClass :Entity ;
+                                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                               ] ,
+                                               [ rdf:type owl:Restriction ;
+                                                 owl:onProperty :person ;
+                                                 owl:allValuesFrom :Person
+                                               ] ,
+                                               [ rdf:type owl:Restriction ;
+                                                 owl:onProperty :affiliatedEntity ;
+                                                 owl:allValuesFrom :Entity
+                                               ] ,
+                                               [ rdf:type owl:Restriction ;
+                                                 owl:onProperty :person ;
+                                                 owl:onClass :Person ;
+                                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                               ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Membership
+
+:Membership rdf:type owl:Class ;
+            
+            rdfs:subClassOf :Subsidiary ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :organization ;
+                              owl:onClass :Entity ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :member ;
+                              owl:allValuesFrom :Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :organization ;
+                              owl:allValuesFrom :Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :member ;
+                              owl:onClass :Entity ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#MergeOrganization
+
+:MergeOrganization rdf:type owl:Class ;
+                   
+                   rdfs:subClassOf :BusinessEvent ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :organization ;
+                                     owl:onClass :Organization ;
+                                     owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :organization ;
+                                     owl:allValuesFrom :Organization
+                                   ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Money
+
+:Money rdf:type owl:Class ;
+       
+       rdfs:subClassOf adept-base:Thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Movement
+
+:Movement rdf:type owl:Class ;
+          
+          rdfs:subClassOf adept-base:Event .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Negated
+
+:Negated rdf:type owl:Class ;
+         
+         rdfs:subClassOf :NonActual .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Nominate
+
+:Nominate rdf:type owl:Class ;
+          
+          rdfs:subClassOf :PersonnelEvent ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :agent ;
+                            owl:onClass :Entity ;
+                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :agent ;
+                            owl:allValuesFrom :Entity
+                          ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#NonActual
+
+:NonActual rdf:type owl:Class .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Number
+
+:Number rdf:type owl:Class .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#NumberOfEmployeesMembers
+
+:NumberOfEmployeesMembers rdf:type owl:Class ;
+                          
+                          rdfs:subClassOf adept-base:Relation ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :organization ;
+                                            owl:allValuesFrom :Organization
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :number ;
+                                            owl:allValuesFrom :Number
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :organization ;
+                                            owl:onClass :Organization ;
+                                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :number ;
+                                            owl:onClass :Number ;
+                                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                          ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#OrgHeadquarter
+
+:OrgHeadquarter rdf:type owl:Class ;
+                
+                rdfs:subClassOf :PhysicalLocation ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :organization ;
+                                  owl:allValuesFrom :Organization
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :organization ;
+                                  owl:onClass :Organization ;
+                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#OrgLocationOrigin
+
+:OrgLocationOrigin rdf:type owl:Class ;
+                   
+                   rdfs:subClassOf :PhysicalLocation ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :organization ;
+                                     owl:onClass :Organization ;
+                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :organization ;
+                                     owl:allValuesFrom :Organization
+                                   ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Organization
+
+:Organization rdf:type owl:Class ;
+              
+              rdfs:subClassOf :Entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#OrganizationPoliticalReligiousAffiliation
+
+:OrganizationPoliticalReligiousAffiliation rdf:type owl:Class ;
+                                           
+                                           rdfs:subClassOf adept-base:Relation ,
+                                                           [ rdf:type owl:Restriction ;
+                                                             owl:onProperty :organization ;
+                                                             owl:onClass :Organization ;
+                                                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                           ] ,
+                                                           [ rdf:type owl:Restriction ;
+                                                             owl:onProperty :affiliatedEntity ;
+                                                             owl:allValuesFrom :Entity
+                                                           ] ,
+                                                           [ rdf:type owl:Restriction ;
+                                                             owl:onProperty :organization ;
+                                                             owl:allValuesFrom :Organization
+                                                           ] ,
+                                                           [ rdf:type owl:Restriction ;
+                                                             owl:onProperty :affiliatedEntity ;
+                                                             owl:onClass :Entity ;
+                                                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#OrganizationWebsite
+
+:OrganizationWebsite rdf:type owl:Class ;
+                     
+                     rdfs:subClassOf adept-base:Relation ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :organization ;
+                                       owl:allValuesFrom :Organization
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :organization ;
+                                       owl:onClass :Organization ;
+                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :url ;
+                                       owl:minCardinality "1"^^xsd:nonNegativeInteger
+                                     ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#OrganizationalAffiliation
+
+:OrganizationalAffiliation rdf:type owl:Class ;
+                           
+                           rdfs:subClassOf adept-base:Relation .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Origin
+
+:Origin rdf:type owl:Class ;
+        
+        rdfs:subClassOf :MemberOriginReligionEthnicity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Ownership
+
+:Ownership rdf:type owl:Class ;
+           
+           rdfs:subClassOf :OrganizationalAffiliation ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :owner ;
+                             owl:allValuesFrom :Person
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :organization ;
+                             owl:allValuesFrom :Organization
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :owner ;
+                             owl:onClass :Person ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :organization ;
+                             owl:onClass :Organization ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Pardon
+
+:Pardon rdf:type owl:Class ;
+        
+        rdfs:subClassOf :JusticeEvent ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :adjudicator ;
+                          owl:onClass :Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:allValuesFrom :Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:onClass :Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :adjudicator ;
+                          owl:allValuesFrom :Entity
+                        ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#ParentChildRelationship
+
+:ParentChildRelationship rdf:type owl:Class ;
+                         
+                         rdfs:subClassOf :FamilyRelationship ,
+                                         [ rdf:type owl:Restriction ;
+                                           owl:onProperty :parent ;
+                                           owl:onClass :Person ;
+                                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                         ] ,
+                                         [ rdf:type owl:Restriction ;
+                                           owl:onProperty :child ;
+                                           owl:onClass :Person ;
+                                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                         ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#PartWhole
+
+:PartWhole rdf:type owl:Class ;
+           
+           rdfs:subClassOf adept-base:Relation .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Person
+
+:Person rdf:type owl:Class ;
+        
+        rdfs:subClassOf :Entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#PersonAge
+
+:PersonAge rdf:type owl:Class ;
+           
+           rdfs:subClassOf adept-base:Relation ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :person ;
+                             owl:onClass :Person ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :age ;
+                             owl:onClass :Number ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :person ;
+                             owl:allValuesFrom :Person
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :age ;
+                             owl:allValuesFrom :Number
+                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#PersonnelEvent
+
+:PersonnelEvent rdf:type owl:Class ;
+                
+                rdfs:subClassOf adept-base:Event ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :position ;
+                                  owl:onClass :Title ;
+                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :person ;
+                                  owl:allValuesFrom :Person
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :person ;
+                                  owl:onClass :Person ;
+                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :position ;
+                                  owl:allValuesFrom :Title
+                                ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#PhysicalLocation
+
+:PhysicalLocation rdf:type owl:Class ;
+                  
+                  rdfs:subClassOf adept-base:Relation ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty :location ;
+                                    owl:onClass :Entity ;
+                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty :location ;
+                                    owl:allValuesFrom :Entity
+                                  ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Planned
+
+:Planned rdf:type owl:Class ;
+         
+         rdfs:subClassOf :NonActual .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#ReleaseParole
+
+:ReleaseParole rdf:type owl:Class ;
+               
+               rdfs:subClassOf :JusticeEvent ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :person ;
+                                 owl:onClass :Person ;
+                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :agent ;
+                                 owl:onClass :Entity ;
+                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :person ;
+                                 owl:allValuesFrom :Person
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :agent ;
+                                 owl:allValuesFrom :Entity
+                               ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Religion
+
+:Religion rdf:type owl:Class ;
+          
+          rdfs:subClassOf :MemberOriginReligionEthnicity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Resident
+
+:Resident rdf:type owl:Class ;
+          
+          rdfs:subClassOf :PhysicalLocation ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :person ;
+                            owl:allValuesFrom :Person
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :person ;
+                            owl:onClass :Person ;
+                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                          ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Role
+
+:Role rdf:type owl:Class ;
+      
+      rdfs:subClassOf :InterpersonalRelationship ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :role ;
+                        owl:onClass :Title ;
+                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :role ;
+                        owl:allValuesFrom :Title
+                      ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Sentence
+
+:Sentence rdf:type owl:Class ;
+          
+          rdfs:subClassOf adept-base:Thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Sentencing
+
+:Sentencing rdf:type owl:Class ;
+            
+            rdfs:subClassOf :JusticeEvent ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :sentence ;
+                              owl:allValuesFrom :Sentence
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :defendant ;
+                              owl:allValuesFrom :Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :sentence ;
+                              owl:onClass :Sentence ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :adjudicator ;
+                              owl:onClass :Entity ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :defendant ;
+                              owl:onClass :Entity ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :adjudicator ;
+                              owl:allValuesFrom :Entity
+                            ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Sentiment
+
+:Sentiment rdf:type owl:Class ;
+           
+           rdfs:subClassOf adept-base:Relation ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :target ;
+                             owl:onClass adept-base:Thing ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :target ;
+                             owl:allValuesFrom adept-base:Thing
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :sentimentHolder ;
+                             owl:allValuesFrom :Entity
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :sentimentHolder ;
+                             owl:onClass :Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#SiblingRelationship
+
+:SiblingRelationship rdf:type owl:Class ;
+                     
+                     rdfs:subClassOf :FamilyRelationship .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#SpousalRelationship
+
+:SpousalRelationship rdf:type owl:Class ;
+                     
+                     rdfs:subClassOf :FamilyRelationship .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#StartOrganization
+
+:StartOrganization rdf:type owl:Class ;
+                   
+                   rdfs:subClassOf :BusinessEvent ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :agent ;
+                                     owl:onClass :Entity ;
+                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :organization ;
+                                     owl:allValuesFrom :Organization
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :agent ;
+                                     owl:allValuesFrom :Entity
+                                   ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#StartPosition
+
+:StartPosition rdf:type owl:Class ;
+               
+               rdfs:subClassOf :PersonnelEvent ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :withinEntity ;
+                                 owl:allValuesFrom :Entity
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :withinEntity ;
+                                 owl:onClass :Entity ;
+                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#StateProvince
+
+:StateProvince rdf:type owl:Class ;
+               
+               rdfs:subClassOf :GeoPoliticalEntity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#StudentAlum
+
+:StudentAlum rdf:type owl:Class ;
+             
+             rdfs:subClassOf :OrganizationalAffiliation ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :organization ;
+                               owl:allValuesFrom :Organization
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :studentAlumni ;
+                               owl:allValuesFrom :Person
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :organization ;
+                               owl:onClass :Organization ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :studentAlumni ;
+                               owl:onClass :Person ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                             ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Subsidiary
+
+:Subsidiary rdf:type owl:Class ;
+            
+            rdfs:subClassOf :PartWhole ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :parent ;
+                              owl:allValuesFrom :Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :subOrganization ;
+                              owl:allValuesFrom :Organization
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :subOrganization ;
+                              owl:onClass :Organization ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :parent ;
+                              owl:onClass :Entity ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Sue
+
+:Sue rdf:type owl:Class ;
+     
+     rdfs:subClassOf :JusticeEvent ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :adjudicator ;
+                       owl:onClass :Entity ;
+                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :plaintiff ;
+                       owl:allValuesFrom :Entity
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :adjudicator ;
+                       owl:allValuesFrom :Entity
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :defendant ;
+                       owl:allValuesFrom :Entity
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :defendant ;
+                       owl:onClass :Entity ;
+                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :plaintiff ;
+                       owl:onClass :Entity ;
+                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                     ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Title
+
+:Title rdf:type owl:Class ;
+       
+       rdfs:subClassOf adept-base:Thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Transaction
+
+:Transaction rdf:type owl:Class ;
+             
+             rdfs:subClassOf adept-base:Event ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :recipient ;
+                               owl:onClass :Entity ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :recipient ;
+                               owl:allValuesFrom :Entity
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :beneficiary ;
+                               owl:allValuesFrom :Entity
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :beneficiary ;
+                               owl:onClass :Entity ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :giver ;
+                               owl:allValuesFrom :Entity
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :giver ;
+                               owl:onClass :Entity ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                             ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#TransferMoney
+
+:TransferMoney rdf:type owl:Class ;
+               
+               rdfs:subClassOf :Transaction ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :money ;
+                                 owl:onClass :Money ;
+                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :money ;
+                                 owl:allValuesFrom :Money
+                               ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#TransferOwnership
+
+:TransferOwnership rdf:type owl:Class ;
+                   
+                   rdfs:subClassOf :Transaction ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :transferredThing ;
+                                     owl:onClass adept-base:Thing ;
+                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :transferredThing ;
+                                     owl:allValuesFrom adept-base:Thing
+                                   ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Transport
+
+:Transport rdf:type owl:Class ;
+           
+           rdfs:subClassOf :Movement ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :instrument ;
+                             owl:onClass adept-base:Thing ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :origin ;
+                             owl:allValuesFrom :Entity
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :destination ;
+                             owl:onClass :Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :destination ;
+                             owl:allValuesFrom :Entity
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :origin ;
+                             owl:onClass :Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :agent ;
+                             owl:onClass :Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :agent ;
+                             owl:allValuesFrom :Entity
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :instrument ;
+                             owl:allValuesFrom adept-base:Thing
+                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#TransportArtifact
+
+:TransportArtifact rdf:type owl:Class ;
+                   
+                   rdfs:subClassOf :Transport ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :artifact ;
+                                     owl:allValuesFrom adept-base:Thing
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :artifact ;
+                                     owl:onClass adept-base:Thing ;
+                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                   ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#TransportPerson
+
+:TransportPerson rdf:type owl:Class ;
+                 
+                 rdfs:subClassOf :Transport ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :person ;
+                                   owl:onClass :Person ;
+                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :person ;
+                                   owl:allValuesFrom :Person
+                                 ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#TrialHearing
+
+:TrialHearing rdf:type owl:Class ;
+              
+              rdfs:subClassOf :JusticeEvent ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :defendant ;
+                                owl:onClass :Entity ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :prosecutor ;
+                                owl:allValuesFrom :Entity
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :adjudicator ;
+                                owl:onClass :Entity ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :adjudicator ;
+                                owl:allValuesFrom :Entity
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :defendant ;
+                                owl:allValuesFrom :Entity
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :prosecutor ;
+                                owl:onClass :Entity ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#UncertainlyExpressedRelation
+
+:UncertainlyExpressedRelation rdf:type owl:Class ;
+                              
+                              rdfs:subClassOf adept-base:Relation .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Vehicle
+
+:Vehicle rdf:type owl:Class ;
+         
+         rdfs:subClassOf adept-base:Thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#Weapon
+
+:Weapon rdf:type owl:Class ;
+        
+        rdfs:subClassOf adept-base:Thing .
+
+
+
+
+###  Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net
+

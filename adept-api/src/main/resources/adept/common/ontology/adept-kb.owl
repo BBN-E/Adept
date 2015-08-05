@@ -1,0 +1,340 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://adept-kb.bbn.com/TAC##"
+     xml:base="http://adept-kb.bbn.com/TAC#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <owl:Ontology rdf:about="http://adept-kb.bbn.com/TAC#">
+        <owl:versionIRI rdf:resource="http://adept-kb.bbn.com/1.0.0"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2001/XMLSchema#duration -->
+
+    <rdfs:Datatype rdf:about="&xsd;duration"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasArgument -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasArgument"/>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasBuyerArg -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasBuyerArg">
+        <rdfs:subPropertyOf rdf:resource="http://adept-kb.bbn.com/TAC#hasPerArg"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasDateArg -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasDateArg">
+        <rdfs:range rdf:resource="http://adept-kb.bbn.com/TAC#Date"/>
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Event"/>
+        <rdfs:subPropertyOf rdf:resource="http://adept-kb.bbn.com/TAC#hasArgument"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasDestinationArg -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasDestinationArg">
+        <rdfs:range rdf:resource="http://adept-kb.bbn.com/TAC#Loc"/>
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Visit"/>
+        <rdfs:subPropertyOf rdf:resource="http://adept-kb.bbn.com/TAC#hasArgument"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasLocArg -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasLocArg">
+        <rdfs:range rdf:resource="http://adept-kb.bbn.com/TAC#Loc"/>
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Relation"/>
+        <rdfs:subPropertyOf rdf:resource="http://adept-kb.bbn.com/TAC#hasArgument"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasPerArg -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasPerArg">
+        <rdfs:range rdf:resource="http://adept-kb.bbn.com/TAC#Per"/>
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Relation"/>
+        <rdfs:subPropertyOf rdf:resource="http://adept-kb.bbn.com/TAC#hasArgument"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasPurchaseArg -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasPurchaseArg">
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Purchase"/>
+        <rdfs:range rdf:resource="http://adept-kb.bbn.com/TAC#Thing"/>
+        <rdfs:subPropertyOf rdf:resource="http://adept-kb.bbn.com/TAC#hasArgument"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasSellerArg -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasSellerArg">
+        <rdfs:subPropertyOf rdf:resource="http://adept-kb.bbn.com/TAC#hasPerArg"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasSpouseArg -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasSpouseArg">
+        <rdfs:subPropertyOf rdf:resource="http://adept-kb.bbn.com/TAC#hasPerArg"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasWishArg -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasWishArg">
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Thing"/>
+        <rdfs:subPropertyOf rdf:resource="http://adept-kb.bbn.com/TAC#hasArgument"/>
+    </rdf:Property>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasCanonicalMention -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasCanonicalMention">
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Thing"/>
+        <rdfs:range rdf:resource="&rdf;PlainLiteral"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasCanonicalString -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasCanonicalString">
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#PredicateArgument"/>
+        <rdfs:range rdf:resource="&rdf;PlainLiteral"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasConfidence -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasConfidence">
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#PredicateArgument"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasTimex2String -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasTimex2String">
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Date"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasXsdDate -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasXsdDate">
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Date"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </rdf:Property>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#hasXsdDuration -->
+
+    <rdf:Property rdf:about="http://adept-kb.bbn.com/TAC#hasXsdDuration">
+        <rdfs:domain rdf:resource="http://adept-kb.bbn.com/TAC#Date"/>
+        <rdfs:range rdf:resource="&xsd;duration"/>
+    </rdf:Property>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#BinaryRelation -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#BinaryRelation">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#Relation"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Commodity -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Commodity">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#Thing"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Date -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Date">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#PredicateArgument"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Event -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Event">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#Relation"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#HasSpouse -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#HasSpouse">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#BinaryRelation"/>
+        <owl:disjointWith rdf:resource="http://adept-kb.bbn.com/TAC#HasWish"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#HasWish -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#HasWish">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#BinaryRelation"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Loc -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Loc">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#Thing"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Org -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Org">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#Thing"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Per -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Per">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#Thing"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#PredicateArgument -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#PredicateArgument"/>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Purchase -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Purchase">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#Event"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Relation -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Relation">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#PredicateArgument"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#ResidesIn -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#ResidesIn">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#BinaryRelation"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Thing -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Thing">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#PredicateArgument"/>
+    </rdfs:Class>
+    
+
+
+    <!-- http://adept-kb.bbn.com/TAC#Visit -->
+
+    <rdfs:Class rdf:about="http://adept-kb.bbn.com/TAC#Visit">
+        <rdfs:subClassOf rdf:resource="http://adept-kb.bbn.com/TAC#Event"/>
+    </rdfs:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

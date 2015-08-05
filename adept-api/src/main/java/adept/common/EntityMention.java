@@ -1,23 +1,15 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -25,7 +17,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
+import adept.metadata.*;
+
+
 /**
  * The Class EntityMention, which is a sequence of tokens 
  * that refer to an Entity with mention type that is drawn
@@ -42,13 +36,14 @@ public class EntityMention extends Chunk {
 	/** The sequence id. */
 	private final long sequenceId;
 
-	/** The entity id distribution. */
+	/** Map containing document level entity IDs that this mention
+	 * resolves to, and associated confidences. */
 	private Map<Long, Float> entityIdDistribution;
 
 	/** The textual context. */
 	protected Chunk context;
 
-	/** The size of the context. */
+	/** The size of the textual context to be set. */
 	protected int contextSize = 2;
 
 	/** The doc id. */
@@ -317,7 +312,9 @@ public class EntityMention extends Chunk {
 	
 	public String getAttribute( String attribute )
 	{
-		return this.attributes.get(attribute); 
+		if(attributes.containsKey(attribute))
+		  return this.attributes.get(attribute); 
+		else return null;
 	}
 
 }

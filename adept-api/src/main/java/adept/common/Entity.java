@@ -1,23 +1,15 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -29,12 +21,12 @@ import java.util.InvalidPropertiesFormatException;
 
 import adept.data.IEntity;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Entity, which is a thing in concrete or abstract reality 
  * that can be identified by its distinct properties, for example persons, 
  * organizations, locations, expressions of times, quantities and 
- * monetary values. The entity type is drawn from an ontology.
+ * monetary values. The entity types are drawn from an ontology.
  * 
  * Modified to allow additional type information (a string from an open-ended set of types)
  *   and categories (similarly open-ended).
@@ -47,17 +39,31 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 	/** The canonical mention. */
 	private EntityMention canonicalMention;
 
-	/** The entity type. */
+	/** The entity type that has the highest type confidence. */
 	private final IType entityType;
+	
+	/** type confidences for each associated entity type. */
+	private Map<IType, Double> typeConfidences = new HashMap<IType, Double>();
+	
+	/** confidence of the instance being a coherent rela world entity. */
+	private double confidence = 1.0;
+	
+	/** confidence that the canonicalMention instance is the correct
+	 * one for this Entity. */
+	private double canonicalMentionConfidence = 1.0;
+	
 
-	/** The entity id distribution. */
+	/** Map containing the KB level entities
+	 * that an instance of this class resolves to, and associated \
+	 * confidences. */
+	@Deprecated
 	Map<KBEntity, Float> kbEntityDistribution;
 
 	/** A set of ontology based attribute-value pairs */
-	private Map<IType, IType> ontologizedAttributes;
+	private Map<IType, IType> ontologizedAttributes = new HashMap<IType, IType>();
 	
 	/** A set of ontology based attribute, and free text value pairs */
-	private Map<IType, String> freeTextAttributes;
+	private Map<IType, String> freeTextAttributes = new HashMap<IType, String>();
 		
 	/** A set of attributes relating to additional type information, from open ontology */
 	private Map< String, Set< String > > typeInformation;
@@ -80,11 +86,14 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 
 		this.kbEntityDistribution = new HashMap<KBEntity, Float>();
 		this.setTypeInformation(new HashMap< String, Set< String > >());
+		
+		typeConfidences.put(entityType, 1.0);
 	}
 	
 	
 	/**
-	 * Gets the kb entity distribution.
+	 * Gets the kb entity distribution, i.e., the one with
+	 * highest confidence.
 	 * 
 	 * @return the kb entity distribution
 	 */
@@ -191,7 +200,7 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 	 * @param kbUri the kb uri
 	 * @return the kB entity by uri
 	 */
-	public KBEntity getKBEntityByUri(String kbUri) {
+	/*public KBEntity getKBEntityByUri(String kbUri) {
 		KBEntity kbe = null;	
 		for(Map.Entry<KBEntity, Float> entrySet : kbEntityDistribution.entrySet()) {
 			if (entrySet.getKey().getKbUri().equals(kbUri)) {
@@ -199,7 +208,7 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 			}
 		}
 		return kbe;
-	}
+	}*/
 
 	/**
 	 * get the additional type information
@@ -419,6 +428,77 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * Gets confidence.
+	 * 
+	 * @return confidence.
+	 */
+	public double getEntityConfidence()
+	{
+		return this.confidence;
+	}
+	
+	/**
+	 * Sets confidence
+	 */
+	public void setEntityConfidence(double confidence)
+	{
+		this.confidence = confidence;
+		
+	}
+	
+	/**
+	 * Gets canonical mention confidence.
+	 * 
+	 * @return confidence.
+	 */
+	public double getCanonicalMentionConfidence()
+	{
+		return this.canonicalMentionConfidence;
+	}
+	
+	/**
+	 * Sets canonicalMentionConfidence
+	 */
+	public void setCanonicalMentionConfidence(double canonicalMentionConfidence)
+	{
+		this.canonicalMentionConfidence = canonicalMentionConfidence;
+		
+	}
+	
+	/**
+	 * Gets type confidence.
+	 * 
+	 * @return type confidence of the type
+	 * having highest confidence.
+	 */
+	public double getTypeConfidence()
+	{
+		return this.typeConfidences.get(entityType);
+	}
+	
+	/**
+	 * Add type(s)
+	 */
+	public void addType(IType type, double confidence)
+	{
+		this.typeConfidences.put(type, confidence);
+	}
+	
+	public void addTypes(Map<IType,Double> types)
+	{
+		this.typeConfidences.putAll(types);
+	}
+	
+	
+	/**
+	 * Get all types
+	 */
+	public Map<IType,Double> getAllTypes()
+	{
+		return this.typeConfidences;
 	}
 
 }

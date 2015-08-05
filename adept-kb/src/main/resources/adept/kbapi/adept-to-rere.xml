@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Mapping from the RERE classes to adept ontology classes</comment>
+
+<!-- Mapping of entity types -->
+<entry key="Person">per</entry>
+<entry key="GeoPoliticalEntity">gpe</entry>
+<entry key="Organization">org</entry>
+<entry key="Location">loc</entry>
+<entry key="Facility">fac</entry>
+
+<!--  mapping of relation types -->
+<entry key="PhysicalLocation">physical</entry>
+<entry key="LocatedNear">locatednear</entry>
+<entry key="Resident">resident</entry>
+<entry key="OrgHeadquarter">orgheadquarter</entry>
+<entry key="OrgLocationOrigin">orglocationorigin</entry>
+<entry key="PartWhole">partwhole</entry>
+<entry key="Subsidiary">subsidiary</entry>
+<entry key="Membership">membership</entry>
+<entry key="InterpersonalRelationship">personalsocial</entry>
+<entry key="BusinessRelationship">business</entry>
+<entry key="FamilyRelationship">family</entry>
+<entry key="Role">role</entry>
+<entry key="OrganizationalAffiliation">orgaffiliation</entry>
+<entry key="EmploymentMembership">employmentmembership</entry>
+<entry key="Leadership">leadership</entry>
+<entry key="InvestorShareholder">investorshareholder</entry>
+<entry key="StudentAlum">studentalum</entry>
+<entry key="Ownership">NAMownership</entry>
+<entry key="Founder">founder</entry>
+<entry key="MemberOriginReligionEthnicity">more</entry>
+<entry key="PersonAge">personage</entry>
+<entry key="OrganizationWebsite">orgwebsite</entry>
+<entry key="OrganizationPoliticalReligiousAffiliation">opra</entry>
+
+
+<!--  mapping of relation argument types -->
+<entry key="PhysicalLocation.locatedEntity">entity</entry>
+<entry key="PhysicalLocation.location">loc</entry>
+<entry key="LocatedNear.locatedEntity">per</entry>
+<entry key="LocatedNear.location">loc</entry>
+<entry key="Resident.person">per</entry>
+<entry key="Resident.location">loc</entry>
+<entry key="OrgHeadquarter.organization">org</entry>
+<entry key="OrgHeadquarter.location">loc</entry>
+<entry key="OrgLocationOrigin.organization">org</entry>
+<entry key="OrgLocationOrigin.location">loc</entry>
+<entry key="Subsidiary.subOrganization">suborg</entry>
+<entry key="Subsidiary.parent">parent</entry>
+<entry key="Membership.member">member</entry>
+<entry key="Membership.affiliatedEntity">org</entry>
+<entry key="BusinessRelationship.person">per</entry>
+<entry key="FamilyRelationship.person">per</entry>
+<entry key="Role.person">per</entry>
+<entry key="Role.role">role</entry>
+<entry key="EmploymentMembership.employeeMember">employeemember</entry>
+<entry key="EmploymentMembership.affiliatedEntity">org</entry>
+<entry key="Leadership.leader">leader</entry>
+<entry key="Leadership.affiliatedEntity">entity</entry>
+<entry key="InvestorShareholder.investorShareholder">investorshareholder</entry>
+<entry key="InvestorShareholder.organization">org</entry>
+<entry key="studentAlumni.studentAlumni">studentalumni</entry>
+<entry key="studentAlumni.organization">org</entry>
+<entry key="Ownership.owner">owner</entry>
+<entry key="Ownership.organization">org</entry>
+<entry key="Founder.founder">founder</entry>
+<entry key="Founder.organization">org</entry>
+<entry key="MemberOriginReligionEthnicity.person">per</entry>
+<entry key="MemberOriginReligionEthnicity.affiliatedEntity">entity</entry>
+<entry key="PersonAge.person">per</entry>
+<entry key="PersonAge.age">age</entry>
+<entry key="OrganizationWebsite.organization">org</entry>
+<entry key="OrganizationWebsite.url">url</entry>
+<entry key="OrganizationPoliticalReligiousAffiliation.organization">org</entry>
+<entry key="OrganizationPoliticalReligiousAffiliation.entity">entity</entry>
+
+
+<!--  mapping of event types -->
+<entry key="BusinessEvent">business</entry>
+<entry key="StartOrganization">startorg</entry>
+<entry key="EndOrganization">endorg</entry>
+<entry key="MergeOrganization">mergeorg</entry>
+<entry key="DeclareBankruptcy">declarebankruptcy</entry>
+<entry key="Conflict">conflict</entry>
+<entry key="Attack">attack</entry>
+<entry key="Demonstrate">demonstrate</entry>
+<entry key="Contact">contact</entry>
+<entry key="Meet">meet</entry>
+<entry key="Correspondence">correspondence</entry>
+<entry key="Broadcast">broadcast</entry>
+<entry key="Manufacture">manufacture</entry>
+<entry key="Artifact">artifact</entry>
+<entry key="LifeEvent">life</entry>
+<entry key="BeBorn">beborn</entry>
+<entry key="Marry">marry</entry>
+<entry key="Divorce">divorce</entry>
+<entry key="Injure">injure</entry>
+<entry key="Die">die</entry>
+<entry key="Movement">movement</entry>
+<entry key="Transport">transportperson</entry>
+<entry key="Transport">transportartifact</entry>
+<entry key="PersonnelEvent">personnel</entry>
+<entry key="StartPosition">startposition</entry>
+<entry key="EndPosition">endposition</entry>
+<entry key="Nominate">nominate</entry>
+<entry key="Elect">elect</entry>
+<entry key="Transaction">transaction</entry>
+<entry key="TransferOwnership">transferownership</entry>
+<entry key="TransferMoney">transfermoney</entry>
+<entry key="JusticeEvent">justice</entry>
+<entry key="ArrestJail">arrestjail</entry>
+<entry key="ReleaseParole">releaseparole</entry>
+<entry key="TrialHearing">trialhearing</entry>
+<entry key="Sentence">sentence</entry>
+<entry key="Fine">fine</entry>
+<entry key="ChargeIndict">chargeindict</entry>
+<entry key="Sue">sue</entry>
+<entry key="Extradite">extradite</entry>
+<entry key="Acquit">acquit</entry>
+<entry key="Convict">convict</entry>
+<entry key="Appeal">appeal</entry>
+<entry key="Execute">execute</entry>
+<entry key="Pardon">pardon</entry>
+
+
+<!--  mapping of event argument types -->
+<entry key="agent">agent</entry>
+<entry key="organization">org</entry>
+<entry key="place">place</entry>
+<entry key="time">time</entry>
+<entry key="attacker">attacker</entry>
+<entry key="target">target</entry>
+<entry key="instrument">instrument</entry>
+<entry key="Demonstrate.entity">entity</entry>
+<entry key="Meet.entity">entity</entry>
+<entry key="Correspondence.entity">entity</entry>
+<entry key="Contact.entity">entity</entry>
+<entry key="Broadcast.entity">broadcaster</entry>
+<entry key="audience">audience</entry>
+<entry key="artifact">artifact</entry>
+<entry key="person">person</entry>
+<entry key="victim">victim</entry>
+<entry key="origin">origin</entry>
+<entry key="destination">destination</entry>
+<entry key="StartPosition.entity">entity</entry>
+<entry key="EndPosition.entity">entity</entry>
+<entry key="position">position</entry>
+<entry key="giver">giver</entry>
+<entry key="recipient">recipient</entry>
+<entry key="beneficiary">beneficiary</entry>
+<entry key="transferredThing">thing</entry>
+<entry key="money">money</entry>
+<entry key="crime">crime</entry>
+<entry key="prosecutor">prosecutor</entry>
+<entry key="adjudicator">adjudicator</entry>
+<entry key="defendant">defendant</entry>
+<entry key="sentence">sentence</entry>
+<entry key="Fine.entity">entity</entry>
+<entry key="plaintiff">plaintiff</entry>
+
+</properties>

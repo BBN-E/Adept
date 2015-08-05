@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Mapping from the TAC classes to adept ontology classes</comment>
+
+<!-- Mapping of entity types -->
+<entry key="per">Person</entry>
+<entry key="gpe">GeoPoliticalEntity</entry>
+<entry key="org">Organization</entry>
+<entry key="loc">Location</entry>
+<entry key="fac">Facility</entry>
+
+<!--  mapping of relation types -->
+<entry key="per:children">ParentChildRelationship</entry>
+<entry key="per:otherfamily">FamilyRelationship</entry>
+<entry key="per:parents">ParentChildRelationship</entry>
+<entry key="per:siblings">SiblingRelationship</entry>
+<entry key="per:spouse">SpousalRelationship</entry>
+<entry key="per:employee_or_member_of">EmploymentMembership</entry>
+<entry key="per:schools_attended">StudentAlum</entry>
+<entry key="per:cities_of_residence">Resident</entry>
+<entry key="per:statesorprovinces_of_residence">Resident</entry>
+<entry key="per:countries_of_residence">Resident</entry>
+<entry key="per:city_of_death">Die</entry>
+<entry key="per:stateorprovince_of_death">Die</entry>
+<entry key="per:country_of_death">Die</entry>
+<entry key="org:shareholders">InvestorShareholder</entry>
+<entry key="org:founded_by">Founder</entry>
+<entry key="org:top_members_employees">Leadership</entry>
+<entry key="org:member_of">Membership</entry>
+<entry key="gpe:member_of">Membership</entry>
+<entry key="org:members">Membership</entry>
+<entry key="org:parents">Subsidiary</entry>
+<entry key="org:subsidiaries">Subsidiary</entry>
+<entry key="org:city_of_headquarters">OrgHeadquarter</entry>
+<entry key="org:stateprovince_of_headquarters">OrgHeadquarter</entry>
+<entry key="org:country_of_headquarters">OrgHeadquarter</entry>
+<entry key="per:age">PersonAge</entry>
+<entry key="per:origin">Origin</entry>
+<entry key="per:title">Title</entry>
+<entry key="per:religion">Religion</entry>
+<entry key="org:political_religious_affiliation">MemberOriginReligionEthnicity</entry>
+<entry key="org:number_of_employees_members">NumberOfEmployeesMembers</entry>
+<entry key="org:website">OrganizationWebsite</entry>
+
+<!-- EVENTS -->
+<!--  entry key="per:date_of_birth">BeBorn</entry>
+<entry key="per:city_of_birth">BeBorn</entry>
+<entry key="per:stateorprovince_of_birth">BeBorn</entry>
+<entry key="per:country_of_birth">BeBorn</entry>
+<entry key="per:date_of_death">Die</entry>
+<entry key="per:cause_of_death">Die</entry>
+<entry key="org:date_founded">StartOrganization</entry>
+<entry key="org:date_dissolved">EndOrganization</entry>
+<entry key="per:charges">ChargeIndict</entry-->
+
+<!--  mapping of relation argument types -->
+<entry key="per:children.arg-1">parent</entry>
+<entry key="per:children.arg-2">child</entry>
+<entry key="per:otherfamily.arg-1">person</entry>
+<entry key="per:otherfamily.arg-2">person</entry>
+<entry key="per:parents.arg-1">child</entry>
+<entry key="per:parents.arg-2">parent</entry>
+<entry key="per:siblings.arg-1">person</entry>
+<entry key="per:siblings.arg-2">person</entry>
+<entry key="per:spouse.arg-1">person</entry>
+<entry key="per:spouse.arg-2">person</entry>
+<entry key="per:employee_or_member_of.arg-1">person</entry>
+<entry key="per:employee_or_member_of.arg-2">organization</entry>
+<entry key="per:schools_attended.arg-1">person</entry>
+<entry key="per:schools_attended.arg-2">organization</entry>
+<entry key="per:cities_of_residence.arg-1">person</entry>
+<entry key="per:cities_of_residence.arg-2">location</entry>
+<entry key="per:statesorprovinces_of_residence.arg-1">person</entry>
+<entry key="per:statesorprovinces_of_residence.arg-2">location</entry>
+<entry key="per:countries_of_residence.arg-1">person</entry>
+<entry key="per:countries_of_residence.arg-2">location</entry>
+<entry key="org:shareholders.arg-1">organization</entry>
+<entry key="org:shareholders.arg-2">investorShareholder</entry>
+<entry key="org:founded_by.arg-1">organization</entry>
+<entry key="org:founded_by.arg-2">founder</entry>
+<entry key="org:top_members_employees.arg-1">organization</entry>
+<entry key="org:top_members_employees.arg-2">leader</entry>
+<entry key="org:member_of.arg-1">member</entry>
+<entry key="org:member_of.arg-2">organization</entry>
+<entry key="gpe:member_of.arg-1">member</entry>
+<entry key="gpe:member_of.arg-2">organization</entry>
+<entry key="org:members.arg-1">organization</entry>
+<entry key="org:members.arg-2">member</entry>
+<entry key="org:parents.arg-1">subOrganization</entry>
+<entry key="org:parents.arg-2">parent</entry>
+<entry key="org:subsidiaries.arg-1">parent</entry>
+<entry key="org:subsidiaries.arg-2">subOrganization</entry>
+<entry key="org:city_of_headquarters.arg-1">organization</entry>
+<entry key="org:city_of_headquarters.arg-2">location</entry>
+<entry key="org:stateprovince_of_headquarters.arg-1">organization</entry>
+<entry key="org:stateprovince_of_headquarters.arg-2">location</entry>
+<entry key="org:country_of_headquarters.arg-1">organization</entry>
+<entry key="org:country_of_headquarters.arg-2">location</entry>
+<entry key="per:age.arg-1">person</entry>
+<entry key="per:age.arg-2">age</entry>
+<entry key="per:origin.arg-1">person</entry>
+<entry key="per:origin.arg-2">affiliatedEntity</entry>
+<entry key="org:website.arg-1">organization</entry>
+<entry key="org:website.arg-2">url</entry>
+<entry key="org:number_of_employees_members.arg1">organization</entry>
+<entry key="org:number_of_employees_members.arg2">number</entry>
+<entry key="per:religion.arg-1">person</entry>
+<entry key="per:religion.arg-2">affiliatedEntity</entry>
+<entry key="per:title.arg-1">person</entry>
+<entry key="per:title.arg-2">role</entry>
+<entry key="org:political_religious_affiliation.arg-1">organization</entry>
+<entry key="org:political_religious_affiliation.arg-2">affiliatedEntity</entry>
+
+<!--  EVENT ARGUMENTS -->
+<!-- entry key="per:cause_of_death.arg-1">person</entry>
+<entry key="per:cause_of_death.arg-2">agent</entry>
+<entry key="per:city_of_death.arg-1">person</entry>
+<entry key="per:city_of_death.arg-2">location</entry>
+<entry key="per:stateorprovince_of_death.arg-1">person</entry>
+<entry key="per:stateorprovince_of_death.arg-2">location</entry>
+<entry key="per:country_of_death.arg-1">person</entry>
+<entry key="per:country_of_death.arg-2">location</entry>
+<entry key="org:date_founded.arg-1">organization</entry>
+<entry key="org:date_founded.arg-2">time</entry>
+<entry key="org:date_dissolved.arg-1">organization</entry>
+<entry key="org:date_dissolved.arg-2">time</entry>
+<entry key="per:date_of_birth.arg-1">person</entry>
+<entry key="per:date_of_birth.arg-2">time</entry>
+<entry key="per:date_of_death.arg-1">person</entry>
+<entry key="per:date_of_death.arg-2">time</entry>
+<entry key="per:city_of_birth.arg-1">person</entry>
+<entry key="per:city_of_birth.arg-2">location</entry>
+<entry key="per:stateorprovince_of_birth.arg-1">person</entry>
+<entry key="per:stateorprovince_of_birth.arg-2">location</entry>
+<entry key="per:country_of_birth.arg-1">person</entry>
+<entry key="per:country_of_birth.arg-2">location</entry>
+<entry key="per:charges.arg-1">person</entry>
+<entry key="per:charges.arg-2">crime</entry-->
+
+</properties>

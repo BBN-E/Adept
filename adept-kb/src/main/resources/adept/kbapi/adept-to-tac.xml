@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Mapping from the TAC classes to adept ontology classes</comment>
+
+<!-- Mapping of entity types -->
+<entry key="Person">per</entry>
+<entry key="GeoPoliticalEntity">gpe</entry>
+<entry key="Organization">org</entry>
+<entry key="Location">loc</entry>
+<entry key="Facility">fac</entry>
+
+<!--  mapping of relation types -->
+<entry key="ParentChildRelationship">per:children</entry>
+<entry key="FamilyRelationship">per:otherfamily</entry>
+<entry key="SiblingRelationship">per:siblings</entry>
+<entry key="SpousalRelationship">per:spouse</entry>
+<entry key="EmploymentMembership">per:employee_or_member_of</entry>
+<entry key="StudentAlum">per:schools_attended</entry>
+<entry key="Resident">per:countries_of_residence|per:statesorprovinces_of_residence|per:cities_of_residence</entry>
+<entry key="InvestorShareholder">org:shareholders</entry>
+<entry key="Founder">org:founded_by</entry>
+<entry key="Leadership">org:top_members_employees</entry>
+<entry key="Membership">org:members</entry>
+<entry key="Subsidiary">org:parents</entry>
+<entry key="Subsidiary">org:subsidiaries</entry>
+<entry key="OrgHeadquarter">org:country_of_headquarters|org:stateprovince_of_headquarters|org:city_of_headquarters</entry>
+<entry key="PersonAge">per:age</entry>
+<entry key="Title">per:title</entry>
+<entry key="MemberOriginReligionEthnicity">org:political_religious_affiliation</entry>
+<entry key="Religion">per:religion</entry>
+<entry key="Origin">per:origin</entry>
+<entry key="NumberOfEmployeesMembers">org:number_of_employees_members</entry>
+<entry key="OrganizationWebsite">org:website</entry>
+
+<!--  EVENTS -->
+<!--entry key="Die">per:date_of_death</entry>
+<entry key="Die">per:cause_of_death</entry>
+<entry key="BeBorn">per:date_of_birth</entry>
+<entry key="Die">per:city_of_death</entry>
+<entry key="Die">per:stateorprovince_of_death</entry>
+<entry key="Die">per:country_of_death|per:date_of_death|per:cause_of_death</entry>
+<entry key="BeBorn">per:city_of_birth</entry>
+<entry key="BeBorn">per:stateorprovince_of_birth</entry>
+<entry key="BeBorn">per:country_of_birth|per:date_of_birth</entry>
+<entry key="StartOrganization">org:date_founded</entry>
+<entry key="EndOrganization">org:date_dissolved</entry>
+<entry key="ChargeIndict">per:charges</entry-->
+
+<!--  mapping of relation argument types -->
+<!-- Of the two parent-child related types in TAC (per:children and per:parents),
+the reverse mapping only supports per:children. -->
+<entry key="ParentChildRelationship.parent">arg-1</entry>
+<entry key="ParentChildRelationship.child">arg-2</entry>
+<entry key="FamilyRelationship.person">arg-1|arg-2</entry>
+<entry key="SiblingRelationship.person">arg-1|arg-2</entry>
+<entry key="SpousalRelationship.person">arg-1|arg-2</entry>
+<entry key="EmploymentMembership.person">arg-1</entry>
+<entry key="EmploymentMembership.organization">arg-2</entry>
+<entry key="StudentAlum.person">arg-1</entry>
+<entry key="StudentAlum.organization">arg-2</entry>
+<entry key="Resident.person">arg-1</entry>
+<entry key="Resident.location">arg-2</entry>
+<entry key="InvestorShareholder.organization">arg-1</entry>
+<entry key="InvestorShareholder.investorShareholder">arg-2</entry>
+<entry key="Founder.organization">arg-1</entry>
+<entry key="Founder.founder">arg-2</entry>
+<entry key="Leadership.organization">arg-1</entry>
+<entry key="Leadership.leader">arg-2</entry>
+<!-- Of the two membership related types in TAC (org:member_of and org:members),
+the reverse mapping only supports org:members -->
+<entry key="Membership.organization">arg-1</entry>
+<entry key="Membership.member">arg-2</entry>
+<entry key="Subsidiary.subOrganization">arg-1</entry>
+<entry key="Subsidiary.parent">arg-2</entry>
+<entry key="Subsidiary.parent">arg-1</entry>
+<entry key="Subsidiary.subOrganization">arg-2</entry>
+<entry key="OrgHeadquarter.organization">arg-1</entry>
+<entry key="OrgHeadQuarter.location">arg-2</entry>
+<entry key="PersonAge.person">arg-1</entry>
+<entry key="PersonAge.age">arg-2</entry>
+<entry key="MemberOriginReligionEthnicity.person">arg-1</entry>
+<entry key="MemberOriginReligionEthnicity.organization">arg-1</entry>
+<entry key="MemberOriginReligionEthnicity.affiliatedEntity">arg-2</entry>
+<entry key="OrganizationWebsite.organization">arg-1</entry>
+<entry key="OrganizationWebsite.url">arg-2</entry>
+<entry key="NumberOfEmployeesMembers.organization">arg-1</entry>
+<entry key="NumberOfEmployeesMembers.number">arg-2</entry>
+<entry key="Title.person">arg-1</entry>
+<entry key="Title.role">arg-2</entry>
+
+
+<!-- EVENT ARGUMENTS -->
+<!-- entry key="BeBorn.person">arg-1</entry>
+<entry key="BeBorn.location">arg-2</entry>
+<entry key="BeBorn.time">arg-2</entry>
+<entry key="Die.time">arg-2</entry>
+<entry key="Die.agent">arg-2</entry>
+<entry key="Die.person">arg-1</entry>
+<entry key="Die.location">arg-2</entry>
+<entry key="ChargeIndict.person">arg-1</entry>
+<entry key="ChargeIndict.crime">arg-2</entry>
+<entry key="StartOrganization.organization">arg-1</entry>
+<entry key="StartOrganization.time">arg-2</entry>
+<entry key="EndOrganization.organization">arg-1</entry>
+<entry key="EndOrganization.time">arg-2</entry-->
+
+</properties>

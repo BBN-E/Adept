@@ -1,5 +1,3 @@
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties version="1.0">
@@ -16,4 +14,5 @@
     <entry key="EVENT_ERE">deft://event.ere</entry>
     <entry key="MENTION_ERE">deft://mention.ere</entry>
     <entry key="EVENT_CAMEO">deft://event.cameo</entry> 
+    <entry key="adept-kb">http://adept-kb.bbn.com/TAC</entry>
 </properties>

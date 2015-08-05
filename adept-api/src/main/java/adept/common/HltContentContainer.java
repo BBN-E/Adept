@@ -1,23 +1,15 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
 
 import com.google.common.collect.ImmutableList;
@@ -25,8 +17,10 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
-// TODO: Auto-generated Javadoc
+
 // TODO: Check for nulls if needed in future.
 /**
  * The Class HltContentContainer, which contains the 
@@ -95,6 +89,10 @@ public class HltContentContainer extends HltContent {
 	/** The inter pausal units. */
 	private List<InterPausalUnit> interPausalUnits;
 
+	private List<AnomalousText> anomalousTexts;
+
+	private List<Entailment> entailments;
+
     private List<Event> events;
 
 	/** The event mentions */
@@ -126,9 +124,20 @@ public class HltContentContainer extends HltContent {
 	/** The time phrases. */
 	private List<TimePhrase> timePhrases;
 	
+	/** The document relations */
+	private List<DocumentRelation> documentRelations;
+	
+	/** The relation mentions */
+	private List<RelationMention> relationMentions;
+	
 	/** The conversations. */
 	private List<ConversationElement> conversationElements;
 	
+	/** Document entity to KBEntity map. */
+	private Map<Entity, Map<KBEntity,Float>> documentEntityToKBEntityMap;
+	
+	/** Document relation to KBRelation map. */
+	private Map<DocumentRelation, Map<KBRelation,Float>> documentRelationToKBRelationMap;
 	
 	/**
 	 * Instantiates a new hlt content container.
@@ -136,6 +145,9 @@ public class HltContentContainer extends HltContent {
 	public HltContentContainer() {
         this.eventMentions = ImmutableList.of();
         this.eventTexts = ImmutableList.of();
+        
+        documentEntityToKBEntityMap = new HashMap<Entity, Map<KBEntity,Float>>();
+        documentRelationToKBRelationMap = new HashMap<DocumentRelation, Map<KBRelation,Float>>();
 	}
 
 	/**
@@ -339,7 +351,7 @@ public class HltContentContainer extends HltContent {
 	public void setRelations(List<Relation> relations) {
 		this.relations = relations;
 	}
-
+	
 	/**
 	 * Gets the coreferences.
 	 * 
@@ -531,6 +543,38 @@ public class HltContentContainer extends HltContent {
 	}
 
 	/**
+	 * Gets the anomalous texts.
+	 * @return The anomalous texts.
+	 */
+	public List<AnomalousText> getAnomalousTexts() {
+		return anomalousTexts;
+	}
+
+	/**
+	 * Sets the anomalous texts.
+	 * @param anomalousTexts The new anomalous texts.
+	 */
+	public void setAnomalousTexts(List<AnomalousText> anomalousTexts) {
+		this.anomalousTexts = anomalousTexts;
+	}
+
+	/**
+	 * Gets the entailments.
+	 * @return The entailments.
+	 */
+	public List<Entailment> getEntailments() {
+		return entailments;
+	}
+
+	/**
+	 * Sets the entailments.
+	 * @param entailments The new entailments.
+	 */
+	public void setEntailments(List<Entailment> entailments) {
+		this.entailments = entailments;
+	}
+
+	/**
 	 * Gets the sessions.
 	 *
 	 * @return the sessions
@@ -697,5 +741,107 @@ public class HltContentContainer extends HltContent {
 		this.conversationElements = conversationElements;
 	}
 	
+	/** get document relations */
+	public List<DocumentRelation> getDocumentRelations() {
+		return documentRelations;
+	}
+	
+	/** set document relations */
+	public void setDocumentRelations(List<DocumentRelation> documentRelations) {
+		this.documentRelations = documentRelations;
+	}
+	
+	/** get relation mentions */
+	public List<RelationMention> getRelationMentions() {
+		return relationMentions;
+	}
+	
+	/** set relation mentions */
+	public void setRelationMentions(List<RelationMention> relationMentions) {
+		this.relationMentions = relationMentions;
+	}
+	
+	
+	
+	/** getter methods related to KB object maps */
+	
+	/**
+	 * Add a KB Entity mapping to a document entity
+	 */
+	public void addEntityToKBEntityMap(Entity entity, KBEntity kbEntity, float confidence)
+	{
+		if(documentEntityToKBEntityMap == null)
+		{
+			documentEntityToKBEntityMap = new HashMap<Entity, Map<KBEntity,Float>>();
+		}
+		if(documentEntityToKBEntityMap.containsKey(entity))
+		{
+			Map<KBEntity,Float> kbEntities = documentEntityToKBEntityMap.get(entity);
+			kbEntities.put(kbEntity,confidence);
+		}
+		else
+		{
+			Map<KBEntity,Float> kbEntities = new HashMap<KBEntity,Float>();
+			documentEntityToKBEntityMap.put(entity, kbEntities);
+			kbEntities.put(kbEntity, confidence);
+		}
+		
+	}
+	
+	/**
+	 * Add KB relation mapping to a document relation.
+	 */
+	public void addRelationToKBRelationMap(DocumentRelation docRelation, KBRelation kbRelation, float confidence)
+	{
+		if(documentRelationToKBRelationMap == null)
+		{
+			documentRelationToKBRelationMap = new HashMap<DocumentRelation, Map<KBRelation,Float>>();
+		}
+		if(documentRelationToKBRelationMap.containsKey(docRelation))
+		{
+			Map<KBRelation,Float> kbRelations = documentRelationToKBRelationMap.get(docRelation);
+			kbRelations.put(kbRelation,confidence);
+		}
+		else
+		{
+			Map<KBRelation,Float> kbRelations = new HashMap<KBRelation,Float>();
+			documentRelationToKBRelationMap.put(docRelation, kbRelations);
+			kbRelations.put(kbRelation,confidence);
+		}
+		
+	}
+	
+	/**
+	 * Get KB entity map for all document entities
+	 */
+	public Map<Entity, Map<KBEntity,Float>> getKBEntityMapForDocEntities()
+	{
+		return this.documentEntityToKBEntityMap;
+	}
+	
+	/**
+	 * Get KB relation map for all document relations
+	 */
+	public Map<DocumentRelation, Map<KBRelation,Float>> getKBRelationMapForDocRelations()
+	{
+		return this.documentRelationToKBRelationMap;
+	}
+	
+	/**
+	 * Get KB entity map for specific document entity
+	 */
+	public Map<KBEntity,Float> getKBEntityMapForEntity(Entity e)
+	{
+	    return this.documentEntityToKBEntityMap.get(e);
+	}
+	
+	/**
+	 * Get KB relation map for specific document relation
+	 */
+	public Map<KBRelation,Float> getKBRelationMapForRelation(DocumentRelation r)
+	{
+	    return this.documentRelationToKBRelationMap.get(r);
+	}
 
 }
+

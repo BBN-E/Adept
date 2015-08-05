@@ -1,44 +1,44 @@
+/*******************************************************************************
+ * Raytheon BBN Technologies Corp., March 2013
+ * 
+ * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
+ ******************************************************************************/
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
+ * 
+ */
 package adept.common;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import java.util.HashMap;
 import java.util.Map;
 
+import adept.metadata.*;
+
 import com.hp.hpl.jena.ontology.OntClass;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * The Class Relation, which defines a named N-ary 
- * relationship characteristic of two or more 
- * entities or parts together.
+ * The Class Relation. 
+ * 
+ * This class is most suitably used by open relation extraction
+ * algorithms. The arguments of this relation can be any text chunk
+ * in the input document, and are required to align with an
+ * entity mention. As a result, instances of this class are not compatible
+ * for use with the Adept KB. For KB purposes, please refer to 
+ * {@link adept.common.DocumentRelation}
  */
 public class Relation extends ArgumentTuple {
 
 	/** The relation id. */
 	private final long relationId;
 
-	/** The entity id distribution. */
+	/** The relation cluster id distribution. */
 	Map<Long, Float> relationClusterIdDistribution;
+	
 
 	/**
 	 * Instantiates a new relation.
@@ -145,4 +145,6 @@ public class Relation extends ArgumentTuple {
 		int hash = id * 27;
 		return hash;
 	}
+
+
 }

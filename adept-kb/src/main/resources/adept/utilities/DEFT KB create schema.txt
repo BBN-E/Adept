@@ -1,0 +1,161 @@
+-- Table: "Corpus"
+
+CREATE TABLE "Corpus"
+(
+  "ID" text NOT NULL,
+  type text,
+  name text,
+  "URI" text,
+  CONSTRAINT "Corpus_pkey" PRIMARY KEY ("ID")
+);
+
+-- Table: "Languages"
+
+CREATE TABLE "Languages"
+(
+  "ID" integer NOT NULL,
+  "languageName" text,
+  CONSTRAINT "Languages_pkey" PRIMARY KEY ("ID")
+);
+
+-- Table: "SourceDocuments"
+
+CREATE TABLE "SourceDocuments"
+(
+  corpus text,
+  "publicationDate" date,
+  "ID" text NOT NULL,
+  "sourceLanguage" text,
+  "URI" text,
+  CONSTRAINT "SourceDocuments_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT corpus_fk FOREIGN KEY (corpus)
+      REFERENCES "Corpus" ("ID") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Table: "TextChunks"
+
+CREATE TABLE "TextChunks"
+(
+  value text,
+  "beginOffset" integer,
+  "endOffset" integer,
+  "ID" text NOT NULL,
+  "sourceDocument" text,
+  "serializedTokenStream" text,
+  CONSTRAINT "TextChunks_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT "TextChunks_sourceDocument_fkey" FOREIGN KEY ("sourceDocument")
+      REFERENCES "SourceDocuments" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+-- Table: "SourceAlgorithms"
+
+CREATE TABLE "SourceAlgorithms"
+(
+  "algorithmName" text NOT NULL,
+  "contributingSiteName" text,
+  CONSTRAINT "SourceAlgorithms_pkey" PRIMARY KEY ("algorithmName")
+);
+
+-- Table: "InferencePaths"
+
+CREATE TABLE "InferencePaths"
+(
+  "ID" integer NOT NULL,
+  "xmlInferencePath" text,
+  CONSTRAINT "InferencePaths_pkey" PRIMARY KEY ("ID")
+);
+
+-- Table: "EntityMentions"
+
+CREATE TABLE "EntityMentions"
+(
+  "mentionType" text,
+  "KBEntityId" text,
+  confidence double precision,
+  "ID" text NOT NULL,
+  chunk text,
+  "sourceAlgorithm" text,
+  CONSTRAINT "ID" PRIMARY KEY ("ID"),
+  CONSTRAINT "EntityMentions_chunk_fkey" FOREIGN KEY (chunk)
+      REFERENCES "TextChunks" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "EntityMentions_sourceAlgorithm_fkey" FOREIGN KEY
+("sourceAlgorithm")
+      REFERENCES "SourceAlgorithms" ("algorithmName") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Table: "DateMentions"
+
+CREATE TABLE "DateMentions"
+(
+  "ID" text NOT NULL,
+  chunk text,
+  "KBDateId" text,
+  confidence double precision,
+  "sourceAlgorithm" text,
+  CONSTRAINT "DateMentions_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT "DateMentions_chunk_fkey" FOREIGN KEY (chunk)
+      REFERENCES "TextChunks" ("ID") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT "DateMentions_sourceAlgorithm_fkey" FOREIGN KEY
+("sourceAlgorithm")
+      REFERENCES "SourceAlgorithms" ("algorithmName") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Table: "RelationMentions"
+
+CREATE TABLE "RelationMentions"
+(
+  "ID" text NOT NULL,
+  "relationType" text,
+  chunk text,
+  "sourceAlgorithm" text,
+  "KBRelationId" text,
+  confidence double precision,
+  CONSTRAINT "RelationMentions_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT "RelationMentions_chunk_fkey" FOREIGN KEY (chunk)
+      REFERENCES "TextChunks" ("ID") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT "RelationMentions_sourceAlgorithm_fkey" FOREIGN KEY
+("sourceAlgorithm")
+      REFERENCES "SourceAlgorithms" ("algorithmName") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+- Table: "Arguments"
+
+-- DROP TABLE "Arguments";
+
+CREATE TABLE "Arguments"
+(
+  "ID" text NOT NULL,
+  "argType" text,
+  "relationMention" text,
+  confidence double precision,
+  "entityMention" text,
+  CONSTRAINT "Arguments_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT "entityMention_fk" FOREIGN KEY ("entityMention")
+      REFERENCES "EntityMentions" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "relationMention_fk" FOREIGN KEY ("relationMention")
+      REFERENCES "RelationMentions" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+-- Table: "ExternalKBReferences"
+
+CREATE TABLE "ExternalKBReferences"
+(
+  "AdeptKBID" text,
+  "ExternalID" text,
+  "ExternalKB" text
+   confidence double precision
+);
+
+
