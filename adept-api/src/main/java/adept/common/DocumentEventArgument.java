@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,14 +12,13 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.common;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-
 import adept.common.EventMentionArgument.Builder;
 
 import com.google.common.base.Optional;
@@ -238,10 +234,12 @@ public class DocumentEventArgument extends HltContent implements HasScoredUnaryA
     public static final class Filler {
     	private final Optional<Entity> entity;
     	private final Optional<TemporalValue> temporalValue;
+    	private final Optional<GenericThing> genericThing;
     	
-        private Filler(Entity entity, TemporalValue temporalValue) {
+        private Filler(Entity entity, TemporalValue temporalValue, GenericThing genericThing) {
             this.entity = Optional.fromNullable(entity);
             this.temporalValue = Optional.fromNullable(temporalValue);
+            this.genericThing = Optional.fromNullable(genericThing);
         }
 
         public Optional<Entity> asEntity() {
@@ -251,13 +249,17 @@ public class DocumentEventArgument extends HltContent implements HasScoredUnaryA
         public Optional<TemporalValue> asTemporalValue() {
         	return temporalValue;
         }
+        
+        public Optional<GenericThing> asGenericThing(){
+        	return genericThing;
+        }
 
         /**
          * @param e May not be null.
          */
         public static Filler fromEntity(Entity e) {
         	checkArgument(e!=null);
-            return new Filler(e,null);
+            return new Filler(e,null, null);
         }
 
         /**
@@ -265,7 +267,27 @@ public class DocumentEventArgument extends HltContent implements HasScoredUnaryA
          */
         public static Filler fromTemporalValue(TemporalValue temporalValue) {
         	checkArgument(temporalValue!=null);
-            return new Filler(null,temporalValue);
+            return new Filler(null,temporalValue, null);
+        }
+        
+        public static Filler fromGenericThing(GenericThing genericThing){
+        	checkArgument(genericThing != null);
+        	return new Filler(null, null, genericThing);
+        }
+        
+        /**
+         * @return
+         */
+        public Optional<Item> asItem() {
+            if (asEntity().isPresent()) {
+                return Optional.<Item>of(asEntity().get());
+            } else if (asTemporalValue().isPresent() && asTemporalValue().get() instanceof Item) {
+                return Optional.<Item>of((Item) asTemporalValue().get());
+            } else if (asGenericThing().isPresent()){
+            	return Optional.<Item>of(asGenericThing().get());
+            } else {
+                return Optional.absent();
+            }
         }
     }
 }

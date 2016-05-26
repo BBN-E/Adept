@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>adept</groupId>
     <artifactId>adept</artifactId>
     <relativePath>..</relativePath>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.2</version>
   </parent>
   <artifactId>adept-pipeline</artifactId>
   <name>adept-pipeline</name>
@@ -255,51 +253,6 @@
       <artifactId>adept-api</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
-<!--dependency>
-      <groupId>org.ihmc</groupId>
-      <artifactId>ihmc-adept</artifactId>
-      <version>1.3-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>edu.jhu</groupId>
-      <artifactId>jhu-adept</artifactId>
-      <version>1.3-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>edu.oregonstate</groupId>
-      <artifactId>oregonstate-adept</artifactId>
-      <version>1.3-SNAPSHOT</version>
-    </dependency-->
-<!--dependency>
-      <groupId>edu.qccuny</groupId>
-      <artifactId>qccuny-adept</artifactId>
-      <version>1.3-SNAPSHOT</version>
-    </dependency-->
-<!--dependency>
-      <groupId>edu.uiuc</groupId>
-      <artifactId>uiuc-adept</artifactId>
-      <version>1.3-SNAPSHOT</version>
-    </dependency-->
-    <!--dependency>
-      <groupId>edu.umass</groupId>
-      <artifactId>umass-adept</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency-->
-<!--dependency>
-      <groupId>edu.utaustin</groupId>
-      <artifactId>utaustin-adept</artifactId>
-      <version>1.3-SNAPSHOT</version>
-    </dependency-->
-    <!--  dependency>
-      <groupId>edu.washington</groupId>
-      <artifactId>washington-adept</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency-->
-<!--dependency>
-      <groupId>edu.wisconsin</groupId>
-      <artifactId>wisconsin-adept</artifactId>
-      <version>1.3-SNAPSHOT</version>
-    </dependency-->
     <dependency>
 	  <groupId>org.apache.tomcat</groupId>
 	  <artifactId>catalina</artifactId>

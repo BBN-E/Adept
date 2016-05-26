@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>adept</groupId>
     <artifactId>adept</artifactId>
     <relativePath>..</relativePath>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.2</version>
   </parent>
   <artifactId>adept-kb</artifactId>
   <name>adept-kb</name>
@@ -77,8 +75,8 @@
  			<docletPath>/nfs/raid59/u12/DEFT/tools/docflex-doclet-1.6.1/lib/docflex-doclet.jar</docletPath> 
  			<additionalparam> 
  			-template /nfs/raid59/u12/DEFT/tools/docflex-doclet-1.6.1/templates/javadoc/PlainDoc.tpl 
- 			-p:windowTitle "ADEPT KB Specifications v3.5" 
- 			-p:docTitle "ADEPT KB Specifications v3.5" 
+ 			-p:windowTitle "ADEPT KB Specifications v3.7" 
+ 			-p:docTitle "ADEPT KB Specifications v3.7" 
  			-format RTF 
  			-nodialog 
  			-launchviewer=false 
@@ -88,7 +86,7 @@
  			<destDir>site</destDir> 
  			<name>site</name> 
  			<description> 
- 			ADEPT KB Specifications v3.5 
+ 			ADEPT KB Specifications v3.7 
  			</description> 
  		</configuration> 
 		-->
@@ -132,14 +130,9 @@
 	  <version>2.0.1</version>
 	</dependency>
     <dependency>
-      <groupId>edu.stanford</groupId>
-      <artifactId>stanford-adept</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
-    <dependency>
 	  <groupId>org.apache.httpcomponents</groupId>
 	  <artifactId>httpclient</artifactId>
 	  <version>4.3.5</version>
-    </dependency> 
+    </dependency>
   </dependencies>
 </project>

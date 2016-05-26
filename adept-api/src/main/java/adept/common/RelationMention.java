@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,7 +12,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.common;
@@ -193,17 +190,19 @@ public final class RelationMention extends HltContent  {
     public static final class Filler {
     	private final Optional<EntityMention> entityMention;
     	private final Optional<TimePhrase> timePhrase;
-    	//TODO: Add class NumberPhrase to Adept API
-    	//private final Optional<NumberPhrase> numberPhrase;
+    	private final Optional<NumberPhrase> numberPhrase;
+        private final Optional<Chunk> genericChunk;
     	
     	private final IType argumentType;
     	private final float confidence;
     	
-        private Filler(EntityMention entityMention, TimePhrase timePhrase, IType argType, float confidence) {
+        private Filler(EntityMention entityMention, TimePhrase timePhrase, NumberPhrase numberPhrase, Chunk genericChunk, IType argType, float confidence) {
             this.argumentType = argType;
         	
         	this.entityMention = Optional.fromNullable(entityMention);
             this.timePhrase = Optional.fromNullable(timePhrase);
+            this.numberPhrase = Optional.fromNullable(numberPhrase);
+            this.genericChunk = Optional.fromNullable(genericChunk);
             
             this.confidence = confidence;
         }
@@ -217,23 +216,35 @@ public final class RelationMention extends HltContent  {
         }
         
 	
-        //TODO: implement asNumberPhrase() 
+        public Optional<NumberPhrase> asNumberPhrase() {
+        	return numberPhrase;
+        }
+        
+        public Optional<Chunk> asGenericChunk() {
+            return genericChunk;
+        }
 
         /**
          * @param m May not be null.
          */
         public static Filler fromEntityMention(EntityMention m, IType argType, float confidence) {
-            return new Filler(checkNotNull(m), null, checkNotNull(argType), confidence);
+            return new Filler(checkNotNull(m), null, null, null, checkNotNull(argType), confidence);
         }
 
         /**
          * @param timePhrase May not be null.
          */
         public static Filler fromTimePhrase(TimePhrase timePhrase, IType argType, float confidence) {
-            return new Filler(null, checkNotNull(timePhrase), checkNotNull(argType), confidence);
+            return new Filler(null, checkNotNull(timePhrase), null, null, checkNotNull(argType), confidence);
         }
         
-        //TODO: implement fromNumberPhrase()
+        public static Filler fromNumberPhrase(NumberPhrase numberPhrase, IType argType, float confidence){
+        	return new Filler(null, null, checkNotNull(numberPhrase), null, checkNotNull(argType), confidence);
+        }
+        
+        public static Filler fromGenericChunk(Chunk genericChunk, IType argType, float confidence){
+        	return new Filler(null, null, null, checkNotNull(genericChunk), checkNotNull(argType), confidence);
+        }
         
         /**
          * 

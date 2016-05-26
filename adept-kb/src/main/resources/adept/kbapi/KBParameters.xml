@@ -1,20 +1,9 @@
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Parameters needed to successfully connect to a triple store and insert KB objects into it</comment>
-<entry key="ontologyBasePrefix">http://adept-kb.bbn.com/adept-base#</entry>
-<entry key="ontologyCorePrefix">http://adept-kb.bbn.com/adept-core#</entry>
-<entry key="dataInstancesPrefix">http://adept-kb.bbn.com/adept-data#</entry>
-<entry key="tripleStoreUrl"><!-- use the BBN provided triple store URL for your site --></entry>
-<entry key="metadataUrl"><!-- use the BBN provided postgres instance for your site --></entry>
+<entry key="tripleStoreUrl"><!-- use the BBN provided triple store URL for your site ex: http://<host>:<port>/dataset--></entry>
+<entry key="metadataUrl"><!-- use the BBN provided postgres instance for your site ex: jdbc:postgresql://<host>:<port>/postgres--></entry>
 <entry key="metadataUsername"><!-- use the BBN provided postgres username for your site --></entry>
 <entry key="metadataPassword"><!-- use the BBN provided postgres password for your site --></entry>
-<entry key="ontologyMappingFile"><!-- change as needed. -->adept/kbapi/tac-to-adept.xml</entry>
-<entry key="reverseOntologyMappingFile"><!-- change as needed -->adept/kbapi/adept-to-tac.xml</entry>
-<entry key="tokenStreamService">http://deft-kb-dmz-01.bbn.com:5600</entry>
-<entry key="remoteTokenStreamPath"><!-- use BBN provided path --></entry>
-<entry key="localTokenStreamCache"><!-- specify a path on your local system to speed up queries --></entry>
-
 </properties>

@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,9 +12,12 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -25,9 +25,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.InvalidPropertiesFormatException;
 
 import adept.data.IEntity;
+
+import com.google.common.base.Objects;
 
 
 /**
@@ -64,8 +65,7 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 	/** Map containing the KB level entities
 	 * that an instance of this class resolves to, and associated \
 	 * confidences. */
-	@Deprecated
-	Map<KBEntity, Float> kbEntityDistribution;
+	Map<KBID, Float> kbEntityDistribution;
 
 	/** A set of ontology based attribute-value pairs */
 	private Map<IType, IType> ontologizedAttributes = new HashMap<IType, IType>();
@@ -92,7 +92,7 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
                 checkArgument(entityType != null);
 		this.entityType = entityType;
 
-		this.kbEntityDistribution = new HashMap<KBEntity, Float>();
+		this.kbEntityDistribution = new HashMap<KBID, Float>();
 		this.setTypeInformation(new HashMap< String, Set< String > >());
 		
 		typeConfidences.put(entityType, 1.0);
@@ -103,9 +103,15 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 	 * Gets the kb entity distribution, i.e., the one with
 	 * highest confidence.
 	 * 
+	 *  @deprecated Not for public use in the future.
+     * The KB entity distribution map has been moved to
+     * {@link adept.common.HltContentContainer}, and should be both
+     * set and retreived from there henceforth.
+	 * 
 	 * @return the kb entity distribution
 	 */
-	public Map<KBEntity, Float> getKBEntityDistribution() {
+	@Deprecated
+	public Map<KBID, Float> getKBEntityDistribution() {
 		return kbEntityDistribution;
 	}
 
@@ -128,12 +134,18 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 	}
 
 	/**
+	 * @deprecated Not for public use in the future.
+	 * The KB entity distribution map has been moved to 
+	 * {@link adept.common.HltContentContainer}, and should be both
+	 * set and retreived from there henceforth.
+	 * 
 	 * Sets the kb entity distribution.
 	 * 
 	 * @param kbEntityDistribution
 	 *            the kb entity distribution
 	 */
-	public void setKBEntityDistribution(Map<KBEntity, Float> kbEntityDistribution) {
+	@Deprecated
+	public void setKBEntityDistribution(Map<KBID, Float> kbEntityDistribution) {
                 checkArgument(kbEntityDistribution!=null);
 		this.kbEntityDistribution = kbEntityDistribution;
 	}
@@ -141,10 +153,16 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 	/**
 	 * Adds the kb entity confidence pair.
 	 *
+	 * @deprecated Not for public use in the future.
+	 * The KB entity distribution map has been moved to 
+	 * {@link adept.common.HltContentContainer}, and should be both
+	 * set and retreived from there henceforth.
+	 * 
 	 * @param kbEntity the kb entity
 	 * @param confidence the confidence
 	 */
-	public void addKBEntityConfidencePair(KBEntity kbEntity, float confidence) {
+	@Deprecated
+	public void addKBEntityConfidencePair(KBID kbEntity, float confidence) {
                 checkArgument(kbEntity != null);		
 		this.kbEntityDistribution.put(kbEntity, new Float(confidence));
 	}
@@ -184,15 +202,21 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 	/**
 	 * Gets the best kb entity.
 	 *
+	 * @deprecated Not for public use in the future.
+	 * The KB entity distribution map has been moved to 
+	 * {@link adept.common.HltContentContainer}, and should be both
+	 * set and retreived from there henceforth.
+	 *
 	 * @return the best kb entity
 	 */
-	public KBEntity getBestKBEntity() {
-		KBEntity kbe = null;
+	@Deprecated
+	public KBID getBestKBEntity() {
+		KBID kbe = null;
 		if (kbEntityDistribution.size() == 1) {
 			kbe = kbEntityDistribution.entrySet().iterator().next().getKey();
 		} else {
 			float score = -1000f;
-			for(Map.Entry<KBEntity, Float> entrySet : kbEntityDistribution.entrySet()) {
+			for(Map.Entry<KBID, Float> entrySet : kbEntityDistribution.entrySet()) {
 				if (entrySet.getValue() > score) {
 					kbe = entrySet.getKey();
 					score = entrySet.getValue();
@@ -274,7 +298,7 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 		if (obj == null || !(obj instanceof Entity))
 			return false;
 		Entity entity = (Entity) obj;
-		return (entity.value.equals(this.value) && entity.entityType.getType().equals(this.entityType.getType()));			
+		return (entity.value.equals(this.value) && entity.entityType.getType().equals(this.entityType.getType()) && entity.entityId == this.entityId);			
 	}
 
 	/*
@@ -284,8 +308,7 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 	 */
 	@Override
 	public int hashCode() {
-		String code = String.format("%s_%s", this.value, this.entityType.getType());				
-		return code.hashCode();
+		return Objects.hashCode(this.value, this.entityType.getType(), this.entityId);	
 	}
 	
 	/**
@@ -319,7 +342,7 @@ public class Entity extends HltContent implements IEntity, HasOntologizedAttribu
 	/**
 	 * Sets free text attributes
 	 */
-	public void setFreeTextAttributes(Map<IType,String> freetextAttributes)
+	public void setFreeTextAttributes(Map<IType,String> freeTextAttributes)
 	{
 		this.freeTextAttributes = freeTextAttributes;
 	}

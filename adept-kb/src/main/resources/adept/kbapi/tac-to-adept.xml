@@ -1,5 +1,3 @@
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
@@ -23,9 +21,6 @@
 <entry key="per:cities_of_residence">Resident</entry>
 <entry key="per:statesorprovinces_of_residence">Resident</entry>
 <entry key="per:countries_of_residence">Resident</entry>
-<entry key="per:city_of_death">Die</entry>
-<entry key="per:stateorprovince_of_death">Die</entry>
-<entry key="per:country_of_death">Die</entry>
 <entry key="org:shareholders">InvestorShareholder</entry>
 <entry key="org:founded_by">Founder</entry>
 <entry key="org:top_members_employees">Leadership</entry>
@@ -39,22 +34,25 @@
 <entry key="org:country_of_headquarters">OrgHeadquarter</entry>
 <entry key="per:age">PersonAge</entry>
 <entry key="per:origin">Origin</entry>
-<entry key="per:title">Title</entry>
+<entry key="per:title">Role</entry>
 <entry key="per:religion">Religion</entry>
 <entry key="org:political_religious_affiliation">MemberOriginReligionEthnicity</entry>
 <entry key="org:number_of_employees_members">NumberOfEmployeesMembers</entry>
 <entry key="org:website">OrganizationWebsite</entry>
 
 <!-- EVENTS -->
-<!--  entry key="per:date_of_birth">BeBorn</entry>
+<entry key="per:date_of_birth">BeBorn</entry>
 <entry key="per:city_of_birth">BeBorn</entry>
 <entry key="per:stateorprovince_of_birth">BeBorn</entry>
 <entry key="per:country_of_birth">BeBorn</entry>
 <entry key="per:date_of_death">Die</entry>
 <entry key="per:cause_of_death">Die</entry>
+<entry key="per:city_of_death">Die</entry>
+<entry key="per:stateorprovince_of_death">Die</entry>
+<entry key="per:country_of_death">Die</entry>
 <entry key="org:date_founded">StartOrganization</entry>
 <entry key="org:date_dissolved">EndOrganization</entry>
-<entry key="per:charges">ChargeIndict</entry-->
+<entry key="per:charges">ChargeIndict</entry>
 
 <!--  mapping of relation argument types -->
 <entry key="per:children.arg-1">parent</entry>
@@ -67,9 +65,9 @@
 <entry key="per:siblings.arg-2">person</entry>
 <entry key="per:spouse.arg-1">person</entry>
 <entry key="per:spouse.arg-2">person</entry>
-<entry key="per:employee_or_member_of.arg-1">person</entry>
+<entry key="per:employee_or_member_of.arg-1">employeeMember</entry>
 <entry key="per:employee_or_member_of.arg-2">organization</entry>
-<entry key="per:schools_attended.arg-1">person</entry>
+<entry key="per:schools_attended.arg-1">studentAlumni</entry>
 <entry key="per:schools_attended.arg-2">organization</entry>
 <entry key="per:cities_of_residence.arg-1">person</entry>
 <entry key="per:cities_of_residence.arg-2">location</entry>
@@ -81,7 +79,7 @@
 <entry key="org:shareholders.arg-2">investorShareholder</entry>
 <entry key="org:founded_by.arg-1">organization</entry>
 <entry key="org:founded_by.arg-2">founder</entry>
-<entry key="org:top_members_employees.arg-1">organization</entry>
+<entry key="org:top_members_employees.arg-1">affiliatedEntity</entry>
 <entry key="org:top_members_employees.arg-2">leader</entry>
 <entry key="org:member_of.arg-1">member</entry>
 <entry key="org:member_of.arg-2">organization</entry>
@@ -105,24 +103,24 @@
 <entry key="per:origin.arg-2">affiliatedEntity</entry>
 <entry key="org:website.arg-1">organization</entry>
 <entry key="org:website.arg-2">url</entry>
-<entry key="org:number_of_employees_members.arg1">organization</entry>
-<entry key="org:number_of_employees_members.arg2">number</entry>
+<entry key="org:number_of_employees_members.arg-1">organization</entry>
+<entry key="org:number_of_employees_members.arg-2">number</entry>
 <entry key="per:religion.arg-1">person</entry>
 <entry key="per:religion.arg-2">affiliatedEntity</entry>
 <entry key="per:title.arg-1">person</entry>
 <entry key="per:title.arg-2">role</entry>
-<entry key="org:political_religious_affiliation.arg-1">organization</entry>
+<entry key="org:political_religious_affiliation.arg-1">person</entry>
 <entry key="org:political_religious_affiliation.arg-2">affiliatedEntity</entry>
 
 <!--  EVENT ARGUMENTS -->
-<!-- entry key="per:cause_of_death.arg-1">person</entry>
+<entry key="per:cause_of_death.arg-1">person</entry>
 <entry key="per:cause_of_death.arg-2">agent</entry>
 <entry key="per:city_of_death.arg-1">person</entry>
-<entry key="per:city_of_death.arg-2">location</entry>
+<entry key="per:city_of_death.arg-2">place</entry>
 <entry key="per:stateorprovince_of_death.arg-1">person</entry>
-<entry key="per:stateorprovince_of_death.arg-2">location</entry>
+<entry key="per:stateorprovince_of_death.arg-2">place</entry>
 <entry key="per:country_of_death.arg-1">person</entry>
-<entry key="per:country_of_death.arg-2">location</entry>
+<entry key="per:country_of_death.arg-2">place</entry>
 <entry key="org:date_founded.arg-1">organization</entry>
 <entry key="org:date_founded.arg-2">time</entry>
 <entry key="org:date_dissolved.arg-1">organization</entry>
@@ -132,12 +130,28 @@
 <entry key="per:date_of_death.arg-1">person</entry>
 <entry key="per:date_of_death.arg-2">time</entry>
 <entry key="per:city_of_birth.arg-1">person</entry>
-<entry key="per:city_of_birth.arg-2">location</entry>
+<entry key="per:city_of_birth.arg-2">place</entry>
 <entry key="per:stateorprovince_of_birth.arg-1">person</entry>
-<entry key="per:stateorprovince_of_birth.arg-2">location</entry>
+<entry key="per:stateorprovince_of_birth.arg-2">place</entry>
 <entry key="per:country_of_birth.arg-1">person</entry>
-<entry key="per:country_of_birth.arg-2">location</entry>
-<entry key="per:charges.arg-1">person</entry>
-<entry key="per:charges.arg-2">crime</entry-->
+<entry key="per:country_of_birth.arg-2">place</entry>
+<entry key="per:charges.arg-1">defendant</entry>
+<entry key="per:charges.arg-2">crime</entry>
+
+<!-- Additional types for objects of roles -->
+<entry key="per:cities_of_residence.arg-2.type">City</entry>
+<entry key="per:statesorprovinces_of_residence.arg-2.type">StateProvince</entry>
+<entry key="per:countries_of_residence.arg-2.type">Country</entry>
+<entry key="per:city_of_birth.arg-2.type">City</entry>
+<entry key="per:stateorprovince_of_birth.arg-2.type">StateProvince</entry>
+<entry key="per:country_of_birth.arg-2.type">Country</entry>
+<entry key="per:city_of_death.arg-2.type">City</entry>
+<entry key="per:stateorprovince_of_death.arg-2.type">StateProvince</entry>
+<entry key="per:country_of_death.arg-2.type">Country</entry>
+
+<!--  mapping of generic things (slot filler) types -->
+<entry key="url">URL</entry>
+<entry key="title">Title</entry>
+<entry key="crime">Crime</entry>
 
 </properties>

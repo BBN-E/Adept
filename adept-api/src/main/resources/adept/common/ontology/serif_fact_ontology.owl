@@ -1,0 +1,1182 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="deft://fact.serif#"
+     xml:base="deft://fact.serif"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="deft://fact.serif"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://fact.serif#hasArgument -->
+
+    <owl:ObjectProperty rdf:about="deft://fact.serif#hasArgument">
+        <rdfs:range rdf:resource="deft://fact.serif#Argument"/>
+        <rdfs:domain rdf:resource="deft://fact.serif#Fact"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://fact.serif#Argument -->
+
+    <owl:Class rdf:about="deft://fact.serif#Argument"/>
+    
+
+
+    <!-- deft://fact.serif#Action -->
+
+    <owl:Class rdf:about="deft://fact.serif#Action">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Actor -->
+
+    <owl:Class rdf:about="deft://fact.serif#Actor">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Activity -->
+
+    <owl:Class rdf:about="deft://fact.serif#Activity">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+
+    <!-- deft://fact.serif#Condition -->
+
+    <owl:Class rdf:about="deft://fact.serif#Condition">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Date -->
+
+    <owl:Class rdf:about="deft://fact.serif#Date">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+
+
+    <!-- deft://fact.serif#start -->
+
+    <owl:Class rdf:about="deft://fact.serif#start">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+</owl:Class>
+
+    <!-- deft://fact.serif#end -->
+
+    <owl:Class rdf:about="deft://fact.serif#end">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+</owl:Class>
+
+    <!-- deft://fact.serif#activity -->
+
+    <owl:Class rdf:about="deft://fact.serif#activity">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+</owl:Class>
+
+    <!-- deft://fact.serif#hold -->
+
+    <owl:Class rdf:about="deft://fact.serif#hold">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+</owl:Class>
+
+    <!-- deft://fact.serif#non_hold -->
+
+    <owl:Class rdf:about="deft://fact.serif#non_hold">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#Start -->
+
+    <owl:Class rdf:about="deft://fact.serif#Start">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+</owl:Class>
+
+    <!-- deft://fact.serif#End -->
+
+    <owl:Class rdf:about="deft://fact.serif#End">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+</owl:Class>
+
+    <!-- deft://fact.serif#Activity -->
+
+    <owl:Class rdf:about="deft://fact.serif#Activity">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+</owl:Class>
+
+    <!-- deft://fact.serif#Hold -->
+
+    <owl:Class rdf:about="deft://fact.serif#Hold">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+</owl:Class>
+
+    <!-- deft://fact.serif#Non_hold -->
+
+    <owl:Class rdf:about="deft://fact.serif#Non_hold">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+
+
+
+
+        <!-- deft://fact.serif#Provenance -->
+
+    <owl:Class rdf:about="deft://fact.serif#Provenance">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+
+
+    <!-- deft://fact.serif#Drug -->
+
+    <owl:Class rdf:about="deft://fact.serif#Drug">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Employee -->
+
+    <owl:Class rdf:about="deft://fact.serif#Employee">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Employer -->
+
+    <owl:Class rdf:about="deft://fact.serif#Employer">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Extent -->
+
+    <owl:Class rdf:about="deft://fact.serif#Extent">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Founder -->
+
+    <owl:Class rdf:about="deft://fact.serif#Founder">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Headword -->
+
+    <owl:Class rdf:about="deft://fact.serif#Headword">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#JobTitle -->
+
+    <owl:Class rdf:about="deft://fact.serif#JobTitle">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+   
+    <!-- deft://fact.serif#Title -->
+
+    <owl:Class rdf:about="deft://fact.serif#Title">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+    
+
+
+    <!-- deft://fact.serif#Location -->
+
+    <owl:Class rdf:about="deft://fact.serif#Location">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#MentionArg -->
+
+    <owl:Class rdf:about="deft://fact.serif#MentionArg">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Nationality -->
+
+    <owl:Class rdf:about="deft://fact.serif#Nationality">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#NonMentionArg -->
+
+    <owl:Class rdf:about="deft://fact.serif#NonMentionArg">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Organization -->
+
+    <owl:Class rdf:about="deft://fact.serif#Organization">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Quotation -->
+
+    <owl:Class rdf:about="deft://fact.serif#Quotation">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#School -->
+
+    <owl:Class rdf:about="deft://fact.serif#School">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Sentiment -->
+
+    <owl:Class rdf:about="deft://fact.serif#Sentiment">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Source -->
+
+    <owl:Class rdf:about="deft://fact.serif#Source">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Status -->
+
+    <owl:Class rdf:about="deft://fact.serif#Status">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Student -->
+
+    <owl:Class rdf:about="deft://fact.serif#Student">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Target -->
+
+    <owl:Class rdf:about="deft://fact.serif#Target">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+
+
+    <!-- deft://fact.serif#Sector -->
+
+    <owl:Class rdf:about="deft://fact.serif#Sector">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Argument"/>
+    </owl:Class>
+    
+
+    <!-- deft://fact.serif#Fact -->
+
+    <owl:Class rdf:about="deft://fact.serif#Fact"/>
+    
+
+
+    <!-- deft://fact.serif#Action -->
+
+    <owl:Class rdf:about="deft://fact.serif#Action">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Contact -->
+
+    <owl:Class rdf:about="deft://fact.serif#Contact">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#BirthDate -->
+
+    <owl:Class rdf:about="deft://fact.serif#BirthDate">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#ConditionStudied -->
+
+    <owl:Class rdf:about="deft://fact.serif#ConditionStudied">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#ConditionTreated -->
+
+    <owl:Class rdf:about="deft://fact.serif#ConditionTreated">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#DateToMarket -->
+
+    <owl:Class rdf:about="deft://fact.serif#DateToMarket">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#DeathDate -->
+
+    <owl:Class rdf:about="deft://fact.serif#DeathDate">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Description -->
+
+    <owl:Class rdf:about="deft://fact.serif#Description">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#DrugProducer -->
+
+    <owl:Class rdf:about="deft://fact.serif#DrugProducer">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Education -->
+
+    <owl:Class rdf:about="deft://fact.serif#Education">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Employment -->
+
+    <owl:Class rdf:about="deft://fact.serif#Employment">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Family -->
+
+    <owl:Class rdf:about="deft://fact.serif#Family">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Founder -->
+
+    <owl:Class rdf:about="deft://fact.serif#Founder">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+    <owl:Class rdf:about="deft://fact.serif#Founder">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+
+    <!-- deft://fact.serif#FoundingDate -->
+
+    <owl:Class rdf:about="deft://fact.serif#FoundingDate">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+     <!-- deft://fact.serif#FoundedDate -->
+
+    <owl:Class rdf:about="deft://fact.serif#FoundedDate">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+   
+
+
+    <!-- deft://fact.serif#Headquarters -->
+
+    <owl:Class rdf:about="deft://fact.serif#Headquarters">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Nationality -->
+
+    <owl:Class rdf:about="deft://fact.serif#Nationality">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#NegativeSentiment -->
+
+    <owl:Class rdf:about="deft://fact.serif#NegativeSentiment">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#PositiveSentiment -->
+
+    <owl:Class rdf:about="deft://fact.serif#PositiveSentiment">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Quotation -->
+
+    <owl:Class rdf:about="deft://fact.serif#Quotation">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#QuotationAbout -->
+
+    <owl:Class rdf:about="deft://fact.serif#QuotationAbout">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#SideEffect -->
+
+    <owl:Class rdf:about="deft://fact.serif#SideEffect">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://fact.serif#Spouse -->
+
+    <owl:Class rdf:about="deft://fact.serif#Spouse">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#Visit -->
+
+    <owl:Class rdf:about="deft://fact.serif#Visit">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>    
+
+    <!-- deft://fact.serif#LocationOfOperation -->
+
+    <owl:Class rdf:about="deft://fact.serif#LocationOfOperation">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>    
+
+
+    <!-- deft://fact.serif#ActorSector -->
+
+    <owl:Class rdf:about="deft://fact.serif#ActorSector">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>   
+
+
+    <!-- deft://fact.serif#wicews_sector_id_1 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_1">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_3 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_3">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_525 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_525">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_526 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_526">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_28 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_28">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_29 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_29">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_35 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_35">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_550 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_550">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_552 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_552">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_554 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_554">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_556 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_556">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_45 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_45">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_559 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_559">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_55 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_55">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_58 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_58">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_60 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_60">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_65 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_65">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_66 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_66">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_67 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_67">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_68 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_68">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_70 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_70">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_71 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_71">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_72 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_72">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_75 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_75">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_590 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_590">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_86 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_86">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_93 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_93">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_97 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_97">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_100 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_100">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_101 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_101">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_106 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_106">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_109 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_109">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_117 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_117">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_129 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_129">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_132 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_132">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_134 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_134">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_135 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_135">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_137 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_137">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_138 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_138">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_139 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_139">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_140 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_140">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_141 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_141">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_143 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_143">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_150 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_150">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_151 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_151">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_154 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_154">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_157 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_157">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_158 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_158">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_175 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_175">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_190 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_190">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_192 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_192">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_198 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_198">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_199 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_199">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_202 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_202">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_205 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_205">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_206 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_206">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_207 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_207">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_209 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_209">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_213 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_213">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_214 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_214">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_217 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_217">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_218 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_218">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_220 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_220">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_224 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_224">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_227 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_227">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_239 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_239">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_242 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_242">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_243 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_243">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_247 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_247">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_259 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_259">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_262 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_262">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_263 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_263">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_266 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_266">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_271 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_271">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_272 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_272">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_275 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_275">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_278 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_278">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_279 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_279">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_280 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_280">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_281 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_281">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_282 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_282">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_283 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_283">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_284 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_284">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_285 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_285">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_286 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_286">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_288 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_288">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_289 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_289">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_290 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_290">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_291 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_291">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_293 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_293">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_294 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_294">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_298 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_298">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_326 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_326">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_331 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_331">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_336 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_336">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_349 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_349">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_356 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_356">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_357 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_357">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_365 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_365">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_370 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_370">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_402 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_402">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_405 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_405">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_473 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_473">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_474 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_474">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_475 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_475">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+    <!-- deft://fact.serif#wicews_sector_id_476 -->
+
+    <owl:Class rdf:about="deft://fact.serif#wicews_sector_id_476">
+        <rdfs:subClassOf rdf:resource="deft://fact.serif#Fact"/>
+    </owl:Class>
+
+</rdf:RDF>
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

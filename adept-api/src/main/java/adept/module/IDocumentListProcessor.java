@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,13 +12,18 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.module;
 
 import adept.common.DocumentList;
 import adept.common.HltContentContainer;
+
+import java.util.List;
 
 
 /**
@@ -44,6 +46,7 @@ public interface IDocumentListProcessor {
 	 * @throws AdeptModuleException
 	 *             the adept module exception
 	 */
+	@Deprecated
 	public abstract HltContentContainer process(DocumentList documentList,
 			HltContentContainer hltContentContainer)
 			throws AdeptModuleException;
@@ -59,9 +62,40 @@ public interface IDocumentListProcessor {
 	 * @throws AdeptModuleException
 	 *             the adept module exception
 	 */
+	@Deprecated
 	public abstract long processAsync(DocumentList documentList,
 			HltContentContainer hltContentContainer)
 			throws AdeptModuleException;
+	
+	/**
+	 * This definition of the process method takes a DocumentList as input 
+	 * and returns as list of HltContentContainer
+	 * objects (one per input document) which include 
+	 * the results from processing.
+	 * 
+	 * @param documentList
+	 *            the document list
+	 * @return List of hlt content container objects
+	 * @throws AdeptModuleException
+	 *             the adept module exception
+	 */
+	public abstract List<HltContentContainer> process(DocumentList documentList)
+			throws AdeptModuleException;
+
+	/**
+	 * This is asynchronous definition of the Process method.
+	 * 
+	 * @param documentList
+	 *            the document list
+	 * @param hltContentContainer
+	 *            the hlt content container
+	 * @return the long
+	 * @throws AdeptModuleException
+	 *             the adept module exception
+	 */
+	public abstract long processAsync(DocumentList documentList)
+			throws AdeptModuleException;
+
 
 	/**
 	 * This method is invoked multiple times as a polling mechanism to get the

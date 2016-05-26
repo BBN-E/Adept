@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,10 +12,15 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
+
+import com.google.common.base.Objects;
 
 
 /**
@@ -103,5 +105,40 @@ public class TimePhrase extends Chunk {
 	public void setResolution(String resolution) {
 		this.resolution = resolution;
 	}
+
+	/**
+	 * 
+	 * @return
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(resolution, resolutionType, type, this.tokenOffset.getBegin(), this.tokenOffset.getEnd(), 
+                this.tokenStream.getDocument(), this.charOffset.getBegin(), 
+                this.charOffset.getEnd(), this.value);
+	}
+
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof TimePhrase))
+			return false;
+		TimePhrase timePhrase = (TimePhrase) obj;
+		return (((timePhrase.resolution == null && resolution == null) || timePhrase.resolution.equals(resolution)) &&
+				((timePhrase.resolutionType == null && resolutionType == null) || timePhrase.resolutionType.equals(resolutionType)) &&
+				((timePhrase.type == null && type == null) || timePhrase.type.equals(type)) &&
+				timePhrase.tokenOffset.getBegin() == this.tokenOffset.getBegin() &&
+						timePhrase.tokenOffset.getEnd() == this.tokenOffset.getEnd() &&
+								timePhrase.value.equals(this.value));
+	}
+	
+	
 
 }

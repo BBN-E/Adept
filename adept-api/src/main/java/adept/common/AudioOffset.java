@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,58 +12,52 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 
 /**
- * The Class AudioOffset.
+ * Captures the begin and end time of an audio span.
+ * This class is immutable.
  */
 public final class AudioOffset {
 
-	/** The begin. */
+	/** The begin time. */
 	private final float begin;
 
-	/** The end. */
+	/** The end time. */
 	private final float end;
 
 	/**
-	 * Instantiates a new audio offset.
-	 * 
 	 * @param begin
-	 *            the begin
+	 *            The time that represents the beginning of the audio span.
 	 * @param end
-	 *            the end
+	 *            The time that represents the end of the audio span.
 	 */
 	public AudioOffset(float begin, float end) {
-            checkArgument((end > begin),
-                    "An AudioOffset's end must be greater than its begin, "
-                    +"but got begin %f and end %f",
-                    begin, end);
+		checkArgument(begin < end, "An AudioOffset's begin must be less than its end, but got begin %s and end %s", begin, end);
 		this.begin = begin;
 		this.end = end;
 	}
 
 	/**
-	 * Gets the begin.
-	 * 
-	 * @return the begin
+	 * @return The begin time.
 	 */
 	public float getBegin() {
 		return begin;
 	}
 
 	/**
-	 * Gets the end.
-	 * 
-	 * @return the end
+	 * @return The end time.
 	 */
 	public float getEnd() {
 		return end;
 	}
-
 }

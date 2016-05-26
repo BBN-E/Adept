@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,59 +12,53 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 
 /**
- * Offset class captures begin and end integer positions of character or token
- * spans. This class is immutable..
+ * Captures the begin and end integer positions of character spans.
+ * The begin position is inclusive, while the end is exclusive.
+ * This class is immutable.
  */
 public final class CharOffset {
 
-	/** The begin. */
+	/** The begin index, which is inclusive. */
 	private final int begin;
 
-	/** The end. */
+	/** The end index, which is exclusive. */
 	private final int end;
 
 	/**
-	 * Instantiates a new offset.
-	 * 
 	 * @param begin
-	 *            the begin
+	 *            The (inclusive) index that points to the beginning of the character span.
 	 * @param end
-	 *            the end
+	 *            The (exclusive) index that points to the end of the character span.
 	 */
 	public CharOffset(int begin, int end) {
-            checkArgument((end >= begin),
-                    "A CharOffset's end must be no less than its begin, "
-                    +"but got begin %s and end %s",
-                    begin, end);
-		this.begin = begin;
-		this.end = end;
+            checkArgument(begin < end, "A CharOffset's begin must be less than its end, but got begin %s and end %s", begin, end);
+            this.begin = begin;
+            this.end = end;
 	}
 
 	/**
-	 * Gets the begin.
-	 * 
-	 * @return the begin
+	 * @return The (inclusive) index that points to the beginning of the character span.
 	 */
 	public int getBegin() {
-		return begin;
+            return begin;
 	}
 
 	/**
-	 * Gets the end.
-	 * 
-	 * @return the end
+	 * @return The (exclusive) index that points to the end of the character span.
 	 */
 	public int getEnd() {
-		return end;
+            return end;
 	}
-
 }

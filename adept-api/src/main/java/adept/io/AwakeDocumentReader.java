@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,7 +12,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.io;
@@ -63,7 +60,7 @@ import adept.serialization.SerializationType;
 import adept.serialization.XMLSerializer;
 
 import adept.utilities.PassageAttributes;
-import adept.utilities.StanfordTokenizer;
+import adept.utilities.OpenNLPTokenizer;
 import adept.utilities.printHltContent;
 
 
@@ -162,7 +159,7 @@ public class AwakeDocumentReader {
 			return null;
 		}
 		// First tokenize document.  Then match up first and last tokens using character offsets of passage.
-		TokenStream tokenStream = StanfordTokenizer.getInstance().tokenize(adeptDocument.getValue(), adeptDocument);
+		TokenStream tokenStream = OpenNLPTokenizer.getInstance().tokenize(adeptDocument.getValue(), adeptDocument);
 //		tokenStream.setDocument(adeptDocument);								
 //		adeptDocument.addTokenStream(tokenStream);
 		System.out.println("Number of passages: " + passageAttributesList.size());				
@@ -178,6 +175,7 @@ public class AwakeDocumentReader {
 				Token token = tokenStream.get(i); 
 				if ( !haveBegin && token.getCharOffset().getBegin() >=  passageStartOffset){
 					begin = i;
+					end = i;
 					haveBegin = true;
 				}
 				if ( token.getCharOffset().getEnd() > passageStartOffset + passageLen) break;

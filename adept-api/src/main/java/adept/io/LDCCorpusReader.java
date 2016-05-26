@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,7 +12,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.io;
@@ -29,6 +26,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,7 +48,7 @@ import adept.common.TokenStream;
 import adept.common.TokenizerType;
 import adept.common.TranscriptType;
 import adept.utilities.PassageAttributes;
-import adept.utilities.StanfordTokenizer;
+import adept.utilities.OpenNLPTokenizer;
 
 import java.util.*;
 
@@ -58,7 +56,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
-
 
 
 /**
@@ -98,8 +95,8 @@ public class LDCCorpusReader {
 
         String docType = "sgm";
         String docID = uri;
-        if(docID == null)
-        	docID = "UNKNOWN";
+        if (docID == null)
+            docID = "UNKNOWN";
 
         List<ConversationElementTag> tags = new ArrayList<ConversationElementTag>();
         //contains name, attributes, start
@@ -114,8 +111,6 @@ public class LDCCorpusReader {
 
         Matcher tagMatcher = tagPattern.matcher(text);
 
-//        System.out.println("Finding matches...");
-
         int lastTagEnd = 0;
         int currTagBegin = 0;
 
@@ -125,30 +120,30 @@ public class LDCCorpusReader {
         adeptDocument.setValue(text);
 //        tokenStream.setDocument(adeptDocument);
 
-        TokenizerType tokenizerType = TokenizerType.STANFORD_CORENLP;
+        TokenizerType tokenizerType = TokenizerType.APACHE_OPENNLP;
         TranscriptType transcriptType = TranscriptType.SOURCE;
         ChannelName channelName = ChannelName.NONE;
         ContentType contentType = ContentType.TEXT;
         TokenStream tokenStream = new TokenStream(tokenizerType, transcriptType, language, channelName,
                 contentType, adeptDocument);
 
+        HashMap<ConversationElement, Map<String, Token>> attrsMap = new HashMap<ConversationElement, Map<String, Token>>();
+
         //find tags
         while (tagMatcher.find()) {
             int tagStart = tagMatcher.start();
             int tagEnd = tagMatcher.end();
-//            System.out.print("Start index: " + tagStart + " ");
-//            System.out.print("Start index: " + tagEnd + " ");
             String tag = tagMatcher.group();
-//            System.out.println(tag);
 
             int tokenBegin = tokenStream.size();
 
             currTagBegin = tagStart;
             String contentString = text.substring(lastTagEnd, currTagBegin);
 //	    System.out.println("Content: " + contentString);
-            TokenStream contentTokenStream = StanfordTokenizer.getInstance().tokenize(contentString, adeptDocument);
+            TokenStream contentTokenStream = OpenNLPTokenizer.getInstance().tokenize(contentString, adeptDocument);
             for (Token t : contentTokenStream) {
                 CharOffset tOffset = t.getCharOffset();
+
                 Token newToken = new Token(tokenStream.size(), new CharOffset(lastTagEnd + tOffset.getBegin(), lastTagEnd + tOffset.getEnd()), t.getValue());
                 tokenStream.add(newToken);
             }
@@ -165,7 +160,7 @@ public class LDCCorpusReader {
             String tagName = "";
             while (tagNameMatcher.find()) {
                 tagName = tagNameMatcher.group().trim().toLowerCase();
-//                System.out.println("\t Name: " + tagName);
+
                 break;
             }
 
@@ -179,12 +174,10 @@ public class LDCCorpusReader {
                 Token token = new Token(tokenStream.size(), new CharOffset(tagStart + split + attrBegin + 3, tagStart + attrEnd - 1), attr.substring(split + 2, attr.length() - 1));
                 token.setTokenType(adept.common.TokenType.TAG);
                 tokenStream.add(token);
-//		System.out.println("Token: " + token.getValue() + " " + token.getCharOffset().getBegin() + " " + token.getCharOffset().getEnd());
+
                 attributes.put(attr.substring(0, split).toLowerCase(), token);
             }
-//            for (String key : attributes.keySet()) {
-//                System.out.println("\t attr: " + key + ": " + attributes.get(key));
-//            }
+
 
             boolean isEnd = tag.contains("</"); //closes another
             boolean isUnit = tag.contains("/>"); //is its own
@@ -192,59 +185,63 @@ public class LDCCorpusReader {
             boolean isPost = (tag.contains("<post") || tag.contains("post>"));
             boolean isQuote = (tag.contains("<quote") || tag.contains("quote>"));
 
-//            System.out.println("\t End: " + isEnd);
-
             // TODO - tags variable is unused.
             ConversationElementTag currTag = new ConversationElementTag(tagName, attributes, tagStart, tagEnd);
             tags.add(currTag);
 
             if (isEnd) {
+
                 if (isQuote) {
                     ConversationElement openQuote = quoteStack.pop();
                     ConversationElement newQuote = new ConversationElement(new TokenOffset(openQuote.getMessageChunk().getTokenOffset().getBegin(), tokenStream.size() - 1), tokenStream);
                     newQuote.getFreeTextAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID"),
-                    		openQuote.getFreeTextAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID")));
+                            openQuote.getFreeTextAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID")));
                     newQuote.getConversationElementRelations().put(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"),
-                    		openQuote.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")));
+                            openQuote.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")));
                     newQuote.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG"),
-                    		openQuote.getConversationElementTagAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG")));
+                            openQuote.getConversationElementTagAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG")));
                     newQuote.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG"),
-                    		openQuote.getConversationElementTagAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG")));
+                            openQuote.getConversationElementTagAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG")));
 
                     if (!quoteStack.isEmpty()) {
                         ConversationElement superQuote = quoteStack.pop();
-                        if(superQuote.getConversationElementRelations().containsKey(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")))
-                           superQuote.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")).add(newQuote);
-                        else
-                        {
-                        	List<ConversationElement> newQuotes = new ArrayList<ConversationElement>();
-                        	newQuotes.add(newQuote);
-                        	superQuote.getConversationElementRelations().put(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"), newQuotes);
+                        if (superQuote.getConversationElementRelations().containsKey(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")))
+                            superQuote.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")).add(newQuote);
+                        else {
+                            List<ConversationElement> newQuotes = new ArrayList<ConversationElement>();
+                            newQuotes.add(newQuote);
+                            superQuote.getConversationElementRelations().put(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"), newQuotes);
                         }
                         quoteStack.push(superQuote);
                     } else {
                         ConversationElement superPost = postStack.pop();
-                        if(superPost.getConversationElementRelations().containsKey(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")))
-                          superPost.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")).add(newQuote);
-                        else
-                        {
-                        	List<ConversationElement> newQuotes = new ArrayList<ConversationElement>();
-                        	newQuotes.add(newQuote);
-                        	superPost.getConversationElementRelations().put(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"), newQuotes);
+                        if (superPost.getConversationElementRelations().containsKey(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")))
+                            superPost.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")).add(newQuote);
+                        else {
+                            List<ConversationElement> newQuotes = new ArrayList<ConversationElement>();
+                            newQuotes.add(newQuote);
+                            superPost.getConversationElementRelations().put(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"), newQuotes);
                         }
                         postStack.push(superPost);
                     }
                 } else if (isPost) {
                     ConversationElement openPost = postStack.pop();
-                    ConversationElement newPost = new ConversationElement(new TokenOffset(openPost.getMessageChunk().getTokenOffset().getBegin(), tokenStream.size() - 1), tokenStream);
+                    Map<String, Token> openPostAttrs = attrsMap.get(openPost);
+                    ConversationElement newPost = new ConversationElement(new TokenOffset(openPost.getMessageChunk().getTokenOffset().getBegin()+openPostAttrs.size(), tokenStream.size() - 1), tokenStream);
+                    if(openPostAttrs.containsKey("author")) {
+                        newPost.setAuthorId(openPostAttrs.get("author").getValue());
+                    }
+                    if(openPostAttrs.containsKey("datetime")) {
+                        newPost.setAuthoredTime(openPostAttrs.get("datetime").getValue());
+                    }
                     newPost.getFreeTextAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID"),
-                    		openPost.getFreeTextAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID")));
+                            openPost.getFreeTextAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID")));
                     newPost.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG"),
-                    		openPost.getConversationElementTagAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG")));
+                            openPost.getConversationElementTagAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG")));
                     newPost.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG"),
-                    		openPost.getConversationElementTagAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG")));
+                            openPost.getConversationElementTagAttributes().get(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG")));
                     newPost.getConversationElementRelations().put(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"),
-                    		openPost.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")));
+                            openPost.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")));
                     postStack.push(newPost);
                     postList.add(newPost);
                 }
@@ -260,23 +257,17 @@ public class LDCCorpusReader {
                     String sequenceId;
                     if (!quoteStack.isEmpty()) {
                         ConversationElement superQuote = quoteStack.peek();
-                        try
-                        {
-                        	sequenceId = Integer.toString(superQuote.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")).size());
-                        }
-                        catch(NullPointerException e)
-                        {
-                        	sequenceId = "1";
+                        try {
+                            sequenceId = Integer.toString(superQuote.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")).size());
+                        } catch (NullPointerException e) {
+                            sequenceId = "1";
                         }
                     } else {
                         ConversationElement superPost = postStack.peek();
-                        try
-                        {
-                        	sequenceId = Integer.toString(superPost.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")).size());
-                        }
-                        catch(NullPointerException e)
-                        {
-                        	sequenceId = "1";
+                        try {
+                            sequenceId = Integer.toString(superPost.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES")).size());
+                        } catch (NullPointerException e) {
+                            sequenceId = "1";
                         }
 
                     }
@@ -285,18 +276,20 @@ public class LDCCorpusReader {
                     }
                     ConversationElement newQuote = new ConversationElement(new TokenOffset(tokenBegin, tokenStream.size() - 1), tokenStream);
                     newQuote.getFreeTextAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID"),
-                    		sequenceId);
-                    newQuote.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG"),currTag);
-                    newQuote.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG"),currTag);
+                            sequenceId);
+                    newQuote.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG"), currTag);
+                    newQuote.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG"), currTag);
                     quoteStack.push(newQuote);
                 } else if (isPost) {
                     String sequenceId = Long.toString(postList.size());
+
                     ConversationElement newPost = new ConversationElement(new TokenOffset(tokenBegin, tokenStream.size() - 1), tokenStream);
                     newPost.getFreeTextAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("SEQUENCE ID"),
-                    		sequenceId);
-                    newPost.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG"),currTag);
-                    newPost.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG"),currTag);
+                            sequenceId);
+                    newPost.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("OPEN TAG"), currTag);
+                    newPost.getConversationElementTagAttributes().put(ConversationElementAttributesTypeFactory.getInstance().getType("CLOSE TAG"), currTag);
                     postStack.push(newPost);
+                    attrsMap.put(newPost,attributes);
                 }
 //                Pair<String, Map<String,String>> nameAndAttrs = new Pair<String, Map<String,String>>(tagName, attributes);
 //                Pair<Pair<String, Map<String,String>>,Integer> partial = new Pair<Pair<String, Map<String,String>>,Integer>(nameAndAttrs, tagStart);
@@ -325,7 +318,7 @@ public class LDCCorpusReader {
     }
 
     private ConversationElement assignPostToQuotes(ConversationElement post) throws InvalidPropertiesFormatException, IOException {
-    	List<ConversationElement> quotes = post.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"));
+        List<ConversationElement> quotes = post.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"));
         if (quotes == null || quotes.size() == 0) {
             return post;
         } else {
@@ -340,15 +333,15 @@ public class LDCCorpusReader {
     }
 
     private ConversationElement assignPostToSubQuotes(ConversationElement quote, ConversationElement post) throws InvalidPropertiesFormatException, IOException {
-    	List<ConversationElement> subQuotes = quote.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"));
+        List<ConversationElement> subQuotes = quote.getConversationElementRelations().get(ConversationElementRelationTypeFactory.getInstance().getType("QUOTES"));
         if (subQuotes == null || subQuotes.size() == 0) {
-        	List<ConversationElement> posts = new ArrayList<ConversationElement>();
-        	posts.add(post);
-        	quote.getConversationElementRelations().put(ConversationElementRelationTypeFactory.getInstance().getType("PARENT POST"), posts);
+            List<ConversationElement> posts = new ArrayList<ConversationElement>();
+            posts.add(post);
+            quote.getConversationElementRelations().put(ConversationElementRelationTypeFactory.getInstance().getType("PARENT POST"), posts);
             return quote;
         } else {
-        	List<ConversationElement> posts = new ArrayList<ConversationElement>();
-        	posts.add(post);
+            List<ConversationElement> posts = new ArrayList<ConversationElement>();
+            posts.add(post);
             List<ConversationElement> newQuotes = new ArrayList<ConversationElement>();
             for (ConversationElement subQuote : subQuotes) {
                 ConversationElement newQuote = assignPostToSubQuotes(subQuote, post);
@@ -390,32 +383,12 @@ public class LDCCorpusReader {
             // HUB4 format for CoNLL read itemid from element such as this:
             // <newsitem itemid="23489" id="root" date="1996-08-30" xml:lang="en">
             // TODO - should also read "headline" and "dateline" elements?
-            textElement = (Element) doc.getElementsByTagName("text").item(0);
-            NodeList passagesNodeList = textElement.getElementsByTagName("p");
-            //System.out.println("passages: " + passagesNodeList.toString() + " " + passagesNodeList.getLength());
-            for (int i = 0; i < passagesNodeList.getLength(); i++) {
-                Element passage = (Element) passagesNodeList.item(i);
-                if (passage != null) {
-                    String passageValue = passage.getFirstChild().getNodeValue();
-                    String passageValueTrimmed = passageValue.replaceAll("^\\s+", "").replaceAll("\\s+$", "");
-                    String passageValueSurrogatesRemoved = Reader.checkSurrogates(passageValueTrimmed);
-                    if (!passageValueSurrogatesRemoved.equals("")) {
-                        documentTextBuffer.append(passageValueSurrogatesRemoved);
-                        documentTextBuffer.append("\n");
-                    }
-                }
-            }
+            textElement = getTextElement(doc);
+            NodeList passagesNodeList = getPassagesNodeList(textElement);
+            documentTextBuffer = getDocumentTextBuffer(passagesNodeList, documentTextBuffer, passageAttributesList);
             /** get adept Document ID and type */
-            Element DOCElement = (Element) doc.getElementsByTagName("newsitem").item(0);
-            if (DOCElement != null) {
-                docID = DOCElement.getAttribute("itemid");
-//					NodeList dcList = textElement.getElementsByTagName("dc");
-                //				for (int i = 0; i < dcList.getLength(); i++) {
-                //					Node dc = dcList.item(i).getFirstChild();
-                //					String source = ((Element) dc).getAttribute("element");
-                //				}
-                docType = "HUB4";//DOCElement.getAttribute("type");
-            }
+            docID = getDocID(doc);
+            docType = getDocType(doc);
 
         } else {
             System.out.println("textElement!=NULL");
@@ -487,21 +460,21 @@ public class LDCCorpusReader {
             if (docID.equals("")) {
                 try {
                     System.out.println("DOCID was empty on the first attempt");
-		    /** Get Adept Document ID */
-		    NodeList docElements = doc.getElementsByTagName("DOCID");
-		    if (docElements != null && docElements.getLength() != 0) {
-			docID = docElements.item(0).getFirstChild().getNodeValue();
-		    }
-		    if (docElements == null || docElements.getLength() == 0 || docID == null ||
-			(docID != null && docID.equals(""))) {
-			System.out.println("DOCID was empty in the second attempt (DOCID)");
-			docID = doc.getElementsByTagName("DOCNO").item(0).getFirstChild()
-			    .getNodeValue();
-		    }
+                    /** Get Adept Document ID */
+                    NodeList docElements = doc.getElementsByTagName("DOCID");
+                    if (docElements != null && docElements.getLength() != 0) {
+                        docID = docElements.item(0).getFirstChild().getNodeValue();
+                    }
+                    if (docElements == null || docElements.getLength() == 0 || docID == null ||
+                            (docID != null && docID.equals(""))) {
+                        System.out.println("DOCID was empty in the second attempt (DOCID)");
+                        docID = doc.getElementsByTagName("DOCNO").item(0).getFirstChild()
+                                .getNodeValue();
+                    }
 
                 } catch (Exception e) {
-		    e.printStackTrace();
-		    // Unrecoverable error, so made this an unchecked exception
+                    e.printStackTrace();
+                    // Unrecoverable error, so made this an unchecked exception
                     throw new RuntimeException("Unable to set DOC ID. Adept documents are required to have a non-empty document ID.");
                 }
 
@@ -512,7 +485,7 @@ public class LDCCorpusReader {
                     docType = doc.getElementsByTagName("DOCTYPE").item(0)
                             .getFirstChild().getNodeValue();
                 } catch (NullPointerException e) {
-                	docType = "UNKNOWN";
+                    docType = "UNKNOWN";
                 }
             }
 
@@ -552,13 +525,78 @@ public class LDCCorpusReader {
         adeptDocument = new adept.common.Document(docID, corpus, docType, uri, language);
         adeptDocument.setValue(documentText);
         adeptDocument.setHeadline(headline);    // TODO should this be trimmed?
+
         return adeptDocument;
+    }
+
+    private NodeList getPassagesNodeList(Element textElement) {
+        NodeList nodelist;
+        nodelist = textElement.getElementsByTagName("p");
+        if (nodelist.getLength() == 0)
+            nodelist = textElement.getElementsByTagName("post");
+        ;
+        return nodelist;
+    }
+
+    private Element getTextElement(Document doc) {
+        Element textElement = (Element) doc.getElementsByTagName("text").item(0);
+        if (textElement == null)
+            textElement = (Element) doc.getElementsByTagName("doc").item(0);
+        return textElement;
+    }
+
+    private StringBuffer getDocumentTextBuffer(NodeList passagesNodeList, StringBuffer documentTextBuffer, List<PassageAttributes> passageAttributesList) {
+
+//        System.out.println("passages: " + passagesNodeList.toString() + " " + passagesNodeList.getLength());
+        for (int i = 0; i < passagesNodeList.getLength(); i++) {
+            Element passage = (Element) passagesNodeList.item(i);
+            if (passage != null) {
+                String passageValue = passage.getTextContent();
+                String passageValueTrimmed = passageValue.replaceAll("^\\s+", "").replaceAll("\\s+$", "");
+                String passageValueSurrogatesRemoved = Reader.checkSurrogates(passageValueTrimmed);
+                if (!passageValueSurrogatesRemoved.equals("")) {
+                    documentTextBuffer.append(passageValueSurrogatesRemoved);
+                    documentTextBuffer.append("\n");
+
+                    PassageAttributes pa = new PassageAttributes();
+                    pa.setPassageId(Long.parseLong(passage.getAttribute("id").replaceAll("[^0-9.]", "")));
+                    pa.setValue(passageValueSurrogatesRemoved);
+                    pa.setSpeaker(passage.getAttribute("author"));
+                    pa.setPostPassageOffset(0);
+                    passageAttributesList.add(pa);
+                }
+            }
+        }
+        return documentTextBuffer;
+    }
+
+    private String getDocID(Document doc) {
+        Element DOCElement = (Element) doc.getElementsByTagName("newsitem").item(0);
+        if (DOCElement != null) {
+            return DOCElement.getAttribute("itemid");
+        } else {
+            DOCElement = (Element) doc.getElementsByTagName("doc").item(0);
+            if (DOCElement != null) {
+                return DOCElement.getAttribute("id");
+            }
+        }
+        return null;
+    }
+
+    private String getDocType(Document doc) {
+        Element DOCElement = (Element) doc.getElementsByTagName("newsitem").item(0);
+        if (DOCElement != null) {
+            return "HUB4";//DOCElement.getAttribute("type");
+        } else {
+            return "MPDF";
+        }
     }
 
     /**
      * Get a {@link List} of passages given some input text {@code text}.
+     *
      * @param passageAttributesList The empty list to which to add the passages.
-     * @param text The input text.
+     * @param text                  The input text.
      */
     public void getPassages(List<PassageAttributes> passageAttributesList, String text) {
         BufferedReader bufReader = new BufferedReader(new StringReader(text));

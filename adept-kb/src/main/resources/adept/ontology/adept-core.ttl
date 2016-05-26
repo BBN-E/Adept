@@ -165,7 +165,7 @@ adept-base:thing rdf:type owl:ObjectProperty .
 
 :founder rdf:type owl:ObjectProperty ;
          
-         rdfs:subPropertyOf :person .
+         rdfs:subPropertyOf :entity .
 
 
 
@@ -341,11 +341,19 @@ adept-base:thing rdf:type owl:ObjectProperty .
 
 
 
-###  http://adept-kb.bbn.com/adept-core#sentimentHolder
+###  http://adept-kb.bbn.com/adept-core#source
 
-:sentimentHolder rdf:type owl:ObjectProperty ;
-                 
-                 rdfs:subPropertyOf :entity .
+:source rdf:type owl:ObjectProperty ;
+        
+        rdfs:subPropertyOf :entity .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#strength
+
+:strength rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf adept-base:argument .
 
 
 
@@ -428,12 +436,11 @@ adept-base:Event rdf:type owl:Class ;
                  
                  rdfs:subClassOf [ rdf:type owl:Restriction ;
                                    owl:onProperty :place ;
-                                   owl:onClass :Entity ;
-                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                   owl:allValuesFrom adept-base:Entity
                                  ] ,
                                  [ rdf:type owl:Restriction ;
-                                   owl:onProperty :time ;
-                                   owl:onClass adept-base:Date ;
+                                   owl:onProperty :place ;
+                                   owl:onClass adept-base:Entity ;
                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                  ] ,
                                  [ rdf:type owl:Restriction ;
@@ -441,8 +448,9 @@ adept-base:Event rdf:type owl:Class ;
                                    owl:allValuesFrom adept-base:Date
                                  ] ,
                                  [ rdf:type owl:Restriction ;
-                                   owl:onProperty :place ;
-                                   owl:allValuesFrom :Entity
+                                   owl:onProperty :time ;
+                                   owl:onClass adept-base:Date ;
+                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                  ] .
 
 
@@ -465,22 +473,22 @@ adept-base:Thing rdf:type owl:Class .
         
         rdfs:subClassOf :JusticeEvent ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:onClass :Entity ;
+                          owl:onProperty :adjudicator ;
+                          owl:onClass adept-base:Entity ;
                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                         ] ,
                         [ rdf:type owl:Restriction ;
                           owl:onProperty :defendant ;
-                          owl:allValuesFrom :Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :adjudicator ;
-                          owl:onClass :Entity ;
+                          owl:onClass adept-base:Entity ;
                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                         ] ,
                         [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:allValuesFrom adept-base:Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
                           owl:onProperty :adjudicator ;
-                          owl:allValuesFrom :Entity
+                          owl:allValuesFrom adept-base:Entity
                         ] .
 
 
@@ -497,31 +505,31 @@ adept-base:Thing rdf:type owl:Class .
         
         rdfs:subClassOf :JusticeEvent ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:allValuesFrom :Entity
+                          owl:onProperty :prosecutor ;
+                          owl:onClass adept-base:Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                         ] ,
                         [ rdf:type owl:Restriction ;
                           owl:onProperty :prosecutor ;
-                          owl:onClass :Entity ;
+                          owl:allValuesFrom adept-base:Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:onClass adept-base:Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:allValuesFrom adept-base:Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :adjudicator ;
+                          owl:onClass adept-base:Entity ;
                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                         ] ,
                         [ rdf:type owl:Restriction ;
                           owl:onProperty :adjudicator ;
-                          owl:onClass :Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :adjudicator ;
-                          owl:allValuesFrom :Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :prosecutor ;
-                          owl:allValuesFrom :Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:onClass :Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                          owl:allValuesFrom adept-base:Entity
                         ] .
 
 
@@ -537,11 +545,11 @@ adept-base:Thing rdf:type owl:Class .
                             ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :agent ;
-                              owl:allValuesFrom :Entity
+                              owl:allValuesFrom adept-base:Entity
                             ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :agent ;
-                              owl:onClass :Entity ;
+                              owl:onClass adept-base:Entity ;
                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                             ] ,
                             [ rdf:type owl:Restriction ;
@@ -559,17 +567,12 @@ adept-base:Thing rdf:type owl:Class .
           rdfs:subClassOf :Manufacture ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty :agent ;
-                            owl:allValuesFrom :Entity
-                          ] ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :artifact ;
-                            owl:onClass adept-base:Thing ;
+                            owl:onClass adept-base:Entity ;
                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                           ] ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty :instrument ;
-                            owl:onClass adept-base:Thing ;
-                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            owl:allValuesFrom adept-base:Thing
                           ] ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty :artifact ;
@@ -577,11 +580,16 @@ adept-base:Thing rdf:type owl:Class .
                           ] ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty :instrument ;
-                            owl:allValuesFrom adept-base:Thing
+                            owl:onClass adept-base:Thing ;
+                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                           ] ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty :agent ;
-                            owl:onClass :Entity ;
+                            owl:allValuesFrom adept-base:Entity
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :artifact ;
+                            owl:onClass adept-base:Thing ;
                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                           ] .
 
@@ -593,13 +601,22 @@ adept-base:Thing rdf:type owl:Class .
         
         rdfs:subClassOf :Conflict ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty :attacker ;
-                          owl:allValuesFrom :Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
                           owl:onProperty :instrument ;
                           owl:onClass adept-base:Thing ;
                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :target ;
+                          owl:allValuesFrom adept-base:Thing
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :attacker ;
+                          owl:onClass adept-base:Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :attacker ;
+                          owl:allValuesFrom adept-base:Entity
                         ] ,
                         [ rdf:type owl:Restriction ;
                           owl:onProperty :instrument ;
@@ -609,15 +626,6 @@ adept-base:Thing rdf:type owl:Class .
                           owl:onProperty :target ;
                           owl:onClass adept-base:Thing ;
                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :attacker ;
-                          owl:onClass :Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :target ;
-                          owl:allValuesFrom adept-base:Thing
                         ] .
 
 
@@ -630,19 +638,62 @@ adept-base:Thing rdf:type owl:Class .
 
 
 
+###  http://adept-kb.bbn.com/adept-core#Belief
+
+:Belief rdf:type owl:Class ;
+        
+        rdfs:subClassOf adept-base:Relation ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :strength ;
+                          owl:allValuesFrom :Number
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :strength ;
+                          owl:onClass :Number ;
+                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :source ;
+                          owl:allValuesFrom adept-base:Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :target ;
+                          owl:onClass adept-base:PredicateArgument ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :target ;
+                          owl:allValuesFrom adept-base:PredicateArgument
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :source ;
+                          owl:onClass adept-base:Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] .
+
+
+
 ###  http://adept-kb.bbn.com/adept-core#Broadcast
 
 :Broadcast rdf:type owl:Class ;
            
            rdfs:subClassOf :Contact ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :audience ;
-                             owl:onClass :Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
+						   [ rdf:type owl:Restriction ;
+						     owl:onProperty :broadcaster ;
+							 owl:allValuesFrom adept-base:Entity
+						   ] ,
                            [ rdf:type owl:Restriction ;
                              owl:onProperty :broadcaster ;
-                             owl:onClass :Entity ;
+                             owl:onClass adept-base:Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+						   [ rdf:type owl:Restriction ;
+						     owl:onProperty :audience ;
+							 owl:allValuesFrom adept-base:Entity
+						   ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :audience ;
+                             owl:onClass adept-base:Entity ;
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                            ] .
 
@@ -655,12 +706,12 @@ adept-base:Thing rdf:type owl:Class .
                rdfs:subClassOf adept-base:Event ,
                                [ rdf:type owl:Restriction ;
                                  owl:onProperty :organization ;
-                                 owl:allValuesFrom :Entity
+                                 owl:onClass adept-base:Entity ;
+                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                ] ,
                                [ rdf:type owl:Restriction ;
                                  owl:onProperty :organization ;
-                                 owl:onClass :Entity ;
-                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                 owl:allValuesFrom adept-base:Entity
                                ] .
 
 
@@ -692,31 +743,31 @@ adept-base:Thing rdf:type owl:Class .
               
               rdfs:subClassOf :JusticeEvent ,
                               [ rdf:type owl:Restriction ;
-                                owl:onProperty :prosecutor ;
-                                owl:allValuesFrom :Entity
+                                owl:onProperty :defendant ;
+                                owl:allValuesFrom adept-base:Entity
                               ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty :prosecutor ;
-                                owl:onClass :Entity ;
-                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                owl:allValuesFrom adept-base:Entity
                               ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty :adjudicator ;
-                                owl:onClass :Entity ;
+                                owl:onClass adept-base:Entity ;
                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                               ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty :defendant ;
-                                owl:onClass :Entity ;
+                                owl:onClass adept-base:Entity ;
                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                               ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty :adjudicator ;
-                                owl:allValuesFrom :Entity
+                                owl:allValuesFrom adept-base:Entity
                               ] ,
                               [ rdf:type owl:Restriction ;
-                                owl:onProperty :defendant ;
-                                owl:allValuesFrom :Entity
+                                owl:onProperty :prosecutor ;
+                                owl:onClass adept-base:Entity ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                               ] .
 
 
@@ -733,7 +784,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Commodity rdf:type owl:Class ;
            
-           rdfs:subClassOf adept-base:Thing .
+           rdfs:subClassOf adept-base:GenericThing .
 
 
 
@@ -752,12 +803,12 @@ adept-base:Thing rdf:type owl:Class .
          rdfs:subClassOf adept-base:Event ,
                          [ rdf:type owl:Restriction ;
                            owl:onProperty :entity ;
-                           owl:onClass :Entity ;
-                           owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
+                           owl:allValuesFrom adept-base:Entity
                          ] ,
                          [ rdf:type owl:Restriction ;
                            owl:onProperty :entity ;
-                           owl:allValuesFrom :Entity
+                           owl:onClass adept-base:Entity ;
+                           owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
                          ] .
 
 
@@ -768,22 +819,22 @@ adept-base:Thing rdf:type owl:Class .
          
          rdfs:subClassOf :JusticeEvent ,
                          [ rdf:type owl:Restriction ;
-                           owl:onProperty :adjudicator ;
-                           owl:allValuesFrom :Entity
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :adjudicator ;
-                           owl:onClass :Entity ;
-                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           owl:onProperty :defendant ;
+                           owl:allValuesFrom adept-base:Entity
                          ] ,
                          [ rdf:type owl:Restriction ;
                            owl:onProperty :defendant ;
-                           owl:onClass :Entity ;
+                           owl:onClass adept-base:Entity ;
                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                          ] ,
                          [ rdf:type owl:Restriction ;
-                           owl:onProperty :defendant ;
-                           owl:allValuesFrom :Entity
+                           owl:onProperty :adjudicator ;
+                           owl:allValuesFrom adept-base:Entity
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :adjudicator ;
+                           owl:onClass adept-base:Entity ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                          ] .
 
 
@@ -808,7 +859,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Crime rdf:type owl:Class ;
        
-       rdfs:subClassOf adept-base:Thing .
+       rdfs:subClassOf adept-base:GenericThing .
 
 
 
@@ -827,11 +878,11 @@ adept-base:Thing rdf:type owl:Class .
              rdfs:subClassOf :Conflict ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :entity ;
-                               owl:allValuesFrom :Entity
+                               owl:allValuesFrom adept-base:Entity
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :entity ;
-                               owl:onClass :Entity ;
+                               owl:onClass adept-base:Entity ;
                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] .
 
@@ -842,17 +893,13 @@ adept-base:Thing rdf:type owl:Class .
 :Die rdf:type owl:Class ;
      
      rdfs:subClassOf :LifeEvent ,
+					 [ rdf:type owl:Restriction ;
+					  owl:onProperty :victim ;
+					  owl:allValuesFrom adept-base:Entity
+					 ] ,
                      [ rdf:type owl:Restriction ;
-                       owl:onProperty :agent ;
-                       owl:allValuesFrom :Entity
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :instrument ;
-                       owl:allValuesFrom adept-base:Thing
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :agent ;
-                       owl:onClass :Entity ;
+                       owl:onProperty :victim ;
+                       owl:onClass :Person ;
                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                      ] ,
                      [ rdf:type owl:Restriction ;
@@ -861,18 +908,18 @@ adept-base:Thing rdf:type owl:Class .
                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                      ] ,
                      [ rdf:type owl:Restriction ;
-                       owl:onProperty :victim ;
-                       owl:onClass :Person ;
+                       owl:onProperty :instrument ;
+                       owl:allValuesFrom adept-base:Thing
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :agent ;
+                       owl:onClass adept-base:Entity ;
                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :agent ;
+                       owl:allValuesFrom adept-base:Entity
                      ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Dislike
-
-:Dislike rdf:type owl:Class ;
-         
-         rdfs:subClassOf :Sentiment .
 
 
 
@@ -896,11 +943,11 @@ adept-base:Thing rdf:type owl:Class .
        rdfs:subClassOf :PersonnelEvent ,
                        [ rdf:type owl:Restriction ;
                          owl:onProperty :agent ;
-                         owl:allValuesFrom :Entity
+                         owl:allValuesFrom adept-base:Entity
                        ] ,
                        [ rdf:type owl:Restriction ;
                          owl:onProperty :agent ;
-                         owl:onClass :Entity ;
+                         owl:onClass adept-base:Entity ;
                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                        ] .
 
@@ -917,11 +964,11 @@ adept-base:Thing rdf:type owl:Class .
                                       ] ,
                                       [ rdf:type owl:Restriction ;
                                         owl:onProperty :organization ;
-                                        owl:allValuesFrom :Entity
+                                        owl:allValuesFrom adept-base:Entity
                                       ] ,
                                       [ rdf:type owl:Restriction ;
                                         owl:onProperty :organization ;
-                                        owl:onClass :Entity ;
+                                        owl:onClass adept-base:Entity ;
                                         owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ,
                                       [ rdf:type owl:Restriction ;
@@ -951,21 +998,13 @@ adept-base:Thing rdf:type owl:Class .
              rdfs:subClassOf :PersonnelEvent ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :withinEntity ;
-                               owl:onClass :Entity ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               owl:allValuesFrom adept-base:Entity
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :withinEntity ;
-                               owl:allValuesFrom :Entity
+                               owl:onClass adept-base:Entity ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Entity
-
-:Entity rdf:type owl:Class ;
-        
-        rdfs:subClassOf adept-base:Thing .
 
 
 
@@ -981,8 +1020,7 @@ adept-base:Thing rdf:type owl:Class .
                          ] ,
                          [ rdf:type owl:Restriction ;
                            owl:onProperty :agent ;
-                           owl:onClass :Entity ;
-                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           owl:allValuesFrom adept-base:Entity
                          ] ,
                          [ rdf:type owl:Restriction ;
                            owl:onProperty :person ;
@@ -990,7 +1028,8 @@ adept-base:Thing rdf:type owl:Class .
                          ] ,
                          [ rdf:type owl:Restriction ;
                            owl:onProperty :agent ;
-                           owl:allValuesFrom :Entity
+                           owl:onClass adept-base:Entity ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                          ] .
 
 
@@ -1001,32 +1040,40 @@ adept-base:Thing rdf:type owl:Class .
            
            rdfs:subClassOf :JusticeEvent ,
                            [ rdf:type owl:Restriction ;
-                             owl:onProperty :agent ;
-                             owl:allValuesFrom :Entity
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :origin ;
-                             owl:onClass :Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :destination ;
-                             owl:onClass :Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
                              owl:onProperty :person ;
                              owl:allValuesFrom :Person
                            ] ,
+						   [ rdf:type owl:Restriction ;
+						     owl:onProperty :origin ;
+							 owl:allValuesFrom adept-base:Entity
+						   ] ,
                            [ rdf:type owl:Restriction ;
-                             owl:onProperty :agent ;
-                             owl:onClass :Entity ;
+                             owl:onProperty :origin ;
+                             owl:onClass adept-base:Entity ;
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                            ] ,
                            [ rdf:type owl:Restriction ;
                              owl:onProperty :person ;
                              owl:onClass :Person ;
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+						   [ rdf:type owl:Restriction ;
+						     owl:onProperty :destination ;
+							 owl:allValuesFrom adept-base:Entity
+						   ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :destination ;
+                             owl:onClass adept-base:Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :agent ;
+                             owl:onClass adept-base:Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :agent ;
+                             owl:allValuesFrom adept-base:Entity
                            ] .
 
 
@@ -1035,7 +1082,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Facility rdf:type owl:Class ;
           
-          rdfs:subClassOf :Entity .
+          rdfs:subClassOf adept-base:Entity .
 
 
 
@@ -1068,30 +1115,30 @@ adept-base:Thing rdf:type owl:Class .
       rdfs:subClassOf :JusticeEvent ,
                       [ rdf:type owl:Restriction ;
                         owl:onProperty :money ;
-                        owl:allValuesFrom :Money
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :adjudicator ;
-                        owl:onClass :Entity ;
-                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :finedEntity ;
-                        owl:onClass :Entity ;
-                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :adjudicator ;
-                        owl:allValuesFrom :Entity
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :money ;
                         owl:onClass :Money ;
                         owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                       ] ,
                       [ rdf:type owl:Restriction ;
                         owl:onProperty :finedEntity ;
-                        owl:allValuesFrom :Entity
+                        owl:onClass adept-base:Entity ;
+                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :finedEntity ;
+                        owl:allValuesFrom adept-base:Entity
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :adjudicator ;
+                        owl:onClass adept-base:Entity ;
+                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :adjudicator ;
+                        owl:allValuesFrom adept-base:Entity
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :money ;
+                        owl:allValuesFrom :Money
                       ] .
 
 
@@ -1106,18 +1153,18 @@ adept-base:Thing rdf:type owl:Class .
                            owl:allValuesFrom :Organization
                          ] ,
                          [ rdf:type owl:Restriction ;
-                           owl:onProperty :founder ;
-                           owl:onClass :Person ;
-                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                         ] ,
-                         [ rdf:type owl:Restriction ;
                            owl:onProperty :organization ;
                            owl:onClass :Organization ;
                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                          ] ,
                          [ rdf:type owl:Restriction ;
                            owl:onProperty :founder ;
-                           owl:allValuesFrom :Person
+                           owl:onClass adept-base:Entity ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :founder ;
+                           owl:allValuesFrom adept-base:Entity
                          ] .
 
 
@@ -1142,7 +1189,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :GeoPoliticalEntity rdf:type owl:Class ;
                     
-                    rdfs:subClassOf :Entity .
+                    rdfs:subClassOf adept-base:Entity .
 
 
 
@@ -1169,11 +1216,7 @@ adept-base:Thing rdf:type owl:Class .
         rdfs:subClassOf :LifeEvent ,
                         [ rdf:type owl:Restriction ;
                           owl:onProperty :agent ;
-                          owl:allValuesFrom :Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :victim ;
-                          owl:onClass :Person ;
+                          owl:onClass adept-base:Entity ;
                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                         ] ,
                         [ rdf:type owl:Restriction ;
@@ -1183,12 +1226,20 @@ adept-base:Thing rdf:type owl:Class .
                         ] ,
                         [ rdf:type owl:Restriction ;
                           owl:onProperty :agent ;
-                          owl:onClass :Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                          owl:allValuesFrom adept-base:Entity
                         ] ,
                         [ rdf:type owl:Restriction ;
                           owl:onProperty :instrument ;
                           owl:allValuesFrom adept-base:Thing
+                        ] ,
+						[ rdf:type owl:Restriction ;
+						  owl:onProperty :victim ;
+						  owl:allValuesFrom adept-base:Entity
+						] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :victim ;
+                          owl:onClass :Person ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                         ] .
 
 
@@ -1216,12 +1267,9 @@ adept-base:Thing rdf:type owl:Class .
                      
                      rdfs:subClassOf :OrganizationalAffiliation ,
                                      [ rdf:type owl:Restriction ;
-                                       owl:onProperty :organization ;
-                                       owl:allValuesFrom :Organization
-                                     ] ,
-                                     [ rdf:type owl:Restriction ;
                                        owl:onProperty :investorShareholder ;
-                                       owl:allValuesFrom :Entity
+                                       owl:onClass adept-base:Entity ;
+                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                      ] ,
                                      [ rdf:type owl:Restriction ;
                                        owl:onProperty :organization ;
@@ -1230,8 +1278,11 @@ adept-base:Thing rdf:type owl:Class .
                                      ] ,
                                      [ rdf:type owl:Restriction ;
                                        owl:onProperty :investorShareholder ;
-                                       owl:onClass :Entity ;
-                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                       owl:allValuesFrom adept-base:Entity
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :organization ;
+                                       owl:allValuesFrom :Organization
                                      ] .
 
 
@@ -1263,17 +1314,17 @@ adept-base:Thing rdf:type owl:Class .
                               owl:allValuesFrom :Person
                             ] ,
                             [ rdf:type owl:Restriction ;
-                              owl:onProperty :leader ;
-                              owl:onClass :Person ;
+                              owl:onProperty :affiliatedEntity ;
+                              owl:allValuesFrom adept-base:Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :affiliatedEntity ;
+                              owl:onClass adept-base:Entity ;
                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                             ] ,
                             [ rdf:type owl:Restriction ;
-                              owl:onProperty :affiliatedEntity ;
-                              owl:allValuesFrom :Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :affiliatedEntity ;
-                              owl:onClass :Entity ;
+                              owl:onProperty :leader ;
+                              owl:onClass :Person ;
                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                             ] .
 
@@ -1296,14 +1347,6 @@ adept-base:Thing rdf:type owl:Class .
 
 
 
-###  http://adept-kb.bbn.com/adept-core#Like
-
-:Like rdf:type owl:Class ;
-      
-      rdfs:subClassOf :Sentiment .
-
-
-
 ###  http://adept-kb.bbn.com/adept-core#LocatedNear
 
 :LocatedNear rdf:type owl:Class ;
@@ -1311,12 +1354,12 @@ adept-base:Thing rdf:type owl:Class .
              rdfs:subClassOf :PhysicalLocation ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :locatedEntity ;
-                               owl:allValuesFrom :Entity
+                               owl:onClass adept-base:Entity ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :locatedEntity ;
-                               owl:onClass :Entity ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               owl:allValuesFrom adept-base:Entity
                              ] .
 
 
@@ -1325,7 +1368,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Location rdf:type owl:Class ;
           
-          rdfs:subClassOf :Entity .
+          rdfs:subClassOf adept-base:Entity .
 
 
 
@@ -1364,8 +1407,8 @@ adept-base:Thing rdf:type owl:Class .
                                
                                rdfs:subClassOf adept-base:Relation ,
                                                [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :affiliatedEntity ;
-                                                 owl:onClass :Entity ;
+                                                 owl:onProperty :person ;
+                                                 owl:onClass :Person ;
                                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                ] ,
                                                [ rdf:type owl:Restriction ;
@@ -1374,12 +1417,12 @@ adept-base:Thing rdf:type owl:Class .
                                                ] ,
                                                [ rdf:type owl:Restriction ;
                                                  owl:onProperty :affiliatedEntity ;
-                                                 owl:allValuesFrom :Entity
+                                                 owl:onClass adept-base:Entity ;
+                                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                ] ,
                                                [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :person ;
-                                                 owl:onClass :Person ;
-                                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                 owl:onProperty :affiliatedEntity ;
+                                                 owl:allValuesFrom adept-base:Entity
                                                ] .
 
 
@@ -1388,23 +1431,23 @@ adept-base:Thing rdf:type owl:Class .
 
 :Membership rdf:type owl:Class ;
             
-            rdfs:subClassOf :Subsidiary ,
+            rdfs:subClassOf :PartWhole ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :organization ;
-                              owl:onClass :Entity ;
+                              owl:allValuesFrom adept-base:Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :member ;
+                              owl:allValuesFrom adept-base:Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :organization ;
+                              owl:onClass adept-base:Entity ;
                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                             ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :member ;
-                              owl:allValuesFrom :Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :organization ;
-                              owl:allValuesFrom :Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :member ;
-                              owl:onClass :Entity ;
+                              owl:onClass adept-base:Entity ;
                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                             ] .
 
@@ -1431,7 +1474,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Money rdf:type owl:Class ;
        
-       rdfs:subClassOf adept-base:Thing .
+       rdfs:subClassOf adept-base:GenericThing .
 
 
 
@@ -1458,12 +1501,12 @@ adept-base:Thing rdf:type owl:Class .
           rdfs:subClassOf :PersonnelEvent ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty :agent ;
-                            owl:onClass :Entity ;
+                            owl:onClass adept-base:Entity ;
                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                           ] ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty :agent ;
-                            owl:allValuesFrom :Entity
+                            owl:allValuesFrom adept-base:Entity
                           ] .
 
 
@@ -1491,16 +1534,16 @@ adept-base:Thing rdf:type owl:Class .
                                           ] ,
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty :number ;
+                                            owl:onClass :Number ;
+                                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :number ;
                                             owl:allValuesFrom :Number
                                           ] ,
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty :organization ;
                                             owl:onClass :Organization ;
-                                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                          ] ,
-                                          [ rdf:type owl:Restriction ;
-                                            owl:onProperty :number ;
-                                            owl:onClass :Number ;
                                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                           ] .
 
@@ -1513,12 +1556,12 @@ adept-base:Thing rdf:type owl:Class .
                 rdfs:subClassOf :PhysicalLocation ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :organization ;
-                                  owl:allValuesFrom :Organization
+                                  owl:onClass :Organization ;
+                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :organization ;
-                                  owl:onClass :Organization ;
-                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                  owl:allValuesFrom :Organization
                                 ] .
 
 
@@ -1530,12 +1573,12 @@ adept-base:Thing rdf:type owl:Class .
                    rdfs:subClassOf :PhysicalLocation ,
                                    [ rdf:type owl:Restriction ;
                                      owl:onProperty :organization ;
-                                     owl:onClass :Organization ;
-                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                     owl:allValuesFrom :Organization
                                    ] ,
                                    [ rdf:type owl:Restriction ;
                                      owl:onProperty :organization ;
-                                     owl:allValuesFrom :Organization
+                                     owl:onClass :Organization ;
+                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                    ] .
 
 
@@ -1544,7 +1587,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Organization rdf:type owl:Class ;
               
-              rdfs:subClassOf :Entity .
+              rdfs:subClassOf adept-base:Entity .
 
 
 
@@ -1554,13 +1597,14 @@ adept-base:Thing rdf:type owl:Class .
                                            
                                            rdfs:subClassOf adept-base:Relation ,
                                                            [ rdf:type owl:Restriction ;
-                                                             owl:onProperty :organization ;
-                                                             owl:onClass :Organization ;
+                                                             owl:onProperty :affiliatedEntity ;
+                                                             owl:onClass adept-base:Entity ;
                                                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                            ] ,
                                                            [ rdf:type owl:Restriction ;
-                                                             owl:onProperty :affiliatedEntity ;
-                                                             owl:allValuesFrom :Entity
+                                                             owl:onProperty :organization ;
+                                                             owl:onClass :Organization ;
+                                                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                            ] ,
                                                            [ rdf:type owl:Restriction ;
                                                              owl:onProperty :organization ;
@@ -1568,8 +1612,7 @@ adept-base:Thing rdf:type owl:Class .
                                                            ] ,
                                                            [ rdf:type owl:Restriction ;
                                                              owl:onProperty :affiliatedEntity ;
-                                                             owl:onClass :Entity ;
-                                                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                             owl:allValuesFrom adept-base:Entity
                                                            ] .
 
 
@@ -1579,6 +1622,11 @@ adept-base:Thing rdf:type owl:Class .
 :OrganizationWebsite rdf:type owl:Class ;
                      
                      rdfs:subClassOf adept-base:Relation ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :url ;
+                                       owl:onClass :URL ;
+                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                     ] ,
                                      [ rdf:type owl:Restriction ;
                                        owl:onProperty :organization ;
                                        owl:allValuesFrom :Organization
@@ -1590,7 +1638,7 @@ adept-base:Thing rdf:type owl:Class .
                                      ] ,
                                      [ rdf:type owl:Restriction ;
                                        owl:onProperty :url ;
-                                       owl:minCardinality "1"^^xsd:nonNegativeInteger
+                                       owl:allValuesFrom :URL
                                      ] .
 
 
@@ -1618,14 +1666,6 @@ adept-base:Thing rdf:type owl:Class .
            rdfs:subClassOf :OrganizationalAffiliation ,
                            [ rdf:type owl:Restriction ;
                              owl:onProperty :owner ;
-                             owl:allValuesFrom :Person
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :organization ;
-                             owl:allValuesFrom :Organization
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :owner ;
                              owl:onClass :Person ;
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                            ] ,
@@ -1633,6 +1673,14 @@ adept-base:Thing rdf:type owl:Class .
                              owl:onProperty :organization ;
                              owl:onClass :Organization ;
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :owner ;
+                             owl:allValuesFrom :Person
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :organization ;
+                             owl:allValuesFrom :Organization
                            ] .
 
 
@@ -1643,22 +1691,22 @@ adept-base:Thing rdf:type owl:Class .
         
         rdfs:subClassOf :JusticeEvent ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty :adjudicator ;
-                          owl:onClass :Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
                           owl:onProperty :defendant ;
-                          owl:allValuesFrom :Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:onClass :Entity ;
+                          owl:onClass adept-base:Entity ;
                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                         ] ,
                         [ rdf:type owl:Restriction ;
                           owl:onProperty :adjudicator ;
-                          owl:allValuesFrom :Entity
+                          owl:onClass adept-base:Entity ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :adjudicator ;
+                          owl:allValuesFrom adept-base:Entity
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :defendant ;
+                          owl:allValuesFrom adept-base:Entity
                         ] .
 
 
@@ -1669,14 +1717,22 @@ adept-base:Thing rdf:type owl:Class .
                          
                          rdfs:subClassOf :FamilyRelationship ,
                                          [ rdf:type owl:Restriction ;
-                                           owl:onProperty :parent ;
+                                           owl:onProperty :child ;
                                            owl:onClass :Person ;
                                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                          ] ,
                                          [ rdf:type owl:Restriction ;
                                            owl:onProperty :child ;
+                                           owl:allValuesFrom :Person
+                                         ] ,
+                                         [ rdf:type owl:Restriction ;
+                                           owl:onProperty :parent ;
                                            owl:onClass :Person ;
                                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                         ] ,
+                                         [ rdf:type owl:Restriction ;
+                                           owl:onProperty :parent ;
+                                           owl:allValuesFrom :Person
                                          ] .
 
 
@@ -1693,7 +1749,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Person rdf:type owl:Class ;
         
-        rdfs:subClassOf :Entity .
+        rdfs:subClassOf adept-base:Entity .
 
 
 
@@ -1709,16 +1765,16 @@ adept-base:Thing rdf:type owl:Class .
                            ] ,
                            [ rdf:type owl:Restriction ;
                              owl:onProperty :age ;
+                             owl:allValuesFrom :Number
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :age ;
                              owl:onClass :Number ;
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                            ] ,
                            [ rdf:type owl:Restriction ;
                              owl:onProperty :person ;
                              owl:allValuesFrom :Person
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :age ;
-                             owl:allValuesFrom :Number
                            ] .
 
 
@@ -1729,15 +1785,6 @@ adept-base:Thing rdf:type owl:Class .
                 
                 rdfs:subClassOf adept-base:Event ,
                                 [ rdf:type owl:Restriction ;
-                                  owl:onProperty :position ;
-                                  owl:onClass :Title ;
-                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                ] ,
-                                [ rdf:type owl:Restriction ;
-                                  owl:onProperty :person ;
-                                  owl:allValuesFrom :Person
-                                ] ,
-                                [ rdf:type owl:Restriction ;
                                   owl:onProperty :person ;
                                   owl:onClass :Person ;
                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
@@ -1745,6 +1792,15 @@ adept-base:Thing rdf:type owl:Class .
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :position ;
                                   owl:allValuesFrom :Title
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :position ;
+                                  owl:onClass :Title ;
+                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :person ;
+                                  owl:allValuesFrom :Person
                                 ] .
 
 
@@ -1756,12 +1812,12 @@ adept-base:Thing rdf:type owl:Class .
                   rdfs:subClassOf adept-base:Relation ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty :location ;
-                                    owl:onClass :Entity ;
-                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                    owl:allValuesFrom adept-base:Entity
                                   ] ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty :location ;
-                                    owl:allValuesFrom :Entity
+                                    owl:onClass adept-base:Entity ;
+                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                   ] .
 
 
@@ -1780,22 +1836,22 @@ adept-base:Thing rdf:type owl:Class .
                
                rdfs:subClassOf :JusticeEvent ,
                                [ rdf:type owl:Restriction ;
+                                 owl:onProperty :agent ;
+                                 owl:allValuesFrom adept-base:Entity
+                               ] ,
+                               [ rdf:type owl:Restriction ;
                                  owl:onProperty :person ;
                                  owl:onClass :Person ;
                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                ] ,
                                [ rdf:type owl:Restriction ;
                                  owl:onProperty :agent ;
-                                 owl:onClass :Entity ;
+                                 owl:onClass adept-base:Entity ;
                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                ] ,
                                [ rdf:type owl:Restriction ;
                                  owl:onProperty :person ;
                                  owl:allValuesFrom :Person
-                               ] ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :agent ;
-                                 owl:allValuesFrom :Entity
                                ] .
 
 
@@ -1815,12 +1871,12 @@ adept-base:Thing rdf:type owl:Class .
           rdfs:subClassOf :PhysicalLocation ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty :person ;
-                            owl:allValuesFrom :Person
+                            owl:onClass :Person ;
+                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                           ] ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty :person ;
-                            owl:onClass :Person ;
-                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            owl:allValuesFrom :Person
                           ] .
 
 
@@ -1846,7 +1902,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Sentence rdf:type owl:Class ;
           
-          rdfs:subClassOf adept-base:Thing .
+          rdfs:subClassOf adept-base:GenericThing .
 
 
 
@@ -1857,30 +1913,30 @@ adept-base:Thing rdf:type owl:Class .
             rdfs:subClassOf :JusticeEvent ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :sentence ;
-                              owl:allValuesFrom :Sentence
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :defendant ;
-                              owl:allValuesFrom :Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :sentence ;
                               owl:onClass :Sentence ;
                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                             ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :adjudicator ;
-                              owl:onClass :Entity ;
+                              owl:allValuesFrom adept-base:Entity
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :defendant ;
+                              owl:onClass adept-base:Entity ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :sentence ;
+                              owl:allValuesFrom :Sentence
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :adjudicator ;
+                              owl:onClass adept-base:Entity ;
                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                             ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :defendant ;
-                              owl:onClass :Entity ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :adjudicator ;
-                              owl:allValuesFrom :Entity
+                              owl:allValuesFrom adept-base:Entity
                             ] .
 
 
@@ -1891,22 +1947,31 @@ adept-base:Thing rdf:type owl:Class .
            
            rdfs:subClassOf adept-base:Relation ,
                            [ rdf:type owl:Restriction ;
-                             owl:onProperty :target ;
-                             owl:onClass adept-base:Thing ;
+                             owl:onProperty :source ;
+                             owl:allValuesFrom adept-base:Entity
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :strength ;
+                             owl:onClass :Number ;
+                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :source ;
+                             owl:onClass adept-base:Entity ;
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                            ] ,
                            [ rdf:type owl:Restriction ;
                              owl:onProperty :target ;
-                             owl:allValuesFrom adept-base:Thing
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :sentimentHolder ;
-                             owl:allValuesFrom :Entity
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :sentimentHolder ;
-                             owl:onClass :Entity ;
+                             owl:onClass adept-base:PredicateArgument ;
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :strength ;
+                             owl:allValuesFrom :Number
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :target ;
+                             owl:allValuesFrom adept-base:PredicateArgument
                            ] .
 
 
@@ -1934,7 +1999,7 @@ adept-base:Thing rdf:type owl:Class .
                    rdfs:subClassOf :BusinessEvent ,
                                    [ rdf:type owl:Restriction ;
                                      owl:onProperty :agent ;
-                                     owl:onClass :Entity ;
+                                     owl:onClass adept-base:Entity ;
                                      owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                    ] ,
                                    [ rdf:type owl:Restriction ;
@@ -1943,7 +2008,7 @@ adept-base:Thing rdf:type owl:Class .
                                    ] ,
                                    [ rdf:type owl:Restriction ;
                                      owl:onProperty :agent ;
-                                     owl:allValuesFrom :Entity
+                                     owl:allValuesFrom adept-base:Entity
                                    ] .
 
 
@@ -1955,12 +2020,12 @@ adept-base:Thing rdf:type owl:Class .
                rdfs:subClassOf :PersonnelEvent ,
                                [ rdf:type owl:Restriction ;
                                  owl:onProperty :withinEntity ;
-                                 owl:allValuesFrom :Entity
+                                 owl:onClass adept-base:Entity ;
+                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                ] ,
                                [ rdf:type owl:Restriction ;
                                  owl:onProperty :withinEntity ;
-                                 owl:onClass :Entity ;
-                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                 owl:allValuesFrom adept-base:Entity
                                ] .
 
 
@@ -1980,21 +2045,21 @@ adept-base:Thing rdf:type owl:Class .
              rdfs:subClassOf :OrganizationalAffiliation ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :organization ;
-                               owl:allValuesFrom :Organization
+                               owl:onClass :Organization ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :studentAlumni ;
                                owl:allValuesFrom :Person
                              ] ,
                              [ rdf:type owl:Restriction ;
-                               owl:onProperty :organization ;
-                               owl:onClass :Organization ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                             ] ,
-                             [ rdf:type owl:Restriction ;
                                owl:onProperty :studentAlumni ;
                                owl:onClass :Person ;
                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :organization ;
+                               owl:allValuesFrom :Organization
                              ] .
 
 
@@ -2006,7 +2071,12 @@ adept-base:Thing rdf:type owl:Class .
             rdfs:subClassOf :PartWhole ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :parent ;
-                              owl:allValuesFrom :Entity
+                              owl:onClass adept-base:Entity ;
+                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :parent ;
+                              owl:allValuesFrom adept-base:Entity
                             ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :subOrganization ;
@@ -2015,11 +2085,6 @@ adept-base:Thing rdf:type owl:Class .
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :subOrganization ;
                               owl:onClass :Organization ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :parent ;
-                              owl:onClass :Entity ;
                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                             ] .
 
@@ -2031,30 +2096,30 @@ adept-base:Thing rdf:type owl:Class .
      
      rdfs:subClassOf :JusticeEvent ,
                      [ rdf:type owl:Restriction ;
-                       owl:onProperty :adjudicator ;
-                       owl:onClass :Entity ;
+                       owl:onProperty :defendant ;
+                       owl:onClass adept-base:Entity ;
                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                      ] ,
                      [ rdf:type owl:Restriction ;
                        owl:onProperty :plaintiff ;
-                       owl:allValuesFrom :Entity
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :adjudicator ;
-                       owl:allValuesFrom :Entity
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :defendant ;
-                       owl:allValuesFrom :Entity
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :defendant ;
-                       owl:onClass :Entity ;
+                       owl:onClass adept-base:Entity ;
                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                      ] ,
                      [ rdf:type owl:Restriction ;
                        owl:onProperty :plaintiff ;
-                       owl:onClass :Entity ;
+                       owl:allValuesFrom adept-base:Entity
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :defendant ;
+                       owl:allValuesFrom adept-base:Entity
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :adjudicator ;
+                       owl:allValuesFrom adept-base:Entity
+                     ] ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :adjudicator ;
+                       owl:onClass adept-base:Entity ;
                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                      ] .
 
@@ -2064,7 +2129,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Title rdf:type owl:Class ;
        
-       rdfs:subClassOf adept-base:Thing .
+       rdfs:subClassOf adept-base:GenericThing .
 
 
 
@@ -2074,31 +2139,31 @@ adept-base:Thing rdf:type owl:Class .
              
              rdfs:subClassOf adept-base:Event ,
                              [ rdf:type owl:Restriction ;
-                               owl:onProperty :recipient ;
-                               owl:onClass :Entity ;
+                               owl:onProperty :giver ;
+                               owl:allValuesFrom adept-base:Entity
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :beneficiary ;
+                               owl:allValuesFrom adept-base:Entity
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :beneficiary ;
+                               owl:onClass adept-base:Entity ;
                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :recipient ;
-                               owl:allValuesFrom :Entity
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :beneficiary ;
-                               owl:allValuesFrom :Entity
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :beneficiary ;
-                               owl:onClass :Entity ;
+                               owl:onClass adept-base:Entity ;
                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :giver ;
-                               owl:allValuesFrom :Entity
+                               owl:onClass adept-base:Entity ;
+                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] ,
                              [ rdf:type owl:Restriction ;
-                               owl:onProperty :giver ;
-                               owl:onClass :Entity ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               owl:onProperty :recipient ;
+                               owl:allValuesFrom adept-base:Entity
                              ] .
 
 
@@ -2110,12 +2175,12 @@ adept-base:Thing rdf:type owl:Class .
                rdfs:subClassOf :Transaction ,
                                [ rdf:type owl:Restriction ;
                                  owl:onProperty :money ;
-                                 owl:onClass :Money ;
-                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                 owl:allValuesFrom :Money
                                ] ,
                                [ rdf:type owl:Restriction ;
                                  owl:onProperty :money ;
-                                 owl:allValuesFrom :Money
+                                 owl:onClass :Money ;
+                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                ] .
 
 
@@ -2148,35 +2213,35 @@ adept-base:Thing rdf:type owl:Class .
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                            ] ,
                            [ rdf:type owl:Restriction ;
-                             owl:onProperty :origin ;
-                             owl:allValuesFrom :Entity
-                           ] ,
-                           [ rdf:type owl:Restriction ;
                              owl:onProperty :destination ;
-                             owl:onClass :Entity ;
+                             owl:onClass adept-base:Entity ;
                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :destination ;
-                             owl:allValuesFrom :Entity
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :origin ;
-                             owl:onClass :Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :agent ;
-                             owl:onClass :Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :agent ;
-                             owl:allValuesFrom :Entity
                            ] ,
                            [ rdf:type owl:Restriction ;
                              owl:onProperty :instrument ;
                              owl:allValuesFrom adept-base:Thing
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :agent ;
+                             owl:onClass adept-base:Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :origin ;
+                             owl:allValuesFrom adept-base:Entity
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :origin ;
+                             owl:onClass adept-base:Entity ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :destination ;
+                             owl:allValuesFrom adept-base:Entity
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :agent ;
+                             owl:allValuesFrom adept-base:Entity
                            ] .
 
 
@@ -2205,12 +2270,12 @@ adept-base:Thing rdf:type owl:Class .
                  rdfs:subClassOf :Transport ,
                                  [ rdf:type owl:Restriction ;
                                    owl:onProperty :person ;
-                                   owl:onClass :Person ;
-                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                   owl:allValuesFrom :Person
                                  ] ,
                                  [ rdf:type owl:Restriction ;
                                    owl:onProperty :person ;
-                                   owl:allValuesFrom :Person
+                                   owl:onClass :Person ;
+                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                  ] .
 
 
@@ -2221,32 +2286,40 @@ adept-base:Thing rdf:type owl:Class .
               
               rdfs:subClassOf :JusticeEvent ,
                               [ rdf:type owl:Restriction ;
-                                owl:onProperty :defendant ;
-                                owl:onClass :Entity ;
-                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :prosecutor ;
-                                owl:allValuesFrom :Entity
-                              ] ,
-                              [ rdf:type owl:Restriction ;
                                 owl:onProperty :adjudicator ;
-                                owl:onClass :Entity ;
+                                owl:onClass adept-base:Entity ;
                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                               ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty :adjudicator ;
-                                owl:allValuesFrom :Entity
+                                owl:allValuesFrom adept-base:Entity
                               ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty :defendant ;
-                                owl:allValuesFrom :Entity
+                                owl:onClass adept-base:Entity ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                               ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty :prosecutor ;
-                                owl:onClass :Entity ;
+                                owl:allValuesFrom adept-base:Entity
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :defendant ;
+                                owl:allValuesFrom adept-base:Entity
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :prosecutor ;
+                                owl:onClass adept-base:Entity ;
                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                               ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-core#URL
+
+:URL rdf:type owl:Class ;
+     
+     rdfs:subClassOf adept-base:GenericThing .
 
 
 
@@ -2262,7 +2335,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Vehicle rdf:type owl:Class ;
          
-         rdfs:subClassOf adept-base:Thing .
+         rdfs:subClassOf adept-base:GenericThing .
 
 
 
@@ -2270,7 +2343,7 @@ adept-base:Thing rdf:type owl:Class .
 
 :Weapon rdf:type owl:Class ;
         
-        rdfs:subClassOf adept-base:Thing .
+        rdfs:subClassOf adept-base:GenericThing .
 
 
 

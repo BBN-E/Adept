@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,7 +12,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.common;
@@ -47,11 +44,11 @@ import java.util.Map;
 public final class DocumentRelation extends HltContent implements HasScoredUnaryAttributes {
     private final IType relationType;
     private final ImmutableSet<RelationMention> provenances;
-    private final ImmutableSet<Filler> arguments;
+    private final ImmutableSet<DocumentRelationArgument> arguments;
     private final ImmutableMap<IType, Float> attributes;
     private final float confidence;
     
-    private DocumentRelation(IType relationType, ImmutableSet<RelationMention> provenances, ImmutableSet<Filler> arguments, 
+    private DocumentRelation(IType relationType, ImmutableSet<RelationMention> provenances, ImmutableSet<DocumentRelationArgument> arguments, 
     		ImmutableMap<IType, Float> attributes, float confidence) {
         this.relationType = checkNotNull(relationType);
         
@@ -64,6 +61,7 @@ public final class DocumentRelation extends HltContent implements HasScoredUnary
         }        
 
         this.arguments = ImmutableSet.copyOf(arguments);
+
         this.attributes = ImmutableMap.copyOf(attributes);
 
         // no null check because it's optional
@@ -90,25 +88,25 @@ public final class DocumentRelation extends HltContent implements HasScoredUnary
      * @return May be empty, no element may be {@code null}. All arguments
      * will have the same relation type as this.
      */
-    public ImmutableSet<Filler> getArguments() {
+    public ImmutableSet<DocumentRelationArgument> getArguments() {
         return arguments;
     }
     
     /**
      * 
      */
-    public Filler getArgumentById(long id) {
-    	for(Filler argument : getArguments())
+    public DocumentRelationArgument getArgumentById(long id) {
+    	for(DocumentRelationArgument argument : getArguments())
     	{
-    		if(argument.asEntity().isPresent())
+    		if(argument.getFiller().asEntity().isPresent())
     		{
-    			if(argument.asEntity().get().getEntityId() == id)
+    			if(argument.getFiller().asEntity().get().getEntityId() == id)
     			{
     				return argument;
     			}
     		}
     		//TODO: Add support for argument being 
-    		// date or number mentions.
+    		// date mentions.
     	}
     	return null;
     }
@@ -132,7 +130,7 @@ public final class DocumentRelation extends HltContent implements HasScoredUnary
     public static final class Builder {
         private final IType relationType;
         private ImmutableSet.Builder<RelationMention> provenances = ImmutableSet.builder();
-        private ImmutableSet.Builder<Filler> arguments = ImmutableSet.builder();
+        private ImmutableSet.Builder<DocumentRelationArgument> arguments = ImmutableSet.builder();
         private ImmutableMap.Builder<IType, Float> attributes = ImmutableMap.builder();
         private float confidence = 1.0f;
     	
@@ -155,7 +153,7 @@ public final class DocumentRelation extends HltContent implements HasScoredUnary
          *                  will be thrown.
          * @return
          */
-        public Builder addArguments(Iterable<Filler> arguments) {
+        public Builder addArguments(Iterable<DocumentRelationArgument> arguments) {
         	checkArgument(arguments!=null);
             this.arguments.addAll(arguments);
             return this;
@@ -166,7 +164,7 @@ public final class DocumentRelation extends HltContent implements HasScoredUnary
          *                 an {@link java.lang.IllegalArgumentException} will be thrown.
          * @return
          */
-        public Builder addArgument(Filler argument) {
+        public Builder addArgument(DocumentRelationArgument argument) {
         	checkArgument(argument!=null);
         	this.arguments.add(argument);
             return this;
@@ -192,7 +190,6 @@ public final class DocumentRelation extends HltContent implements HasScoredUnary
             this.provenances.add(provenance);
             return this;
         }
-
 
         /**
          * @param provenance may not be {@code null}. May differ in relation type from this.
@@ -232,76 +229,4 @@ public final class DocumentRelation extends HltContent implements HasScoredUnary
                     attributes.build(), confidence);
         }
     }
-    
-    
-    /**
-     * A filler for a role in a document-level relation.  Such role fillers may be of a limited
-     * number of different types, currently {@link Entity} and
-     * {@link TemporalValue}. This class represents that uncertainty. The available
-     * types may expand in the future. 
-     *
-     * This class is locally immutable.
-     */
-    public static final class Filler {
-    	private final Optional<Entity> entity;
-    	private final Optional<TemporalValue> temporalValue;
-    	//TODO: Add class NumericValue to Adept API
-    	//private final Optional<NumericValue> temporalValue;
-    	
-    	private final IType argType;
-    	private final float confidence;
-    	
-        private Filler(Entity entity, TemporalValue temporalValue, IType argType, float confidence) {
-            this.entity = Optional.fromNullable(entity);
-            this.temporalValue = Optional.fromNullable(temporalValue);
-            this.argType = argType;
-            
-            this.confidence = confidence;
         }
-
-        public Optional<Entity> asEntity() {
-            return entity;
-        }
-
-        public Optional<TemporalValue> asTemporalValue() {
-        	return temporalValue;
-        }
-        
-        //TODO: implement asNumericValue() 
-
-        /**
-         * @param entity and argType May not be null.
-         */
-        public static Filler fromEntity(Entity e, IType argType, float confidence) {
-            return new Filler(checkNotNull(e),null, checkNotNull(argType), confidence);
-        }
-
-        /**
-         * @param temporalValue and argType May not be null.
-         */
-        public static Filler fromTemporalValue(TemporalValue temporalValue, IType argType, float confidence) {
-            return new Filler(null,checkNotNull(temporalValue), checkNotNull(argType), confidence);
-        }
-        
-        //TODO: implement fromNumericValue()
-        
-        /**
-         * get Filler argument role.
-         */
-        public String getArgumentType()
-        {
-        	return this.argType.getType();
-        }
-        
-        /**
-         * 
-         */
-        public float getConfidence()
-        {
-        	return this.confidence;
-        }
-    }
-
-
-    
-}

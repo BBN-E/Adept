@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,18 +12,9 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
-/*******************************************************************************
- * Raytheon BBN Technologies Corp., November 2013
- *
- * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
- * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- *
- * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
- ******************************************************************************/
 package adept.io;
 
 import java.io.*;
@@ -41,12 +29,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.input.BOMInputStream;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import adept.common.Document;
+import adept.common.OntTypeFactory;
 import adept.common.TokenStream;
 import adept.common.Token;
 import adept.common.TokenOffset;
@@ -64,12 +52,10 @@ import adept.common.Pair;
 import adept.common.PartOfSpeech;
 import adept.common.Passage;
 import adept.common.Sentence;
-import adept.common.OntTypeFactory;
 import adept.utilities.DocumentMaker;
 import adept.utilities.PassageAttributes;
 
 import java.util.List;
-
 import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.Enumeration;
@@ -80,6 +66,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+
 
 //import org.w3c.dom.Document; //conflicts with adept.common.Document
 import org.w3c.dom.NodeList;
@@ -1327,3 +1315,4 @@ public class Reader {
     }
 
 }
+

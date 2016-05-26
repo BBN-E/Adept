@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,18 +12,8 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
-
-/*******************************************************************************
- * Raytheon BBN Technologies Corp., March 2013
- * 
- * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
- * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- * 
- * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
- ******************************************************************************/
 
  package adept.utilities;
 
@@ -100,13 +87,13 @@ public abstract class AdeptProfiler
 	
 	// TODO - convert to google guava Stopwatch
 	/** The activate. */
-	private static Stopwatch activate = new Stopwatch(); //Stopwatch.createUnstarted();
+	private static Stopwatch activate = Stopwatch.createUnstarted();
 	
 	/** The process. */
-	private static Stopwatch process = new Stopwatch(); //Stopwatch.createUnstarted();
+	private static Stopwatch process = Stopwatch.createUnstarted();
 	
 	/** total process time */
-	private static Stopwatch totalprocess = new Stopwatch();
+	private static Stopwatch totalprocess = Stopwatch.createUnstarted();
 	
 	/** The process_last recorded. */
 	private static double process_lastRecorded;
@@ -159,7 +146,7 @@ public abstract class AdeptProfiler
     private static int totalFiles = 0;
 
     /** The type of tokenizer to be used. */
-    protected TokenizerType tokenizerType = TokenizerType.STANFORD_CORENLP;
+    protected TokenizerType tokenizerType = TokenizerType.APACHE_OPENNLP;
 
 
     /**
@@ -392,7 +379,7 @@ public abstract class AdeptProfiler
 		Double[] docStatistics = {0.0,0.0,0.0,0.0};
 		HltContentContainer hltcontainer;
         int dirSize = dataDirectory.listFiles().length;
-        int summarySize = (dirSize + 1) / 10;
+        int summarySize = dirSize >= 9 ? (dirSize + 1)/10 : 1;
 		for(File file : dataDirectory.listFiles()) {
 			    totalFiles++;
 			    bSuccess = true;
@@ -404,7 +391,7 @@ public abstract class AdeptProfiler
 					activate.stop();
 				   //activate();
 				   try {
-					    //String line = "Time taken in activate(): " + activate.elapsedTime(TimeUnit.MILLISECONDS)/1000.0 + "\n\n";
+					    //String line = "Time taken in activate(): " + activate.elapsed(TimeUnit.MILLISECONDS)/1000.0 + "\n\n";
 						//document_stats_writer.write(line);
 						String line = String.format(lineFormat,
 								"Doc name",
@@ -455,7 +442,7 @@ public abstract class AdeptProfiler
             
             try {
             	logger.info("Now writing profiling statistics to file..");
-				double elapsed = process.elapsedTime(TimeUnit.MILLISECONDS)/1000.0;
+				double elapsed = process.elapsed(TimeUnit.MILLISECONDS)/1000.0;
 				processTimes.add(elapsed);
 				String line = String.format(lineFormat,
 						file.getName(),
@@ -484,14 +471,14 @@ public abstract class AdeptProfiler
 				e.printStackTrace();
 			}
             
-            //process_lastRecorded = process.elapsedTime(TimeUnit.MILLISECONDS)/1000.0 ;
+            //process_lastRecorded = process.elapsed(TimeUnit.MILLISECONDS)/1000.0 ;
 
             if(totalFiles % summarySize == 0)
             {
                 try {
                     // write in the test_summary file
 			
-                    test_summary_writer.write(configFilename + "\t" + activate.elapsedTime(TimeUnit.MILLISECONDS)/1000.0 + "\t" +
+                    test_summary_writer.write(configFilename + "\t" + activate.elapsed(TimeUnit.MILLISECONDS)/1000.0 + "\t" +
                                               totalFiles + "\t" + failureCount + "\t" + totalprocess.toString().replace(" s", "") + "\t" + calculateAverage(fileSizes) + "\t" + calculateMax(fileSizes) + "\t"
                                               + calculateMin(fileSizes) + "\t" + calculateVariance(fileSizes) + "\t" + calculateAverage(numOfChars) + "\t"
                                               + calculateMax(numOfChars) + "\t" + calculateMin(numOfChars) + "\t" + calculateVariance(numOfChars) + "\t"
@@ -535,7 +522,7 @@ public abstract class AdeptProfiler
 			
 			// write in the test_summary file
 			
-			test_summary_writer.write(configFilename + "\t" + activate.elapsedTime(TimeUnit.MILLISECONDS)/1000.0 + "\t" +
+			test_summary_writer.write(configFilename + "\t" + activate.elapsed(TimeUnit.MILLISECONDS)/1000.0 + "\t" +
 					totalFiles + "\t" + failureCount + "\t" + totalprocess.toString().replace(" s", "") + "\t" + calculateAverage(fileSizes) + "\t" + calculateMax(fileSizes) + "\t"
 					+ calculateMin(fileSizes) + "\t" + calculateVariance(fileSizes) + "\t" + calculateAverage(numOfChars) + "\t"
 					+ calculateMax(numOfChars) + "\t" + calculateMin(numOfChars) + "\t" + calculateVariance(numOfChars) + "\t"
@@ -547,7 +534,7 @@ public abstract class AdeptProfiler
 			test_summary_writer.flush();
 			test_summary_writer.close();
 			
-                	test_html_writer.write("<tr><td>" + activate.elapsedTime(TimeUnit.MILLISECONDS)/1000.0 + "</td><td>" +
+                	test_html_writer.write("<tr><td>" + activate.elapsed(TimeUnit.MILLISECONDS)/1000.0 + "</td><td>" +
                                               totalFiles + "</td><td>" + failureCount + "</td><td>" + totalprocess.toString().replace(" s", "") + "</td><td>" + String.format("%.2f", calculateAverage(fileSizes)) + "</td><td>" + String.format("%.2f", calculateMax(fileSizes)) + "</td><td>"
                                               + String.format("%.2f", calculateMin(fileSizes)) + "</td><td>" + String.format("%.2f", calculateVariance(fileSizes)) + "</td><td>" + String.format("%.2f", calculateAverage(numOfChars)) + "</td><td>"
                                               + String.format("%s", calculateMax(numOfChars)) + "</td><td>" + String.format("%s", calculateMin(numOfChars)) + "</td><td>" + String.format("%.2f", calculateVariance(numOfChars)) + "</td><td>"
@@ -564,7 +551,7 @@ public abstract class AdeptProfiler
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Average time taken in process: " + (process.elapsedTime(TimeUnit.MILLISECONDS)/1000.0 /(fileCount*NUM_OF_LOOPS))/1000.0);
+		System.out.println("Average time taken in process: " + (process.elapsed(TimeUnit.MILLISECONDS)/1000.0 /(fileCount*NUM_OF_LOOPS))/1000.0);
 		System.out.println("Number of failures: " + failureCount);
 		
 		// graph making

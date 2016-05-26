@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,7 +12,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.mapreduce;
@@ -25,7 +22,7 @@ import java.util.*;
 
 import adept.common.*;
 import adept.utilities.DocumentMaker;
-import adept.utilities.StanfordSentenceSegmenter;
+import adept.utilities.OpenNLPSentenceSegmenter;
 import adept.serialization.*;
 
 import org.apache.hadoop.fs.Path;
@@ -59,7 +56,7 @@ public class PreprocessingJob extends AdeptMapper
 
      // sentence segmentation.For now, consider all text as a single sentence.
      List<Sentence> sentences = new ArrayList<Sentence>();
-     sentences.addAll(StanfordSentenceSegmenter.getInstance().getSentences(doc.getValue(),doc.getDefaultTokenStream()));
+     sentences.addAll(OpenNLPSentenceSegmenter.getInstance().getSentences(doc.getValue(),doc.getDefaultTokenStream()));
      hltcontentcontainer.setSentences(sentences);
 
      XMLSerializer xmlserializer = new XMLSerializer(SerializationType.XML);

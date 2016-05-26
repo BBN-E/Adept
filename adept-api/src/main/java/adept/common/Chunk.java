@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,11 +12,15 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
 
+import com.google.common.base.Objects;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -245,15 +246,16 @@ public class Chunk extends HltContent {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Chunk))
+		if (obj == null || obj.getClass() != Chunk.class)
 			return false;
 		Chunk chunk = (Chunk) obj;
 		if ( ! isCompatible(chunk)) return false;
 		return (chunk.tokenOffset.getBegin() == this.tokenOffset.getBegin() 
-				&& chunk.tokenOffset.getEnd() == this.tokenOffset.getEnd() &&
-				chunk.tokenStream.getDocument() == this.tokenStream.getDocument()
-				&& (chunk.charOffset.getBegin() == this.charOffset.getBegin() && chunk
-				.charOffset.getEnd() == this.charOffset.getEnd()));
+				&& chunk.tokenOffset.getEnd() == this.tokenOffset.getEnd() 
+                                && chunk.tokenStream.getDocument() == this.tokenStream.getDocument()
+				&& (chunk.charOffset.getBegin() == this.charOffset.getBegin() 
+                                && chunk.charOffset.getEnd() == this.charOffset.getEnd())
+                                && chunk.value.equals(this.value));
 	}
 
 	/*
@@ -263,9 +265,9 @@ public class Chunk extends HltContent {
 	 */
 	@Override
 	public int hashCode() {
-		String code = String.format("%d_%d_%s", this.tokenOffset.getBegin(),
-				this.tokenOffset.getEnd(), this.value);
-		return code.hashCode();
+                return Objects.hashCode(this.tokenOffset.getBegin(), this.tokenOffset.getEnd(), 
+                                        this.tokenStream.getDocument(), this.charOffset.getBegin(), 
+                                        this.charOffset.getEnd(), this.value);
 	}
 
 }

@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,11 +12,12 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.common;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -120,8 +118,6 @@ public class Event extends ArgumentTuple {
 	 */
     @Override
     public int hashCode() {
-        int id = (int) this.eventId;
-        int hash = id * 27;
-        return hash;
+        return Objects.hashCode(this.eventId, this.tupleType);
     }
 }

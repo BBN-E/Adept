@@ -1,5 +1,3 @@
-<!--Copyright 2014  Raytheon BBN Technologies Corp. All Rights Reserved. -->
-
 <?xml version="1.0"?>
 
 
@@ -32,6 +30,42 @@
     
 
 
+    <!-- deft://event.serif#hasAddressee -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasAddressee">
+        <rdfs:range rdf:resource="deft://event.serif#Addressee"/>
+        <rdfs:domain rdf:resource="deft://event.serif#Communicate"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://event.serif#hasAgent -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasAgent">
+        <rdfs:range rdf:resource="deft://event.serif#Agent"/>
+        <rdfs:domain rdf:resource="deft://event.serif#Event"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://event.serif#hasArg1 -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasArg1">
+        <rdfs:range rdf:resource="deft://event.serif#Arg1"/>
+        <rdfs:domain rdf:resource="deft://event.serif#Event"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://event.serif#hasArg2 -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasArg2">
+        <rdfs:range rdf:resource="deft://event.serif#Arg2"/>
+        <rdfs:domain rdf:resource="deft://event.serif#Event"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- deft://event.serif#hasArgumentType -->
 
     <owl:ObjectProperty rdf:about="deft://event.serif#hasArgumentType">
@@ -41,11 +75,39 @@
     
 
 
+    <!-- deft://event.serif#hasArtifact -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasArtifact">
+        <rdfs:range rdf:resource="deft://event.serif#Artifact"/>
+        <rdfs:domain rdf:resource="deft://event.serif#Obtain"/>
+        <rdfs:domain rdf:resource="deft://event.serif#Possess"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://event.serif#hasDomain -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasDomain">
+        <rdfs:range rdf:resource="deft://event.serif#Domain"/>
+        <rdfs:domain rdf:resource="deft://event.serif#Event"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- deft://event.serif#hasEntityType -->
 
     <owl:ObjectProperty rdf:about="deft://event.serif#hasEntityType">
-        <rdfs:domain rdf:resource="deft://event.serif#Argument"/>
         <rdfs:range rdf:resource="deft://entity.serif#EntityType"/>
+        <rdfs:domain rdf:resource="deft://event.serif#Argument"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://event.serif#hasEvent -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasEvent">
+        <rdfs:domain rdf:resource="deft://event.serif#Argument"/>
+        <rdfs:range rdf:resource="deft://event.serif#Event"/>
     </owl:ObjectProperty>
     
 
@@ -59,11 +121,38 @@
     
 
 
+    <!-- deft://event.serif#hasGoal -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasGoal">
+        <rdfs:domain rdf:resource="deft://event.serif#Attempt"/>
+        <rdfs:range rdf:resource="deft://event.serif#Goal"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- deft://event.serif#hasIndicator -->
 
     <owl:ObjectProperty rdf:about="deft://event.serif#hasIndicator">
         <rdfs:domain rdf:resource="deft://event.serif#Attempt"/>
         <rdfs:range rdf:resource="deft://event.serif#Indicator"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://event.serif#hasMessage -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasMessage">
+        <rdfs:domain rdf:resource="deft://event.serif#Communicate"/>
+        <rdfs:range rdf:resource="deft://event.serif#Message"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- deft://event.serif#hasMonetaryAmount -->
+
+    <owl:ObjectProperty rdf:about="deft://event.serif#hasMonetaryAmount">
+        <rdfs:domain rdf:resource="deft://event.serif#FinancialEvent"/>
+        <rdfs:range rdf:resource="deft://event.serif#MonetaryAmount"/>
     </owl:ObjectProperty>
     
 
@@ -88,6 +177,12 @@
     
 
 
+    <!-- deft://entity.serif#EntityType -->
+
+    <owl:Class rdf:about="deft://entity.serif#EntityType"/>
+    
+
+
     <!-- deft://event.serif#Addressee -->
 
     <owl:Class rdf:about="deft://event.serif#Addressee">
@@ -99,6 +194,22 @@
     <!-- deft://event.serif#Agent -->
 
     <owl:Class rdf:about="deft://event.serif#Agent">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://event.serif#Arg1 -->
+
+    <owl:Class rdf:about="deft://event.serif#Arg1">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://event.serif#Arg2 -->
+
+    <owl:Class rdf:about="deft://event.serif#Arg2">
         <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
     </owl:Class>
     
@@ -166,6 +277,14 @@
     
 
 
+    <!-- deft://event.serif#Domain -->
+
+    <owl:Class rdf:about="deft://event.serif#Domain">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+    
+
+
     <!-- deft://event.serif#Event -->
 
     <owl:Class rdf:about="deft://event.serif#Event"/>
@@ -216,6 +335,14 @@
 
     <owl:Class rdf:about="deft://event.serif#Indicator">
         <rdfs:subClassOf rdf:resource="deft://event.serif#Property"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://event.serif#KnowsDomain -->
+
+    <owl:Class rdf:about="deft://event.serif#KnowsDomain">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
     </owl:Class>
     
 
@@ -335,8 +462,490 @@
     <owl:Class rdf:about="deft://event.serif#Unknown">
         <rdfs:subClassOf rdf:resource="deft://event.serif#Indicator"/>
     </owl:Class>
+
+    <!-- deft://event.serif#Provenance -->
+
+    <owl:Class rdf:about="deft://event.serif#Provenance">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Business -->
+
+    <owl:Class rdf:about="deft://event.serif#Business">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Business.Declare-Bankruptcy -->
+
+    <owl:Class rdf:about="deft://event.serif#Business.Declare-Bankruptcy">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Business"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Business.End-Org -->
+
+    <owl:Class rdf:about="deft://event.serif#Business.End-Org">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Business"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Business.Merge-Org -->
+
+    <owl:Class rdf:about="deft://event.serif#Business.Merge-Org">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Business"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Business.Start-Org -->
+
+    <owl:Class rdf:about="deft://event.serif#Business.Start-Org">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Business"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Speaker -->
+
+    <owl:Class rdf:about="deft://event.serif#Speaker">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Conflict -->
+
+    <owl:Class rdf:about="deft://event.serif#Conflict">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Conflict.Attack-->
+
+    <owl:Class rdf:about="deft://event.serif#Conflict.Attack">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Conflict"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Conflict.Demonstrate-->
+
+    <owl:Class rdf:about="deft://event.serif#Conflict.Demonstrate">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Conflict"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Contact -->
+
+    <owl:Class rdf:about="deft://event.serif#Contact">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Contact.Meet -->
+
+    <owl:Class rdf:about="deft://event.serif#Contact.Meet">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Contact"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Contact.Phone-Write -->
+
+    <owl:Class rdf:about="deft://event.serif#Contact.Phone-Write">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Contact"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Acquit -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Acquit">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Appeal -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Appeal">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Arrest-Jail -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Arrest-Jail">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Charge-Indict -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Charge-Indict">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Convict -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Convict">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Execute -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Execute">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Extradite -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Extradite">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Fine -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Fine">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Pardon -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Pardon">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Release-Parole -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Release-Parole">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Sentence -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Sentence">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Sue -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Sue">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Justice.Trial-Hearing -->
+
+    <owl:Class rdf:about="deft://event.serif#Justice.Trial-Hearing">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Justice"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Life -->
+
+    <owl:Class rdf:about="deft://event.serif#Life">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Life.Be-Born -->
+
+    <owl:Class rdf:about="deft://event.serif#Life.Be-Born">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Life"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Life.Die -->
+
+    <owl:Class rdf:about="deft://event.serif#Life.Die">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Life"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Life.Divorce -->
+
+    <owl:Class rdf:about="deft://event.serif#Life.Divorce">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Life"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Life.Injure -->
+
+    <owl:Class rdf:about="deft://event.serif#Life.Injure">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Life"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Life.Marry -->
+
+    <owl:Class rdf:about="deft://event.serif#Life.Marry">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Life"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Movement -->
+
+    <owl:Class rdf:about="deft://event.serif#Movement">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Movement.Transport -->
+
+    <owl:Class rdf:about="deft://event.serif#Movement.Transport">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Movement"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Personnel -->
+
+    <owl:Class rdf:about="deft://event.serif#Personnel">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Personnel.Elect -->
+
+    <owl:Class rdf:about="deft://event.serif#Personnel.Elect">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Personnel"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Personnel.End-Position -->
+
+    <owl:Class rdf:about="deft://event.serif#Personnel.End-Position">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Personnel"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Personnel.Nominate -->
+
+    <owl:Class rdf:about="deft://event.serif#Personnel.Nominate">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Personnel"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Personnel.Start-Position -->
+
+    <owl:Class rdf:about="deft://event.serif#Personnel.Start-Position">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Personnel"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Transaction -->
+
+    <owl:Class rdf:about="deft://event.serif#Transaction">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Transaction.Transfer-Money -->
+
+    <owl:Class rdf:about="deft://event.serif#Transaction.Transfer-Money">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Transaction"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Transaction.Transfer-Ownership -->
+
+    <owl:Class rdf:about="deft://event.serif#Transaction.Transfer-Ownership">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Transaction"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Quotation -->
+
+    <owl:Class rdf:about="deft://event.serif#Quotation">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Event"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Quotation.Definite -->
+
+    <owl:Class rdf:about="deft://event.serif#Quotation.Definite">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Quotation"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Quotation.Possible -->
+
+    <owl:Class rdf:about="deft://event.serif#Quotation.Possible">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Quotation"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Person -->
+
+    <owl:Class rdf:about="deft://event.serif#Person">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Time -->
+
+    <owl:Class rdf:about="deft://event.serif#Time">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Place -->
+
+    <owl:Class rdf:about="deft://event.serif#Place">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Victim -->
+
+    <owl:Class rdf:about="deft://event.serif#Victim">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Vehicle-->
+
+    <owl:Class rdf:about="deft://event.serif#Vehicle">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Instrument-->
+
+    <owl:Class rdf:about="deft://event.serif#Instrument">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Price-->
+
+    <owl:Class rdf:about="deft://event.serif#Price">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Origin-->
+
+    <owl:Class rdf:about="deft://event.serif#Origin">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Destination-->
+
+    <owl:Class rdf:about="deft://event.serif#Destination">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Buyer-->
+
+    <owl:Class rdf:about="deft://event.serif#Buyer">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Seller-->
+
+    <owl:Class rdf:about="deft://event.serif#Seller">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Beneficiary-->
+
+    <owl:Class rdf:about="deft://event.serif#Beneficiary">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Giver-->
+
+    <owl:Class rdf:about="deft://event.serif#Giver">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Recipient-->
+
+    <owl:Class rdf:about="deft://event.serif#Recipient">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Money-->
+
+    <owl:Class rdf:about="deft://event.serif#Money">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Org-->
+
+    <owl:Class rdf:about="deft://event.serif#Org">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Attacker-->
+
+    <owl:Class rdf:about="deft://event.serif#Attacker">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Target-->
+
+    <owl:Class rdf:about="deft://event.serif#Target">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Entity -->
+
+    <owl:Class rdf:about="deft://event.serif#Entity">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+     <!-- deft://event.serif#Position -->
+
+    <owl:Class rdf:about="deft://event.serif#Position">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Defendant -->
+
+    <owl:Class rdf:about="deft://event.serif#Defendant">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Adjudicator-->
+
+    <owl:Class rdf:about="deft://event.serif#Adjudicator">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Prosecutor-->
+
+    <owl:Class rdf:about="deft://event.serif#Prosecutor">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Crime-->
+
+    <owl:Class rdf:about="deft://event.serif#Crime">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Plaintiff-->
+
+    <owl:Class rdf:about="deft://event.serif#Plaintiff">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Sentence-->
+
+    <owl:Class rdf:about="deft://event.serif#Sentence">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Time-Within-->
+
+    <owl:Class rdf:about="deft://event.serif#Time-Within">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Time-Starting-->
+
+    <owl:Class rdf:about="deft://event.serif#Time-Starting">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Time-Ending-->
+
+    <owl:Class rdf:about="deft://event.serif#Time-Ending">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Time-Before-->
+
+    <owl:Class rdf:about="deft://event.serif#Time-Before">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Time-After-->
+
+    <owl:Class rdf:about="deft://event.serif#Time-After">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Time-Holds-->
+
+    <owl:Class rdf:about="deft://event.serif#Time-Holds">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Time-At-Beginning-->
+
+    <owl:Class rdf:about="deft://event.serif#Time-At-Beginning">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.serif#Time-At-End-->
+
+    <owl:Class rdf:about="deft://event.serif#Time-At-End">
+        <rdfs:subClassOf rdf:resource="deft://event.serif#Argument"/>
+    </owl:Class>
+
 </rdf:RDF>
 
 
 
 <!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

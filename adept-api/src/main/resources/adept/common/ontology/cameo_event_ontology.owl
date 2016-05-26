@@ -1,0 +1,1262 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="deft://event.cameo#"
+     xml:base="deft://event.cameo"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="deft://event.cameo"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://event.cameo#hasArgument -->
+
+    <owl:ObjectProperty rdf:about="deft://event.cameo#hasArgument">
+        <rdfs:range rdf:resource="deft://event.cameo#Argument"/>
+        <rdfs:domain rdf:resource="deft://event.cameo#Event"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- deft://event.cameo#Argument -->
+
+    <owl:Class rdf:about="deft://event.cameo#Argument"/>
+    
+        <!-- deft://event.cameo#Provenance -->
+
+    <owl:Class rdf:about="deft://event.cameo#Provenance">
+        <rdfs:subClassOf rdf:resource="deft://event.cameo#Argument"/>
+    </owl:Class>
+
+
+    <!-- deft://event.cameo#SOURCE -->
+
+    <owl:Class rdf:about="deft://event.cameo#SOURCE">
+        <rdfs:subClassOf rdf:resource="deft://event.cameo#Argument"/>
+    </owl:Class>
+    
+
+
+    <!-- deft://event.cameo#TARGET -->
+
+    <owl:Class rdf:about="deft://event.cameo#TARGET">
+        <rdfs:subClassOf rdf:resource="deft://event.cameo#Argument"/>
+    </owl:Class>
+
+    <!-- deft://event.cameo#LOCATION -->
+
+    <owl:Class rdf:about="deft://event.cameo#LOCATION">
+        <rdfs:subClassOf rdf:resource="deft://event.cameo#Argument"/>
+    </owl:Class>
+    
+    
+	<!--All CAMEO event types-->
+
+	<!-- deft://event.cameo#010 -->
+	<owl:Class rdf:about="deft://event.cameo#010">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#011 -->
+	<owl:Class rdf:about="deft://event.cameo#011">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#012 -->
+	<owl:Class rdf:about="deft://event.cameo#012">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#013 -->
+	<owl:Class rdf:about="deft://event.cameo#013">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#014 -->
+	<owl:Class rdf:about="deft://event.cameo#014">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#015 -->
+	<owl:Class rdf:about="deft://event.cameo#015">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#016 -->
+	<owl:Class rdf:about="deft://event.cameo#016">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#017 -->
+	<owl:Class rdf:about="deft://event.cameo#017">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#018 -->
+	<owl:Class rdf:about="deft://event.cameo#018">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#019 -->
+	<owl:Class rdf:about="deft://event.cameo#019">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#020 -->
+	<owl:Class rdf:about="deft://event.cameo#020">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#021 -->
+	<owl:Class rdf:about="deft://event.cameo#021">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0211 -->
+	<owl:Class rdf:about="deft://event.cameo#0211">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0212 -->
+	<owl:Class rdf:about="deft://event.cameo#0212">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0213 -->
+	<owl:Class rdf:about="deft://event.cameo#0213">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0214 -->
+	<owl:Class rdf:about="deft://event.cameo#0214">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#022 -->
+	<owl:Class rdf:about="deft://event.cameo#022">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#023 -->
+	<owl:Class rdf:about="deft://event.cameo#023">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0231 -->
+	<owl:Class rdf:about="deft://event.cameo#0231">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0232 -->
+	<owl:Class rdf:about="deft://event.cameo#0232">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0233 -->
+	<owl:Class rdf:about="deft://event.cameo#0233">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0234 -->
+	<owl:Class rdf:about="deft://event.cameo#0234">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#024 -->
+	<owl:Class rdf:about="deft://event.cameo#024">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0241 -->
+	<owl:Class rdf:about="deft://event.cameo#0241">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0242 -->
+	<owl:Class rdf:about="deft://event.cameo#0242">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0243 -->
+	<owl:Class rdf:about="deft://event.cameo#0243">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0244 -->
+	<owl:Class rdf:about="deft://event.cameo#0244">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#025 -->
+	<owl:Class rdf:about="deft://event.cameo#025">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0251 -->
+	<owl:Class rdf:about="deft://event.cameo#0251">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0252 -->
+	<owl:Class rdf:about="deft://event.cameo#0252">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0253 -->
+	<owl:Class rdf:about="deft://event.cameo#0253">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0254 -->
+	<owl:Class rdf:about="deft://event.cameo#0254">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0255 -->
+	<owl:Class rdf:about="deft://event.cameo#0255">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0256 -->
+	<owl:Class rdf:about="deft://event.cameo#0256">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#026 -->
+	<owl:Class rdf:about="deft://event.cameo#026">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#027 -->
+	<owl:Class rdf:about="deft://event.cameo#027">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#028 -->
+	<owl:Class rdf:about="deft://event.cameo#028">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#030 -->
+	<owl:Class rdf:about="deft://event.cameo#030">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#031 -->
+	<owl:Class rdf:about="deft://event.cameo#031">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0311 -->
+	<owl:Class rdf:about="deft://event.cameo#0311">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0312 -->
+	<owl:Class rdf:about="deft://event.cameo#0312">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0313 -->
+	<owl:Class rdf:about="deft://event.cameo#0313">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0314 -->
+	<owl:Class rdf:about="deft://event.cameo#0314">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#032 -->
+	<owl:Class rdf:about="deft://event.cameo#032">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#033 -->
+	<owl:Class rdf:about="deft://event.cameo#033">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0331 -->
+	<owl:Class rdf:about="deft://event.cameo#0331">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0332 -->
+	<owl:Class rdf:about="deft://event.cameo#0332">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0333 -->
+	<owl:Class rdf:about="deft://event.cameo#0333">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0334 -->
+	<owl:Class rdf:about="deft://event.cameo#0334">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#034 -->
+	<owl:Class rdf:about="deft://event.cameo#034">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0341 -->
+	<owl:Class rdf:about="deft://event.cameo#0341">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0342 -->
+	<owl:Class rdf:about="deft://event.cameo#0342">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0343 -->
+	<owl:Class rdf:about="deft://event.cameo#0343">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0344 -->
+	<owl:Class rdf:about="deft://event.cameo#0344">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#035 -->
+	<owl:Class rdf:about="deft://event.cameo#035">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0351 -->
+	<owl:Class rdf:about="deft://event.cameo#0351">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0352 -->
+	<owl:Class rdf:about="deft://event.cameo#0352">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0353 -->
+	<owl:Class rdf:about="deft://event.cameo#0353">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0354 -->
+	<owl:Class rdf:about="deft://event.cameo#0354">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0355 -->
+	<owl:Class rdf:about="deft://event.cameo#0355">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0356 -->
+	<owl:Class rdf:about="deft://event.cameo#0356">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#036 -->
+	<owl:Class rdf:about="deft://event.cameo#036">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#037 -->
+	<owl:Class rdf:about="deft://event.cameo#037">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#038 -->
+	<owl:Class rdf:about="deft://event.cameo#038">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#039 -->
+	<owl:Class rdf:about="deft://event.cameo#039">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#040 -->
+	<owl:Class rdf:about="deft://event.cameo#040">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#041 -->
+	<owl:Class rdf:about="deft://event.cameo#041">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#042 -->
+	<owl:Class rdf:about="deft://event.cameo#042">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#043 -->
+	<owl:Class rdf:about="deft://event.cameo#043">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#044 -->
+	<owl:Class rdf:about="deft://event.cameo#044">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#045 -->
+	<owl:Class rdf:about="deft://event.cameo#045">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#046 -->
+	<owl:Class rdf:about="deft://event.cameo#046">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#050 -->
+	<owl:Class rdf:about="deft://event.cameo#050">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#051 -->
+	<owl:Class rdf:about="deft://event.cameo#051">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#052 -->
+	<owl:Class rdf:about="deft://event.cameo#052">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#053 -->
+	<owl:Class rdf:about="deft://event.cameo#053">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#054 -->
+	<owl:Class rdf:about="deft://event.cameo#054">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#055 -->
+	<owl:Class rdf:about="deft://event.cameo#055">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#056 -->
+	<owl:Class rdf:about="deft://event.cameo#056">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#057 -->
+	<owl:Class rdf:about="deft://event.cameo#057">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#060 -->
+	<owl:Class rdf:about="deft://event.cameo#060">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#061 -->
+	<owl:Class rdf:about="deft://event.cameo#061">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#062 -->
+	<owl:Class rdf:about="deft://event.cameo#062">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#063 -->
+	<owl:Class rdf:about="deft://event.cameo#063">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#064 -->
+	<owl:Class rdf:about="deft://event.cameo#064">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#070 -->
+	<owl:Class rdf:about="deft://event.cameo#070">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#071 -->
+	<owl:Class rdf:about="deft://event.cameo#071">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#072 -->
+	<owl:Class rdf:about="deft://event.cameo#072">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#073 -->
+	<owl:Class rdf:about="deft://event.cameo#073">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#074 -->
+	<owl:Class rdf:about="deft://event.cameo#074">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#075 -->
+	<owl:Class rdf:about="deft://event.cameo#075">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#080 -->
+	<owl:Class rdf:about="deft://event.cameo#080">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#081 -->
+	<owl:Class rdf:about="deft://event.cameo#081">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0811 -->
+	<owl:Class rdf:about="deft://event.cameo#0811">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0812 -->
+	<owl:Class rdf:about="deft://event.cameo#0812">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0813 -->
+	<owl:Class rdf:about="deft://event.cameo#0813">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0814 -->
+	<owl:Class rdf:about="deft://event.cameo#0814">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#082 -->
+	<owl:Class rdf:about="deft://event.cameo#082">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#083 -->
+	<owl:Class rdf:about="deft://event.cameo#083">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0831 -->
+	<owl:Class rdf:about="deft://event.cameo#0831">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0832 -->
+	<owl:Class rdf:about="deft://event.cameo#0832">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0833 -->
+	<owl:Class rdf:about="deft://event.cameo#0833">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0834 -->
+	<owl:Class rdf:about="deft://event.cameo#0834">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#084 -->
+	<owl:Class rdf:about="deft://event.cameo#084">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0841 -->
+	<owl:Class rdf:about="deft://event.cameo#0841">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0842 -->
+	<owl:Class rdf:about="deft://event.cameo#0842">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#085 -->
+	<owl:Class rdf:about="deft://event.cameo#085">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#086 -->
+	<owl:Class rdf:about="deft://event.cameo#086">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0861 -->
+	<owl:Class rdf:about="deft://event.cameo#0861">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0862 -->
+	<owl:Class rdf:about="deft://event.cameo#0862">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0863 -->
+	<owl:Class rdf:about="deft://event.cameo#0863">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#087 -->
+	<owl:Class rdf:about="deft://event.cameo#087">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0871 -->
+	<owl:Class rdf:about="deft://event.cameo#0871">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0872 -->
+	<owl:Class rdf:about="deft://event.cameo#0872">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0873 -->
+	<owl:Class rdf:about="deft://event.cameo#0873">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#0874 -->
+	<owl:Class rdf:about="deft://event.cameo#0874">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#090 -->
+	<owl:Class rdf:about="deft://event.cameo#090">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#091 -->
+	<owl:Class rdf:about="deft://event.cameo#091">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#092 -->
+	<owl:Class rdf:about="deft://event.cameo#092">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#093 -->
+	<owl:Class rdf:about="deft://event.cameo#093">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#094 -->
+	<owl:Class rdf:about="deft://event.cameo#094">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#100 -->
+	<owl:Class rdf:about="deft://event.cameo#100">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#101 -->
+	<owl:Class rdf:about="deft://event.cameo#101">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1011 -->
+	<owl:Class rdf:about="deft://event.cameo#1011">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1012 -->
+	<owl:Class rdf:about="deft://event.cameo#1012">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1013 -->
+	<owl:Class rdf:about="deft://event.cameo#1013">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1014 -->
+	<owl:Class rdf:about="deft://event.cameo#1014">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#102 -->
+	<owl:Class rdf:about="deft://event.cameo#102">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#103 -->
+	<owl:Class rdf:about="deft://event.cameo#103">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1031 -->
+	<owl:Class rdf:about="deft://event.cameo#1031">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1032 -->
+	<owl:Class rdf:about="deft://event.cameo#1032">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1033 -->
+	<owl:Class rdf:about="deft://event.cameo#1033">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1034 -->
+	<owl:Class rdf:about="deft://event.cameo#1034">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#104 -->
+	<owl:Class rdf:about="deft://event.cameo#104">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1041 -->
+	<owl:Class rdf:about="deft://event.cameo#1041">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1042 -->
+	<owl:Class rdf:about="deft://event.cameo#1042">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1043 -->
+	<owl:Class rdf:about="deft://event.cameo#1043">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1044 -->
+	<owl:Class rdf:about="deft://event.cameo#1044">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#105 -->
+	<owl:Class rdf:about="deft://event.cameo#105">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1051 -->
+	<owl:Class rdf:about="deft://event.cameo#1051">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1052 -->
+	<owl:Class rdf:about="deft://event.cameo#1052">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1053 -->
+	<owl:Class rdf:about="deft://event.cameo#1053">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1054 -->
+	<owl:Class rdf:about="deft://event.cameo#1054">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1055 -->
+	<owl:Class rdf:about="deft://event.cameo#1055">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1056 -->
+	<owl:Class rdf:about="deft://event.cameo#1056">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#106 -->
+	<owl:Class rdf:about="deft://event.cameo#106">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#107 -->
+	<owl:Class rdf:about="deft://event.cameo#107">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#108 -->
+	<owl:Class rdf:about="deft://event.cameo#108">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#110 -->
+	<owl:Class rdf:about="deft://event.cameo#110">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#111 -->
+	<owl:Class rdf:about="deft://event.cameo#111">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#112 -->
+	<owl:Class rdf:about="deft://event.cameo#112">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1121 -->
+	<owl:Class rdf:about="deft://event.cameo#1121">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1122 -->
+	<owl:Class rdf:about="deft://event.cameo#1122">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1123 -->
+	<owl:Class rdf:about="deft://event.cameo#1123">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1124 -->
+	<owl:Class rdf:about="deft://event.cameo#1124">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1125 -->
+	<owl:Class rdf:about="deft://event.cameo#1125">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#113 -->
+	<owl:Class rdf:about="deft://event.cameo#113">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#114 -->
+	<owl:Class rdf:about="deft://event.cameo#114">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#115 -->
+	<owl:Class rdf:about="deft://event.cameo#115">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#116 -->
+	<owl:Class rdf:about="deft://event.cameo#116">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#120 -->
+	<owl:Class rdf:about="deft://event.cameo#120">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#121 -->
+	<owl:Class rdf:about="deft://event.cameo#121">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1211 -->
+	<owl:Class rdf:about="deft://event.cameo#1211">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1212 -->
+	<owl:Class rdf:about="deft://event.cameo#1212">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1213 -->
+	<owl:Class rdf:about="deft://event.cameo#1213">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#122 -->
+	<owl:Class rdf:about="deft://event.cameo#122">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1221 -->
+	<owl:Class rdf:about="deft://event.cameo#1221">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1222 -->
+	<owl:Class rdf:about="deft://event.cameo#1222">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1223 -->
+	<owl:Class rdf:about="deft://event.cameo#1223">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1224 -->
+	<owl:Class rdf:about="deft://event.cameo#1224">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#123 -->
+	<owl:Class rdf:about="deft://event.cameo#123">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1231 -->
+	<owl:Class rdf:about="deft://event.cameo#1231">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1232 -->
+	<owl:Class rdf:about="deft://event.cameo#1232">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1233 -->
+	<owl:Class rdf:about="deft://event.cameo#1233">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1234 -->
+	<owl:Class rdf:about="deft://event.cameo#1234">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#124 -->
+	<owl:Class rdf:about="deft://event.cameo#124">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1241 -->
+	<owl:Class rdf:about="deft://event.cameo#1241">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1242 -->
+	<owl:Class rdf:about="deft://event.cameo#1242">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1243 -->
+	<owl:Class rdf:about="deft://event.cameo#1243">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1244 -->
+	<owl:Class rdf:about="deft://event.cameo#1244">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1245 -->
+	<owl:Class rdf:about="deft://event.cameo#1245">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1246 -->
+	<owl:Class rdf:about="deft://event.cameo#1246">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#125 -->
+	<owl:Class rdf:about="deft://event.cameo#125">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#126 -->
+	<owl:Class rdf:about="deft://event.cameo#126">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#127 -->
+	<owl:Class rdf:about="deft://event.cameo#127">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#128 -->
+	<owl:Class rdf:about="deft://event.cameo#128">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#129 -->
+	<owl:Class rdf:about="deft://event.cameo#129">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#130 -->
+	<owl:Class rdf:about="deft://event.cameo#130">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#131 -->
+	<owl:Class rdf:about="deft://event.cameo#131">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1311 -->
+	<owl:Class rdf:about="deft://event.cameo#1311">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1312 -->
+	<owl:Class rdf:about="deft://event.cameo#1312">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1313 -->
+	<owl:Class rdf:about="deft://event.cameo#1313">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#132 -->
+	<owl:Class rdf:about="deft://event.cameo#132">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1321 -->
+	<owl:Class rdf:about="deft://event.cameo#1321">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1322 -->
+	<owl:Class rdf:about="deft://event.cameo#1322">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1323 -->
+	<owl:Class rdf:about="deft://event.cameo#1323">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1324 -->
+	<owl:Class rdf:about="deft://event.cameo#1324">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#133 -->
+	<owl:Class rdf:about="deft://event.cameo#133">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#134 -->
+	<owl:Class rdf:about="deft://event.cameo#134">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#135 -->
+	<owl:Class rdf:about="deft://event.cameo#135">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#136 -->
+	<owl:Class rdf:about="deft://event.cameo#136">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#137 -->
+	<owl:Class rdf:about="deft://event.cameo#137">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#138 -->
+	<owl:Class rdf:about="deft://event.cameo#138">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1381 -->
+	<owl:Class rdf:about="deft://event.cameo#1381">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1382 -->
+	<owl:Class rdf:about="deft://event.cameo#1382">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1383 -->
+	<owl:Class rdf:about="deft://event.cameo#1383">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1384 -->
+	<owl:Class rdf:about="deft://event.cameo#1384">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1385 -->
+	<owl:Class rdf:about="deft://event.cameo#1385">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#139 -->
+	<owl:Class rdf:about="deft://event.cameo#139">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#140 -->
+	<owl:Class rdf:about="deft://event.cameo#140">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#141 -->
+	<owl:Class rdf:about="deft://event.cameo#141">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1411 -->
+	<owl:Class rdf:about="deft://event.cameo#1411">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1412 -->
+	<owl:Class rdf:about="deft://event.cameo#1412">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1413 -->
+	<owl:Class rdf:about="deft://event.cameo#1413">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1414 -->
+	<owl:Class rdf:about="deft://event.cameo#1414">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#142 -->
+	<owl:Class rdf:about="deft://event.cameo#142">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1421 -->
+	<owl:Class rdf:about="deft://event.cameo#1421">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1422 -->
+	<owl:Class rdf:about="deft://event.cameo#1422">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1423 -->
+	<owl:Class rdf:about="deft://event.cameo#1423">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1424 -->
+	<owl:Class rdf:about="deft://event.cameo#1424">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#143 -->
+	<owl:Class rdf:about="deft://event.cameo#143">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1431 -->
+	<owl:Class rdf:about="deft://event.cameo#1431">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1432 -->
+	<owl:Class rdf:about="deft://event.cameo#1432">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1433 -->
+	<owl:Class rdf:about="deft://event.cameo#1433">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1434 -->
+	<owl:Class rdf:about="deft://event.cameo#1434">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#144 -->
+	<owl:Class rdf:about="deft://event.cameo#144">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1441 -->
+	<owl:Class rdf:about="deft://event.cameo#1441">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1442 -->
+	<owl:Class rdf:about="deft://event.cameo#1442">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1443 -->
+	<owl:Class rdf:about="deft://event.cameo#1443">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1444 -->
+	<owl:Class rdf:about="deft://event.cameo#1444">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#145 -->
+	<owl:Class rdf:about="deft://event.cameo#145">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1451 -->
+	<owl:Class rdf:about="deft://event.cameo#1451">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1452 -->
+	<owl:Class rdf:about="deft://event.cameo#1452">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1453 -->
+	<owl:Class rdf:about="deft://event.cameo#1453">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1454 -->
+	<owl:Class rdf:about="deft://event.cameo#1454">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#150 -->
+	<owl:Class rdf:about="deft://event.cameo#150">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#151 -->
+	<owl:Class rdf:about="deft://event.cameo#151">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#152 -->
+	<owl:Class rdf:about="deft://event.cameo#152">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#153 -->
+	<owl:Class rdf:about="deft://event.cameo#153">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#154 -->
+	<owl:Class rdf:about="deft://event.cameo#154">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#160 -->
+	<owl:Class rdf:about="deft://event.cameo#160">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#161 -->
+	<owl:Class rdf:about="deft://event.cameo#161">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#162 -->
+	<owl:Class rdf:about="deft://event.cameo#162">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1621 -->
+	<owl:Class rdf:about="deft://event.cameo#1621">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1622 -->
+	<owl:Class rdf:about="deft://event.cameo#1622">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1623 -->
+	<owl:Class rdf:about="deft://event.cameo#1623">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#163 -->
+	<owl:Class rdf:about="deft://event.cameo#163">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#164 -->
+	<owl:Class rdf:about="deft://event.cameo#164">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#165 -->
+	<owl:Class rdf:about="deft://event.cameo#165">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#166 -->
+	<owl:Class rdf:about="deft://event.cameo#166">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1661 -->
+	<owl:Class rdf:about="deft://event.cameo#1661">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1662 -->
+	<owl:Class rdf:about="deft://event.cameo#1662">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1663 -->
+	<owl:Class rdf:about="deft://event.cameo#1663">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#170 -->
+	<owl:Class rdf:about="deft://event.cameo#170">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#171 -->
+	<owl:Class rdf:about="deft://event.cameo#171">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1711 -->
+	<owl:Class rdf:about="deft://event.cameo#1711">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1712 -->
+	<owl:Class rdf:about="deft://event.cameo#1712">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#172 -->
+	<owl:Class rdf:about="deft://event.cameo#172">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1721 -->
+	<owl:Class rdf:about="deft://event.cameo#1721">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1722 -->
+	<owl:Class rdf:about="deft://event.cameo#1722">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1723 -->
+	<owl:Class rdf:about="deft://event.cameo#1723">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1724 -->
+	<owl:Class rdf:about="deft://event.cameo#1724">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#173 -->
+	<owl:Class rdf:about="deft://event.cameo#173">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#174 -->
+	<owl:Class rdf:about="deft://event.cameo#174">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#175 -->
+	<owl:Class rdf:about="deft://event.cameo#175">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#180 -->
+	<owl:Class rdf:about="deft://event.cameo#180">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#181 -->
+	<owl:Class rdf:about="deft://event.cameo#181">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#182 -->
+	<owl:Class rdf:about="deft://event.cameo#182">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1821 -->
+	<owl:Class rdf:about="deft://event.cameo#1821">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1822 -->
+	<owl:Class rdf:about="deft://event.cameo#1822">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1823 -->
+	<owl:Class rdf:about="deft://event.cameo#1823">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#183 -->
+	<owl:Class rdf:about="deft://event.cameo#183">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1831 -->
+	<owl:Class rdf:about="deft://event.cameo#1831">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1832 -->
+	<owl:Class rdf:about="deft://event.cameo#1832">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#1833 -->
+	<owl:Class rdf:about="deft://event.cameo#1833">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#184 -->
+	<owl:Class rdf:about="deft://event.cameo#184">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#185 -->
+	<owl:Class rdf:about="deft://event.cameo#185">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#186 -->
+	<owl:Class rdf:about="deft://event.cameo#186">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#190 -->
+	<owl:Class rdf:about="deft://event.cameo#190">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#191 -->
+	<owl:Class rdf:about="deft://event.cameo#191">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#192 -->
+	<owl:Class rdf:about="deft://event.cameo#192">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#193 -->
+	<owl:Class rdf:about="deft://event.cameo#193">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#194 -->
+	<owl:Class rdf:about="deft://event.cameo#194">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#195 -->
+	<owl:Class rdf:about="deft://event.cameo#195">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#196 -->
+	<owl:Class rdf:about="deft://event.cameo#196">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#200 -->
+	<owl:Class rdf:about="deft://event.cameo#200">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#201 -->
+	<owl:Class rdf:about="deft://event.cameo#201">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#202 -->
+	<owl:Class rdf:about="deft://event.cameo#202">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#203 -->
+	<owl:Class rdf:about="deft://event.cameo#203">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#204 -->
+	<owl:Class rdf:about="deft://event.cameo#204">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#2041 -->
+	<owl:Class rdf:about="deft://event.cameo#2041">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+	<!-- deft://event.cameo#2042  -->
+	<owl:Class rdf:about="deft://event.cameo#2042">
+		<rdfs:subClassOf rdf:resource="deft://event.cameo#Event"/>
+	</owl:Class>
+
+
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

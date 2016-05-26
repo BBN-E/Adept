@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,19 +12,19 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.mappers.thrift.factories;
 
-import org.dozer.BeanFactory;
 import adept.common.Document;
 
 public class DocumentFactory implements org.dozer.BeanFactory {
-	public Document createBean(Object source, Class sourceClass, String targetBeanId) {
 
-		adept.common.Corpus corpus = new adept.common.Corpus("", null, null, null);
+  public Document createBean(Object source, Class sourceClass, String targetBeanId) {
 
-		return new adept.common.Document("", null, "", "", "");
-	}
+    adept.common.Corpus corpus = new adept.common.Corpus("", null, null, null);
+
+    return new adept.common.Document("", null, "", "", "");
+  }
 }

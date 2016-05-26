@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,9 +12,12 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import adept.metadata.*;
+import com.google.common.base.Objects;
 
 import com.hp.hpl.jena.ontology.OntClass;
 
@@ -79,12 +80,12 @@ public class Relation extends ArgumentTuple {
 	}
 	
 	/**
-	 * Gets the relation ont type.
+	 * Gets the relation type uri.
 	 * 
-	 * @return the relation type
+	 * @return the relation type uri
 	 */
-	public OntClass getRelationOntType() {
-		return super.getOntType();
+	public String getRelationTypeURI() {
+		return super.getTypeURI();
 	}
 
 	/**
@@ -149,9 +150,7 @@ public class Relation extends ArgumentTuple {
 	 */
 	@Override
 	public int hashCode() {
-		int id = (int) this.relationId;
-		int hash = id * 27;
-		return hash;
+            return Objects.hashCode(this.relationId, this.tupleType);
 	}
 
 

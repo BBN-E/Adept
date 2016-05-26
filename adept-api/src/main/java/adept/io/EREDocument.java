@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,7 +12,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.io;
@@ -28,7 +25,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import adept.utilities.DocumentMaker;
-import adept.utilities.StanfordSentenceSegmenter;
+import adept.utilities.OpenNLPSentenceSegmenter;
 import adept.common.Document;
 import adept.common.HltContentContainer;
 import adept.common.Corpus;
@@ -355,7 +352,7 @@ public class EREDocument
             String text = createDocText();
             document.setValue(text);
             document.addTokenStream(DocumentMaker.getInstance().tokenize(text, document));
-            hltcc.setSentences(StanfordSentenceSegmenter.getInstance().getSentences(document.getValue(),document.getTokenStreamList().get(0)));
+            hltcc.setSentences(OpenNLPSentenceSegmenter.getInstance().getSentences(document.getValue(),document.getTokenStreamList().get(0)));
         }
         else
         {

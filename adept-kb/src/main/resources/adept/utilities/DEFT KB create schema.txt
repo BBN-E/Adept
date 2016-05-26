@@ -42,7 +42,6 @@ CREATE TABLE "TextChunks"
   "endOffset" integer,
   "ID" text NOT NULL,
   "sourceDocument" text,
-  "serializedTokenStream" text,
   CONSTRAINT "TextChunks_pkey" PRIMARY KEY ("ID"),
   CONSTRAINT "TextChunks_sourceDocument_fkey" FOREIGN KEY ("sourceDocument")
       REFERENCES "SourceDocuments" ("ID") MATCH SIMPLE
@@ -68,94 +67,48 @@ CREATE TABLE "InferencePaths"
   CONSTRAINT "InferencePaths_pkey" PRIMARY KEY ("ID")
 );
 
--- Table: "EntityMentions"
+-- Table: "TextProvenances"
 
-CREATE TABLE "EntityMentions"
+CREATE TABLE "TextProvenances"
 (
-  "mentionType" text,
-  "KBEntityId" text,
+  "KBId" text,
   confidence double precision,
   "ID" text NOT NULL,
   chunk text,
   "sourceAlgorithm" text,
-  CONSTRAINT "ID" PRIMARY KEY ("ID"),
-  CONSTRAINT "EntityMentions_chunk_fkey" FOREIGN KEY (chunk)
+  CONSTRAINT "TextProvenances_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT "TextProvenances_chunk_fkey" FOREIGN KEY (chunk)
       REFERENCES "TextChunks" ("ID") MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT "EntityMentions_sourceAlgorithm_fkey" FOREIGN KEY
-("sourceAlgorithm")
+  CONSTRAINT "TextProvenances_sourceAlgorithm_fkey" FOREIGN KEY ("sourceAlgorithm")
       REFERENCES "SourceAlgorithms" ("algorithmName") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
--- Table: "DateMentions"
+CREATE INDEX "TextProvenances_KBId" on "TextProvenances" ( "KBId" );
 
-CREATE TABLE "DateMentions"
+CREATE TABLE "DocumentTexts"
 (
-  "ID" text NOT NULL,
-  chunk text,
-  "KBDateId" text,
-  confidence double precision,
-  "sourceAlgorithm" text,
-  CONSTRAINT "DateMentions_pkey" PRIMARY KEY ("ID"),
-  CONSTRAINT "DateMentions_chunk_fkey" FOREIGN KEY (chunk)
-      REFERENCES "TextChunks" ("ID") MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT "DateMentions_sourceAlgorithm_fkey" FOREIGN KEY
-("sourceAlgorithm")
-      REFERENCES "SourceAlgorithms" ("algorithmName") MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  docID text NOT NULL,
+  corpusID text NOT NULL,
+  content text NOT NULL,
+  CONSTRAINT "DocumentTexts_pkey" PRIMARY KEY (docID, corpusID)
 );
 
--- Table: "RelationMentions"
-
-CREATE TABLE "RelationMentions"
+CREATE TABLE "SentenceMD5"
 (
-  "ID" text NOT NULL,
-  "relationType" text,
-  chunk text,
-  "sourceAlgorithm" text,
-  "KBRelationId" text,
-  confidence double precision,
-  CONSTRAINT "RelationMentions_pkey" PRIMARY KEY ("ID"),
-  CONSTRAINT "RelationMentions_chunk_fkey" FOREIGN KEY (chunk)
-      REFERENCES "TextChunks" ("ID") MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT "RelationMentions_sourceAlgorithm_fkey" FOREIGN KEY
-("sourceAlgorithm")
-      REFERENCES "SourceAlgorithms" ("algorithmName") MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  sentencemd5id serial NOT NULL,
+  hash bytea NOT NULL,
+  documentname character varying(100) NOT NULL,
+  CONSTRAINT "PK_SentenceMD5" PRIMARY KEY (sentencemd5id)
 );
 
-- Table: "Arguments"
+CREATE INDEX "idx_sentencemd5_hash" ON "SentenceMD5" ("hash");
 
--- DROP TABLE "Arguments";
-
-CREATE TABLE "Arguments"
+CREATE TABLE "OverlappingDocument"
 (
-  "ID" text NOT NULL,
-  "argType" text,
-  "relationMention" text,
-  confidence double precision,
-  "entityMention" text,
-  CONSTRAINT "Arguments_pkey" PRIMARY KEY ("ID"),
-  CONSTRAINT "entityMention_fk" FOREIGN KEY ("entityMention")
-      REFERENCES "EntityMentions" ("ID") MATCH SIMPLE
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT "relationMention_fk" FOREIGN KEY ("relationMention")
-      REFERENCES "RelationMentions" ("ID") MATCH SIMPLE
-      ON UPDATE CASCADE ON DELETE CASCADE
+  overlappingdocumentid serial NOT NULL,
+  score double precision NOT NULL,
+  documentname character varying(100) NOT NULL,
+  CONSTRAINT "PK_OverlappingDocument" PRIMARY KEY (overlappingdocumentid)
 );
-
-
--- Table: "ExternalKBReferences"
-
-CREATE TABLE "ExternalKBReferences"
-(
-  "AdeptKBID" text,
-  "ExternalID" text,
-  "ExternalKB" text
-   confidence double precision
-);
-
-

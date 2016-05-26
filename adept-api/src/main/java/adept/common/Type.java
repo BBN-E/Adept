@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,9 +12,12 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
 
 
@@ -33,6 +33,10 @@ public class Type implements IType {
 
 	/** The type. */
 	private final String type;
+
+  	private Type() {
+	  type = null;
+	}
 
 	/**
 	 * Instantiates a new type.
@@ -55,12 +59,12 @@ public class Type implements IType {
 	}
 
 	/**
-	 * gets OntClass.
+	 * gets URI.
 	 *
-	 * @return the ont class
+	 * @return the URI
 	 */
 	@Deprecated
-	public OntClass getOntClass() {
+	public String getURI() {
 		// TODO Auto-generated method stub
 		return null;
 	}

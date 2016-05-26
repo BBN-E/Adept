@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,44 +12,48 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.common;
 
+import com.google.common.base.Objects;
+import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Represents a generic KB ID.
  * 
  */
-public class KBID {
+public final class KBID {
 	
 	/** Unique KB ID */
-	private final String kbUri;
+	private final String objectID;
 	
 	/** Source KB */
-	private final String sourceKB;
+	private final String kbNamespace;
 	
 	// constructor
-	public KBID(String kbUri, String sourceKB)
+	public KBID(String objectID, String kbNamespace)
 	{
-		this.kbUri = kbUri;
-		this.sourceKB = sourceKB;
+		checkArgument(objectID!=null);
+		checkArgument(kbNamespace!=null);
+		this.objectID = objectID;
+		this.kbNamespace = kbNamespace;
 	}
 	
     /**
      * @return May never be null.
      */
-    public String getKBUri()
+    public String getObjectID()
     {
-    	return kbUri;
+    	return objectID;
     }
     
     /**
      * 
      */
-    public String getSourceKB()
+    public String getKBNamespace()
     {
-    	return sourceKB;
+    	return kbNamespace;
     }
     
     /**
@@ -60,8 +61,7 @@ public class KBID {
      * the KB object URI
      */
 	public int hashCode() {
-		String code = String.format("%s_%s", this.sourceKB, this.kbUri);				
-		return code.hashCode();
+		return Objects.hashCode(this.kbNamespace, this.objectID);
 	}
 	
 	/*
@@ -75,6 +75,6 @@ public class KBID {
 		if (obj == null || !(obj instanceof KBID))
 			return false;
 		KBID kbID = (KBID) obj;
-		return (kbID.getSourceKB().equals(this.sourceKB) && kbID.getKBUri().equals(this.kbUri));			
+		return (kbID.getKBNamespace().equals(this.kbNamespace) && kbID.getObjectID().equals(this.objectID));			
 	}
 }

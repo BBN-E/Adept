@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,9 +12,12 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
 
 import com.hp.hpl.jena.ontology.Individual;
@@ -160,7 +160,8 @@ public class OntTypeFactory implements ITypeFactory {
 			model = models.get(schemaLocation);
 		}
 		
-		return new OntType(model, temp[0], "#"+temp[1]);
+		//return new OntType(model, temp[0], "#"+temp[1]);
+                return new OntType(temp[0], temp[1]);
 	}
 	
 	/**
@@ -192,7 +193,8 @@ public class OntTypeFactory implements ITypeFactory {
 			model = models.get(schemaLocation);
 		}
 		
-		return new OntType(model, ontology, ontURIDirectory.getProperty(ontology)+"#"+type);
+		//return new OntType(model, ontology, ontURIDirectory.getProperty(ontology)+"#"+type);
+                return new OntType(ontology, type);
 	}
 	
 	/**

@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,18 +12,22 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 
 // TODO: Check for nulls if needed in future.
@@ -41,65 +42,65 @@ public class HltContentContainer extends HltContent {
     /** The coreferences. */
 	// Keep these first so that XSLT will find complete EntityMention elements
 	// inside the <resolvedEntityMentions> element, rather than only references to EntityMentions.
-	private List<Coreference> coreferences;
+	private ImmutableList<Coreference> coreferences;
 	
 	/** The sentence similarities */
 	// Keep these before sentences for the same reason as above comment
-	private List<SentenceSimilarity> sentenceSimilarities;
+	private ImmutableList<SentenceSimilarity> sentenceSimilarities;
 
 	/** The sentences. */
-	private List<Sentence> sentences;
+	private ImmutableList<Sentence> sentences;
 
 	/** The passages. */
-	private List<Passage> passages;
+	private ImmutableList<Passage> passages;
 
 	/** The entity mentions. */
-	private List<EntityMention> entityMentions;
+	private ImmutableList<EntityMention> entityMentions;
 
 	/** The named entities. */
-	private List<EntityMention> namedEntities;
+	private ImmutableList<EntityMention> namedEntities;
 
 	/** The part of speechs. */
-	private List<PartOfSpeech> partOfSpeechs;
+	private ImmutableList<PartOfSpeech> partOfSpeechs;
 
 	/** The dependencies. */
-	private List<Dependency> dependencies;
+	private ImmutableList<Dependency> dependencies;
 
 	/** The syntactic chunks. */
-	private List<SyntacticChunk> syntacticChunks;
+	private ImmutableList<SyntacticChunk> syntacticChunks;
 
 	/** The tagged chunks. */
-	private List<TaggedChunk> taggedChunks;
+	private ImmutableList<TaggedChunk> taggedChunks;
 	
 	/** The relations. */
-	private List<Relation> relations;
-
+	private ImmutableList<Relation> relations;
+        
 	/** The joint relation coreferences. */
-	private List<JointRelationCoreference> jointRelationCoreferences;
+	private ImmutableList<JointRelationCoreference> jointRelationCoreferences;
 
 	/** The opinions. */
-	private List<Opinion> opinions;
+	private ImmutableList<Opinion> opinions;
 
 
 	/** The prosodic phrases. */
-	private List<ProsodicPhrase> prosodicPhrases;
+	private ImmutableList<ProsodicPhrase> prosodicPhrases;
 
 	/** The sarcasms. */
-	private List<Sarcasm> sarcasms;
+	private ImmutableList<Sarcasm> sarcasms;
 
 	/** The committed beliefs. */
-	private List<CommittedBelief> committedBeliefs;
+	private ImmutableList<CommittedBelief> committedBeliefs;
 
 	/** Utterances. */
-	private List<Utterance> utterances;
+	private ImmutableList<Utterance> utterances;
 
 
 	/** The inter pausal units. */
-	private List<InterPausalUnit> interPausalUnits;
+	private ImmutableList<InterPausalUnit> interPausalUnits;
 
-	private List<AnomalousText> anomalousTexts;
+	private ImmutableList<AnomalousText> anomalousTexts;
 
-	private List<Entailment> entailments;
+	private ImmutableList<Entailment> entailments;
 
     private List<Event> events;
 
@@ -107,7 +108,7 @@ public class HltContentContainer extends HltContent {
 	private List<EventMention> eventMentions;
 
     /** The event provenances */
-    private List<EventText> eventTexts;
+    private ImmutableList<EventText> eventTexts;
 
     private ImmutableList<DocumentEvent> documentEvents;
     private ImmutableList<DocumentEventArgument> documentEventArguments;
@@ -115,37 +116,61 @@ public class HltContentContainer extends HltContent {
     private ImmutableList<EventTextSet> eventTextSets;
 
 	/** The events relations. */
-	private List<EventRelations> eventRelations;
+	private ImmutableList<EventRelations> eventRelations;
 	
 	/** The events phrases. */
-	private List<EventPhrase> eventPhrases;
+	private ImmutableList<EventPhrase> eventPhrases;
 
 	/** The sessions. */
-	private List<Session> sessions;
+	private ImmutableList<Session> sessions;
 
     /** The triples */
-    private List<Triple> triples;
+    private ImmutableList<Triple> triples;
 
     /** The paraphrases */
-    private List<Paraphrase> paraphrases;
+    private ImmutableList<Paraphrase> paraphrases;
 
 	/** The time phrases. */
-	private List<TimePhrase> timePhrases;
+	private ImmutableList<TimePhrase> timePhrases;
+
+	/** The temporal resolutions. */
+	private ImmutableList<TemporalResolution> temporalResolutions;
 	
 	/** The document relations */
-	private List<DocumentRelation> documentRelations;
+	private ImmutableList<DocumentRelation> documentRelations;
 	
 	/** The relation mentions */
-	private List<RelationMention> relationMentions;
+	private ImmutableList<RelationMention> relationMentions;
+        
+        /** The document sentiments */
+	private ImmutableList<DocumentSentiment> documentSentiments;
+	
+	/** The relation mentions */
+	private ImmutableList<SentimentMention> sentimentMentions;
+        
+        /** The document beliefs */
+	private ImmutableList<DocumentBelief> documentBeliefs;
+	
+	/** The belief mentions */
+	private ImmutableList<BeliefMention> beliefMentions;
 	
 	/** The conversations. */
-	private List<ConversationElement> conversationElements;
+	private ImmutableList<ConversationElement> conversationElements;
+	
+	/** The authorship theories. */
+	private ImmutableList<AuthorshipTheory> authorshipTheories;
 	
 	/** Document entity to KBEntity map. */
-	private Map<Entity, Map<KBEntity,Float>> documentEntityToKBEntityMap;
+	private Map<Entity, Map<KBID,Float>> documentEntityToKBEntityMap;
 	
 	/** Document relation to KBRelation map. */
-	private Map<DocumentRelation, Map<KBRelation,Float>> documentRelationToKBRelationMap;
+	private Map<DocumentRelation, Map<KBID,Float>> documentRelationToKBRelationMap;
+        
+        /** Document sentiment to KBSentiment map. */
+	private Map<DocumentSentiment, Map<KBID,Float>> documentSentimentToKBSentimentMap;
+        
+        /** Document belief to KBBelief map. */
+	private Map<DocumentBelief, Map<KBID,Float>> documentBeliefToKBBeliefMap;
 	
 	/**
 	 * Instantiates a new hlt content container.
@@ -154,8 +179,10 @@ public class HltContentContainer extends HltContent {
         this.eventMentions = ImmutableList.of();
         this.eventTexts = ImmutableList.of();
         
-        documentEntityToKBEntityMap = new HashMap<Entity, Map<KBEntity,Float>>();
-        documentRelationToKBRelationMap = new HashMap<DocumentRelation, Map<KBRelation,Float>>();
+        documentEntityToKBEntityMap = new LinkedHashMap<Entity, Map<KBID,Float>>();
+        documentRelationToKBRelationMap = new LinkedHashMap<DocumentRelation, Map<KBID,Float>>();
+        documentSentimentToKBSentimentMap = new HashMap<DocumentSentiment, Map<KBID,Float>>();
+        documentBeliefToKBBeliefMap = new HashMap<DocumentBelief, Map<KBID,Float>>();
 	}
 
 	/**
@@ -174,7 +201,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new named entities
 	 */
 	public void setNamedEntities(List<EntityMention> namedEntities) {
-		this.namedEntities = namedEntities;
+		this.namedEntities = ImmutableList.copyOf(namedEntities);
 	}
 
 	/**
@@ -193,7 +220,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new entity mentions
 	 */
 	public void setEntityMentions(List<EntityMention> entityMentions) {
-		this.entityMentions = entityMentions;
+		this.entityMentions = ImmutableList.copyOf(entityMentions);
 	}
 
 	/**
@@ -212,7 +239,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new opinions
 	 */
 	public void setOpinions(List<Opinion> opinions) {
-		this.opinions = opinions;
+		this.opinions = ImmutableList.copyOf(opinions);
 	}
 
 
@@ -232,7 +259,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new prosodic phrases
 	 */
 	public void setProsodicPhrases(List<ProsodicPhrase> prosodicPhrases) {
-		this.prosodicPhrases = prosodicPhrases;
+		this.prosodicPhrases = ImmutableList.copyOf(prosodicPhrases);
 	}
 
 	/**
@@ -251,7 +278,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new sarcasms
 	 */
 	public void setSarcasms(List<Sarcasm> sarcasms) {
-		this.sarcasms = sarcasms;
+		this.sarcasms = ImmutableList.copyOf(sarcasms);
 	}
 	
 	/**
@@ -285,7 +312,7 @@ public class HltContentContainer extends HltContent {
     }
 
 	public void setEventMentions(List<EventMention> eventMentions) {
-		this.eventMentions = new ArrayList(eventMentions);
+		this.eventMentions = new ArrayList<EventMention>(eventMentions);
 	}
 
     public List<EventText> getEventTexts() {
@@ -338,7 +365,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new sentences
 	 */
 	public void setSentences(List<Sentence> sentences) {
-		this.sentences = sentences;
+		this.sentences = ImmutableList.copyOf(sentences);
 	}
 
 	/**
@@ -357,7 +384,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new relations
 	 */
 	public void setRelations(List<Relation> relations) {
-		this.relations = relations;
+		this.relations = ImmutableList.copyOf(relations);
 	}
 	
 	/**
@@ -376,7 +403,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new coreferences
 	 */
 	public void setCoreferences(List<Coreference> coreferences) {
-		this.coreferences = coreferences;
+		this.coreferences = ImmutableList.copyOf(coreferences);
 	}
 
 	/**
@@ -395,7 +422,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new passages
 	 */
 	public void setPassages(List<Passage> passages) {
-		this.passages = passages;
+		this.passages = ImmutableList.copyOf(passages);
 	}
 
 	/**
@@ -415,7 +442,7 @@ public class HltContentContainer extends HltContent {
 	 */
 	public void setJointRelationCoreferences(
 			List<JointRelationCoreference> jointRelationCoreferences) {
-		this.jointRelationCoreferences = jointRelationCoreferences;
+		this.jointRelationCoreferences = ImmutableList.copyOf(jointRelationCoreferences);
 	}
 
 	/**
@@ -434,7 +461,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new part of speechs
 	 */
 	public void setPartOfSpeechs(List<PartOfSpeech> partOfSpeechs) {
-		this.partOfSpeechs = partOfSpeechs;
+		this.partOfSpeechs = ImmutableList.copyOf(partOfSpeechs);
 	}
 
 	/**
@@ -453,7 +480,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new syntactic chunks
 	 */
 	public void setSyntacticChunks(List<SyntacticChunk> syntacticChunks) {
-		this.syntacticChunks = syntacticChunks;
+		this.syntacticChunks = ImmutableList.copyOf(syntacticChunks);
 	}
 
 	/**
@@ -472,7 +499,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new tagged chunks
 	 */
 	public void setTaggedChunks(List<TaggedChunk> taggedChunks) {
-		this.taggedChunks = taggedChunks;
+		this.taggedChunks = ImmutableList.copyOf(taggedChunks);
 	}
 	
 	/**
@@ -491,7 +518,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new dependencies
 	 */
 	public void setDependencies(List<Dependency> dependencies) {
-		this.dependencies = dependencies;
+		this.dependencies = ImmutableList.copyOf(dependencies);
 	}
 
 	/**
@@ -509,7 +536,7 @@ public class HltContentContainer extends HltContent {
 	 * @param committedBeliefs the new committed beliefs
 	 */
 	public void setCommittedBeliefs(List<CommittedBelief> committedBeliefs) {
-		this.committedBeliefs = committedBeliefs;
+		this.committedBeliefs = ImmutableList.copyOf(committedBeliefs);
 	}
 	
 	/**
@@ -527,7 +554,7 @@ public class HltContentContainer extends HltContent {
 	 * @param utterances the utterances
 	 */
 	public void setUtterances(List<Utterance> utterances) {
-		this.utterances = utterances;
+		this.utterances = ImmutableList.copyOf(utterances);
 	}
 
 	/**
@@ -547,7 +574,7 @@ public class HltContentContainer extends HltContent {
 	 */
 
 	public void setInterPausalUnits(List<InterPausalUnit> interPausalUnits) {
-		this.interPausalUnits = interPausalUnits;
+		this.interPausalUnits = ImmutableList.copyOf(interPausalUnits);
 	}
 
 	/**
@@ -563,7 +590,7 @@ public class HltContentContainer extends HltContent {
 	 * @param anomalousTexts The new anomalous texts.
 	 */
 	public void setAnomalousTexts(List<AnomalousText> anomalousTexts) {
-		this.anomalousTexts = anomalousTexts;
+		this.anomalousTexts = ImmutableList.copyOf(anomalousTexts);
 	}
 
 	/**
@@ -579,7 +606,7 @@ public class HltContentContainer extends HltContent {
 	 * @param entailments The new entailments.
 	 */
 	public void setEntailments(List<Entailment> entailments) {
-		this.entailments = entailments;
+		this.entailments = ImmutableList.copyOf(entailments);
 	}
 
 	/**
@@ -597,7 +624,7 @@ public class HltContentContainer extends HltContent {
 	 * @param sessions the new sessions
 	 */
 	public void setSessions(List<Session> sessions) {
-		this.sessions = sessions;
+		this.sessions = ImmutableList.copyOf(sessions);
 	}
 
 
@@ -617,7 +644,7 @@ public class HltContentContainer extends HltContent {
          *            the new entity mentions
          */
         public void setTriples(List<Triple> triples) {
-                this.triples = triples;
+                this.triples = ImmutableList.copyOf(triples);
         }
 
         /**
@@ -636,7 +663,7 @@ public class HltContentContainer extends HltContent {
          *            the new entity mentions
          */
         public void setParaphrases(List<Paraphrase> paraphrases) {
-                this.paraphrases = paraphrases;
+                this.paraphrases = ImmutableList.copyOf(paraphrases);
         } 
 
 	/**
@@ -658,7 +685,7 @@ public class HltContentContainer extends HltContent {
 	 */
     @Deprecated
 	public void setEventRelations(List<EventRelations> eventRelations) {
-		this.eventRelations = eventRelations;
+		this.eventRelations = ImmutableList.copyOf(eventRelations);
 	}
     
     /**
@@ -680,7 +707,7 @@ public class HltContentContainer extends HltContent {
 	 */
     @Deprecated
 	public void setEventPhrase(List<EventPhrase> eventPhrases) {
-		this.eventPhrases = eventPhrases;
+		this.eventPhrases = ImmutableList.copyOf(eventPhrases);
 	}
 
 	/**
@@ -698,7 +725,25 @@ public class HltContentContainer extends HltContent {
 	 * @param timePhrases the new timePhrases
 	 */
 	public void setTimePhrases(List<TimePhrase> timePhrases) {
-		this.timePhrases = timePhrases;
+		this.timePhrases = ImmutableList.copyOf(timePhrases);
+	}
+
+	/**
+	 * Gets the temporal resolutions.
+	 *
+	 * @return the temporal resolutions
+	 */
+	public List<TemporalResolution> getTemporalResolutions() {
+		return temporalResolutions;
+	}
+
+	/**
+	 * Sets the temporalResolutions.
+	 *
+	 * @param temporalResolutions the new temporalResolutions
+	 */
+	public void setTemporalResolutions(List<TemporalResolution> temporalResolutions) {
+		this.temporalResolutions = ImmutableList.copyOf(temporalResolutions);
 	}
 	
 	/**
@@ -738,7 +783,7 @@ public class HltContentContainer extends HltContent {
 	}
 
 	public void setSentenceSimilarities(List<SentenceSimilarity> sentenceSimilarities) {
-		this.sentenceSimilarities = sentenceSimilarities;
+		this.sentenceSimilarities = ImmutableList.copyOf(sentenceSimilarities);
 	}
 	
 	public List<ConversationElement> getConversationElements() {
@@ -746,7 +791,7 @@ public class HltContentContainer extends HltContent {
 	}
 
 	public void setConversationElements(List<ConversationElement> conversationElements) {
-		this.conversationElements = conversationElements;
+		this.conversationElements = ImmutableList.copyOf(conversationElements);
 	}
 	
 	/** get document relations */
@@ -756,7 +801,7 @@ public class HltContentContainer extends HltContent {
 	
 	/** set document relations */
 	public void setDocumentRelations(List<DocumentRelation> documentRelations) {
-		this.documentRelations = documentRelations;
+		this.documentRelations = ImmutableList.copyOf(documentRelations);
 	}
 	
 	/** get relation mentions */
@@ -766,9 +811,59 @@ public class HltContentContainer extends HltContent {
 	
 	/** set relation mentions */
 	public void setRelationMentions(List<RelationMention> relationMentions) {
-		this.relationMentions = relationMentions;
+		this.relationMentions = ImmutableList.copyOf(relationMentions);
 	}
 	
+        
+        /** get document sentiments */
+	public List<DocumentSentiment> getDocumentSentiments() {
+		return documentSentiments;
+	}
+	
+	/** set document sentiments */
+	public void setDocumentSentiments(List<DocumentSentiment> documentSentiments) {
+		this.documentSentiments = ImmutableList.copyOf(documentSentiments);
+	}
+	
+	/** get sentiments mentions */
+	public List<SentimentMention> getSentimentMentions() {
+		return sentimentMentions;
+	}
+	
+	/** set sentiments mentions */
+	public void setSentimentMentions(List<SentimentMention> sentimentMentions) {
+		this.sentimentMentions = ImmutableList.copyOf(sentimentMentions);
+	}
+        
+        /** get document beliefs */
+	public List<DocumentBelief> getDocumentBeliefs() {
+		return documentBeliefs;
+	}
+	
+	/** set document beliefs */
+	public void setDocumentBeliefs(List<DocumentBelief> documentBeliefs) {
+		this.documentBeliefs = ImmutableList.copyOf(documentBeliefs);
+	}
+	
+	/** get beliefs mentions */
+	public List<BeliefMention> getBeliefMentions() {
+		return beliefMentions;
+	}
+	
+	/** set beliefs mentions */
+	public void setBeliefMentions(List<BeliefMention> beliefMentions) {
+		this.beliefMentions = ImmutableList.copyOf(beliefMentions);
+	}
+	
+	/** get authorship theories */
+	public List<AuthorshipTheory> getAuthorshipTheories() {
+		return authorshipTheories;
+	}
+	
+	/** set authorship theories */
+	public void setAuthorshipTheories(List<AuthorshipTheory> authorshipTheories) {
+		this.authorshipTheories = ImmutableList.copyOf(authorshipTheories);
+	}
 	
 	
 	/** getter methods related to KB object maps */
@@ -776,20 +871,20 @@ public class HltContentContainer extends HltContent {
 	/**
 	 * Add a KB Entity mapping to a document entity
 	 */
-	public void addEntityToKBEntityMap(Entity entity, KBEntity kbEntity, float confidence)
+	public void addEntityToKBEntityMap(Entity entity, KBID kbEntity, float confidence)
 	{
 		if(documentEntityToKBEntityMap == null)
 		{
-			documentEntityToKBEntityMap = new HashMap<Entity, Map<KBEntity,Float>>();
+			documentEntityToKBEntityMap = new LinkedHashMap<Entity, Map<KBID,Float>>();
 		}
 		if(documentEntityToKBEntityMap.containsKey(entity))
 		{
-			Map<KBEntity,Float> kbEntities = documentEntityToKBEntityMap.get(entity);
+			Map<KBID,Float> kbEntities = documentEntityToKBEntityMap.get(entity);
 			kbEntities.put(kbEntity,confidence);
 		}
 		else
 		{
-			Map<KBEntity,Float> kbEntities = new HashMap<KBEntity,Float>();
+			Map<KBID,Float> kbEntities = new LinkedHashMap<KBID,Float>();
 			documentEntityToKBEntityMap.put(entity, kbEntities);
 			kbEntities.put(kbEntity, confidence);
 		}
@@ -799,30 +894,74 @@ public class HltContentContainer extends HltContent {
 	/**
 	 * Add KB relation mapping to a document relation.
 	 */
-	public void addRelationToKBRelationMap(DocumentRelation docRelation, KBRelation kbRelation, float confidence)
+	public void addRelationToKBRelationMap(DocumentRelation docRelation, KBID kbRelation, float confidence)
 	{
 		if(documentRelationToKBRelationMap == null)
 		{
-			documentRelationToKBRelationMap = new HashMap<DocumentRelation, Map<KBRelation,Float>>();
+			documentRelationToKBRelationMap = new LinkedHashMap<DocumentRelation, Map<KBID,Float>>();
 		}
 		if(documentRelationToKBRelationMap.containsKey(docRelation))
 		{
-			Map<KBRelation,Float> kbRelations = documentRelationToKBRelationMap.get(docRelation);
+			Map<KBID,Float> kbRelations = documentRelationToKBRelationMap.get(docRelation);
 			kbRelations.put(kbRelation,confidence);
 		}
 		else
 		{
-			Map<KBRelation,Float> kbRelations = new HashMap<KBRelation,Float>();
+			Map<KBID,Float> kbRelations = new LinkedHashMap<KBID,Float>();
 			documentRelationToKBRelationMap.put(docRelation, kbRelations);
 			kbRelations.put(kbRelation,confidence);
 		}
 		
 	}
+        
+        /**
+	 * Add KB sentiment mapping to a document sentiment.
+	 */
+	public void addSentimentToKBSentimentMap(DocumentSentiment docSentiment, KBID kbSentiment, float confidence)
+	{
+		if(documentSentimentToKBSentimentMap == null)
+		{
+			documentSentimentToKBSentimentMap = new HashMap<DocumentSentiment, Map<KBID,Float>>();
+		}
+		if(documentSentimentToKBSentimentMap.containsKey(docSentiment))
+		{
+			Map<KBID,Float> kbSentiments = documentSentimentToKBSentimentMap.get(docSentiment);
+			kbSentiments.put(kbSentiment,confidence);
+		}
+		else
+		{
+			Map<KBID,Float> kbSentiments = new HashMap<KBID,Float>();
+			documentSentimentToKBSentimentMap.put(docSentiment, kbSentiments);
+			kbSentiments.put(kbSentiment,confidence);
+		}
+	}
+        
+        /**
+	 * Add KB belief mapping to a document belief.
+	 */
+	public void addBeliefToKBBeliefMap(DocumentBelief docBelief, KBID kbBelief, float confidence)
+	{
+		if(documentBeliefToKBBeliefMap == null)
+		{
+			documentBeliefToKBBeliefMap = new HashMap<DocumentBelief, Map<KBID,Float>>();
+		}
+		if(documentBeliefToKBBeliefMap.containsKey(docBelief))
+		{
+			Map<KBID,Float> kbBeliefs = documentBeliefToKBBeliefMap.get(docBelief);
+			kbBeliefs.put(kbBelief,confidence);
+		}
+		else
+		{
+			Map<KBID,Float> kbBeliefs = new HashMap<KBID,Float>();
+			documentBeliefToKBBeliefMap.put(docBelief, kbBeliefs);
+			kbBeliefs.put(kbBelief,confidence);
+		}
+	}
 	
 	/**
 	 * Get KB entity map for all document entities
 	 */
-	public Map<Entity, Map<KBEntity,Float>> getKBEntityMapForDocEntities()
+	public Map<Entity, Map<KBID,Float>> getKBEntityMapForDocEntities()
 	{
 		return this.documentEntityToKBEntityMap;
 	}
@@ -830,15 +969,31 @@ public class HltContentContainer extends HltContent {
 	/**
 	 * Get KB relation map for all document relations
 	 */
-	public Map<DocumentRelation, Map<KBRelation,Float>> getKBRelationMapForDocRelations()
+	public Map<DocumentRelation, Map<KBID,Float>> getKBRelationMapForDocRelations()
 	{
 		return this.documentRelationToKBRelationMap;
+	}
+        
+        /**
+	 * Get KB sentiment map for all document sentiments
+	 */
+	public Map<DocumentSentiment, Map<KBID,Float>> getKBSentimentMapForDocSentiments()
+	{
+		return this.documentSentimentToKBSentimentMap;
+	}
+        
+        /**
+	 * Get KB belief map for all document beliefs
+	 */
+	public Map<DocumentBelief, Map<KBID,Float>> getKBBeliefMapForDocBeliefs()
+	{
+		return this.documentBeliefToKBBeliefMap;
 	}
 	
 	/**
 	 * Get KB entity map for specific document entity
 	 */
-	public Map<KBEntity,Float> getKBEntityMapForEntity(Entity e)
+	public Map<KBID,Float> getKBEntityMapForEntity(Entity e)
 	{
 	    return this.documentEntityToKBEntityMap.get(e);
 	}
@@ -846,9 +1001,25 @@ public class HltContentContainer extends HltContent {
 	/**
 	 * Get KB relation map for specific document relation
 	 */
-	public Map<KBRelation,Float> getKBRelationMapForRelation(DocumentRelation r)
+	public Map<KBID, Float> getKBRelationMapForRelation(DocumentRelation r)
 	{
 	    return this.documentRelationToKBRelationMap.get(r);
 	}
-
+        
+        /**
+	 * Get KB sentiment map for specific document sentiment
+	 */
+	public Map<KBID, Float> getKBSentimentMapForSentiment(DocumentSentiment s)
+	{
+	    return this.documentSentimentToKBSentimentMap.get(s);
+	}
+        
+        /**
+	 * Get KB belief map for specific document belief
+	 */
+	public Map<KBID, Float> getKBBeliefMapForBelief(DocumentBelief b)
+	{
+	    return this.documentBeliefToKBBeliefMap.get(b);
+	}
 }
+

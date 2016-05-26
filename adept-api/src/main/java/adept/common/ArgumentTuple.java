@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,9 +12,12 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
 
 import java.util.ArrayList;
@@ -181,14 +181,14 @@ public class ArgumentTuple extends HltContent {
 	 * 
 	 * @return the attribute type
 	 */
-	public List<OntClass> getAttributeOntTypes() {
-	       List<OntClass> types = new ArrayList<OntClass>();
+	public List<IType> getAttributeOntTypes() {
+	       List<IType> types = new ArrayList<IType>();
 
                 if(attributes != null)
                   {
                      for(IType attribute : attributes)
                       {
-                         types.add(attribute.getOntClass());
+                         types.add(attribute);
                       }
                      return types;
                   }
@@ -206,12 +206,12 @@ public class ArgumentTuple extends HltContent {
 	}
 	
 	/**
-	 * Gets the ont type.
+	 * Gets the type URI.
 	 * 
-	 * @return the type
+	 * @return the type uri
 	 */
-	public OntClass getOntType() {
-		return tupleType.getOntClass();
+	public String getTypeURI() {
+		return tupleType.getURI();
 	}
 
 	/**

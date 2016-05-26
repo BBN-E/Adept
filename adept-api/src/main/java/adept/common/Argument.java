@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,16 +12,22 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
+/*
+ * 
+ */
 package adept.common;
-
-import com.hp.hpl.jena.ontology.OntClass;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.hp.hpl.jena.ontology.OntClass;
 
 
 /**
@@ -49,7 +52,7 @@ public class Argument extends HltContent {
 	/** Map containing the KB level entities or relations
 	 * that an instance of this class resolves to, and associated 
 	 * confidences. */
-	private Map<KBEntity, Float> kbArgumentDistribution;
+	private Map<KBID, Float> kbArgumentDistribution;
 
 	/**
 	 * Instantiates a new argument.
@@ -65,7 +68,7 @@ public class Argument extends HltContent {
 		this.argumentType = argumentType;
 		this.confidence = confidence;
 		
-		this.kbArgumentDistribution = new HashMap<KBEntity, Float>();
+		this.kbArgumentDistribution = new HashMap<KBID, Float>();
 	}
 	
 	public Argument(IType argumentType, int distributionSize) {
@@ -86,7 +89,7 @@ public class Argument extends HltContent {
 		this.argumentDistribution = arg.argumentDistribution;
 		this.confidence = arg.confidence;
 		
-		this.kbArgumentDistribution = new HashMap<KBEntity, Float>();
+		this.kbArgumentDistribution = new HashMap<KBID, Float>();
 	}
 
     
@@ -110,12 +113,12 @@ public class Argument extends HltContent {
 	}
 	
 	/**
-	 * Gets the argument ont type.
+	 * Gets the argument type uri.
 	 * 
-	 * @return the argument type
+	 * @return the argument type uri
 	 */
-	public OntClass getArgumentOntType() {
-		return argumentType.getOntClass();
+	public String getArgumentTypeURI() {
+		return argumentType.getURI();
 	}
 
     public IType getArgumentIType() {
@@ -161,13 +164,13 @@ public class Argument extends HltContent {
 	 * 
 	 * @return the attribute type
 	 */
-	public List<OntClass> getAttributeOntTypes() {
-	    List<OntClass> types = new ArrayList<OntClass>();
+	public List<IType> getAttributeOntTypes() {
+	    List<IType> types = new ArrayList<IType>();
         if(attributes != null)
           {
              for(IType attribute : attributes)
               {
-                 types.add(attribute.getOntClass());
+                 types.add(attribute);
               }
              return types;
           }
@@ -237,7 +240,7 @@ public class Argument extends HltContent {
 	 * 
 	 * @return the kb argument distribution
 	 */
-	public Map<KBEntity, Float> getKBArgumentDistribution() {
+	public Map<KBID, Float> getKBArgumentDistribution() {
 		return kbArgumentDistribution;
 	}
 	
@@ -247,7 +250,7 @@ public class Argument extends HltContent {
 	 * @param kbArgumentDistribution
 	 *            the kb argument distribution
 	 */
-	public void setKBArgumentDistribution(Map<KBEntity, Float> kbArgumentDistribution) {
+	public void setKBArgumentDistribution(Map<KBID, Float> kbArgumentDistribution) {
         checkArgument(kbArgumentDistribution!=null);
 		this.kbArgumentDistribution = kbArgumentDistribution;
 	}
@@ -259,7 +262,7 @@ public class Argument extends HltContent {
 	 * @param kbArgument the kb argument
 	 * @param confidence the confidence
 	 */
-	public void addKBArgumentConfidencePair(KBEntity kbArgument, float confidence) {
+	public void addKBArgumentConfidencePair(KBID kbArgument, float confidence) {
                 checkArgument(kbArgument != null);		
 		this.kbArgumentDistribution.put(kbArgument, new Float(confidence));
 	}
@@ -271,13 +274,13 @@ public class Argument extends HltContent {
 	 *
 	 * @return the best kb entity
 	 */
-	public KBEntity getBestKBArgument() {
-		KBEntity kba = null;
+	public KBID getBestKBArgument() {
+		KBID kba = null;
 		if (kbArgumentDistribution.size() == 1) {
 			kba = kbArgumentDistribution.entrySet().iterator().next().getKey();
 		} else {
 			float score = -1000f;
-			for(Map.Entry<KBEntity, Float> entrySet : kbArgumentDistribution.entrySet()) {
+			for(Map.Entry<KBID, Float> entrySet : kbArgumentDistribution.entrySet()) {
 				if (entrySet.getValue() > score) {
 					kba = entrySet.getKey();
 					score = entrySet.getValue();

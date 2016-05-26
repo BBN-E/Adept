@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,7 +12,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.common;
@@ -169,8 +166,8 @@ public final class DocumentEvent extends HltContent implements HasScoredUnaryAtt
         for (final DocumentEventArgument arg : arguments) {
             checkArgument(eventType.equals(arg.getEventType()),
                     "A document event's arguments' event types must match its own, "
-                    +"but got argument of type %s for event of type %s",
-                    arg.getEventType(), eventType);
+                    +"but got argument of type %s [%s] for event of type %s [%s]",
+                    arg.getEventType(), arg.getEventType().getType(), eventType, eventType.getType());
         }
 
         this.attributes = ImmutableMap.copyOf(attributes);
@@ -369,7 +366,7 @@ public final class DocumentEvent extends HltContent implements HasScoredUnaryAtt
     	
         private Provenance(EventText eventText, EventMention eventMention) {
             this.eventText = eventText;
-            this.eventMention = Optional.of(eventMention);
+            this.eventMention = Optional.fromNullable(eventMention);
         }
 
         /**

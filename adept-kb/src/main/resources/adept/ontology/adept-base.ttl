@@ -16,6 +16,12 @@
 #################################################################
 
 
+###  http://www.w3.org/2001/XMLSchema#date
+
+xsd:date rdf:type rdfs:Datatype .
+
+
+
 ###  http://www.w3.org/2001/XMLSchema#duration
 
 xsd:duration rdf:type rdfs:Datatype .
@@ -41,11 +47,43 @@ xsd:duration rdf:type rdfs:Datatype .
 
 
 
+###  http://adept-kb.bbn.com/adept-base#beginDate
+
+:beginDate rdf:type owl:ObjectProperty ;
+           
+           rdfs:subPropertyOf :date .
+
+
+
 ###  http://adept-kb.bbn.com/adept-base#canonicalMention
 
 :canonicalMention rdf:type owl:ObjectProperty ;
                   
                   rdfs:domain :PredicateArgument .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#date
+
+:date rdf:type owl:ObjectProperty .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#endDate
+
+:endDate rdf:type owl:ObjectProperty ;
+         
+         rdfs:subPropertyOf :date .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#externalID
+
+:externalID rdf:type owl:ObjectProperty ;
+            
+            rdfs:range :ExternalID ;
+            
+            rdfs:domain :PredicateArgument .
 
 
 
@@ -59,6 +97,12 @@ xsd:duration rdf:type rdfs:Datatype .
 
 
 
+###  http://adept-kb.bbn.com/adept-base#validTemporalSpan
+
+:validTemporalSpan rdf:type owl:ObjectProperty .
+
+
+
 
 
 #################################################################
@@ -66,14 +110,6 @@ xsd:duration rdf:type rdfs:Datatype .
 #    Data properties
 #
 #################################################################
-
-
-###  http://adept-kb.bbn.com/adept-base#coherenceConfidence
-
-:coherenceConfidence rdf:type owl:DatatypeProperty ;
-                     
-                     rdfs:subPropertyOf :confidence .
-
 
 
 ###  http://adept-kb.bbn.com/adept-base#canonicalString
@@ -86,11 +122,39 @@ xsd:duration rdf:type rdfs:Datatype .
 
 
 
+###  http://adept-kb.bbn.com/adept-base#coherenceConfidence
+
+:coherenceConfidence rdf:type owl:DatatypeProperty ;
+                     
+                     rdfs:subPropertyOf :confidence .
+
+
+
 ###  http://adept-kb.bbn.com/adept-base#confidence
 
 :confidence rdf:type owl:DatatypeProperty ;
             
             rdfs:range xsd:float .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#externalKbElementId
+
+:externalKbElementId rdf:type owl:DatatypeProperty ;
+                     
+                     rdfs:domain :ExternalID ;
+                     
+                     rdfs:range xsd:string .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#externalKbName
+
+:externalKbName rdf:type owl:DatatypeProperty ;
+                
+                rdfs:domain :ExternalID ;
+                
+                rdfs:range xsd:string .
 
 
 
@@ -104,6 +168,16 @@ xsd:duration rdf:type rdfs:Datatype .
 
 
 
+###  http://adept-kb.bbn.com/adept-base#xsdDate
+
+:xsdDate rdf:type owl:DatatypeProperty ;
+         
+         rdfs:domain :Date ;
+         
+         rdfs:range xsd:date .
+
+
+
 ###  http://adept-kb.bbn.com/adept-base#xsdDuration
 
 :xsdDuration rdf:type owl:DatatypeProperty ;
@@ -113,13 +187,7 @@ xsd:duration rdf:type rdfs:Datatype .
              rdfs:range xsd:duration .
 
 
-###  http://adept-kb.bbn.com/adept-base#xsdDate
 
-:xsdDate rdf:type owl:DatatypeProperty ;
-             
-             rdfs:domain :Date ;
-             
-             rdfs:range xsd:date .
 
 
 #################################################################
@@ -129,19 +197,23 @@ xsd:duration rdf:type rdfs:Datatype .
 #################################################################
 
 
-###  http://adept-kb.bbn.com/adept-base#Number
-
-:Number rdf:type owl:Class ;
-        
-        rdfs:subClassOf :PredicateArgument .
-
-
-
 ###  http://adept-kb.bbn.com/adept-base#Date
 
 :Date rdf:type owl:Class ;
       
-      rdfs:subClassOf :PredicateArgument .
+      rdfs:subClassOf :Thing ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :xsdDate ;
+                        owl:allValuesFrom xsd:date
+                      ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#Entity
+
+:Entity rdf:type owl:Class ;
+        
+        rdfs:subClassOf :Thing .
 
 
 
@@ -150,6 +222,28 @@ xsd:duration rdf:type rdfs:Datatype .
 :Event rdf:type owl:Class ;
        
        rdfs:subClassOf :Relation .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#ExternalID
+
+:ExternalID rdf:type owl:Class .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#GenericThing
+
+:GenericThing rdf:type owl:Class ;
+              
+              rdfs:subClassOf :Thing .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#Number
+
+:Number rdf:type owl:Class ;
+        
+        rdfs:subClassOf :Thing .
 
 
 
@@ -165,10 +259,40 @@ xsd:duration rdf:type rdfs:Datatype .
           
           rdfs:subClassOf :PredicateArgument ,
                           [ rdf:type owl:Restriction ;
+                            owl:onProperty :validTemporalSpan ;
+                            owl:allValuesFrom :TemporalSpan
+                          ] ,
+                          [ rdf:type owl:Restriction ;
                             owl:onProperty :argument ;
                             owl:onClass :PredicateArgument ;
                             owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
                           ] .
+
+
+
+###  http://adept-kb.bbn.com/adept-base#TemporalSpan
+
+:TemporalSpan rdf:type owl:Class ;
+              
+              rdfs:subClassOf :Relation ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :endDate ;
+                                owl:onClass :Date ;
+                                owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :beginDate ;
+                                owl:onClass :Date ;
+                                owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :beginDate ;
+                                owl:allValuesFrom :Date
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :endDate ;
+                                owl:allValuesFrom :Date
+                              ] .
 
 
 

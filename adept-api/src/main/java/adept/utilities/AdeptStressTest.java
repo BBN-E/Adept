@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,20 +12,10 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.utilities;
-/*******************************************************************************
- * Raytheon BBN Technologies Corp., March 2013
- * 
- * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
- * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- * 
- * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
- ******************************************************************************/
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -99,13 +86,13 @@ public abstract class AdeptStressTest
 	
 	// TODO - convert to google guava Stopwatch
 	/** The activate. */
-	private static Stopwatch activate = new Stopwatch(); //Stopwatch.createUnstarted();
+	private static Stopwatch activate = Stopwatch.createUnstarted();
 	
 	/** The process. */
-	private static Stopwatch process = new Stopwatch(); //Stopwatch.createUnstarted();
+	private static Stopwatch process = Stopwatch.createUnstarted();
 	
 	/** total process time */
-	private static Stopwatch totalprocess = new Stopwatch();
+	private static Stopwatch totalprocess = Stopwatch.createUnstarted();
 	
 	/** The process_last recorded. */
 	//private static double process_lastRecorded;
@@ -202,7 +189,7 @@ public abstract class AdeptStressTest
     private static OutFileWriter stressSummaryWriter;
 
     /** The type of tokenizer to be used. */
-    protected TokenizerType tokenizerType = TokenizerType.STANFORD_CORENLP;
+    protected TokenizerType tokenizerType = TokenizerType.APACHE_OPENNLP;
 
 
     /**
@@ -396,8 +383,8 @@ public abstract class AdeptStressTest
                     process.stop();
                 }
                 e.printStackTrace();
+                throw e; // re-throw to be caught by Run()
             }
-            return null;
         }
     }
 
@@ -413,13 +400,13 @@ public abstract class AdeptStressTest
         HltContentContainer retHltContentContainer = null;
         try {
             retHltContentContainer = future.get(600, TimeUnit.SECONDS);
-        } catch (TimeoutException e) {
+        } finally {
             future.cancel(true);
             if (process.isRunning()) {
                 process.stop();
             }
+            executor.shutdown();
         }
-	executor.shutdown();
         return retHltContentContainer;
     }
     
@@ -429,7 +416,7 @@ public abstract class AdeptStressTest
 
             String line = String.format(summaryLineFormat,
             		configFilename,
-            		activate.elapsedTime(TimeUnit.MILLISECONDS) / 1000.0,
+            		activate.elapsed(TimeUnit.MILLISECONDS) / 1000.0,
             		totalFiles,
             		failureCount,
             		totalprocess.toString().replace(" s", ""),
@@ -487,7 +474,7 @@ public abstract class AdeptStressTest
             // write in the test_summary file
             String line = String.format(summaryLineFormat,
             		configFilename,
-            		activate.elapsedTime(TimeUnit.MILLISECONDS) / 1000.0,
+            		activate.elapsed(TimeUnit.MILLISECONDS) / 1000.0,
             		totalFiles,
             		failureCount,
             		totalprocess.toString().replace(" s", ""),
@@ -515,7 +502,7 @@ public abstract class AdeptStressTest
             testSummaryWriter.close();
             
             line = String.format(summaryHtmlFormat,
-            		activate.elapsedTime(TimeUnit.MILLISECONDS) / 1000.0,
+            		activate.elapsed(TimeUnit.MILLISECONDS) / 1000.0,
             		totalFiles,
             		failureCount,
             		totalprocess.toString().replace(" s", ""),
@@ -586,7 +573,7 @@ public abstract class AdeptStressTest
         heapUsages.add(heapUsage);
 
             logger.info("now writing profiling statistics to file");
-            double elapsed = process.elapsedTime(TimeUnit.MILLISECONDS) / 1000.0;
+            double elapsed = process.elapsed(TimeUnit.MILLISECONDS) / 1000.0;
             processTimes.add(elapsed);
             String line = String.format(lineFormat,
                     file.getName(),
@@ -615,7 +602,7 @@ public abstract class AdeptStressTest
         String lineFormat = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t\n";
         String htmlTopRowFormat = "<tr><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th></tr>\n";
 
-            //String line = "Time taken in activate(): " + activate.elapsedTime(TimeUnit.MILLISECONDS)/1000.0 + "\n\n";
+            //String line = "Time taken in activate(): " + activate.elapsed(TimeUnit.MILLISECONDS)/1000.0 + "\n\n";
             //document_stats_writer.write(line);
             String line = String.format(lineFormat,
                     "Doc name",
@@ -700,7 +687,7 @@ public abstract class AdeptStressTest
 
                 writeDocStats(file, docStatistics);
 
-                //process_lastRecorded = process.elapsedTime(TimeUnit.MILLISECONDS)/1000.0 ;
+                //process_lastRecorded = process.elapsed(TimeUnit.MILLISECONDS)/1000.0 ;
 
                 if (totalFiles % summarySize == 0) {
                 	writeToSummary(failureCount);
@@ -709,7 +696,7 @@ public abstract class AdeptStressTest
 
             finishInputSummary(failureCount, inputType, exceptions);
             
-            System.out.println("Average time taken in process: " + (process.elapsedTime(TimeUnit.MILLISECONDS) / 1000.0 / (fileCount * NUM_OF_LOOPS)) / 1000.0);
+            System.out.println("Average time taken in process: " + (process.elapsed(TimeUnit.MILLISECONDS) / 1000.0 / (fileCount * NUM_OF_LOOPS)) / 1000.0);
             System.out.println("Number of failures: " + failureCount);
 
             makeGraphs(inputType, outputDir);

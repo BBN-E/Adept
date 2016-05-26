@@ -1,9 +1,6 @@
 /*
-* ------
-* Adept
-* -----
-* Copyright (C) 2014 Raytheon BBN Technologies Corp.
-* -----
+* Copyright (C) 2016 Raytheon BBN Technologies Corp.
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,34 +12,20 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* -------
+*
 */
 
 package adept.utilities;
-/*******************************************************************************
- * Raytheon BBN Technologies Corp., March 2013
- * 
- * THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS
- * OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- * 
- * Copyright 2013 Raytheon BBN Technologies Corp.  All Rights Reserved.
- ******************************************************************************/
-
+import java.io.IOException;
 import java.util.Properties;
 import java.util.List;
 import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import edu.stanford.nlp.ling.CoreAnnotations.CharacterOffsetBeginAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.CharacterOffsetEndAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import edu.stanford.nlp.util.CoreMap;
+import opennlp.tools.tokenize.SimpleTokenizer;
+import opennlp.tools.tokenize.Tokenizer;
+import opennlp.tools.util.Span;
 
 import adept.common.ChannelName;
 import adept.common.CharOffset;
@@ -93,115 +76,6 @@ public class DocumentMaker implements ITokenizer {
 			instance = new DocumentMaker();
 		return instance;
 	}
-
-/*    public Document createCleanedXMLDocument(String docId, 
-			Corpus corpus,
-			String docType, 
-			String uri, 
-			String language, 
-			String filename, 
-			HltContentContainer hltContentContainer, boolean tokenize) {
-		Document document = null;		
-        List<Tag> tags = null;
-		System.out.println("Creating ADEPT document from file: " + filename);
-
-        String rawText = Reader.getInstance().readFileIntoString(filename);
-
-		if(rawText != null)
-			System.out.println("File read successfully");
-
-        List<PassageAttributes> passageAttributesList = new ArrayList<PassageAttributes>();		
-        Pair<List<Tag>,Document> docTagPair = LDCCorpusReader.getInstance().readCorpus(rawText,
-													passageAttributesList,
-													corpus,
-													uri,
-													language);
-        document = docTagPair.getR();
-        tags = docTagPair.getL();
-
-        Set<String> passageTags = new HashSet<String>(Arrays.asList(new String[] {"p", "post"}));
-        Set<String> headlineTags = new HashSet<String>(Arrays.asList(new String[] {"headline"}));
-
-        //tokenize the document
-        TokenStream tokenStream = StanfordTokenizer.getInstance().tokenize(document.getValue(), document);		     
-        //map between charOffsets begins and TokenOffset begins 
-        Map<Integer, Integer> charOffsetToTokenIndexMap = new HashMap<Integer, Integer>();
-        //from beginning of document till beginning of first token
-        for(int offset = 0; offset < tokenStream.get(0).getCharOffset().getBegin(); offset++)
-        {
-            charOffsetToTokenIndexMap.put(offset,0);
-        }
-        //from beginning of first token to beginning of last token...
-        for(int x = 0; x < tokenStream.size()-1; x++)
-        {
-            Token currToken = tokenStream.get(x);
-            Token nextToken = tokenStream.get(x+1);
-
-            for(int offset = currToken.getCharOffset().getBegin(); offset < nextToken.getCharOffset().getBegin(); offset++)
-            {
-                if(offset < 20)
-                    System.out.println(offset + ":" + x);
-                charOffsetToTokenIndexMap.put(offset,x);
-            }
-        }
-        //from beginning of last token until end of document
-        for(int offset = tokenStream.get(tokenStream.size()-1).getCharOffset().getBegin(); offset <  document.getValue().length(); offset++)
-        {
-            charOffsetToTokenIndexMap.put(offset,tokenStream.size()-1);
-        }
-
-
-        long seqId = 0;
-        long sarcasmSeqId = 0;
-        List<Passage> passages = new ArrayList<Passage>();								            
-        List<Sarcasm> sarcasms = new ArrayList<Sarcasm>();								            
-        String headline = "";
-        for(Tag tag : tags)
-        {
-            CharOffset tagOffsets = tag.getCharOffset();
-            //create Passages
-            if(passageTags.contains(tag.getTagName().toLowerCase()))
-            {
-                long passageId = seqId++;
-                System.out.println(tagOffsets.getBegin());
-                int start = charOffsetToTokenIndexMap.get(tagOffsets.getBegin());
-                int end = charOffsetToTokenIndexMap.get(tagOffsets.getEnd());
-                Passage p = new Passage(passageId, new TokenOffset(start,end), tokenStream);
-                passages.add(p);
-
-                if(tag.getAttributes().keySet().contains("pid"))
-                    passageId = Long.valueOf(tag.getAttributes().get("pid").getValue());
-
-                //get the sarcasm while we're here
-                if(tag.getAttributes().keySet().contains("sarcasm"))
-                {
-                    Judgment judgment = Judgment.NONE;
-                    String sarcasmValue = tag.getAttributes().get("sarcasm").getValue();
-                    if (sarcasmValue.toLowerCase().equals("yes")) {
-                        judgment = Judgment.POSITIVE;
-                    } else if (sarcasmValue.toLowerCase().equals("no")) {
-                        judgment = Judgment.NEGATIVE;
-                    }
-                    Sarcasm sarcasm = new Sarcasm(sarcasmSeqId++, p.getTokenOffset(), tokenStream, judgment);
-                    sarcasms.add(sarcasm);
-                }
-            }
-            //get the headline
-            else if(headlineTags.contains(tag.getTagName().toLowerCase()))
-            {
-                headline = document.getValue().substring(tagOffsets.getBegin(), tagOffsets.getEnd()).trim();
-            }
-        }
-
-        document.setHeadline(headline);
-        List<TokenStream> tokenStreamList = new ArrayList<TokenStream>();
-        tokenStreamList.add(tokenStream);
-        document.setTokenStreamList(tokenStreamList);
-        hltContentContainer.setPassages(passages);
-        hltContentContainer.setSarcasms(sarcasms);
-
-        return document;
-    }*/
 	
 	/**
 	 * Creates the default document. The argument filename *must* be non-null.
@@ -234,7 +108,7 @@ public class DocumentMaker implements ITokenizer {
                 language,
                 filename,
                 hltContentContainer,
-                TokenizerType.STANFORD_CORENLP);
+                TokenizerType.APACHE_OPENNLP);
     }
 
     /**
@@ -270,18 +144,20 @@ public class DocumentMaker implements ITokenizer {
 			System.out.println("DOM object obtained successfully");
 		
 		// XML and SGML documents
-		if(w3cDoc != null && (w3cDoc.getElementsByTagName("DOC").item(0) != null || w3cDoc.getElementsByTagName("doc").item(0) != null)) {
+		if(w3cDoc != null
+				&& (w3cDoc.getElementsByTagName("DOC").item(0) != null || w3cDoc.getElementsByTagName("doc").item(0) != null)
+//				&& (w3cDoc.getElementsByTagName("TEXT").item(0) != null || w3cDoc.getElementsByTagName("text").item(0) != null)
+				) {
 			System.out.println("Loading input document as XML-formatted SGM file");
-			List<PassageAttributes> passageAttributesList = new ArrayList<PassageAttributes>();		
-			
+			List<PassageAttributes> passageAttributesList = new ArrayList<PassageAttributes>();
+
 			document = LDCCorpusReader.getInstance().readCorpus(w3cDoc,
 													passageAttributesList,
 													corpus,
 													uri,
 													language);
-			
+
 			if(document != null && tokenize) {				
-				//TokenizerType tokenizerType = TokenizerType.STANFORD_CORENLP;
 				TranscriptType transcriptType = TranscriptType.SOURCE;
 				ChannelName channelName = ChannelName.NONE;
 				ContentType contentType = ContentType.TEXT;
@@ -289,7 +165,7 @@ public class DocumentMaker implements ITokenizer {
 						contentType, document != null ? document : null);
 //				tokenStream.setDocument(document);								
 				List<Passage> passages = new ArrayList<Passage>();								
-				System.out.println("Number of passages: " + passageAttributesList.size());				
+				System.out.println("Number of passages: " + passageAttributesList.size());
 				int docCharStart = 0;
 				int docTokenIndex = 0;
 				long seqId = 0;
@@ -299,13 +175,12 @@ public class DocumentMaker implements ITokenizer {
 					 //System.out.print("Adding Passage ID: " + seqId);
                     String passageValue = passage.getValue();
 					TokenStream passageLevelTokenStream = tokenize(passageValue, document, tokenizerType);
-                    //TokenStream passageLevelTokenStream = StanfordTokenizer.getInstance().tokenize(passage.getValue(), null);
 					 int tokenId = docTokenIndex; 
 					 int pCharEnd = 0;
 		        	 for (Token token : passageLevelTokenStream) {		 		        		 
 		        		 int pasCharBegin = token.getCharOffset().getBegin();
 		        		 int pasCharEnd = token.getCharOffset().getEnd();
-                         // Stanford tokenizer by default sets end to one past the token end.  Make UIUC do same.
+
                          if ( tokenizerType == TokenizerType.UIUC && pasCharEnd + 1 < passageValue.length()) {
                              ++ pasCharEnd;
                          }
@@ -325,6 +200,8 @@ public class DocumentMaker implements ITokenizer {
 		        	 long passageId = seqId++;
 		        	 passageId = passage.getPassageId();
 		        	 Passage p = new Passage(passageId, new TokenOffset(docTokenIndex, tokenId-1), tokenStream);
+					 p.setSpeaker(passage.getSpeaker());
+					 p.setContentType("Post");
 		             passages.add(p);
 		             //System.out.println("Passage " + seqId + "added successfully! " + passageString + " " + startIndex + " " + (startIndex+passageLevelTokenStream.size()-1));
 		             docTokenIndex = tokenId;
@@ -377,7 +254,6 @@ public class DocumentMaker implements ITokenizer {
 			document.setValue(text);
 			
 			if(text != null && textLines.size() != 0 && tokenize) {				
-				//TokenizerType tokenizerType = TokenizerType.STANFORD_CORENLP;
 				TranscriptType transcriptType = TranscriptType.SOURCE;
 				ChannelName channelName = ChannelName.NONE;
 				ContentType contentType = ContentType.TEXT;
@@ -392,7 +268,7 @@ public class DocumentMaker implements ITokenizer {
 				for(String passage : textLines) {
 					 //System.out.print("Adding Passage ID: " + seqId);					 
                     TokenStream passageLevelTokenStream = tokenize(passage, document, tokenizerType);
-					//TokenStream passageLevelTokenStream = StanfordTokenizer.getInstance().tokenize(passage, null);
+
 					 int tokenId = docTokenIndex; 
 					 int pCharEnd = 0;
 		        	 for (Token token : passageLevelTokenStream) {		 		        		 
@@ -456,17 +332,19 @@ public class DocumentMaker implements ITokenizer {
 	{
 		Document document = null;
 		String data = null;
+
 		System.out.println(filename);
 	
 		List<String> utterances = new ArrayList<String>();
 		List<String> speakers = new ArrayList<String>();
 		String title = null;
-		String docText = Reader.getInstance().readConversationFile(filename, utterances, speakers, title);
+		String docText = Reader.getInstance().readFileIntoString(filename);
 		document = new Document(docId, corpus, "conversation", uri, language);
 		document.setValue(docText);
 		document.setHeadline(title);
 		
-		TokenStream tokenStream = StanfordTokenizer.getInstance().tokenize(document.getValue(), document);
+		TokenStream tokenStream = OpenNLPTokenizer.getInstance().tokenize(document.getValue(), document);
+
 		document.addTokenStream(tokenStream);
 		// DEBUG
 		System.out.printf("Tokenized with %d tokens in document URI=%s ID=%s.\n", tokenStream.size(), document.getUri(), document.getDocId());
@@ -480,7 +358,7 @@ public class DocumentMaker implements ITokenizer {
          {
 			 String utt = utterances.get(i);
 			 System.out.println(utt);
-        	 utteranceLevelTokenStream = StanfordTokenizer.getInstance().tokenize(utt, null);
+        	 utteranceLevelTokenStream = OpenNLPTokenizer.getInstance().tokenize(utt, null);
         	 utteranceObjects.add(new Utterance(new TokenOffset(startIndex,startIndex+utteranceLevelTokenStream.size()-1), tokenStream, seqId++, speakers.get(i), utt));
              //System.out.println("Utterance added successfully! " + utt + " " + startIndex + " " + (startIndex+utteranceLevelTokenStream.size()-1));
              startIndex += utteranceLevelTokenStream.size();
@@ -488,53 +366,16 @@ public class DocumentMaker implements ITokenizer {
 		if(hltContentContainer != null) hltContentContainer.setUtterances(utteranceObjects);
 		return document;
 	}
-
 	
-	
-	// document can be null in the argument
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see adept.test.ITokenizer#tokenize(java.lang.String,
-	 * adept.common.Document)
-	 */
-	
-	/*public TokenStream tokenize(String text, Document document) {
-		TokenStream tokenStream = new TokenStream(TokenizerType.STANFORD_CORENLP, null,
-				document != null ? document.getLanguage() : null, null,
-				ContentType.TEXT, document != null ? document.getValue() : null);
-		tokenStream.setDocument(document);
-
-		int currOffset = 0, seqId = 0;
-		String[] temp = text.split(" ");
-		for (String token : temp) {
-			Token textToken = new Token(seqId++, new CharOffset(currOffset,
-					currOffset + token.length() - 1), token);
-			tokenStream.add(textToken);
-			
-			// +1 to take space offset into account
-			currOffset += (token.length() + 1);
-		}
-
-		return tokenStream;
-	}
-	*/
-	
-	// Stanford Core NLP tokenizer
+	// Apache Open NLP tokenizer
 	@Override
     public TokenStream tokenize(String text, Document document) {
-        return tokenize(text, document, TokenizerType.STANFORD_CORENLP);
+        return tokenize(text, document, TokenizerType.APACHE_OPENNLP);
     }
 
             public TokenStream tokenize(String text, Document document, TokenizerType tokenizerType )	{
-		// System.out.println("in tokenize() in DocMaker");
-		Properties props = new Properties();
-	    props.put("annotators", "tokenize,ssplit,pos,lemma");
-		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-		Annotation annotation = new Annotation(text);
-		pipeline.annotate(annotation);
-		
-		//TokenizerType tokenizerType = TokenizerType.STANFORD_CORENLP;
+
+		tokenizerType = TokenizerType.APACHE_OPENNLP;
 		TranscriptType transcriptType = TranscriptType.SOURCE;
 		ChannelName channelName = ChannelName.NONE;
 		ContentType contentType = ContentType.TEXT;
@@ -542,18 +383,18 @@ public class DocumentMaker implements ITokenizer {
 				contentType, document != null ? document : null);
 //		tokenStream.setDocument(document);
 
+		Tokenizer tokenizer = SimpleTokenizer.INSTANCE;
+
+		Span tokenSpans[] = tokenizer.tokenizePos(text);
+
 		long tokenSequenceId = 0;
-		for (CoreMap tokenAnn : annotation.get(TokensAnnotation.class)) {
 
-			// create the token annotation
-			int charBegin = tokenAnn.get(CharacterOffsetBeginAnnotation.class);
-			int charEnd = tokenAnn.get(CharacterOffsetEndAnnotation.class);
-
-			String lemma = tokenAnn.get(LemmaAnnotation.class);
-			String word = tokenAnn.get(TextAnnotation.class);
+		for (Span span: tokenSpans) {
+			int charBegin = span.getStart();
+			int charEnd = span.getEnd();
+			String word = text.substring(charBegin, charEnd);
 			Token token = new Token(tokenSequenceId++, new CharOffset(charBegin, charEnd), word);
 			token.setTokenType(TokenType.LEXEME);
-			token.setLemma(lemma);
 			tokenStream.add(token);
 		}
 
@@ -576,3 +417,4 @@ public class DocumentMaker implements ITokenizer {
 		System.out.println(doc.getValue());
 	}*/
 }
+
