@@ -1,27 +1,28 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
-/*
- * 
- */
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 
 import com.hp.hpl.jena.ontology.OntClass;
+import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -29,8 +30,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * The Class Type.
  */
-public class Type implements IType {
+public class Type implements IType, Serializable {
 
+	private static final long serialVersionUID = 1426561177307936304L;
 	/** The type. */
 	private final String type;
 
@@ -63,33 +65,32 @@ public class Type implements IType {
 	 *
 	 * @return the URI
 	 */
-	@Deprecated
 	public String getURI() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Type))
-			return false;
-		Type targetType = (Type) obj;
-		return (targetType.getType().equals(this.getType()));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
-		return type.hashCode();
+		final int prime = 31;
+		int result;
+		result = prime + ((type == null) ? 0 : type.hashCode());
+		return result;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Type other = (Type) obj;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
 }

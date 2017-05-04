@@ -1,24 +1,35 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.sql;
 
-import java.sql.*;
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
+
+import adept.kbapi.KBOpenIEArgument;
+import adept.kbapi.KBOpenIERelation;
+import adept.kbapi.KBProvenance;
 
 /**
  * Utility to build SQL query and update statements
@@ -95,25 +106,20 @@ public class SqlQueryBuilder {
 	public static final String corpusById =
 			"SELECT * FROM \"Corpus\" WHERE \"ID\" = ?";
 
-	public static final String entityIdsByChunkValue =
+	public static final String kbIdsByChunkValue =
 			"SELECT \"TextProvenances\".\"KBId\", \"TextProvenances\".\"confidence\""
 					+ "FROM \"TextProvenances\" JOIN \"TextChunks\" ON \"TextProvenances\".\"chunk\" = \"TextChunks\".\"ID\" "
 					+ "WHERE LOWER(\"TextChunks\".\"value\") = ?";
 
-	public static final String entityIdsByChunkCaseSensitiveRegex =
+	public static final String kbIdsByChunkCaseSensitiveRegex =
 			"SELECT \"TextProvenances\".\"KBId\", \"TextProvenances\".\"confidence\""
 					+ "FROM \"TextProvenances\" JOIN \"TextChunks\" ON \"TextProvenances\".\"chunk\" = \"TextChunks\".\"ID\" "
 					+ "WHERE \"TextChunks\".\"value\" ~ ?";
 
-	public static final String entityIdsByChunkCaseInsensitiveRegex =
+	public static final String kbIdsByChunkCaseInsensitiveRegex =
 			"SELECT \"TextProvenances\".\"KBId\", \"TextProvenances\".\"confidence\""
 					+ "FROM \"TextProvenances\" JOIN \"TextChunks\" ON \"TextProvenances\".\"chunk\" = \"TextChunks\".\"ID\" "
 					+ "WHERE \"TextChunks\".\"value\" ~* ?";
-
-	public static final String relationIdsByChunkValue =
-			"SELECT DISTINCT \"TextProvenances\".\"KBId\", \"TextProvenances\".\"confidence\" "
-					+ "FROM \"TextProvenances\" JOIN \"TextChunks\" ON \"TextProvenances\".\"chunk\" = \"TextChunks\".\"ID\" "
-					+ "WHERE \"TextChunks\".\"value\" = ?";
 
 	public static final String getTextProvenanceKbIdsWithinChunkOffset =
 			"SELECT DISTINCT \"TextProvenances\".\"KBId\" "
@@ -128,31 +134,30 @@ public class SqlQueryBuilder {
 	public static final String doesExternalKbIdExist =
 			"SELECT * FROM \"ExternalKBReferences\" WHERE \"ExternalID\"= ? AND \"ExternalKB\" = ?";
 
+
 	public static final String insertTextChunk =
 			"INSERT INTO \"TextChunks\"(\"ID\", \"value\", \"beginOffset\", \"endOffset\", \"sourceDocument\") "
-					+ "values (?, ?, ?, ?, ?)";
+					+ "SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS ( SELECT \"ID\" FROM \"TextChunks\" WHERE \"ID\"= ? )";
 
 	public static final String insertTextProvenance =
 			"INSERT INTO \"TextProvenances\"(\"ID\", \"chunk\", \"sourceAlgorithm\", \"KBId\", \"confidence\") "
 					+ "values (?, ?, ?, ?, ?)";
 
-	// Since TextChunks are 1:1 with TextProvenances, deleting the TextChunk
-	// entry will cascade delete the TextProvenance entry
+  	public static final String updateTextProvenance =
+      		"UPDATE \"TextProvenances\" set \"KBId\"=? WHERE \"ID\"=?";
+
+	public static final String getChunkIDByProvenanceKBID =
+			"SELECT \"chunk\" FROM \"TextProvenances\" WHERE \"ID\" = ?";
+
 	public static final String deleteTextProvenance =
 			"DELETE " +
-					"FROM \"TextChunks\" " +
-					"WHERE \"ID\" IN " +
-					"	(SELECT \"chunk\" " +
-					"	 FROM \"TextProvenances\" " +
-					"	 WHERE \"ID\" = ?)";
+					"FROM \"TextProvenances\" " +
+					"WHERE \"ID\" = ?";
 
-	public static final String deleteTextProvenancesByObjectId =
+	public static final String deleteTextProvenanceByObjectId =
 			"DELETE " +
-					"FROM \"TextChunks\" " +
-					"WHERE \"ID\" IN " +
-					"	(SELECT \"chunk\" " +
-					"	 FROM \"TextProvenances\" " +
-					"	 WHERE \"KBId\" = ?)";
+					"FROM \"TextProvenances\" " +
+					"WHERE \"KBId\" = ?";
 
 	public static final String deleteOrphanSourceAlgorithms =
 			"DELETE " +
@@ -175,6 +180,20 @@ public class SqlQueryBuilder {
 					"	(SELECT DISTINCT \"corpus\" " +
 					"	 FROM \"SourceDocuments\")";
 
+	public static final String deleteOrphanTextChunks =
+			"DELETE " +
+					"FROM \"TextChunks\" " +
+					"WHERE \"ID\" NOT IN " +
+					"	(SELECT DISTINCT \"chunk\" " +
+					"	 FROM \"TextProvenances\")";
+
+	public static final String getOrphanTextChunks =
+			"SELECT \"ID\" " +
+					"FROM \"TextChunks\" " +
+					"WHERE \"ID\" NOT IN " +
+					"	(SELECT DISTINCT \"chunk\" " +
+					"	 FROM \"TextProvenances\")";
+
 	public static final String deleteExternalKbIdMapsForAdeptElement =
 			"DELETE FROM \"ExternalKBReferences\" WHERE \"AdeptKBID\" = ?";
 
@@ -184,11 +203,11 @@ public class SqlQueryBuilder {
 
 	public static final String insertSourceDocument =
 			"INSERT INTO \"SourceDocuments\"(\"ID\", \"sourceLanguage\", \"corpus\", \"publicationDate\", \"URI\") "
-					+ "values (?, ?, ?, ?, ?)";
+					+ "SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS ( SELECT \"ID\" FROM \"SourceDocuments\" WHERE \"ID\"= ? )";
 
 	public static final String insertSourceAlgorithm =
-			"INSERT INTO \"SourceAlgorithms\"(\"algorithmName\", \"contributingSiteName\") "
-					+ "values (?, ?)";
+                        "INSERT INTO \"SourceAlgorithms\"(\"algorithmName\", \"contributingSiteName\") "
+                                        + "SELECT ?, ? WHERE NOT EXISTS ( SELECT \"algorithmName\" FROM \"SourceAlgorithms\" WHERE \"algorithmName\"= ? )";
 
 	public static final String insertCorpus =
 			"INSERT INTO \"Corpus\"(\"ID\", \"type\", \"name\", \"URI\") "
@@ -207,6 +226,58 @@ public class SqlQueryBuilder {
 			"SELECT content " +
 					"FROM \"DocumentTexts\"\n" +
 					"WHERE docID = ? AND corpusID = ?";
+
+	public static final String insertOpenIERelation =
+			"INSERT INTO \"OpenIERelations\"(\"ID\", \"confidence\", "
+			    + "\"predicate\", \"arg1ID\", "
+			    + "\"arg2ID\") values (?, ?, ?, ?, ?)";
+
+  	public static final String insertOpenIERelationProvenance =
+      	"INSERT INTO \"OpenIERelationProvenances\"(\"ID\", \"chunk\", \"sourceAlgorithm\", "
+	    + "\"openIERelationID\", "
+	    + "\"confidence\") "
+	  + "values (?, ?, ?, ?, ?)";
+
+  	public static final String insertOpenIEArgument =
+      		"INSERT INTO \"OpenIEArguments\"(\"ID\", \"confidence\", "
+	  + "\"value\") values (?, ?, ?)";
+
+  	public static final String insertOpenIEArgumentProvenance =
+	  "INSERT INTO \"OpenIEArgumentProvenances\"(\"ID\", \"chunk\", \"sourceAlgorithm\", "
+	  + "\"openIEArgumentID\", "
+	  + "\"confidence\") "
+	  + "values (?, ?, ?, ?, ?)";
+
+
+  public static PreparedStatement createOpenIERelationInsertionStatement(KBOpenIERelation
+      .InsertionBuilder openIERelation, String ID,
+      Connection connection) throws SQLException {
+    PreparedStatement preparedStatement = connection.prepareStatement(insertOpenIERelation);
+    preparedStatement.setString(1, ID);
+    preparedStatement.setDouble(2, openIERelation.getConfidence());
+    preparedStatement.setString(3,openIERelation.getPredicate());
+    if(openIERelation.getArg1().isPresent()) {
+      preparedStatement.setString(4, openIERelation.getArg1().get().getKBID().getObjectID());
+    }else{
+      preparedStatement.setNull(4, Types.VARCHAR);
+    }
+    if(openIERelation.getArg2().isPresent()) {
+      preparedStatement.setString(5, openIERelation.getArg2().get().getKBID().getObjectID());
+    }else{
+      preparedStatement.setNull(5, Types.VARCHAR);
+    }
+    return preparedStatement;
+  }
+
+  public static PreparedStatement createOpenIEArgumentInsertionStatement(KBOpenIEArgument
+      .InsertionBuilder openIEArgument, String ID,
+      Connection connection) throws SQLException {
+    PreparedStatement preparedStatement = connection.prepareStatement(insertOpenIEArgument);
+    preparedStatement.setString(1, ID);
+    preparedStatement.setDouble(2, openIEArgument.getConfidence());
+    preparedStatement.setString(3, openIEArgument.getValue());
+    return preparedStatement;
+  }
 
 	/**
 	 * create SQL query to get text chunk given the primary key ID.
@@ -252,10 +323,10 @@ public class SqlQueryBuilder {
 	 * create SQL query to get the KB Entity IDs that contain mentions within a
 	 * given span of text.
 	 */
-	public static PreparedStatement createEntityIdsByChunkValueQuery(String chunkValue,
+	public static PreparedStatement createKBIdsByChunkValueQuery(String chunkValue,
 			Connection connection) throws SQLException {
-		PreparedStatement preparedStatement = connection.prepareStatement(entityIdsByChunkValue);
-		preparedStatement.setString(1, chunkValue);
+		PreparedStatement preparedStatement = connection.prepareStatement(kbIdsByChunkValue);
+		preparedStatement.setString(1, chunkValue.toLowerCase());
 		return preparedStatement;
 	}
 
@@ -263,23 +334,12 @@ public class SqlQueryBuilder {
 	 * create SQL query to get the KB Entity IDs that contain mentions within a
 	 * given span of text.
 	 */
-	public static PreparedStatement createEntityIdsByChunkRegexQuery(String regex,
+	public static PreparedStatement createKBIdsByChunkRegexQuery(String regex,
 			Connection connection, boolean caseSensitive) throws SQLException {
-		String statementString = caseSensitive ? entityIdsByChunkCaseSensitiveRegex
-				: entityIdsByChunkCaseInsensitiveRegex;
+		String statementString = caseSensitive ? kbIdsByChunkCaseSensitiveRegex
+				: kbIdsByChunkCaseInsensitiveRegex;
 		PreparedStatement preparedStatement = connection.prepareStatement(statementString);
 		preparedStatement.setString(1, regex);
-		return preparedStatement;
-	}
-
-	/**
-	 * create SQL query to get KB relation IDs that contain mentions within a
-	 * given span of text.
-	 */
-	public static PreparedStatement createRelationIdsByChunkValueQuery(String chunkValue,
-			Connection connection) throws SQLException {
-		PreparedStatement preparedStatement = connection.prepareStatement(relationIdsByChunkValue);
-		preparedStatement.setString(1, chunkValue);
 		return preparedStatement;
 	}
 
@@ -294,6 +354,7 @@ public class SqlQueryBuilder {
 		chunkInsertBatchStatement.setInt(3, beginOffset);
 		chunkInsertBatchStatement.setInt(4, endOffset);
 		chunkInsertBatchStatement.setString(5, sourceDocument);
+		chunkInsertBatchStatement.setString(6, chunkId);
 		chunkInsertBatchStatement.addBatch();
 	}
 
@@ -316,6 +377,13 @@ public class SqlQueryBuilder {
 		textProvenanceDeleteBatchStatement.setString(1, provenanceId);
 		textProvenanceDeleteBatchStatement.addBatch();
 	}
+
+  	public static void addTextProvenanceUpdateQueryToBatch(String provenanceId, String
+	    sourceUri, PreparedStatement textProvenanceUpdateBatchStatement) throws SQLException {
+    		textProvenanceUpdateBatchStatement.setString(1, sourceUri);
+	  	textProvenanceUpdateBatchStatement.setString(2,provenanceId);
+    		textProvenanceUpdateBatchStatement.addBatch();
+  	}
 
 	/**
 	 * create SQL query to check if a text chunk already exists in the DB given
@@ -358,16 +426,16 @@ public class SqlQueryBuilder {
 	/**
 	 * create SQL update statement to insert a new source document.
 	 */
-	public static PreparedStatement createSourceDocumentInsertQuery(String sourceDocId,
+	public static void addDocumentInsertQueryToBatch(PreparedStatement preparedStatement, String sourceDocId,
 			String sourceDocUri, String language, String corpusId, Date pubDate,
 			Connection connection) throws SQLException {
-		PreparedStatement preparedStatement = connection.prepareStatement(insertSourceDocument);
 		preparedStatement.setString(1, sourceDocId);
 		preparedStatement.setString(2, language);
 		preparedStatement.setString(3, corpusId);
 		preparedStatement.setDate(4, pubDate);
 		preparedStatement.setString(5, sourceDocUri);
-		return preparedStatement;
+		preparedStatement.setString(6, sourceDocId);
+		preparedStatement.addBatch();
 	}
 
 	/**
@@ -390,6 +458,7 @@ public class SqlQueryBuilder {
 		PreparedStatement preparedStatement = connection.prepareStatement(insertSourceAlgorithm);
 		preparedStatement.setString(1, algName);
 		preparedStatement.setString(2, site);
+		preparedStatement.setString(3, algName);
 
 		return preparedStatement;
 	}
@@ -427,6 +496,13 @@ public class SqlQueryBuilder {
 		preparedStatement.setString(1, sourceDocId);
 		preparedStatement.setInt(2, beginOffset);
 		preparedStatement.setInt(3, endOffset);
+
+		return preparedStatement;
+	}
+
+	public static PreparedStatement createGetChunkIDByProvenance(KBProvenance provenance, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(getChunkIDByProvenanceKBID);
+		preparedStatement.setString(1, provenance.getKBID().getObjectID());
 
 		return preparedStatement;
 	}
@@ -507,7 +583,7 @@ public class SqlQueryBuilder {
 	}
 
 	/**
-	 * @param string
+	 * @param id
 	 * @param sqlConnection
 	 * @return
 	 * @throws SQLException
@@ -536,7 +612,7 @@ public class SqlQueryBuilder {
 	}
 
 	/**
-	 * @param objectUri
+	 * @param objectId
 	 * @param sqlConnection
 	 * @return
 	 * @throws SQLException
@@ -544,7 +620,7 @@ public class SqlQueryBuilder {
 	public static PreparedStatement createTextProvenanceDeleteQuery(String objectId,
 			Connection sqlConnection) throws SQLException {
 		PreparedStatement preparedStatement = sqlConnection
-				.prepareStatement(deleteTextProvenancesByObjectId);
+				.prepareStatement(deleteTextProvenanceByObjectId);
 		preparedStatement.setString(1, objectId);
 		return preparedStatement;
 	}
@@ -566,6 +642,18 @@ public class SqlQueryBuilder {
 	public static PreparedStatement createDeleteOrphanCorpusQuery(Connection sqlConnection)
 			throws SQLException {
 		PreparedStatement preparedStatement = sqlConnection.prepareStatement(deleteOrphanCorpus);
+		return preparedStatement;
+	}
+
+	public static PreparedStatement createDeleteOrphanTextChunksQuery(Connection sqlConnection)
+			throws SQLException {
+		PreparedStatement preparedStatement = sqlConnection.prepareStatement(deleteOrphanTextChunks);
+		return preparedStatement;
+	}
+
+	public static PreparedStatement createGetOrphanTextChunksQuery(Connection sqlConnection)
+			throws SQLException {
+		PreparedStatement preparedStatement = sqlConnection.prepareStatement(getOrphanTextChunks);
 		return preparedStatement;
 	}
 

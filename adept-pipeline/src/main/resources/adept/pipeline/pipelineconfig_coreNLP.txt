@@ -1,2 +1,0 @@
-mapreduce.PreprocessingJob		src/main/resources/pipeline/PreprocessingJobInput.txt	output
-edu.stanford.nlp.mapreduce.StanfordCoreNlpMapClass	mapreduce.PreprocessingJob	output/part-00000	coreNLP_output

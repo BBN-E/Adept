@@ -1,172 +1,244 @@
 <?xml version="1.0"?>
-<!--Copyright 2016 Raytheon BBN Technologies Corp. All Rights Reserved. -->
+<!--Copyright 2012-2017 Raytheon BBN Technologies Corp. All Rights Reserved. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<version>2.0-SNAPSHOT</version>
-	<groupId>adept</groupId>
-	<artifactId>adept</artifactId>
-	<name>adept</name>
-	<packaging>pom</packaging>
-	<description>The project file to build and run ADEPT interfaces and applications using Maven</description>
-	<modules>
-	<module>adept-api</module>
-	<module>adept-api-mappers</module>
-	<module>adept-mapreduce</module>
-	<module>adept-pipeline</module>
-	<module>adept-thrift-api</module>
-	<module>adept-thrift-java</module>
-	<module>adept-thrift-perl</module>
-	<module>example</module>
-	</modules>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>adept</groupId>
+  <artifactId>adept</artifactId>
+  <version>2.7.0</version>
+  <name>adept</name>
+  <packaging>pom</packaging>
+  <description>The project file to build and run ADEPT interfaces and applications using Maven</description>
+  <url>https://github.com/BBN-E/Adept</url>
+  <organization>
+    <name>Raytheon BBN Technologies Corp.</name>
+    <url>http://www.raytheon.com/ourcompany/bbn</url>
+  </organization>
+  <inceptionYear>2012</inceptionYear>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
   <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <jdk.version.value>1.8</jdk.version.value>
+    <javac.exec.path>${env.JAVA_HOME_8}/bin/javac</javac.exec.path>
+    <java.exec.path>${env.JAVA_HOME_8}/bin/java</java.exec.path>
     <antrunPluginVersion>1.7</antrunPluginVersion>
-    <appassemblerMaxMemorySize>2g</appassemblerMaxMemorySize>
+    <appassemblerMaxMemorySize>4g</appassemblerMaxMemorySize>
     <appassemblerMinMemorySize>2g</appassemblerMinMemorySize>
     <appassemblerPluginVersion>1.3.1</appassemblerPluginVersion>
-    <execMaxMemorySize>-Xmx16g</execMaxMemorySize>
-    <execMinMemorySize>-Xms8g</execMinMemorySize>
+    <execMaxMemorySize>-Xmx24g</execMaxMemorySize>
+    <execMinMemorySize>-Xms6g</execMinMemorySize>
     <execNewRatio>-XX:NewRatio=3</execNewRatio>
     <execPluginVersion>1.2.1</execPluginVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <skipRegressionTest>true</skipRegressionTest>
-    <skipBenchmarkTest>true</skipBenchmarkTest>
-    <skipUnitTests>true</skipUnitTests>
-    <skipProfiler>true</skipProfiler>
-    <skipUntar>false</skipUntar>
-    <skipLicensing>true</skipLicensing>
-    <surefirePluginVersion>2.14.1</surefirePluginVersion>
-    <jdk.version.value>1.7</jdk.version.value>
-    <javac.exec.path>${env.JAVA_HOME_7}/bin/javac</javac.exec.path>
-    <java.exec.path>${env.JAVA_HOME_7}/bin/java</java.exec.path>
-    <thriftPluginVersion>0.1.12-SNAPSHOT</thriftPluginVersion>
-    <sourcePluginVersion>2.2.1</sourcePluginVersion>
     <redirect>false</redirect>
-  </properties>	<build>
-	<plugins>
+    <defaultInputLanguage>en</defaultInputLanguage>
+    <guavaDependencyVersion>18.0</guavaDependencyVersion>
+    <adeptApiSpecVersion>3.11</adeptApiSpecVersion>
+    <xstreamVersion>1.4.8</xstreamVersion>
+    <stanford-corenlp.version>3.7.0</stanford-corenlp.version>
+  </properties>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>3.0.4</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>appassembler-maven-plugin</artifactId>
+          <version>1.3.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.9.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>maven-exec-plugin</artifactId>
+          <version>1.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.2.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.2.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-changelog-plugin</artifactId>
+          <version>2.3</version>
+          <configuration>
+            <type>tag</type>
+            <tags>
+              <tag>v2.2</tag>
+              <tag>HEAD</tag>
+            </tags>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.19.1</version>
+          <configuration>
+            <parallel>methods</parallel>
+            <threadCount>10</threadCount>
+            <jvm>${java.exec.path}</jvm>
+            <workingDirectory>${project.basedir}/target/test-classes</workingDirectory>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.0</version>
+          <configuration>
+            <source>${jdk.version.value}</source>
+            <target>${jdk.version.value}</target>
+            <verbose>true</verbose>
+            <fork>true</fork>
+            <compilerVersion>${jdk.version.value}</compilerVersion>
+            <executable>${javac.exec.path}</executable>
+            <showDeprecation>true</showDeprecation>
+            <showWarnings>true</showWarnings>
+            <compilerArgument>-Xlint:all</compilerArgument>
+          </configuration>
+        </plugin>
+        <plugin>
+          <inherited>true</inherited>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>1.4.1</version>
+          <executions>
+            <execution>
+              <id>enforce-maven-version</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireMavenVersion>
+                    <version>3.0.5</version>
+                  </requireMavenVersion>
+                </rules>
+                <fail>true</fail>
+              </configuration>
+            </execution>
+            <execution>
+              <id>enforce-java-version</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireProperty>
+                    <property>env.JAVA_HOME</property>
+                    <message>JAVA_HOME not defined in environment</message>
+                    <regex>.+</regex>
+                    <regexMessage>JAVA_HOME is defined but empty</regexMessage>
+                  </requireProperty>
+                  <requireProperty>
+                    <property>env.JAVA_HOME_8</property>
+                    <message>JAVA_HOME_8 not defined in environment</message>
+                    <regex>.+</regex>
+                    <regexMessage>JAVA_HOME_8 is defined but empty</regexMessage>
+                  </requireProperty>
+                  <evaluateBeanshell>
+                    <condition>"${env.JAVA_HOME}" == "${env.JAVA_HOME_8}"</condition>
+                    <message>JAVA_HOME must equal JAVA_HOME_8</message>
+                  </evaluateBeanshell>
+                  <requireFilesExist>
+                    <files>
+                      <file>${java.exec.path}</file>
+                      <file>${javac.exec.path}</file>
+                    </files>
+                    <message>Invalid path JAVA_HOME_8=${env.JAVA_HOME_8}, no java binary found</message>
+                  </requireFilesExist>
+                  <requireJavaVersion>
+                    <version>[1.8.0,)</version>
+                    <message>JDK installed at JAVA_HOME_8=${env.JAVA_HOME_8} is older than minimum 1.8.0</message>
+                  </requireJavaVersion>
+                </rules>
+                <failFast>true</failFast>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>1.12</version>
+          <configuration>
+            <inceptionYear>2012</inceptionYear>
+            <licenseName>apache_v2</licenseName>
+            <verbose>true</verbose>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>${antrunPluginVersion}</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <echo>DEFT POM Properties:</echo>
-                <echo>Skip Regression = ${skipRegressionTest}</echo>
-                <echo>Redirect regression output = ${redirect}</echo>
-                <echo>Skip Benchmark = ${skipBenchmarkTest}</echo>
-                <echo>Skip Profiler = ${skipProfiler}</echo>
-                <echo>Skip Batch Unit Tests = ${skipUnitTests}</echo>
-                <echo>Skip Untar = ${skipUntar}</echo>
-                <echo>Skip Licensing = ${skipLicensing}</echo>
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>	
-		<plugin>
-		<groupId>org.codehaus.mojo</groupId>
-		<artifactId>license-maven-plugin</artifactId>
-		<version>1.7</version>
-		<configuration>
-			<licenseName>apache_v2</licenseName>
-			<licenseResolver>file://${project.basedir}/license</licenseResolver>
-			<year>2014</year>
-			<inceptionYear>2014</inceptionYear>
-			<copyrightOwner>Raytheon BBN Technologies Corp.</copyrightOwner>
-			<organizationName>Raytheon BBN Technologies Corp.</organizationName>
-			<projectName>Adept</projectName>	
-			<dryRun>false</dryRun>
-			<verbose>true</verbose>			
-			<processStartTag>------</processStartTag>
-			<sectionDelimiter>-----</sectionDelimiter>
-			<processEndTag>-------</processEndTag>
-              <roots>
-				<root>src</root>
-              </roots>		
-              <excludes>
-                <exclude>**/*.xml</exclude>
-              </excludes>			  
-			<skip>${skipLicensing}</skip>
-		</configuration>
-		<executions>
-			<!-- Downloads the project licenses via mvn license:download-licenses 		
-			<execution>
-				<id>download-licenses</id>
-				<goals>
-					<goal>download-licenses</goal>
-				</goals>
-			</execution> -->
-			<!-- Updates the source files via mvn license:update-file-header -->
-			<!--execution>
-            <id>update-file-header-first</id>
-            <goals>
-              <goal>update-file-header</goal>
-            </goals>
-            <phase>process-sources</phase>
-            <configuration>
-              <licenseName>apache_v2 </licenseName>
-				<header>src/main/licenseHeader.txt</header>
-				<properties>
-				</properties>		  <            </configuration>
-          </execution-->
-			<!-- not needed?
-			<execution>
-				<id>check-file-header</id>
-				<goals>
-					<goal>check-file-header</goal>
-				</goals>
-				<phase>generate-sources</phase>
-			</execution>	
-			-->	
-		</executions>
-		</plugin>
-		<!--
-		Note that "token" is actually a regex, so watch out for punctuation.
-		Note that version 1.5.1 works for multiple files, 1.5.3 works for single file.
-		For testing, use this instead of includes/excludes:
-				<file>test.xml</file>		
-		-->
-		<!--
-       <plugin>
-           <groupId>com.google.code.maven-replacer-plugin</groupId>
-           <artifactId>replacer</artifactId>
-           <version>1.5.1</version>
-           <executions>
-               <execution>
-                   <phase>validate</phase>
-                   <goals>
-                       <goal>replace</goal>
-                   </goals>                   
-               </execution>
-           </executions>
-           <configuration>
-                <includes>
-                    <include>**/*.cpp</include>
-                    <include>**/*.h</include>
-                    <include>**/*.java</include>
-                    <include>**/*.pm</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <excludes>
-                    <exclude>**/pom.xml</exclude>
-                </excludes>
-                   <replacement>
-                       <token>Copyright \(C\) 2014 Raytheon BBN Technologies</token>
-                       <value>Copyright (C) 2014 Raytheon BBN Technologies Corp.</value>
-                   </replacement> 	
-				   <replacements>
-                   <replacement>
-                       <token>Corp. Corp.</token>
-                       <value>Corp.</value>
-                   </replacement> 	
-               </replacements>
-           </configuration>
-       </plugin>		
-		-->	   
-	</plugins>
-	</build>	
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>edu.stanford.nlp</groupId>
+        <artifactId>stanford-corenlp</artifactId>
+        <version>${stanford-corenlp.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>edu.stanford.nlp</groupId>
+        <artifactId>stanford-corenlp</artifactId>
+        <version>${stanford-corenlp.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      <dependency>
+        <groupId>edu.stanford.nlp</groupId>
+        <artifactId>stanford-corenlp</artifactId>
+        <version>${stanford-corenlp.version}</version>
+        <classifier>models</classifier>
+      </dependency>
+      <dependency>
+        <groupId>edu.stanford.nlp</groupId>
+        <artifactId>stanford-corenlp</artifactId>
+        <version>${stanford-corenlp.version}</version>
+        <classifier>models-english</classifier>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <modules>
+    <module>adept-api</module>
+    <module>adept-kb</module>
+    <module>example</module>
+  </modules>
 </project>

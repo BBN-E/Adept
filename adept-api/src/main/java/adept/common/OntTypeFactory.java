@@ -1,24 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
-/*
- * 
- */
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntModel;
@@ -76,8 +76,6 @@ public class OntTypeFactory implements ITypeFactory {
 	 *
 	 * @param ontTypeCatalog the ont type catalog
 	 * @return single instance of RelationTypeFactory
-	 * @throws InvalidPropertiesFormatException the invalid properties format exception
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static OntTypeFactory getInstance(String ontTypeCatalog) {
 		try
@@ -157,11 +155,11 @@ public class OntTypeFactory implements ITypeFactory {
 		else
 		{
 			//System.out.println("Found a model previously made");
-			model = models.get(schemaLocation);
+			//model = models.get(schemaLocation);
 		}
 		
 		//return new OntType(model, temp[0], "#"+temp[1]);
-                return new OntType(temp[0], temp[1]);
+    return new OntType(temp[0], temp[1]);
 	}
 	
 	/**
@@ -190,7 +188,7 @@ public class OntTypeFactory implements ITypeFactory {
 		else
 		{
 			//System.out.println("Found a model previously made");
-			model = models.get(schemaLocation);
+			//model = models.get(schemaLocation);
 		}
 		
 		//return new OntType(model, ontology, ontURIDirectory.getProperty(ontology)+"#"+type);
@@ -208,7 +206,8 @@ public class OntTypeFactory implements ITypeFactory {
 		try
 		{
 			ontTypeCatalog = new Properties();
-			InputStream is = Reader.getInstance().findStreamInClasspathOrFileSystem(ontTypeCatalogName);		
+			Reader.getInstance();
+			InputStream is = Reader.findStreamInClasspathOrFileSystem(ontTypeCatalogName);		
 			ontTypeCatalog.loadFromXML(is);
 		}
 		catch(InvalidPropertiesFormatException e)

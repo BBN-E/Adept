@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.io;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.io.*;
 import java.util.*;
@@ -56,16 +59,16 @@ public class CoNLLDocument
     private Map<Token,String> tokensToPOSs;
 
     /** The wordnum. */
-    private final int WORDNUM = 2;
+    private static final int WORDNUM = 2;
     
     /** The token. */
-    private final int TOKEN = 3;
+    private static final int TOKEN = 3;
     
     /** The pos. */
-    private final int POS = 4;
+    private static final int POS = 4;
     
     /** The nentity. */
-    private final int NENTITY = 10;
+    private static final int NENTITY = 10;
 
 
     /**
@@ -302,7 +305,7 @@ public class CoNLLDocument
         if((firstChar >= 65 && firstChar <= 90) 
            || (firstChar >= 97 && firstChar <= 122) 
            || firstChar == 40 || firstChar == 91 || firstChar == 123
-           || tokens.equals("n't"))
+           || token.equals("n't"))
             return " ";
         return "";
     }
@@ -315,7 +318,7 @@ public class CoNLLDocument
      */
     private TokenStream tokenize(String text)
     {
-        TokenStream ts = new TokenStream(TokenizerType.APACHE_OPENNLP, 
+        TokenStream ts = new TokenStream(TokenizerType.STANFORD_CORENLP, 
                                          TranscriptType.SOURCE,
                                          "English",
                                          ChannelName.NONE,

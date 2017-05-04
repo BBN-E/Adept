@@ -1,11 +1,12 @@
-December 2014
+March 2017
 
 ADEPT
 
-This code has been approved by DARPA's Public Release Center for
-public release, with the following statement:
+This work was funded by DARPA/AFRL Contract FA8750-13-C-0008.
 
-Approved for public release; distribution is unlimited.
+The views, opinions, and/or findings expressed are those of the author(s) and should not
+be interpreted as representing the official views of policies of the Department of
+Defense or the U.S. Government.  
 
 Questions should be directed to:
 

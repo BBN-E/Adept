@@ -1,30 +1,35 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.common;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.Serializable;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.Map;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents an event where the arguments are particular
@@ -36,8 +41,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  <p>This class is locally immutable.</p>
 
  */
-public final class EventMention extends HltContent implements HasScoredUnaryAttributes {
-    private final IType eventType;
+public final class EventMention extends HltContent implements HasScoredUnaryAttributes, Serializable {
+	private static final long serialVersionUID = -5103849434884738303L;
+	private final IType eventType;
     private final EventText provenance;
     private final ImmutableSet<EventMentionArgument> arguments;
     private final ImmutableMap<IType, Float> attributes;
@@ -120,7 +126,7 @@ public final class EventMention extends HltContent implements HasScoredUnaryAttr
         private ImmutableSet.Builder<EventMentionArgument> arguments = ImmutableSet.builder();
         private ImmutableMap.Builder<IType, Float> attributes = ImmutableMap.builder();
         private Float score = null;
-        
+
         private Builder(IType eventType) {
             this.eventType = eventType;
         }
@@ -187,12 +193,12 @@ public final class EventMention extends HltContent implements HasScoredUnaryAttr
          */
         public Builder setAttributes(Map<? extends IType, Float> attributes) {
         	checkArgument(attributes!=null);
-            for (final IType arg : attributes.keySet()) {
-            	checkArgument(arg!=null);
-                checkArgument(attributes.get(arg)!=null);
-            }        	
-            this.attributes.putAll(attributes);
-            return this;
+        	for (final Map.Entry<? extends IType, Float> entry : attributes.entrySet()) {
+           	checkArgument(entry.getKey()!=null);
+            checkArgument(entry.getValue()!=null);
+          }
+          this.attributes.putAll(attributes);
+          return this;
         }
 
         /**
@@ -211,5 +217,42 @@ public final class EventMention extends HltContent implements HasScoredUnaryAttr
             return new EventMention(eventType, provenance, arguments.build(),
                     attributes.build(), score);
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final EventMention that = (EventMention) o;
+
+        if (!eventType.equals(that.eventType)) {
+            return false;
+        }
+        if (provenance != null ? !provenance.equals(that.provenance) : that.provenance != null) {
+            return false;
+        }
+        if (!arguments.equals(that.arguments)) {
+            return false;
+        }
+        if (!attributes.equals(that.attributes)) {
+            return false;
+        }
+        return !(score != null ? !score.equals(that.score) : that.score != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = eventType.hashCode();
+        result = 31 * result + (provenance != null ? provenance.hashCode() : 0);
+        result = 31 * result + arguments.hashCode();
+        result = 31 * result + attributes.hashCode();
+        result = 31 * result + (score != null ? score.hashCode() : 0);
+        return result;
     }
 }

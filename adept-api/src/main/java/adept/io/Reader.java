@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.io;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -24,15 +27,28 @@ import java.net.URLDecoder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.conf.Configuration;
+
+import org.apache.xml.utils.XMLChar;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import adept.common.CharOffset;
 import adept.common.Document;
 import adept.common.OntTypeFactory;
 import adept.common.TokenStream;
@@ -66,21 +82,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 //import org.w3c.dom.Document; //conflicts with adept.common.Document
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
-
-
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 
 /**
  * The Class Reader.
  */
 public class Reader {
-
+    private static final Logger logger = LoggerFactory.getLogger(Reader.class); 
     /**
      * The instance.
      */
@@ -97,26 +115,73 @@ public class Reader {
         return instance;
     }
 
+    private class MyErrorHandler implements org.xml.sax.ErrorHandler {
+
+      @Override
+      public void warning(SAXParseException exception) throws SAXException {
+        throw exception;
+      }
+
+      @Override
+      public void error(SAXParseException exception) throws SAXException {
+        throw exception;
+      }
+
+      @Override
+      public void fatalError(SAXParseException exception) throws SAXException {
+        throw exception;
+      }
+    }
+
     /**
      * Reads specified XML file into a DOM object.
      *
      * @param path the path
      * @return the document
      */
-    public org.w3c.dom.Document readXML(String path) {
+    public org.w3c.dom.Document readXML(String path) throws IOException {
+        if (null == path || path.isEmpty()) {
+          return null;
+        }
+        InputStream is = findStreamInClasspathOrFileSystem(path);
+        BOMInputStream bis = new BOMInputStream(is, false);
         try {
-            InputStream is = findStreamInClasspathOrFileSystem(path);
-	    BOMInputStream bis = new BOMInputStream(is, false);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            dBuilder.setErrorHandler(new MyErrorHandler());
             org.w3c.dom.Document doc = dBuilder.parse(bis);
             // TODO - might have backslashes.
             doc.setDocumentURI(path);
             return doc;
-        } catch (Exception e) {
-            //e.printStackTrace();
+        } catch (SAXParseException e) {
+            logger.info("XML Parsing exception caught attempting to read {}", path);
+            logger.debug("Exception caught attempting to read '{}':", path, e );
+            return null;
+        } catch (ParserConfigurationException|SAXException e) {
+            logger.warn("Exception caught attempting to read '{}':", path, e );
+            return null;
         }
-        return null;
+    }
+
+    /**
+     * Reads specified XML file into a DOM object.
+     *
+     * @param uri the path. May be null
+     * @param fileString Must be the path to a file
+     * @return the document
+     */
+    public org.w3c.dom.Document readXMLFromString(String uri, String fileString) throws IOException {
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            org.w3c.dom.Document doc = dBuilder.parse(new ByteArrayInputStream(fileString.getBytes()));
+            // TODO - might have backslashes.
+            doc.setDocumentURI(uri);
+            return doc;
+        } catch (ParserConfigurationException|SAXException e) {
+            logger.warn("Exception caught attempting to parse XML from string, uri='{}':", uri, e );
+            return null;
+        }
     }
 
     /**
@@ -125,39 +190,38 @@ public class Reader {
      * @param path       the path
      * @param utterances the utterances
      * @param speakers   the speakers
-     * @param title      the title
      * @return the string
      */
-    public String readConversationFile(String path, List<String> utterances, List<String> speakers,
-                                       String title) {
+    public String readConversationFile(String path, List<String> utterances, List<String> speakers) throws IOException {
         try {
             JSONParser parser = new JSONParser();
-            Object obj = parser.parse(new FileReader(path));
-            JSONObject jsonObject = (JSONObject) obj;
+            JSONObject jsonObject = null;
+            try (FileReader reader = new FileReader(path)) {
+              Object obj = parser.parse(reader);
+              jsonObject = (JSONObject) obj;
+            }
 
             JSONObject conversation = (JSONObject) jsonObject.get("conversation");
-            title = (String) conversation.get("name");
-            //System.out.println("Title is: " + title);
 
             StringBuffer conversationText = new StringBuffer();
             JSONArray utt = (JSONArray) conversation.get("utterances");
             if (utt != null) {
-                for (Object o : utt) {
-                    JSONObject utterance = (JSONObject) o;
-                    speakers.add((String) utterance.get("name"));
+              for (Object o : utt) {
+                JSONObject utterance = (JSONObject) o;
+                speakers.add((String) utterance.get("name"));
 
-                    String uttText = (String) utterance.get("utterance");
-                    utterances.add(uttText);
-                    conversationText.append(uttText + "\n");
-                }
+                String uttText = (String) utterance.get("utterance");
+                utterances.add(uttText);
+                conversationText.append(uttText + "\n");
+              }
             }
 
             return conversationText.toString();
-        } catch (Exception e) {
+        } catch (ParseException e) {
             e.printStackTrace();
+            return null;
         }
 
-        return null;
     }
 
     /**
@@ -167,7 +231,7 @@ public class Reader {
      * @param docId the doc id
      * @return an EREDocument with fields derived from file at path.
      */
-    public EREDocument readEREFile(String path, String docId, String language) {
+    public EREDocument readEREFile(String path, String docId, String language) throws IOException {
         String filestring = readFileIntoString(path);
         HltContentContainer hltcc = new HltContentContainer();
         EREDocument ereDoc = new EREDocument(filestring, hltcc);
@@ -310,7 +374,6 @@ public class Reader {
                 //otherwise, sets canonical mention to this mention
                 //emId = ereDoc.putCanonicalEntityMentionById(entityId,emId).getSequenceId();
                 Chunk distribution = ereDoc.getEntityMentionById(emId);
-                Pair<Chunk, Float> argumentDistribution = new Pair<Chunk, Float>(distribution, 1F);
                 argument.addArgumentConfidencePair(distribution, confidence);
                 relation.addArgument(argument);
                 prevEntityId = entityId;
@@ -366,7 +429,6 @@ public class Reader {
                 }
 
                 Chunk distribution = mentionsById.get(emId);
-                Pair<Chunk, Float> argumentDistribution = new Pair<Chunk, Float>(distribution, 1F);
                 argument.addArgumentConfidencePair(distribution, confidence);
                 relation.addArgument(argument);
                 prevEntityId = entityId;
@@ -384,11 +446,9 @@ public class Reader {
      * @return the doc id
      */
     private String getDocId(org.w3c.dom.Document xmlDoc) {
-        List<EntityMention> entityMentionList = new ArrayList<EntityMention>();
-
         NodeList deft_eres = xmlDoc.getElementsByTagName("deft_ere");
-        for (int x = 0; x < deft_eres.getLength(); x++) {
-            return deft_eres.item(x).getAttributes().getNamedItem("docid").getNodeValue();
+        if (deft_eres.getLength() > 0) {
+            return deft_eres.item(0).getAttributes().getNamedItem("docid").getNodeValue();
         }
         return "none";
     }
@@ -808,9 +868,15 @@ public class Reader {
      * @return an HLTContentContainer
      */
     public HltContentContainer EREtoHltContentContainer(String EREPath, String XMLPath, String language) {
-        org.w3c.dom.Document xmlDoc = readXML(XMLPath);
-        String docId = getDocId(xmlDoc);
-        EREDocument ereDoc = readEREFile(EREPath, docId, language);
+        org.w3c.dom.Document xmlDoc;
+        EREDocument ereDoc;
+        try {
+            xmlDoc = readXML(XMLPath);
+            String docId = getDocId(xmlDoc);
+            ereDoc = readEREFile(EREPath, docId, language);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         HltContentContainer hltcc = ereDoc.getHltContentContainer();
         if (xmlDoc != null) {
             List<EntityMention> entityMentions = getEntityMentions(ereDoc, xmlDoc);
@@ -866,8 +932,6 @@ public class Reader {
                     if (entityEnd == entList.get(x).size()
                             || (long) entList.get(x).get(entityEnd).getR() != entityId) {
                         EntityMention em = new EntityMention(entityId, new TokenOffset(runningSum + entityStart, runningSum + entityEnd - 1), ts);
-                        Map<Long, Float> distribution = new HashMap<Long, Float>();
-                        distribution.put(entityId, 1F);
                         em.setMentionType(new Type(entList.get(x).get(entityStart).getL().substring(0, 3)));
                         em.setEntityType(new Type("NAM"));
                         Entity e = new Entity(entityId, new Type("NAM"));
@@ -912,15 +976,15 @@ public class Reader {
      * @return the coreferences
      */
     private List<Coreference> getCoreferences(CoNLLDocument conllDocument, Map<Integer, Entity> entityMap, List<EntityMention> entityMentions) {
-        Map<Long, Set<Entity>> corefEntityMap = new HashMap<Long, Set<Entity>>();
+        Map<Long, Set<Entity>> corefEntityMap = new HashMap<>();
         List<List<Set<Long>>> corefIds = conllDocument.getCorefs();
-        List<Coreference> corefs = new ArrayList<Coreference>();
+        List<Coreference> corefs = new ArrayList<>();
 
         for (int x = 0; x < corefIds.size(); x++) {
             for (int y = 0; y < corefIds.get(x).size(); y++) {
                 for (long corefId : corefIds.get(x).get(y)) {
                     if (corefEntityMap.get(corefId) == null) {
-                        Set<Entity> entities = new HashSet<Entity>();
+                        Set<Entity> entities = new HashSet<>();
                         corefEntityMap.put(corefId, entities);
                     }
                     if (entityMap.get(x + y) != null)
@@ -928,11 +992,10 @@ public class Reader {
                 }
             }
         }
-
-        for (long corefId : corefEntityMap.keySet()) {
-            Coreference c = new Coreference(corefId);
+        for (Map.Entry<Long, Set<Entity>> entry : corefEntityMap.entrySet()) {
+            Coreference c = new Coreference(entry.getKey());
             c.setResolvedMentions(entityMentions);
-            c.setEntities(new ArrayList<Entity>(corefEntityMap.get(corefId)));
+            c.setEntities(new ArrayList<Entity>(entry.getValue()));
             corefs.add(c);
         }
 
@@ -964,7 +1027,12 @@ public class Reader {
      * @return an CONLLDocument with fields derived from file at path.
      */
     public CoNLLDocument readCoNLLFile(String path) {
-        String filestring = readFileIntoString(path);
+        String filestring;
+        try {
+            filestring = readFileIntoString(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         CoNLLDocument conllDoc = new CoNLLDocument(filestring);
         conllDoc.createDocument();
         return conllDoc;
@@ -981,10 +1049,9 @@ public class Reader {
         HltContentContainer hltcc = new HltContentContainer();
 
         HashMap<Integer, Entity> entityMap = getEntities(conllDoc);
-        HashSet<Entity> entitySet = new HashSet<Entity>();
-        for (Integer i : entityMap.keySet())
-            entitySet.add(entityMap.get(i));
-        List<Entity> entities = new ArrayList<Entity>(entitySet);
+        HashSet<Entity> entitySet = new HashSet<>();
+        entitySet.addAll(entityMap.values());
+        List<Entity> entities = new ArrayList<>(entitySet);
         List<EntityMention> entityMentions = getEntityMentions(conllDoc, entities);
 
         hltcc.setSentences(getSentences(conllDoc));
@@ -1008,7 +1075,7 @@ public class Reader {
 
             // This HLTCC is discarded.
             HltContentContainer hltContentContainer = new HltContentContainer();
-            Document document = DocumentMaker.getInstance().createDefaultDocument(filepath, hltContentContainer);
+            Document document = DocumentMaker.getInstance().createDocument(filepath, hltContentContainer);
             String text = null;
             text = fileToString(filepath);
             document.setValue(text);
@@ -1044,31 +1111,150 @@ public class Reader {
     	}
         catch(Exception e)
         {
-        	e.printStackTrace();
-        	return null;
+        	throw new RuntimeException(e);
         }
     }
+
+    /**
+     * @throws IOException
+     */
+    public static String readRawFile(String path) throws IOException {
+        InputStream is;
+        if (path.startsWith("hdfs:")) { // (Hadoop File System)
+            Path p = new Path(path);
+            FileSystem fs = FileSystem.get(p.toUri(), new Configuration());
+            is = fs.open(p);
+        } else {
+            is = Reader.class.getClassLoader().getResourceAsStream(path);
+            if (is == null) {
+                is = Reader.class.getClassLoader().getResourceAsStream(path.replaceAll("\\\\", "/"));
+            }
+            if (is == null) {
+                File f = new File(path);
+                if (!f.exists()) {
+                    System.out.println("Warning - creating FileInputStream: " + f.getAbsolutePath());
+                }
+                is = new FileInputStream(path);
+            }
+        }
+        return IOUtils.toString(is, "UTF-8");
+    }
+
+    /**
+     * Builds a new String based on the given one but with certain character spans replaced with whitespace based
+     * on the given regular expressions.
+     * In practice, this is used for raw XML tokenization, where is it necessary to filter from the raw file text
+     * unwanted items such as XML tags and extraneous XML elements.
+     * @param whiteListedRegexes Expressions the represent the character spans in the given text to preserve. All
+     *                           surrounding spans will be replaced with whitespace.
+     * @param blackListedRegexes Expressions that represent the character spans that are present within the whitespace
+     *                           areas to replace with whitespace.
+     */
+    public static String cleanRawText(String rawText, String[] whiteListedRegexes, String[] blackListedRegexes) {
+        return cleanRawText(rawText, whiteListedRegexes, Integer.MAX_VALUE, blackListedRegexes);
+    }
+
+    /**
+     * Builds a new String based on the given one but with certain character spans replaced with whitespace based
+     * on the given regular expressions.
+     * In practice, this is used for raw XML tokenization, where is it necessary to filter from the raw file text
+     * unwanted items such as XML tags and extraneous XML elements.
+     * @param whiteListedRegexes Expressions the represent the character spans in the given text to preserve. All
+     *                           surrounding spans will be replaced with whitespace.
+     * @param maxNumWhiteListedSpansToRead The maximum number of whitelisted spans to read. Any remaining are discarded.
+     * @param blackListedRegexes Expressions that represent the character spans that are present within the whitespace
+     *                           areas to replace with whitespace.
+     */
+    public static String cleanRawText(String rawText, String[] whiteListedRegexes, int maxNumWhiteListedSpansToRead, String[] blackListedRegexes) {
+        int whiteListedSpanEnd = 0;
+        for (String whiteListedRegex: whiteListedRegexes) {
+            Matcher matcher = Pattern.compile(whiteListedRegex, Pattern.DOTALL).matcher(rawText);
+            for (int i = 0; i < maxNumWhiteListedSpansToRead && matcher.find(); i++) {
+                rawText = replaceSubstringWithSpaces(rawText, whiteListedSpanEnd, matcher.start());
+                whiteListedSpanEnd = matcher.end();
+            }
+        }
+        rawText = replaceSubstringWithSpaces(rawText, whiteListedSpanEnd, rawText.length());
+
+        for (String forbiddenSubstringRegex : blackListedRegexes) {
+            Matcher matcher = Pattern.compile(forbiddenSubstringRegex, Pattern.DOTALL).matcher(rawText);
+            while (matcher.find()) {
+                rawText = replaceSubstringWithSpaces(rawText, matcher.start(), matcher.end());
+            }
+        }
+        return rawText;
+    }
+
+    /**
+     * Build a new string where the substring from begin (inclusive) to end (exclusive) has been replaced with spaces.
+     */
+    public static String replaceSubstringWithSpaces(String str, int begin, int end) {
+        return
+          str.substring(0, begin) +
+          StringUtils.repeat(" ", end - begin) +
+          str.substring(end);
+    }
+
+    /**
+     * Like {@link String#indexOf(String)}, but search for a regex pattern instead of a literal string.
+     * @return a CharOffset representing the first regex match, or <code>null</code> if no match was found.
+     */
+    public static CharOffset searchByRegex(String s, String regex) {
+        return searchByRegex(s, 0, regex);
+    }
+
+    /**
+     * Like {@link String#indexOf(String, int)}, but search for a regex pattern instead of a literal string.
+     * @return a CharOffset representing the first regex match, or <code>null</code> if no match was found.
+     */
+    public static CharOffset searchByRegex(String s, int fromIndex, String regex) {
+        Matcher matcher = Pattern.compile(regex).matcher(s.substring(fromIndex));
+        return matcher.find() ? new CharOffset(fromIndex + matcher.start(), fromIndex + matcher.end()) : null;
+    }
+
+    /**
+     * Locate the first given tag in the given XML string.
+     * @param tagName The tag for which to search.
+     * @return The index of the first tag, or -1 if it was not found.
+     */
+    public static int findXMLTag(String xmlString, String tagName) {
+        if (!XMLChar.isValidName(tagName)) {
+            throw new IllegalArgumentException("'" + tagName + "'");
+        }
+        CharOffset charOffset = searchByRegex(
+                Reader.cleanRawText(xmlString, new String[]{".*"}, new String[]{"<!--.*?-->"}),
+                String.format("<%s[\\s|>]", tagName)
+        );
+        return charOffset != null ? charOffset.getBegin() : -1;
+    }
+
+
 
     /**
      * Find stream in classpath or file system.
      *
      * @param name the name
      * @return the input stream
-     * @throws FileNotFoundException the file not found exception
+     * @throws IOException
      */
-    public static BOMInputStream findStreamInClasspathOrFileSystem(String name) throws FileNotFoundException {
+    public static BOMInputStream findStreamInClasspathOrFileSystem(String name) throws IOException {
+        if (name.startsWith("hdfs:")) { // (Hadoop File System)
+            Path path = new Path(name);
+            FileSystem fs = FileSystem.get(path.toUri(), new Configuration());
+            return new BOMInputStream(fs.open(path), false);
+        }
         InputStream is = Reader.class.getClassLoader().getResourceAsStream(name);
-	BOMInputStream bis = new BOMInputStream(is, false);
+	      BOMInputStream bis = new BOMInputStream(is, false);
         if (is == null) {
             is = Reader.class.getClassLoader().getResourceAsStream(name.replaceAll("\\\\", "/"));
-	    bis = new BOMInputStream(is, false);
+	          bis = new BOMInputStream(is, false);
             if (is == null) {
                 File f = new File(name);
                 if (!f.exists()) {
                     System.out.println("Warning - creating FileInputStream: " + f.getAbsolutePath());
                 }
                 is = new FileInputStream(name);
-		bis = new BOMInputStream(is, false);
+		            bis = new BOMInputStream(is, false);
                 //System.out.println("Reading InputStream: " + f.getAbsolutePath());
             } else {
                 System.out.println("InputStream found in Class Loader after adjusting separators.");
@@ -1084,21 +1270,15 @@ public class Reader {
      *
      * @param name the name
      * @return the absolute path from classpath or file system
-     * @throws FileNotFoundException the file not found exception
      */
-    public static String getAbsolutePathFromClasspathOrFileSystem(String name) throws FileNotFoundException {
+    public static String getAbsolutePathFromClasspathOrFileSystem(String name) throws URISyntaxException {
         if (name.startsWith("/")) return name;
         //
         // System.out.println("To find the absolute path of: " + name);
         URL url = null;
-        try {
-            url = Reader.class.getClassLoader().getResource(name);
-            if (url != null) return url.toURI().getPath();
-            else return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        url = Reader.class.getClassLoader().getResource(name);
+        if (url != null) return url.toURI().getPath();
+        else return null;
 
     }
 
@@ -1114,7 +1294,7 @@ public class Reader {
      * @throws IOException        Signals that an I/O exception has occurred.
      * @author Greg Briggs
      */
-    public static String[] getResourceListing(Class clazz, String path) throws URISyntaxException, IOException {
+    public static String[] getResourceListing(Class<?> clazz, String path) throws URISyntaxException, IOException {
 
         URL dirURL = clazz.getClassLoader().getResource(path);
         if (dirURL != null && dirURL.getProtocol().equals("file")) {
@@ -1131,26 +1311,27 @@ public class Reader {
             dirURL = clazz.getClassLoader().getResource(me);
         }
 
-        if (dirURL.getProtocol().equals("jar")) {
-	        /* A JAR path */
-            String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
-            JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
-            Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-            Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
-            while (entries.hasMoreElements()) {
-                String name = entries.nextElement().getName();
-                if (name.startsWith(path)) { //filter according to the path
-                    String entry = name.substring(path.length());
-                    int checkSubdir = entry.indexOf("/");
-                    if (checkSubdir >= 0) {
-                        // if it is a subdirectory, we just return the directory name
-                        entry = entry.substring(0, checkSubdir);
-                    }
-                    result.add(entry);
-                }
+    if (dirURL.getProtocol().equals("jar")) {
+      /* A JAR path */
+      Set<String> result = new HashSet<String>(); // avoid duplicates in case it is a subdirectory
+      String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); // strip only the JAR file
+      try (JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"))) {
+        Enumeration<JarEntry> entries = jar.entries(); // gives ALL entries in jar
+        while (entries.hasMoreElements()) {
+          String name = entries.nextElement().getName();
+          if (name.startsWith(path)) { // filter according to the path
+            String entry = name.substring(path.length());
+            int checkSubdir = entry.indexOf("/");
+            if (checkSubdir >= 0) {
+              // if it is a subdirectory, we just return the directory name
+              entry = entry.substring(0, checkSubdir);
             }
-            return result.toArray(new String[result.size()]);
+            result.add(entry);
+          }
         }
+      }
+      return result.toArray(new String[result.size()]);
+    }
 
         throw new UnsupportedOperationException("Cannot list files for URL " + dirURL);
     }
@@ -1162,23 +1343,18 @@ public class Reader {
      * @param path the path
      * @return the string
      */
-    public String readFileIntoString(String path) {
+    public String readFileIntoString(String path) throws IOException {
+        String absolutePath = path;
+        //			String absolutePath = getAbsolutePathFromClasspathOrFileSystem(path);
+        FileInputStream stream = new FileInputStream(new File(absolutePath));
         try {
-            String absolutePath = path;
-            //			String absolutePath = getAbsolutePathFromClasspathOrFileSystem(path);
-            FileInputStream stream = new FileInputStream(new File(absolutePath));
-            try {
-                FileChannel fc = stream.getChannel();
-                MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-				/* Instead of using default, pass in a decoder. */
-                return Charset.forName("UTF-8").decode(bb).toString();
-            } finally {
-                stream.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            FileChannel fc = stream.getChannel();
+            MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+            /* Instead of using default, pass in a decoder. */
+            return Charset.forName("UTF-8").decode(bb).toString();
+        } finally {
+            stream.close();
         }
-        return null;
     }
 
     /**
@@ -1187,19 +1363,16 @@ public class Reader {
      * @param path the path
      * @return the byte[]
      */
-    public byte[] readFileIntoByteArray(String path) {
-        try {
-            RandomAccessFile f = new RandomAccessFile(path, "r");
-            byte[] b = new byte[(int) f.length()];
-            f.read(b);
-            f.close();
-            return b;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public byte[] readFileIntoByteArray(String path) throws IOException {
+        RandomAccessFile f = new RandomAccessFile(path, "r");
+        byte[] b = new byte[(int) f.length()];
+		int len = f.read(b);
+		if (len < b.length) {
+		  logger.warn("Short read from {} - read {} bytes. expected {}", path, len, b.length);
+		}
+        f.close();
+        return b;
     }
-
 
     /**
      * Read file into lines.
@@ -1208,27 +1381,26 @@ public class Reader {
      * @param lines    the lines
      * @return the string
      */
-    public String readFileIntoLines(String filename, List<String> lines) {
+    public String readFileIntoLines(String filename, List<String> lines) throws IOException {
         if (lines == null)
-            lines = new ArrayList<String>();
+            lines = new ArrayList<>();
         String line = "";
         StringBuffer sb = new StringBuffer();
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new BOMInputStream(new FileInputStream(new File(filename)), false), "UTF-8"));
-            while ((line = in.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    String surrogatesRemoved = checkSurrogates(line);
-                    lines.add(surrogatesRemoved);
-                    sb.append(surrogatesRemoved);
-                    sb.append("\n");
-                }
+	    Configuration conf = new Configuration();
+          Path path = new Path(filename);
+          FileSystem fs = FileSystem.get(path.toUri(), conf);
+          FSDataInputStream inputStream = fs.open(path);
+          BufferedReader in = new BufferedReader(new InputStreamReader(new BOMInputStream(inputStream, false), "UTF-8"));
+          while ((line = in.readLine()) != null) {
+            if (!line.isEmpty()) {
+              String surrogatesRemoved = checkSurrogates(line);
+              lines.add(surrogatesRemoved);
+              sb.append(surrogatesRemoved);
+              sb.append("\n");
             }
-            in.close();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+          }
+          in.close();
         return sb.toString();
-
     }
 
     /**
@@ -1237,18 +1409,14 @@ public class Reader {
      * @param filename the filename
      * @return the list
      */
-    public List<String> fileToLines(String filename) {
+    public List<String> fileToLines(String filename) throws IOException {
         List<String> lines = new LinkedList<String>();
         String line = "";
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new BOMInputStream(new FileInputStream(new File(filename)), false), "UTF-8"));
-            while ((line = in.readLine()) != null) {
-                lines.add(checkSurrogates(line));
-            }
-            in.close();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+        BufferedReader in = new BufferedReader(new InputStreamReader(new BOMInputStream(new FileInputStream(new File(filename)), false), "UTF-8"));
+        while ((line = in.readLine()) != null) {
+            lines.add(checkSurrogates(line));
         }
+        in.close();
         return lines;
     }
 
@@ -1261,7 +1429,7 @@ public class Reader {
      */
     public String convertStreamToString(java.io.InputStream is) throws IOException {
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         StringBuilder out = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
@@ -1299,19 +1467,15 @@ public class Reader {
      * @param filename the filename
      * @return the list
      */
-    private String fileToString(String filename) {
-        String lines = "";
-        String line = "";
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(new BOMInputStream(new FileInputStream(new File(filename)), false), "UTF-8"));
-            while ((line = in.readLine()) != null) {
-                lines = lines + line + "\n";
-            }
-            in.close();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+    private String fileToString(String filename) throws IOException {
+        StringBuffer lines = new StringBuffer();
+        BufferedReader in = new BufferedReader(new InputStreamReader(new BOMInputStream(new FileInputStream(new File(filename)), false), "UTF-8"));
+		String line;
+        while ((line = in.readLine()) != null) {
+            lines.append(line).append('\n');
         }
-        return lines;
+        in.close();
+        return lines.toString();
     }
 
 }

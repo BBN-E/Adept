@@ -1,72 +1,75 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 // Next line is site-specific.
 package adept.utilities;
 
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
-import java.io.DataInputStream;
-import java.io.IOException;
+
+import org.apache.log4j.PropertyConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.PropertyConfigurator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import adept.common.Corpus;
 import adept.common.Document;
 import adept.common.DocumentList;
 import adept.common.HltContentContainer;
 import adept.common.HltContentContainerList;
-import adept.io.Writer;
-import adept.io.Reader;
-
-import adept.serialization.BinaryFromJSONSerializer;
-import adept.serialization.JSONSerializer;
-import adept.serialization.SerializationType;
-import adept.serialization.XMLSerializer;
 import adept.common.TokenizerType;
+import adept.module.AdeptModuleException;
+import adept.io.Reader;
+import adept.io.Writer;
+import adept.serialization.JSONBinarySerializer;
+import adept.serialization.JSONStringSerializer;
+import adept.serialization.XMLStringSerializer;
 
 
 
 /**
  * The Class CommandLineApp.
  */
-public abstract class CommandLineApp 
+public abstract class CommandLineApp
 {
 
 	/** The xml serializer. */
-	private static XMLSerializer xmlSerializer;
+	private static XMLStringSerializer xmlStringSerializer;
 
 	/** The json serializer. */
-	private static JSONSerializer jsonSerializer;
+	private static JSONStringSerializer jsonStringSerializer;
 
 	/** The binary serializer. */
-	private static BinaryFromJSONSerializer binarySerializer;
+	private static JSONBinarySerializer jsonBinarySerializer;
 
 	/** The logger. */
 	private static Logger logger;
@@ -79,27 +82,27 @@ public abstract class CommandLineApp
 	private static String packagePath;
 
 	/** files to be written on serialization. */
-	private static String xmlFilename, jsonFilename, binaryFilename;
+	private static String xmlFilename, jsonFilename = null, binaryFilename = null;
 
 	/** Command line arguments. */
 	private static CommandLineArgParse theArgs;
 
     /** The type of tokenizer to be used. */
-    protected TokenizerType tokenizerType = TokenizerType.APACHE_OPENNLP;
+    protected TokenizerType tokenizerType = TokenizerType.STANFORD_CORENLP;
 
 
-    /**
+     	/**
 	 * Abstract methods.
 	 *
-	 * @param algorithmConfig the algorithm config
-	 */
-	protected abstract void doActivate(String algorithmConfig);
-	
+     	 * @param algorithmConfig the algorithm config
+    	 */
+	public abstract void doActivate(String algorithmConfig) throws AdeptModuleException;
+
 	/**
 	 * Do deactivate.
 	 */
-	protected abstract void doDeactivate();
-	
+	public abstract void doDeactivate() throws AdeptModuleException;
+
 	/**
 	 * Do process.
 	 *
@@ -107,7 +110,8 @@ public abstract class CommandLineApp
 	 * @param hltContentContainer the hlt content container
 	 * @return the hlt content container
 	 */
-	protected abstract HltContentContainer doProcess(Document document, HltContentContainer hltContentContainer);		
+	public abstract HltContentContainer doProcess(Document document,
+			HltContentContainer hltContentContainer) throws AdeptModuleException;
 
 	/**
 	 * The main method.
@@ -118,65 +122,72 @@ public abstract class CommandLineApp
 	public void Run(String[] args, String algorithmConfig)
 	{
 		/** initialize and configure */
-		long totalStart = System.nanoTime();    
+		long totalStart = System.nanoTime();
 		theArgs = new CommandLineArgParse( args);
 		if ( theArgs.bHelp || theArgs.bVersion) return;
-		if ( !theArgs.bRunOneFile && !theArgs.bRunList) 
+		if ( !theArgs.bRunOneFile && !theArgs.bRunList)
 		{
 			System.out.println("Invalid arguments - exiting.");
 			return;
 		}
-		initialize();
-		boolean bSuccess = true;
-		if ( !isNullOrEmpty(theArgs.algorithmConfig))
-		{
-			algorithmConfig = theArgs.algorithmConfig;
+    boolean bSuccess = true;
+    List<File> fileList = new ArrayList<File>();
+		try {
+  		initialize();
+  		if ( !isNullOrEmpty(theArgs.algorithmConfig))
+  		{
+  			algorithmConfig = theArgs.algorithmConfig;
+  		}
+  		if ( theArgs.bRunOneFile)
+  		{
+  			File file = new File(theArgs.inputFile);
+  			fileList.add(file);
+  		}
+  		else if ( theArgs.bRunList )
+  		{
+  			List<String> inputFileList = fileToLines(theArgs.inputList);
+  			File dir = new File(theArgs.inputDirectory);
+  			for ( String line : inputFileList)
+  			{
+  				if ( line.startsWith("#")) continue;	// this means the line was a comment not a filename
+  				File file = new File(dir, line);
+  				if(!file.exists())
+  				{
+  					System.out.println("Input file not found:  " + file.getAbsolutePath());
+  					continue;
+  				}
+  				fileList.add(file);
+  				System.out.println("Input file found:  " + file.getAbsolutePath());
+  			}
+  			if ( fileList.isEmpty() ) throw new RuntimeException("List " + inputFileList + " is empty.");
+  		}
+  		if ( theArgs.bCrossDoc)
+  		{
+  			bSuccess = processListOfFiles( algorithmConfig, fileList);
+  		}
+  		else
+  		{
+  			doActivate(algorithmConfig);
+  			for ( File fInFile : fileList)
+  			{
+  				if ( ! processInputFile( fInFile) ) bSuccess = false;
+  			}
+  		}
+  		doDeactivate();
+		} catch (Exception e) {
+      logger.error("Caught Exception: ", e);
+      System.out.format("Error: %s thrown", e.getClass().getName() );
+      System.exit(1);
 		}
-		List<File> fileList = new ArrayList<File>();
-		if ( theArgs.bRunOneFile)
-		{
-			File file = new File(theArgs.inputFile);
-			fileList.add(file);
-		}
-		else if ( theArgs.bRunList )
-		{
-			List<String> inputFileList = fileToLines(theArgs.inputList);
-			File dir = new File(theArgs.inputDirectory);
-			for ( String line : inputFileList)
-			{
-				if ( line.startsWith("#")) continue;	// this means the line was a comment not a filename
-				File file = new File(dir, line);
-				if(!file.exists()) 
-				{
-					System.out.println("Input file not found:  " + file.getAbsolutePath());
-					continue;
-				}
-				fileList.add(file);
-				System.out.println("Input file found:  " + file.getAbsolutePath());
-			}
-			if ( fileList.isEmpty() ) throw new RuntimeException("List " + inputFileList + " is empty.");
-		}
-		if ( theArgs.bCrossDoc) 
-		{
-			bSuccess = processListOfFiles( algorithmConfig, fileList);
-		}
-		else 
-		{
-			doActivate(algorithmConfig);
-			for ( File fInFile : fileList) 
-			{
-				if ( ! processInputFile( fInFile) ) bSuccess = false;
-			}			
-		}
-		doDeactivate();
 		long totalSeconds = TimeUnit.SECONDS.convert(System.nanoTime() - totalStart, TimeUnit.NANOSECONDS);
 		System.out.format("%s  Processed %d files in %d seconds.\n", bSuccess?"SUCCESS!":"ERROR!", fileList.size(), totalSeconds);
 	}
 
 	/**
 	 * Initialize.
+	 * @throws IOException
 	 */
-	public void initialize()
+	public void initialize() throws IOException
 	{
 		System.out.println("Current Directory: " + System.getProperty("user.dir"));
 		String packageName = new Object(){}.getClass().getPackage().getName();
@@ -184,21 +195,16 @@ public abstract class CommandLineApp
 
 		/** Initialize logger instance */
 		logger = LoggerFactory.getLogger(new Object(){}.getClass());
-		try {
-			/** The log config file path. */
-			logConfigFilePath = packagePath + "log4j.file.properties";
-			DataInputStream rf = new DataInputStream(Reader.findStreamInClasspathOrFileSystem(logConfigFilePath));
-			PropertyConfigurator.configure(rf);
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();			
-		}	
+		/** The log config file path. */
+		logConfigFilePath = packagePath + "log4j.file.properties";
+		DataInputStream rf = new DataInputStream(Reader.findStreamInClasspathOrFileSystem(logConfigFilePath));
+		PropertyConfigurator.configure(rf);
 		logger.info("JUnit version " + junit.runner.Version.id());
 
 		/** Initialize serializer instances */
-		xmlSerializer = new XMLSerializer(SerializationType.XML);
-		jsonSerializer = new JSONSerializer(SerializationType.JSON);
-		binarySerializer = new BinaryFromJSONSerializer(SerializationType.BINARY);
+		xmlStringSerializer = new XMLStringSerializer();
+		jsonStringSerializer = new JSONStringSerializer();
+		jsonBinarySerializer = new JSONBinarySerializer();
 	}
 
 	// Make HltContentContainer from file and save to file with timing.
@@ -207,27 +213,31 @@ public abstract class CommandLineApp
 	 *
 	 * @param file the file
 	 * @return true, if successful
+	 * @throws Exception 
 	 */
-	private boolean processInputFile( File file) {
-		long start = System.nanoTime();  
+	private boolean processInputFile( File file) throws Exception {
+		long start = System.nanoTime();
 		String filename = theArgs.outputFile;
+		String docType = "Text"; // default
+		if (theArgs.inputFormat != null) {
+			docType = theArgs.inputFormat;
+		}
 		if ( isNullOrEmpty(filename)) filename = file.getName();
 		xmlFilename = filename + ".xml";
 		if ( !isNullOrEmpty( theArgs.outputDirectory )) {
 			File f = new File(theArgs.outputDirectory);
 			File x = new File(f,xmlFilename);
 			xmlFilename = x.getAbsolutePath();
-		}	
+		}
 		HltContentContainer hltContentContainer = new HltContentContainer();
 		//Document document = createDocument( file, hltContentContainer);
-		
+
 		/** Create a document object. */
 		String docId = "001";
 		Corpus corpus = null;
-		String docType = "Text"; 
 		String uri = file.getAbsolutePath();
 		String language = "English";
-		Document document = DocumentMaker.getInstance().createDefaultDocument(
+		Document document = DocumentMaker.getInstance().createDocument(
                 docId,
                 corpus,
                 docType,
@@ -236,13 +246,13 @@ public abstract class CommandLineApp
                 uri,
                 hltContentContainer,
                 tokenizerType);
-		
+
 		hltContentContainer = doProcess(document, hltContentContainer);
-		boolean bOK =  saveHLTCC( hltContentContainer  );	
+		boolean bOK =  saveHLTCC( hltContentContainer  );
 		long seconds = TimeUnit.SECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS);
 		System.out.format("Seconds=%d File=%s\n", seconds, file.getName());
 		return bOK;
-	}	
+	}
 
 	// Make HltContentContainer from file list and save to file.
 	/**
@@ -251,9 +261,10 @@ public abstract class CommandLineApp
 	 * @param algorithmConfig the algorithm config
 	 * @param fileList the file list
 	 * @return true, if successful
+	 * @throws Exception 
 	 */
-	public boolean processListOfFiles(String algorithmConfig, List<File> fileList )
-	{		
+	public boolean processListOfFiles(String algorithmConfig, List<File> fileList ) throws Exception
+	{
 		DocumentList documentList = new DocumentList();
 		HltContentContainerList hltccList = new HltContentContainerList();
 		for ( File file : fileList )		{
@@ -279,16 +290,17 @@ public abstract class CommandLineApp
 	 *
 	 * @param hltContentContainer the hlt content container
 	 * @return true, if successful
+	 * @throws Exception 
 	 */
-	protected boolean saveHLTCC(HltContentContainer hltContentContainer  ) {
-		if ( hltContentContainer == null ) 
+	protected boolean saveHLTCC(HltContentContainer hltContentContainer  ) throws Exception {
+		if ( hltContentContainer == null )
 		{
 			System.out.println("Null HLT content container.");
 			return false;
-		}	
+		}
 		String xmlTemp = serialize(hltContentContainer);
 		boolean bOK = true;
-		if ( theArgs.bValidateXml) 
+		if ( theArgs.bValidateXml)
 		{
 			bOK = doValidate( xmlTemp );
 		}
@@ -315,7 +327,7 @@ public abstract class CommandLineApp
 //			File fOutBase = new File( fOutDir, baseFilename);
 //			baseFilename = fOutBase.getAbsolutePath();
 //		}
-//		return baseFilename + ".output." + ext;		
+//		return baseFilename + ".output." + ext;
 //	}
 
 	/**
@@ -329,11 +341,11 @@ public abstract class CommandLineApp
 		/** Create a document object. */
 		String docId = "001";
 		Corpus corpus = null;
-		String docType = "Text"; 
+		String docType = "Text";
 		String uri = file.getAbsolutePath();
 		String language = "English";
 		if (hltcc == null) hltcc = new HltContentContainer();
-		Document document = DocumentMaker.getInstance().createDefaultDocument(docId, corpus, docType, uri, language, uri, hltcc);
+		Document document = DocumentMaker.getInstance().createDocument(docId, corpus, docType, uri, language, uri, hltcc);
 		return document;
 	}
 
@@ -342,36 +354,33 @@ public abstract class CommandLineApp
 	 *
 	 * @param hltContentContainer the hltContentContainer
 	 * @return the string
+	 * @throws UnsupportedEncodingException 
 	 */
-	public String serialize(HltContentContainer hltContentContainer)
+	public String serialize(HltContentContainer hltContentContainer) throws UnsupportedEncodingException
 	{
 		if ( hltContentContainer == null) return null;
 		String xmlTemp = null;
-		try {
-			xmlTemp = xmlSerializer.serializeAsString(hltContentContainer);
-			//System.out.println(xmlTemp);
-			if ( !isNullOrEmpty(xmlFilename) )
-			{
-				System.out.println("Writing to:  " + xmlFilename);
-				Writer.getInstance().writeToFile(xmlFilename,xmlTemp);
-			}
-			if ( !isNullOrEmpty(jsonFilename) )
-			{
-				System.out.println("Writing to:  " + jsonFilename);
-				String jsonTemp = jsonSerializer.serializeAsString(hltContentContainer);
-				Writer.getInstance().writeToFile(jsonFilename,jsonTemp);
-			}
-			if ( !isNullOrEmpty(binaryFilename) )
-			{
-				System.out.println("Writing to:  " + binaryFilename);
-				byte[] binTemp = binarySerializer.serializeAsByteArray(hltContentContainer);
-				Writer.getInstance().writeToFile(binaryFilename,binTemp);
-			}
-			logger.info("files written with serialized values");
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		xmlTemp = xmlStringSerializer.serializeToString(hltContentContainer);
+		//System.out.println(xmlTemp);
+		if ( !isNullOrEmpty(xmlFilename) )
+		{
+			System.out.println("Writing to:  " + xmlFilename);
+			Writer.getInstance().writeToFile(xmlFilename,xmlTemp);
 		}
+		if ( !isNullOrEmpty(jsonFilename) )
+		{
+			System.out.println("Writing to:  " + jsonFilename);
+			String jsonTemp = jsonStringSerializer.serializeToString(hltContentContainer);
+			Writer.getInstance().writeToFile(jsonFilename,jsonTemp);
+		}
+		if ( !isNullOrEmpty(binaryFilename) )
+		{
+			System.out.println("Writing to:  " + binaryFilename);
+			byte[] binTemp = jsonBinarySerializer.serializeToByteArray(hltContentContainer);
+			Writer.getInstance().writeToFile(binaryFilename,binTemp);
+		}
+		logger.info("files written with serialized values");
+
 		return xmlTemp;
 	}
 
@@ -394,18 +403,19 @@ public abstract class CommandLineApp
 	 *
 	 * @param filename the filename
 	 * @return the list
+	 * @throws IOException 
 	 */
-	public static List<String> fileToLines(String filename) {
+	public static List<String> fileToLines(String filename) throws IOException {
 		List<String> lines = new LinkedList<String>();
 		String line = "";
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new java.io.File(filename).getAbsolutePath()));
+		try (BufferedReader reader = new BufferedReader(new FileReader(new java.io.File(filename).getAbsolutePath()))) {
 			while ((line = reader.readLine()) != null) {
 				lines.add(line);
 			}
-			reader.close();
 		} catch (IOException ex) {
-			throw new RuntimeException(ex);
+      System.err.format("Error: %s reading file %s%n", ex.getMessage(), filename);
+      logger.error("Exception caught: ", ex);
+      throw ex;
 		}
 		return lines;
 	}
@@ -415,11 +425,12 @@ public abstract class CommandLineApp
 	 *
 	 * @param filename the filename
 	 * @param lines the lines
+	 * @throws Exception 
 	 */
-	public static void linesToFile(String filename, List<String> lines)
+	public static void linesToFile(String filename, List<String> lines) throws Exception
 	{
 		try{
-			// Create file 
+			// Create file
 			FileWriter fstream = new FileWriter(filename);
 			BufferedWriter writer = new BufferedWriter(fstream);
 			for(Iterator<String> i = lines.iterator(); i.hasNext(); ) {
@@ -430,8 +441,10 @@ public abstract class CommandLineApp
 			}
 			//Close the output stream
 			writer.close();
-		}catch (Exception e){//Catch exception if any
-			System.err.println("Error: " + e.getMessage());
+		} catch (Exception e){//Catch exception if any
+			System.err.format("Error: %s writing file %s%n", e.getMessage(), filename);
+			logger.error("Exception caught: ", e);
+			throw e;
 		}
 	}
 
@@ -441,7 +454,7 @@ public abstract class CommandLineApp
 	 * @param xmlTemp the xml temp
 	 * @return true, if successful
 	 */
-	protected boolean doValidate( String xmlTemp )
+	protected boolean doValidate( String xmlTemp ) throws Exception
 	{
 		// TODO - implement XSD validation here and in all subclasses.
 		return true;
@@ -454,7 +467,7 @@ public abstract class CommandLineApp
 	 * @param documentList the document list
 	 * @return the hlt content container
 	 */
-	protected HltContentContainer doProcess(DocumentList documentList, HltContentContainerList hltccList)
+	protected HltContentContainer doProcess(DocumentList documentList, HltContentContainerList hltccList) throws AdeptModuleException
 	{
 		System.err.println("Document list processing is not implemented for this algorithm");
 		return null;

@@ -1,23 +1,27 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.utilities;
 
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.jfree.chart.ChartFactory;
@@ -41,32 +45,23 @@ public class Grapher
  	 *
  	 * @param values the values
  	 * @param filename the filename
+ 	 * @throws IOException 
  	 */
- 	public static void makeHeapUsageGraph(ArrayList<Double> values, File filename)
-	    {
-	        try
-	        {
-	            DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
-	            for(int i=1; i<=values.size(); i++)
-	            {
-	            	line_chart_dataset.addValue(values.get(i-1), "MB", ""+i);
-	            }              
-	            
-	             /* Step -2:Define the JFreeChart object to create line chart */
-	             JFreeChart lineChartObject=ChartFactory.createLineChart("Heap Memory Usage","Run Number","Heap Memory Used",line_chart_dataset,PlotOrientation.VERTICAL,true,true,false);               
-	                      
-	             /* Step -3 : Write line chart to a file */              
-	              int width=640; /* Width of the image */
-	              int height=480; /* Height of the image */                           
-	              ChartUtilities.saveChartAsPNG(filename,lineChartObject,width,height);
-	        }
-	       
-	       catch (Exception e)
-	        {
-	          e.printStackTrace();
-	        }
+  public static void makeHeapUsageGraph(ArrayList<Double> values, File filename) throws IOException {
+    DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
+    for (int i = 1; i <= values.size(); i++) {
+      line_chart_dataset.addValue(values.get(i - 1), "MB", "" + i);
+    }
 
-	}  
+    /* Step -2:Define the JFreeChart object to create line chart */
+    JFreeChart lineChartObject = ChartFactory.createLineChart("Heap Memory Usage", "Run Number", "Heap Memory Used",
+        line_chart_dataset, PlotOrientation.VERTICAL, true, true, false);
+
+    /* Step -3 : Write line chart to a file */
+    int width = 640; /* Width of the image */
+    int height = 480; /* Height of the image */
+    ChartUtilities.saveChartAsPNG(filename, lineChartObject, width, height);
+  }
 	 
 	 /**
  	 * Make time vs size graph.
@@ -78,33 +73,25 @@ public class Grapher
  	 * @param Xlabel the xlabel
  	 * @param Ylabel the ylabel
  	 * @param title the title
+	 * @throws IOException 
  	 */
- 	public static void makeTimeVsSizeGraph(ArrayList<Double> timevalues, ArrayList<Double> sizevalues, File filename, String linelabel, String Xlabel, String Ylabel, String title)
-    {
-		 try
-		 {
-		 
-	            XYSeriesCollection scatter_plot_dataset = new XYSeriesCollection();
-	            XYSeries data = new XYSeries(linelabel);
-	            for(int i=0; i<sizevalues.size(); i++)
-	            {
-	            	data.add(sizevalues.get(i),timevalues.get(i));
-	            }              
-	            scatter_plot_dataset.addSeries(data);
+ 	public static void makeTimeVsSizeGraph(ArrayList<Double> timevalues, ArrayList<Double> sizevalues, File filename, String linelabel, String Xlabel, String Ylabel, String title) throws IOException 
+ 	{
+    XYSeriesCollection scatter_plot_dataset = new XYSeriesCollection();
+	  XYSeries data = new XYSeries(linelabel);
+	  
+	  for(int i=0; i < sizevalues.size(); i++) {
+	    data.add(sizevalues.get(i),timevalues.get(i));
+	  }
+ 	
+	  scatter_plot_dataset.addSeries(data);
 	            
-	             /* Step -2:Define the JFreeChart object to create line chart */
-	             JFreeChart scatterPlotObject=ChartFactory.createScatterPlot(Ylabel,Xlabel,title,scatter_plot_dataset,PlotOrientation.VERTICAL,true,true,false);               
+	  /* Step -2:Define the JFreeChart object to create line chart */
+	  JFreeChart scatterPlotObject=ChartFactory.createScatterPlot(Ylabel,Xlabel,title,scatter_plot_dataset,PlotOrientation.VERTICAL,true,true,false);               
 	                      
-	             /* Step -3 : Write line chart to a file */              
-	              int width=640; /* Width of the image */
-	              int height=480; /* Height of the image */                           
-	              ChartUtilities.saveChartAsPNG(filename,scatterPlotObject,width,height);
-	        }
-	       
-	       catch (Exception e)
-	        {
-	          e.printStackTrace();
-	        }
-
-	}  
+	  /* Step -3 : Write line chart to a file */              
+	  int width=640; /* Width of the image */
+	  int height=480; /* Height of the image */                           
+	  ChartUtilities.saveChartAsPNG(filename,scatterPlotObject,width,height);
+  }
 }

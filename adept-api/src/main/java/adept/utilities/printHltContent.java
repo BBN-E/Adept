@@ -1,30 +1,46 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.utilities;
 
-import adept.common.*;
-import adept.serialization.*;
-import adept.io.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import java.io.*;
 import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import adept.common.Argument;
+import adept.common.Chunk;
+import adept.common.Coreference;
+import adept.common.Document;
+import adept.common.Entity;
+import adept.common.EntityMention;
+import adept.common.HltContentContainer;
+import adept.common.KBID;
+import adept.common.Opinion;
+import adept.common.Passage;
+import adept.common.Relation;
+import adept.common.Sarcasm;
+import adept.io.Reader;
+import adept.serialization.XMLStringSerializer;
 
 
 
@@ -34,12 +50,9 @@ import java.util.List;
  */
 public class printHltContent {
 
-	/** The hcc. */
-	private static HltContentContainer hcc;
-
 	/** The deserializer. */
-	private static XMLSerializer deserializer = new XMLSerializer(
-			SerializationType.XML);
+	private static XMLStringSerializer deserializer = new XMLStringSerializer();
+  private static final Logger logger = LoggerFactory.getLogger(printHltContent.class);
 
 	/**
 	 * The main method.
@@ -49,69 +62,74 @@ public class printHltContent {
 	public static void main(String[] args) {
 		String input_path = args[0];
 		File input_directory = new File(input_path);
-
-		for (File hcc_file : input_directory.listFiles()) {
-			try {
-				// Ignore subfolders.
-				if (hcc_file.isDirectory()) continue;
-				String name = hcc_file.getName();
-				String filename = input_path + name;
-				System.out.println("Working on file: " + filename);
-				printOneFile( filename);
-			} catch (Exception e) {
-				e.printStackTrace();
+		File[] files = input_directory.listFiles();
+		if (null != files) {
+      String filename = null;
+			for (File hcc_file : files) {
+				try {
+					// Ignore subfolders.
+					if (hcc_file.isDirectory()) continue;
+					String name = hcc_file.getName();
+					filename = input_path + name;
+					System.out.println("Working on file: " + filename);
+					printOneFile( filename);
+				} catch (Exception e) {
+					System.err.format("File %s failed processing due to a %s exception%n", filename, e.getClass().getName());
+					logger.error("Exception caught processing file {}: ", filename, e);
+				}
 			}
+		} else {
+			System.err.format("%s does not exist or is not a directory%n", input_path);
 		}
 	}
-	
+
 	/**
 	 * Write file.
 	 *
 	 * @param inFile the in file
 	 * @param outFile the out file
+	 * @throws FileNotFoundException 
+	 * @throws UnsupportedEncodingException 
 	 */
-	public static void writeFile( String inFile, String outFile)
+	public static void writeFile( String inFile, String outFile) throws FileNotFoundException, UnsupportedEncodingException
 	{
 		PrintStream console = System.out;
-		try {
-			File out = new File(outFile);
-			System.setOut(new PrintStream(out));
-			System.setErr(new PrintStream(out));
-			printOneFile(inFile);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();		
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally
-		{
-			System.setErr(console);
-			System.setOut(console);
-		}		
+		File out = new File(outFile);
+		System.setOut(new PrintStream(out));
+		System.setErr(new PrintStream(out));
+		printOneFile(inFile);
+		System.setErr(console);
+		System.setOut(console);
 	}
-	
+
 	/**
 	 * Prints the one file.
 	 *
 	 * @param filename the filename
 	 * @throws UnsupportedEncodingException the unsupported encoding exception
 	 */
-	protected static void 	printOneFile(String filename) throws UnsupportedEncodingException {
-		String content = Reader.getInstance().readFileIntoString(filename);
-
-		if (content != null) {
-			hcc = (HltContentContainer) deserializer.deserializeString(
-					content, HltContentContainer.class);
-		} else {
-			System.out.println("Could not read data...ending!");
-			return;
+	protected static void printOneFile(String filename) throws UnsupportedEncodingException {
+		String content;
+		try {
+			content = Reader.getInstance().readFileIntoString(filename);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
-		// Get Document 
-		Document document = hcc.getDocument();		
-		
+		if (content != null) {
+			HltContentContainer hcc = (HltContentContainer) deserializer.deserializeFromString(
+					content, HltContentContainer.class);
+			printOneContainer(hcc);
+		} else {
+			System.out.println("Could not read data...ending!");
+		}
+	}
+
+	public static void printOneContainer(HltContentContainer hcc) {
+
+		// Get Document
+		Document document = hcc.getDocument();
+
 		if(document !=null)
 		{
 			System.out.println("Printing document attributes..");
@@ -129,9 +147,9 @@ public class printHltContent {
 			System.out.println("SplitId: " + document.getSplitId());
 			System.out.println("Uri: " + document.getUri());
 			System.out.println("");
-			System.out.println("[" + document.getValue() + "]\n");			
-		}		
-		
+			System.out.println("[" + document.getValue() + "]\n");
+		}
+
 		if (hcc.getEntityMentions() != null) {
 			System.out.println("Printing Entity Mentions:");
 			System.out
@@ -147,7 +165,7 @@ public class printHltContent {
 				if (em.getMentionType() != null) {
 					mentionType = em.getMentionType().getType();
 				}
-				System.out.println(em.getValue() + "\t" + entityType + "\t"
+				System.out.println(em.getValue().replace("\n", " ") + "\t" + entityType + "\t"
 						+ mentionType + "\t"
 						+ em.getTokenOffset().getBegin() + "\t"
 						//+ em.getTokenOffset().getEnd());
@@ -155,7 +173,7 @@ public class printHltContent {
 						+ em.getTokenStream().getDocument().getId());
 			}
 		}
-		
+
         if(hcc.getCoreferences()!=null)
         {
         	System.out.println("Printing Entity with their Cluster IDs:");
@@ -170,14 +188,14 @@ public class printHltContent {
     				mentionType = e.getCanonicalMention().getMentionType()
     						.getType();
     			}
-    			System.out.println(e.getValue() + "\t" + entityType + "\t"
-    					+ e.getCanonicalMention().getValue() + "\t"
+    			System.out.println(e.getValue().replace("\n", " ") + "\t" + entityType + "\t"
+    					+ e.getCanonicalMention().getValue().replace("\n", " ") + "\t"
     					+ mentionType + "\t" + e.getEntityId());
     		}
 
     		System.out.println("Printing Resolved Entity Mentions to respective Entity Cluster IDs:");
     		System.out.println("Value\tentityType\tmentionType\tbegin\tend\tentityClusterID\tDocumentID");
-    		for (Coreference cor : hcc.getCoreferences()) {    			    			
+    		for (Coreference cor : hcc.getCoreferences()) {
 	    		for (EntityMention em : cor
 	    				.getResolvedMentions()) {
 	    			String entityType = "UNKNOWN";
@@ -188,8 +206,8 @@ public class printHltContent {
 	    			if (em.getMentionType() != null) {
 	    				mentionType = em.getMentionType().getType();
 	    			}
-	
-	    			System.out.println(em.getValue()
+
+	    			System.out.println(em.getValue().replace("\n", " ")
 	    					+ "\t"
 	    					+ entityType
 	    					+ "\t"
@@ -205,7 +223,7 @@ public class printHltContent {
 	    					+ em.getTokenStream().getDocument().getId());
 	    		}
 	        }
-        }		
+        }
 
 		if (hcc.getRelations() != null) {
 			System.out.println("Printing Relations with associated arguments");
@@ -256,76 +274,99 @@ public class printHltContent {
 						arg2EmEntityType = arg2Em.getEntityType()
 								.getType();
 					}
-					System.out.println(arg1Em.getValue() + "\t"
+					System.out.println(arg1Em.getValue().replace("\n", " ") + "\t"
 							+ arg1EmEntityType + "\t"
 							+ arg1Em.getTokenOffset().getBegin() + "\t"
 							+ arg1Em.getTokenOffset().getEnd() + "\t"
-							+ arg2Em.getValue() + "\t" + arg2EmEntityType
+							+ arg2Em.getValue().replace("\n", " ") + "\t" + arg2EmEntityType
 							+ "\t" + arg2Em.getTokenOffset().getBegin()
 							+ "\t" + arg2Em.getTokenOffset().getEnd()
 							+ "\t" + relationType);
 				} else {
-					System.out.println(arg1Chunk.getValue() + "\t"
+					System.out.println(arg1Chunk.getValue().replace("\n", " ") + "\t"
 							+ arg1Type + "\t"
 							+ arg1Chunk.getTokenOffset().getBegin() + "\t"
 							+ arg1Chunk.getTokenOffset().getEnd() + "\t"
-							+ arg2Chunk.getValue() + "\t" + arg2Type + "\t"
+							+ arg2Chunk.getValue().replace("\n", " ") + "\t" + arg2Type + "\t"
 							+ arg2Chunk.getTokenOffset().getBegin() + "\t"
 							+ arg2Chunk.getTokenOffset().getEnd() + "\t"
 							+ relationType);
 				}
 			}
-		}		
-		
+		}
+
+		if(hcc.getKBEntityMapForDocEntities() != null) {
+			System.out.println("Printing KB entities");
+			System.out.println("Value\tentityType\tcanonicalMentionValue\tmentionType\tentityKBIDs");
+			for (Map.Entry<Entity, Map<KBID, Float>> entry: hcc.getKBEntityMapForDocEntities().entrySet()) {
+				String entityType = "UNKNOWN";
+				if (entry.getKey().getEntityType() != null) {
+					entityType = entry.getKey().getEntityType().getType();
+				}
+				String mentionType = "UNKNOWN";
+				if (entry.getKey().getCanonicalMention().getMentionType() != null) {
+					mentionType = entry.getKey().getCanonicalMention()
+							.getMentionType().getType();
+				}
+				StringBuilder kbids = new StringBuilder();
+				for (KBID kbid: entry.getValue().keySet()) {
+					kbids.append(" " + kbid.getObjectID());
+				}
+				System.out.println(entry.getKey().getValue().replace("\n", " ") + "\t" + entityType + "\t"
+						+ entry.getKey().getCanonicalMention().getValue().replace("\n", " ") + "\t"
+						+ mentionType + "\t" + kbids.toString());
+			}
+		}
+
 		if(hcc.getSarcasms()!=null)
 		{
 			System.out.println("Printing Sarcasm instances with their confidence values");
 			System.out.println("SarcasmId\tValue\tBeginOffset\tEndOffset\tJudgment\tConfidence\n");
-			
+
 			for(Sarcasm s : hcc.getSarcasms())
 			{
 				System.out.println(s.getSarcasmId() + "\t"
-						+ s.getValue() + "\t" +
+						+ s.getValue().replace("\n", " ") + "\t" +
 						+ s.getTokenOffset().getBegin() + "\t"
 						+ s.getTokenOffset().getEnd() + "\t" +
-						s.getJudgment() + "\t" + 
+						s.getJudgment() + "\t" +
 						s.getConfidence() + "\n");
 			}
-		}		
-		
+		}
+
 		if(hcc.getOpinions()!=null)
 		{
 			System.out.println("Printing opinion instances..");
 			System.out.println("OpinionId\tValue\tBeginOffset\tEndOffset\tPolarity\tSubjectivity\n");
-			
+
 			for(Opinion o : hcc.getOpinions())
 			{
 				System.out.println(o.getIdString() + "\t"
-						+ o.getValue() + "\t" +
+						+ o.getValue().replace("\n", " ") + "\t" +
 						+ o.getTokenOffset().getBegin() + "\t"
 						+ o.getTokenOffset().getEnd() + "\t" +
-						o.getPolarity() + "\t" + 
+						o.getPolarity() + "\t" +
 						o.getSubjectivity() + "\n");
 			}
-		}		
-		
+		}
+
 		if(hcc.getPassages()!=null)
 		{
 			System.out.println("Printing passage instances..");
 			System.out.println("PassageId\t\tBeginOffset\tEndOffset\tContentType\tSequenceId\n");
-			
+
 			for(Passage passage : hcc.getPassages())
 			{
 				System.out.println(passage.getIdString() + "\t"
 						+ passage.getTokenOffset().getBegin() + "\t"
-						+ passage.getTokenOffset().getEnd() + "\t" 
+						+ passage.getTokenOffset().getEnd() + "\t"
 						+ passage.getContentType() + "\t"
 						+ passage.getSequenceId() + "\t"
 						+ passage.getContentType());
 				System.out.println("[" + passage.getValue() + "]\n");
 			}
 		}
-		
+
 		System.out.println("-------------------------------------------------");
 	}
 }

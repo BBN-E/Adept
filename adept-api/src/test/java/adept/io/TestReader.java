@@ -1,31 +1,32 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.io;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import adept.serialization.*;
 import adept.utilities.printHltContent;
 import adept.common.HltContentContainer;
 import adept.common.Argument;
 import adept.common.Event;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+
+import java.io.*;
 
 import org.junit.*;
 
@@ -43,7 +44,11 @@ public class TestReader {
 	 * @return the string
 	 */
 	public String testReadIntoString(String path) {
-		return Reader.getInstance().readFileIntoString(path);
+		try {
+			return Reader.getInstance().readFileIntoString(path);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -54,7 +59,11 @@ public class TestReader {
 	 * @return the byte[]
 	 */
 	public byte[] testReadIntoBytes(String path) {
-		return Reader.getInstance().readFileIntoByteArray(path);
+		try {
+			return Reader.getInstance().readFileIntoByteArray(path);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -65,7 +74,11 @@ public class TestReader {
 	 * @return the document
 	 */
 	public org.w3c.dom.Document testReadXML(String path) {
-		return Reader.getInstance().readXML(path);
+		try {
+			return Reader.getInstance().readXML(path);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
 	}
 
@@ -89,10 +102,10 @@ public class TestReader {
 
         try
         {
-        XMLSerializer xmlSerializer = new XMLSerializer(SerializationType.XML);
-        String serialized = xmlSerializer.serializeAsString(hltcc);
+        XMLStringSerializer xmlStringSerializer = new XMLStringSerializer();
+        String serialized = xmlStringSerializer.serializeToString(hltcc);
         
-        HltContentContainer deserialized = (HltContentContainer)xmlSerializer.deserializeString(serialized, HltContentContainer.class);
+        HltContentContainer deserialized = (HltContentContainer)xmlStringSerializer.deserializeFromString(serialized, HltContentContainer.class);
         System.out.println("after serialization/deserialization");
         for(Event e : deserialized.getEvents())
         {
@@ -116,7 +129,7 @@ public class TestReader {
 	 *            the arguments
 	 */
 	public static void main(String[] args) {
-		TestReader tr = new TestReader();
+		// TestReader tr = new TestReader();
         //        String path = ClassLoader.getSystemResource("adept/test/sample.txt")
         //        				.getFile();
 		// String xmlpath = "C:\\Users\\ssriniva\\input.txt.xml";

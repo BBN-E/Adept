@@ -18,21 +18,14 @@
 
 package adept.example;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.List;
-
-import adept.common.Document;
-import adept.common.EntityMention;
-import adept.common.Sentence;
-import adept.common.TokenOffset;
-import adept.common.TokenizerType;
 import adept.common.HltContentContainer;
 import adept.common.Passage;
 import adept.io.Writer;
-import adept.serialization.SerializationType;
-import adept.serialization.XMLSerializer;
+import adept.serialization.XMLStringSerializer;
 import adept.utilities.DocumentMaker;
 
 
@@ -53,7 +46,7 @@ public class ExamplePassageTokenizerTest {
 		
 	    HltContentContainer hltContentContainer = new HltContentContainer();
 		
-	    Document doc = DocumentMaker.getInstance().createDefaultDocument(null, null, null, null, "English",
+	    DocumentMaker.getInstance().createDocument(
 				ClassLoader.getSystemResource("ExamplePassageTokenizerTest.txt").getFile(),hltContentContainer);
 		
 		for(Passage p : hltContentContainer.getPassages()) {			
@@ -63,8 +56,8 @@ public class ExamplePassageTokenizerTest {
 			if ( hltContentContainer != null) {
 			String xmlTemp = null;
 			try {
-				XMLSerializer xmlSerializer = new XMLSerializer(SerializationType.XML);
-				xmlTemp = xmlSerializer.serializeAsString(hltContentContainer);
+				XMLStringSerializer xmlSerializer = new XMLStringSerializer();
+				xmlTemp = xmlSerializer.serializeToString(hltContentContainer);
 				//System.out.println(xmlTemp);
 				if ( !isNullOrEmpty(xmlFilename) )
 				{

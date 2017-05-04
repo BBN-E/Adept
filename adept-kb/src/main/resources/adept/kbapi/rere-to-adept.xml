@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  #%L
+  adept-kb
+  %%
+  Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Mapping from the RERE classes to adept ontology classes</comment>
@@ -89,6 +109,8 @@
 <entry key="contact">Contact</entry>
 <entry key="meet">Meet</entry>
 <entry key="correspondence">Correspondence</entry>
+<entry key="phonewrite">Correspondence</entry>
+<entry key="correspondance">Correspondence</entry>
 <entry key="broadcast">Broadcast</entry>
 <entry key="manufacture">Manufacture</entry>
 <entry key="artifact">Artifact</entry>
@@ -155,6 +177,8 @@
 <entry key="correspondence.entity">entity</entry>
 <entry key="correspondence.time">time</entry>
 <entry key="correspondence.place">place</entry>
+<entry key="correspondance.entity">entity</entry>
+<entry key="phonewrite.entity">entity</entry>
 <entry key="contact.entity">entity</entry>
 <entry key="contact.time">time</entry>
 <entry key="contact.place">place</entry>
@@ -214,11 +238,13 @@
 <entry key="nominate.time">time</entry>
 <entry key="nominate.place">place</entry>
 <entry key="elect.agent">agent</entry>
+<entry key="elect.entity">agent</entry>
 <entry key="elect.person">person</entry>
 <entry key="elect.position">position</entry>
 <entry key="elect.time">time</entry>
 <entry key="elect.place">place</entry>
 <entry key="transferownership.thing">transferredThing</entry>
+<entry key="transferownership.artifact">transferredThing</entry>
 <entry key="transferownership.giver">giver</entry>
 <entry key="transferownership.recipient">recipient</entry>
 <entry key="transferownership.beneficiary">beneficiary</entry>
@@ -315,12 +341,15 @@
 
 <!--  mapping of generic things (slot filler) types -->
 <entry key="commodity">Commodity</entry>
+<entry key="com">Commodity</entry>
 <entry key="crime">Crime</entry>
 <entry key="money">Money</entry>
 <!--<entry key="sentence">Sentence</entry>--> <!-- commenting this out because it conflicts with the sentence key for event type. The mapping is hardcoded in the adept-kb code -->
 <entry key="title">Title</entry>
 <entry key="vehicle">Vehicle</entry>
+<entry key="veh">Vehicle</entry>
 <entry key="weapon">Weapon</entry>
+<entry key="wea">Weapon</entry>
 <entry key="url">URL</entry>
 
 

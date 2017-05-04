@@ -1,32 +1,35 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
-/*
- * 
- */
 package adept.common;
 
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import static com.google.common.base.Preconditions.checkArgument;
+import java.io.Serializable;
 
 
 /**
  * The Class ProsodicPhrase.
  */
-public class ProsodicPhrase extends Chunk {
+public class ProsodicPhrase extends Chunk implements Serializable {
+
+	private static final long serialVersionUID = -5475296755842539039L;
 
 	/** The sequence id. */
 	private final long sequenceId;
@@ -143,6 +146,43 @@ public class ProsodicPhrase extends Chunk {
 	 */
 	public long getSequenceId() {
 		return sequenceId;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Float.floatToIntBits(confidence);
+		result = prime * result + Float.floatToIntBits(noveltyConfidence);
+		result = prime * result + (int) (sequenceId ^ (sequenceId >>> 32));
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + Float.floatToIntBits(uncertaintyConfidence);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProsodicPhrase other = (ProsodicPhrase) obj;
+		if (Float.floatToIntBits(confidence) != Float.floatToIntBits(other.confidence))
+			return false;
+		if (Float.floatToIntBits(noveltyConfidence) != Float.floatToIntBits(other.noveltyConfidence))
+			return false;
+		if (sequenceId != other.sequenceId)
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		if (Float.floatToIntBits(uncertaintyConfidence) != Float.floatToIntBits(other.uncertaintyConfidence))
+			return false;
+		return true;
 	}
 
 }

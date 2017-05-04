@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.io;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,7 +28,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import adept.utilities.DocumentMaker;
-import adept.utilities.OpenNLPSentenceSegmenter;
+import adept.utilities.StanfordSentenceSegmenter;
 import adept.common.Document;
 import adept.common.HltContentContainer;
 import adept.common.Corpus;
@@ -352,7 +355,7 @@ public class EREDocument
             String text = createDocText();
             document.setValue(text);
             document.addTokenStream(DocumentMaker.getInstance().tokenize(text, document));
-            hltcc.setSentences(OpenNLPSentenceSegmenter.getInstance().getSentences(document.getValue(),document.getTokenStreamList().get(0)));
+            hltcc.setSentences(StanfordSentenceSegmenter.getInstance().getSentences(document.getValue(),document.getTokenStreamList().get(0)));
         }
         else
         {

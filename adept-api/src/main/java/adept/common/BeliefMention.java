@@ -1,24 +1,28 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.ImmutableSet;
+import java.io.Serializable;
 
 /**
  * <p>Represents a textual belief. This class has been 
@@ -32,21 +36,23 @@ import com.google.common.collect.ImmutableSet;
  * to instances of type {@link adept.common.DocumentBelief}.</p>
  * 
  */
-public class BeliefMention extends MentalStateMention  {
-    
-    // constructor
+public class BeliefMention extends MentalStateMention implements Serializable  {
+
+	private static final long serialVersionUID = -8884473385563395021L;
+
+	// constructor
     private BeliefMention(Chunk justification, ImmutableSet<Filler> arguments, float confidence) {
         super(justification, arguments, confidence);
     }    
     
     /**
-     * @return
+     * @return a new BeliefMention builder instance
      */
     public static Builder builder() {
         return new Builder();
     }
 
-    public static final class Builder extends MentalStateMention.Builder {
+    public static final class Builder extends MentalStateMention.Builder<Builder> {
         @Override
         public BeliefMention build() {
             ImmutableSet<Filler> builtArguments = arguments.build();
@@ -70,6 +76,10 @@ public class BeliefMention extends MentalStateMention  {
             }
             
             return new BeliefMention(justification, builtArguments, confidence);
+        }
+        
+        protected Builder me(){
+        	return this;
         }
     }
 }

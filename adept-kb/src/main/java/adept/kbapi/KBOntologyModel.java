@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +56,7 @@ public class KBOntologyModel {
 	private ImmutableList<String> roles = null;
 
 	private final SparqlQueryBuilder sparqlQueryBuilder;
+	private ImmutableList<String> genericThingTypes = null;
 
 	private static KBOntologyModel instance;
 
@@ -72,6 +76,7 @@ public class KBOntologyModel {
 		loadRelationArgumentTypes(model);
 		loadEntityTypeSubclasses(model);
 		loadEntityTypes(model);
+		loadGenericThingTypes(model);
 		loadRelationTypes(model);
 		loadEventTypes(model);
 		loadClasses(model);
@@ -165,6 +170,25 @@ public class KBOntologyModel {
 			listBuilder.add(entityType);
 		}
 		entityTypes = listBuilder.build();
+		qe.close();
+	}
+	
+	private void loadGenericThingTypes(Model model) {
+		ImmutableList.Builder<String> listBuilder = ImmutableList.builder();
+
+		QueryExecution qe = QueryExecutionFactory.create(
+				sparqlQueryBuilder.createGetGenericThingTypeQuery(), model);
+		com.hp.hpl.jena.query.ResultSet resultSet = qe.execSelect();
+
+		while (resultSet.hasNext()) {
+			QuerySolution item = resultSet.next();
+			RDFNode subject = item.get(SparqlQueryBuilder.SUBJECT);
+			String entityType = subject.isLiteral() ? subject.asLiteral().getString() : subject
+					.asResource().getLocalName();
+
+			listBuilder.add(entityType);
+		}
+		genericThingTypes  = listBuilder.build();
 		qe.close();
 	}
 
@@ -262,5 +286,12 @@ public class KBOntologyModel {
 	 */
 	public ImmutableList<String> getClasses() {
 		return classes;
+	}
+
+	/**
+	 * @return
+	 */
+	public List<String> getGenericThingTypes() {
+		return genericThingTypes;
 	}
 }

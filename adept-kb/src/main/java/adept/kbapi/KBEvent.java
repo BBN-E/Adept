@@ -1,26 +1,31 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
 
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,36 +46,41 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Class KBEvent represents Events that have been saved in the KB. This class
  * extends {@link KBRelation}, and allows creation of insertion builders from
  * {@link DocumentEvent}.
- * 
+ *
  * @author dkolas
  */
 public class KBEvent extends KBRelation {
 
 	private final ImmutableMap<OntType, Float> realisTypes;
 
+  	private static Logger log = LoggerFactory.getLogger(KBEvent.class);
+
 	/**
 	 * Private constructor. To be called only from builders.
-	 * 
+	 *
 	 * @param kbID
 	 * @param eventType
 	 * @param confidence
 	 * @param arguments
 	 * @param provenances
 	 */
-	private KBEvent(KBID kbID, OntType eventType, float confidence,
-			Set<KBRelationArgument> arguments, Set<KBProvenance> provenances,
+	private KBEvent(KB kb, KBID kbID, OntType eventType, float confidence,
+			Set<KBRelationArgument> arguments, Optional<Set<KBProvenance>> provenances,
 			Map<OntType, Float> realisTypes) {
-		super(kbID, eventType, confidence, arguments, provenances);
+		super(kb, kbID, eventType, confidence, arguments, provenances);
 		this.realisTypes = ImmutableMap.copyOf(realisTypes);
 	}
 
 	/**
 	 * Create a new InsertionBuilder with the type and confidence of this event.
-	 * 
+	 *
 	 * @param eventType
 	 * @param confidence
 	 * @return
@@ -81,17 +91,17 @@ public class KBEvent extends KBRelation {
 
 	/**
 	 * Create a new InsertionBuilder from a {@link DocumentEvent}.
-	 * 
+	 *
 	 * Arguments of the {@link DocumentEvent} must have already been inserted
 	 * into the KB, and the mapping from the DocumentEvent argument targets to
 	 * the KBPredicateArguments must be provided in the insertedArgumentMap.
-	 * 
+	 *
 	 * Provenances in the {@link DocumentEvent} will be copied into the builder.
 	 * Note that if a provenance for the DocumentEvent contains both an
 	 * EventMention and an EventText, and the scores of those objects are not
 	 * the same, the score of the EventMention will be used as the
 	 * {@link KBTextProvenance} confidence.
-	 * 
+	 *
 	 * @param documentEvent
 	 * @param insertedArgumentMap
 	 * @param ontologyMap
@@ -186,7 +196,7 @@ public class KBEvent extends KBRelation {
 	/**
 	 * Create a new InsertionBuilder for insertion into the KB. THIS METHOD IS
 	 * FOR DOCUMENT RELATIONS THAT NEED TO BE CONVERTED INTO AN EVENT. Use
-	 * {@link KBOntologyMap.relationConvertsToEvent()} to know if you need to
+	 * {@link KBOntologyMap#relationConvertsToEvent(IType)} to know if you need to
 	 * use this method. This method prepopulates a KBEvent.InsertionBuilder with
 	 * the content of a {@link DocumentRelation}. All argument targets of the
 	 * {@link DocumentRelation} must have been inserted into the KB already, and
@@ -194,11 +204,11 @@ public class KBEvent extends KBRelation {
 	 * in the insertedArgumentMap. All provenances on both the
 	 * {@link DocumentRelation} and {@link DocumentRelationArgument}s will be
 	 * added to the builder.
-	 * 
+	 *
 	 * The ontologyMap will be used to convert Types and Roles from the
 	 * DocumentRelation into the ontology of the KB. An exception will be thrown
 	 * if the types cannot be mapped.
-	 * 
+	 *
 	 * @param documentRelation
 	 * @param insertedArgumentMap
 	 * @param ontologyMap
@@ -226,10 +236,8 @@ public class KBEvent extends KBRelation {
 	/**
 	 * Get an UpdateBuilder for this event. Confidence and provenances may be
 	 * updated.
-	 * 
+	 *
 	 * @return
-	 * 
-	 * @see adept.kbapi.model.KBRelation#updateBuilder()
 	 */
 	public UpdateBuilder updateBuilder() {
 		return new UpdateBuilder();
@@ -237,7 +245,7 @@ public class KBEvent extends KBRelation {
 
 	/**
 	 * The InsertionBuilder class for Events.
-	 * 
+	 *
 	 * @author dkolas
 	 */
 	public static class InsertionBuilder extends
@@ -280,7 +288,7 @@ public class KBEvent extends KBRelation {
 				updatedEntities.put(entityTypeUpdate.getKBID(), entityTypeUpdate.update(kb));
 			}
 			kb.insertEvent(this);
-			return build();
+			return build(kb, false);
 		}
 
 		public InsertionBuilder addRealisType(OntType realisType, float confidence) {
@@ -288,22 +296,19 @@ public class KBEvent extends KBRelation {
 			return this;
 		}
 
-		protected KBEvent build() {
+		protected KBEvent build(KB kb, boolean deferProvenances) {
 			Preconditions.checkNotNull(kbid);
 			Preconditions.checkArgument(getConfidence() >= 0);
-			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
-			for (KBProvenance.InsertionBuilder provenanceBuilder : getProvenances()) {
-				provenances.add(provenanceBuilder.build());
-			}
+			Optional<Set<KBProvenance>> provenances = buildProvenances(deferProvenances);
 			Set<KBRelationArgument> arguments = new HashSet<KBRelationArgument>();
 			for (KBRelationArgument.InsertionBuilder argumentBuilder : getArguments()) {
 				if (updatedEntities.containsKey(argumentBuilder.getTarget().getKBID())) {
 					argumentBuilder.setTarget(updatedEntities.get(argumentBuilder.getTarget()
 							.getKBID()));
 				}
-				arguments.add(argumentBuilder.build(argumentBuilder.kbid));
+				arguments.add(argumentBuilder.build(kb, argumentBuilder.kbid, deferProvenances));
 			}
-			return new KBEvent(kbid, getType(), getConfidence(), arguments, provenances,
+			return new KBEvent(kb, kbid, getType(), getConfidence(), arguments, provenances,
 					realisTypes);
 		}
 
@@ -321,9 +326,9 @@ public class KBEvent extends KBRelation {
 
 	/**
 	 * The UpdateBuilder class for events.
-	 * 
+	 *
 	 * Confidence and provenances may be updated.
-	 * 
+	 *
 	 * @author dkolas
 	 */
 	public class UpdateBuilder extends KBRelation.AbstractUpdateBuilder<UpdateBuilder, KBEvent> {
@@ -337,12 +342,22 @@ public class KBEvent extends KBRelation {
 
 		@Override
 		public KBEvent update(KB kb) throws KBUpdateException {
+			Set<KBProvenance> oldProvenances = null;
+			try{
+				oldProvenances = getProvenances();
+				checkProvenancesToRemove();
+			}catch(KBQueryException e){
+				throw new KBUpdateException("Could not load provenances for original object",e);
+			}
 			kb.updateEvent(this);
 			Set<KBProvenance> updatedProvenances = new HashSet<KBProvenance>();
 			for (KBProvenance.InsertionBuilder provenanceBuilder : getNewProvenances()) {
 				updatedProvenances.add(provenanceBuilder.build());
 			}
-			for (KBProvenance kbProvenance : getProvenances()) {
+		  	for (KBProvenance.UpdateBuilder provenanceBuilder : getProvenancesToUpdate()) {
+		    		updatedProvenances.add(provenanceBuilder.build());
+		  	}
+			for (KBProvenance kbProvenance : oldProvenances) {
 				if (!getProvenancesToRemove().contains(kbProvenance)) {
 					updatedProvenances.add(kbProvenance);
 				}
@@ -363,9 +378,9 @@ public class KBEvent extends KBRelation {
 					arguments.add(oldArgument);
 				}
 			}
-			return new KBEvent(getKBRelation().getKBID(), getType(),
+			return new KBEvent(kb, getKBRelation().getKBID(), getType(),
 					getNewConfidence() != null ? getNewConfidence() : getKBRelation()
-							.getConfidence(), arguments, updatedProvenances, updatedRealisTypes);
+							.getConfidence(), arguments, Optional.of(updatedProvenances), updatedRealisTypes);
 		}
 
 		protected UpdateBuilder me() {
@@ -419,4 +434,91 @@ public class KBEvent extends KBRelation {
 	public int hashCode() {
 		return Objects.hashCode(super.hashCode(), realisTypes);
 	}
+
+  /**
+   * <p>
+   * API to merge multiple KBEvents into a single KBEvent. Merging of KBEvents may be
+   * required, for example, when trying to remove duplicate events (which point to the same
+   * real-world event--in other words, have the same event-type, realis-type and the same set of
+   * real-world objects, in the same role, as their arguments)
+   * <p>
+   *   The event-type of all to-be-merged events should be the same. The
+   *   confidence of the merged event is a weighted average weighted by
+   *   number of provenances of the events being merged.
+   * <p>
+   *   The provenances of all the contributing events are re-linked to the merged event.
+   *   Re-linking simply means updating the KBId field of the contributing provenances in the
+   *   TextProvenance table with the KBID of the merged event.
+   * <p>
+   *   In this implementation, the merged-event is not a new KBEvent, but a KBEvent chosen
+   *   arbitrarily from the input list of KBEvents to merge. Specifically, it's the first
+   *   KBEvent in the list.
+   * <p>
+   *   Currently, when merging KBEvents, we are not merging their arguments. Arguments of
+   *   events are supposed to be de-duplicated before merging the events. This should change
+   *   in a later version of the api.
+   *
+   * @param kbEventsToMerge {@code List<KBEvent>} of KBEvents to merge
+   * @param kb KB instance
+   *
+   * @return the merged KBRelation
+   * @throws KBUpdateException
+   * @throws KBQueryException
+   *
+   */
+  public static KBEvent mergeKBEvents(List<KBEvent> kbEventsToMerge, KB kb)
+      throws KBUpdateException, KBQueryException {
+
+    checkNotNull(kbEventsToMerge);
+    checkArgument(!kbEventsToMerge.isEmpty(),"kbEventsToMerge list cannot be empty.");
+    if(kbEventsToMerge.size()==1){
+      return kbEventsToMerge.get(0);
+    }
+
+    KBEvent kbEventToRetain = null;
+    double weightTotal = 0.0;
+    float averageConfidence = 0.0f;
+    Set<KBProvenance> allProvenances = new HashSet<>();
+    for (KBEvent kbEvent : kbEventsToMerge) {
+      log.info("KBEvent to merge: {}", kbEvent.getKBID().getObjectID());
+      if(kbEventToRetain==null) {
+	kbEventToRetain = kbEvent;
+	if(kbEventToRetain.getArguments()==null || kbEventToRetain.getArguments().size()==0){
+		kbEventToRetain = kb.getEventById(kbEventToRetain.getKBID());
+	}
+      }
+      float weight = kbEvent.getProvenances().size();
+      weightTotal += weight;
+      //provenances
+      allProvenances.addAll(kbEvent.getProvenances());
+      //confidence
+      averageConfidence += (kbEvent.getConfidence()*weight);
+    }
+    averageConfidence/=weightTotal;
+    UpdateBuilder updateBuilder = kbEventToRetain.updateBuilder();
+    //dealing with provenances
+    for(KBProvenance provenance : allProvenances) {
+      if(!kbEventToRetain.getProvenances().contains(provenance)) {
+	KBTextProvenance.UpdateBuilder provenanceUpdateBuilder =
+	    ((KBTextProvenance)provenance).getUpdateBuilder();
+	provenanceUpdateBuilder.setSourceEntityKBID(kbEventToRetain.getKBID());
+	log.info("Added provenance {}.... ",provenanceUpdateBuilder
+	    .getKBID().getObjectID());
+	log.info("...to update with KBId: {}",provenanceUpdateBuilder.getSourceEntityKBID()
+	    .getObjectID());
+	updateBuilder.addProvenanceToUpdate(provenanceUpdateBuilder);
+      }
+    }
+    //update the confidence
+    updateBuilder.setConfidence(averageConfidence);
+    KBEvent mergedKBEvent =  updateBuilder.update(kb);
+    log.info("Deleting duplicate KBEvents...");
+    for(KBEvent kbEvent : kbEventsToMerge) {
+      if(!kbEvent.getKBID().equals(mergedKBEvent.getKBID())) {
+	log.info("Deleting KBEvent with KBID {}...", kbEvent.getKBID().getObjectID());
+	kb.deleteDuplicateKBObject(kbEvent.getKBID());
+      }
+    }
+    return mergedKBEvent;
+  }
 }

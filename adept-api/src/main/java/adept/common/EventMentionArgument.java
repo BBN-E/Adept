@@ -1,30 +1,36 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
+import java.io.Serializable;
 import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents that a particular span of text plays a role in an event.
@@ -33,13 +39,14 @@ import java.util.Map;
  <p>This class is locally immutable.</p>
 
  */
-public final class EventMentionArgument extends HltContent implements HasScoredUnaryAttributes {
-    private final IType eventType;
+public final class EventMentionArgument extends HltContent implements HasScoredUnaryAttributes, Serializable {
+	private static final long serialVersionUID = -4250809784071643735L;
+	private final IType eventType;
     private final IType role;
     private final Chunk filler;
     private final ImmutableMap<IType, Float> attributes;
     private final Float score;
-    
+
     private EventMentionArgument(IType eventType, IType role, Chunk filler, ImmutableMap<IType, Float> attributes, Float score) {
         this.eventType = checkNotNull(eventType);
 
@@ -77,7 +84,7 @@ public final class EventMentionArgument extends HltContent implements HasScoredU
     /**
      * Obtains a builder which can build an {@code EventMentionArgument}
      * of the specified type with the specified filler.
-     * @Param eventType may not be {@code null}
+     * @param eventType may not be {@code null}
      * @param role may not be {@code null}.
      * @param filler may not be {@code null}.
      */
@@ -91,7 +98,7 @@ public final class EventMentionArgument extends HltContent implements HasScoredU
         private final Chunk filler;
         private ImmutableMap.Builder<IType, Float> attributes = ImmutableMap.builder();
         private Float score = null;
-        
+
         private Builder(IType eventType, IType role, Chunk filler) {
             this.eventType = checkNotNull(eventType);
 			this.role = checkNotNull(role);
@@ -110,12 +117,12 @@ public final class EventMentionArgument extends HltContent implements HasScoredU
 
         public Builder setAttributes(Map<? extends IType, Float> attributes) {
         	checkArgument(attributes!=null);
-            for (final IType arg : attributes.keySet()) {
-            	checkArgument(arg!=null);
-                checkArgument(attributes.get(arg)!=null);
-            }  
-            this.attributes.putAll(attributes);
-            return this;
+        	for (final Map.Entry<? extends IType, Float> entry : attributes.entrySet()) {
+           	checkArgument(entry.getKey()!=null);
+            checkArgument(entry.getValue()!=null);
+          }
+          this.attributes.putAll(attributes);
+          return this;
         }
 
         public Builder addAttribute(IType attribute, float score) {
@@ -126,7 +133,45 @@ public final class EventMentionArgument extends HltContent implements HasScoredU
 
         public EventMentionArgument build() {
             return new EventMentionArgument(eventType, role, filler,
-                    attributes.build(), score);        
+                    attributes.build(), score);
         }
+
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final EventMentionArgument that = (EventMentionArgument) o;
+
+        if (!eventType.equals(that.eventType)) {
+            return false;
+        }
+        if (!role.equals(that.role)) {
+            return false;
+        }
+        if (!filler.equals(that.filler)) {
+            return false;
+        }
+        if (!attributes.equals(that.attributes)) {
+            return false;
+        }
+        return !(score != null ? !score.equals(that.score) : that.score != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = eventType.hashCode();
+        result = 31 * result + role.hashCode();
+        result = 31 * result + filler.hashCode();
+        result = 31 * result + attributes.hashCode();
+        result = 31 * result + (score != null ? score.hashCode() : 0);
+        return result;
     }
 }

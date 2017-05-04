@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-<comment>Parameters needed to successfully connect to a triple store and insert KB objects into it</comment>
-<entry key="tripleStoreUrl"><!-- use the BBN provided triple store URL for your site ex: http://<host>:<port>/dataset--></entry>
-<entry key="metadataUrl"><!-- use the BBN provided postgres instance for your site ex: jdbc:postgresql://<host>:<port>/postgres--></entry>
-<entry key="metadataUsername"><!-- use the BBN provided postgres username for your site --></entry>
-<entry key="metadataPassword"><!-- use the BBN provided postgres password for your site --></entry>
-</properties>

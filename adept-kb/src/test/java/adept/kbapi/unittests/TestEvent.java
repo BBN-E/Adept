@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.unittests;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static org.junit.Assert.assertTrue;
 
@@ -96,6 +99,11 @@ public class TestEvent extends KBUnitTest {
 		testQueryEventByArgAndType(kbEntity1.getKBID(), expectedResultOntType, 1);
 		testQueryEventByStringRef("BBN Technologies");
 
+		
+		Assert.assertTrue("Event should be returned when querying by arguments", kb.getEventsByArgs(kbEntity1.getKBID(), kbEntity2.getKBID()).size() > 0);
+		Assert.assertTrue("Event should be returned when querying by arguments", kb.getEventsByArgs(kbEntity1.getKBID(), kbEntity2.getKBID()).get(0).getKBID().equals(kbEvent.getKBID()));
+		Assert.assertTrue("Event should not be returned when querying by spurious arguments", kb.getEventsByArgs(kbEntity1.getKBID(),new KBID("Jimmy", KBOntologyModel.DATA_INSTANCES_PREFIX)).size() == 0);
+		
 		KBTextProvenance.InsertionBuilder newArgumentProvenanceBuilder = KBTextProvenance.builder(
 				createTestChunk(), 0.3f);
 		KBTextProvenance.InsertionBuilder newRelationProvenanceBuilder = KBTextProvenance.builder(
@@ -136,6 +144,7 @@ public class TestEvent extends KBUnitTest {
 		testQueryEventByArg(kbEntity1.getKBID());
 		testQueryEventByArgAndType(kbEntity1.getKBID(), expectedResultOntType, 1);
 		testQueryEventByStringRef("BBN Technologies");
+		testQueryEventByRegexMatch("BBN.*", false);
 
 		updateBuilder = updatedEvent.updateBuilder();
 		updateBuilder.removeRealisType(futureRealisType);
@@ -259,6 +268,25 @@ public class TestEvent extends KBUnitTest {
 					Assert.fail("Relation mentions do not match the expected argument string. Expected \""
 							+ stringReference + "\" got \"" + textProvenance.getValue() + "\".");
 				}
+			}
+		}
+	}
+	
+	private void testQueryEventByRegexMatch(String regex, boolean caseSensitive) throws KBQueryException {
+		List<KBEvent> relations = kb.getEventsByRegexMatch(regex, caseSensitive);
+
+		int size = relations.size();
+		assertTrue("Size of relations is not greater than zero", size > 0);
+
+		for (KBEvent relation : relations) {
+
+			int mentionsSize = relation.getProvenances().size();
+			assertTrue("Size of relation mentions is not greater than 0.", mentionsSize > 0);
+
+			// for each mention, check presence of justification
+			for (KBProvenance provenance : relation.getProvenances()) {
+				KBTextProvenance textProvenance = (KBTextProvenance) provenance;
+				assertTrue("Relation justification is null", textProvenance.getValue() != null);
 			}
 		}
 	}

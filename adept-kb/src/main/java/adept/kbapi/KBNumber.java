@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +29,7 @@ import adept.common.NumberPhrase;
 import adept.common.NumericValue;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 
 /**
  * This class represents numbers in the KB.
@@ -50,8 +54,8 @@ public class KBNumber extends KBThing {
 	 * @param provenances
 	 * @param canonicalString
 	 */
-	private KBNumber(KBID kbID, Set<KBProvenance> provenances, Number number) {
-		super(kbID, provenances, number.toString());
+	private KBNumber(KB kb, KBID kbID, Optional<Set<KBProvenance>> provenances, Number number) {
+		super(kb, kbID, provenances, number.toString());
 		this.number = number;
 	}
 
@@ -129,20 +133,16 @@ public class KBNumber extends KBThing {
 		 * @return
 		 * @throws adept.kbapi.KBUpdateException
 		 * 
-		 * @see adept.kbapi.model.KBPredicateArgument.InsertionBuilder#insert(adept.kbapi.KB)
 		 */
 		@Override
 		public KBNumber insert(KB kb) throws KBUpdateException {
 			kb.insertNumber(this);
-			return build();
+			return build(kb, false);
 		}
 
-		protected KBNumber build() {
-			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
-			for (KBProvenance.InsertionBuilder provenanceBuilder : getProvenances()) {
-				provenances.add(provenanceBuilder.build());
-			}
-			return new KBNumber(kbid, provenances, number);
+		protected KBNumber build(KB kb, boolean deferProvenances) {
+			Optional<Set<KBProvenance>> provenances = buildProvenances(deferProvenances);
+			return new KBNumber(kb, kbid, provenances, number);
 		}
 
 		/**
@@ -162,7 +162,6 @@ public class KBNumber extends KBThing {
 	 * 
 	 * @return
 	 * 
-	 * @see adept.kbapi.model.KBPredicateArgument#updateBuilder()
 	 */
 	@Override
 	public UpdateBuilder updateBuilder() {
@@ -182,23 +181,25 @@ public class KBNumber extends KBThing {
 		}
 
 		@Override
-		public KBID getKBID() {
-			return kbNumber.getKBID();
-		}
-
-		@Override
-		public KBPredicateArgument update(KB kb) throws KBUpdateException {
+		public KBNumber update(KB kb) throws KBUpdateException {
+			Set<KBProvenance> oldProvenances = null;
+			try{
+				oldProvenances = getProvenances();
+				checkProvenancesToRemove();
+			}catch(KBQueryException e){
+				throw new KBUpdateException("Could not load provenances for original object",e);
+			}
 			kb.updateKBPredicateArgumentProvenances(this);
 			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
 			for (KBProvenance.InsertionBuilder provenanceBuilder : getNewProvenances()) {
 				provenances.add(provenanceBuilder.build());
 			}
-			for (KBProvenance kbProvenance : kbNumber.getProvenances()) {
+			for (KBProvenance kbProvenance : oldProvenances) {
 				if (!getProvenancesToRemove().contains(kbProvenance)) {
 					provenances.add(kbProvenance);
 				}
 			}
-			return new KBNumber(kbNumber.getKBID(), provenances, kbNumber.getNumber());
+			return new KBNumber(kb, kbNumber.getKBID(), Optional.of(provenances), kbNumber.getNumber());
 		}
 
 		/**

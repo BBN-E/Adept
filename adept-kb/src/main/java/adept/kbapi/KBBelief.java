@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -31,6 +34,7 @@ import adept.common.MentalStateMention;
 import adept.common.OntType;
 import adept.common.RelationMention;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 /**
@@ -51,9 +55,9 @@ public class KBBelief extends KBMentalState {
 	 * @param arguments
 	 * @param provenances
 	 */
-	protected KBBelief(KBID kbID, float confidence, Set<KBRelationArgument> arguments,
-			Set<KBProvenance> provenances) {
-		super(kbID, beliefType, confidence, arguments, provenances);
+	protected KBBelief(KB kb, KBID kbID, float confidence, Set<KBRelationArgument> arguments,
+			Optional<Set<KBProvenance>> provenances) {
+		super(kb, kbID, beliefType, confidence, arguments, provenances);
 	}
 
 	/**
@@ -129,7 +133,8 @@ public class KBBelief extends KBMentalState {
 						chunk = relationArg.asTimePhrase().get();
 					}
 				}
-				argumentBuilder.addProvenance(KBTextProvenance.builder(chunk,
+				if (null != chunk)
+					argumentBuilder.addProvenance(KBTextProvenance.builder(chunk,
 						mention.getConfidence()));
 			}
 
@@ -158,9 +163,9 @@ public class KBBelief extends KBMentalState {
 		}
 
 		@Override
-		protected KBBelief buildMentalState(KBID kbid, float confidence,
-				Set<KBRelationArgument> arguments, Set<KBProvenance> provenances) {
-			return new KBBelief(kbid, confidence, arguments, provenances);
+		protected KBBelief buildMentalState(KB kb, KBID kbid, float confidence,
+				Set<KBRelationArgument> arguments, Optional<Set<KBProvenance>> provenances) {
+			return new KBBelief(kb, kbid, confidence, arguments, provenances);
 		}
 
 		@Override
@@ -174,9 +179,8 @@ public class KBBelief extends KBMentalState {
 	 * Get an updateBuilder for this KBBelief. Provenances and the confidence
 	 * may be updated.
 	 * 
-	 * @return
+	 * @return the new UpdateBuilder. May be chained.
 	 * 
-	 * @see adept.kbapi.model.KBRelation#updateBuilder()
 	 */
 	public UpdateBuilder updateBuilder() {
 		return new UpdateBuilder();
@@ -204,20 +208,19 @@ public class KBBelief extends KBMentalState {
 		}
 
 		/**
-		 * 
+		 * @param kb
 		 * @param kbid
 		 * @param confidence
 		 * @param arguments
 		 * @param provenances
 		 * @return
 		 * 
-		 * @see adept.kbapi.KBMentalState.UpdateBuilder#buildMentalState(adept.common.KBID,
-		 *      float, java.util.Set, java.util.Set)
+		 * @see adept.kbapi.KBMentalState.UpdateBuilder#buildMentalState(KB, KBID, float, Set, Set)
 		 */
 		@Override
-		protected KBBelief buildMentalState(KBID kbid, float confidence,
+		protected KBBelief buildMentalState(KB kb, KBID kbid, float confidence,
 				Set<KBRelationArgument> arguments, Set<KBProvenance> provenances) {
-			return new KBBelief(kbid, confidence, arguments, provenances);
+			return new KBBelief(kb, kbid, confidence, arguments, Optional.of(provenances));
 		}
 	}
 }

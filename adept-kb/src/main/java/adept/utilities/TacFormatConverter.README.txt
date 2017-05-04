@@ -1,0 +1,9 @@
+## GenerateHumanReadableReport ##
+
+This utility is used to check your knowledge base for issues and sample the contents for further analysis. The code is defined in `adept/adept-kb/src/main/java/adept/utilities/TacFormatConverter.java` and is built as part of running `mvn install -pl :adept-kb -am`.
+
+After building, it can be run with `adept/adept-kb/target/appassembler/bin/TacFormatConverter`:
+
+/nfs/path-to-my-repository/deft/adept/adept-kb/target/appassembler/bin/TacFormatConverter /path/to/output/folder/ RunName -params /path/to/KBParams.xml
+
+Some sample KBParams files are included in /nfs/mercury-04/u39/DEFT/users/hprovenz/deft/adept/adept-kb/src/main/resources/adept/kbapi/

@@ -41,6 +41,8 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :argument rdf:type owl:ObjectProperty ;
           
+          rdfs:comment "The top property linking a Relation to a PredicateArgument." ;
+          
           rdfs:range :PredicateArgument ;
           
           rdfs:domain :Relation .
@@ -51,6 +53,8 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :beginDate rdf:type owl:ObjectProperty ;
            
+           rdfs:comment "begin date role." ;
+           
            rdfs:subPropertyOf :date .
 
 
@@ -59,19 +63,25 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :canonicalMention rdf:type owl:ObjectProperty ;
                   
+                  rdfs:comment "Property linking an Entity to its canonical mention." ;
+                  
                   rdfs:domain :PredicateArgument .
 
 
 
 ###  http://adept-kb.bbn.com/adept-base#date
 
-:date rdf:type owl:ObjectProperty .
+:date rdf:type owl:ObjectProperty ;
+      
+      rdfs:comment "date role." .
 
 
 
 ###  http://adept-kb.bbn.com/adept-base#endDate
 
 :endDate rdf:type owl:ObjectProperty ;
+         
+         rdfs:comment "end date role." ;
          
          rdfs:subPropertyOf :date .
 
@@ -80,6 +90,8 @@ xsd:duration rdf:type rdfs:Datatype .
 ###  http://adept-kb.bbn.com/adept-base#externalID
 
 :externalID rdf:type owl:ObjectProperty ;
+            
+            rdfs:comment "external ID role." ;
             
             rdfs:range :ExternalID ;
             
@@ -91,6 +103,8 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :thing rdf:type owl:ObjectProperty ;
        
+       rdfs:comment "Role for arguments which are Things." ;
+       
        rdfs:range :Thing ;
        
        rdfs:subPropertyOf :argument .
@@ -99,7 +113,9 @@ xsd:duration rdf:type rdfs:Datatype .
 
 ###  http://adept-kb.bbn.com/adept-base#validTemporalSpan
 
-:validTemporalSpan rdf:type owl:ObjectProperty .
+:validTemporalSpan rdf:type owl:ObjectProperty ;
+                   
+                   rdfs:comment "The valid temporal span during which a Relation is thought to hold." .
 
 
 
@@ -116,6 +132,8 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :canonicalString rdf:type owl:DatatypeProperty ;
                  
+                 rdfs:comment "The canonical string representation for an Entity." ;
+                 
                  rdfs:domain :Thing ;
                  
                  rdfs:range xsd:string .
@@ -126,6 +144,8 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :coherenceConfidence rdf:type owl:DatatypeProperty ;
                      
+                     rdfs:comment "The confidence that all of the mentions of the Entity actually belong together." ;
+                     
                      rdfs:subPropertyOf :confidence .
 
 
@@ -134,6 +154,8 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :confidence rdf:type owl:DatatypeProperty ;
             
+            rdfs:comment "The confidence value associated with any part of an assertion." ;
+            
             rdfs:range xsd:float .
 
 
@@ -141,6 +163,8 @@ xsd:duration rdf:type rdfs:Datatype .
 ###  http://adept-kb.bbn.com/adept-base#externalKbElementId
 
 :externalKbElementId rdf:type owl:DatatypeProperty ;
+                     
+                     rdfs:comment "The element id of an external KB id." ;
                      
                      rdfs:domain :ExternalID ;
                      
@@ -152,6 +176,8 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :externalKbName rdf:type owl:DatatypeProperty ;
                 
+                rdfs:comment "The KB name of an external kb ID." ;
+                
                 rdfs:domain :ExternalID ;
                 
                 rdfs:range xsd:string .
@@ -161,6 +187,8 @@ xsd:duration rdf:type rdfs:Datatype .
 ###  http://adept-kb.bbn.com/adept-base#timex2String
 
 :timex2String rdf:type owl:DatatypeProperty ;
+              
+              rdfs:comment "The timex2 string representation of a date" ;
               
               rdfs:domain :Date ;
               
@@ -172,6 +200,8 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :xsdDate rdf:type owl:DatatypeProperty ;
          
+         rdfs:comment "The xsd:date respresentation of a date." ;
+         
          rdfs:domain :Date ;
          
          rdfs:range xsd:date .
@@ -181,6 +211,8 @@ xsd:duration rdf:type rdfs:Datatype .
 ###  http://adept-kb.bbn.com/adept-base#xsdDuration
 
 :xsdDuration rdf:type owl:DatatypeProperty ;
+             
+             rdfs:comment "an xsd:duration" ;
              
              rdfs:domain :Date ;
              
@@ -205,7 +237,9 @@ xsd:duration rdf:type rdfs:Datatype .
                       [ rdf:type owl:Restriction ;
                         owl:onProperty :xsdDate ;
                         owl:allValuesFrom xsd:date
-                      ] .
+                      ] ;
+      
+      rdfs:comment "A calendar date, parts of which may be unknown." .
 
 
 
@@ -213,7 +247,9 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :Entity rdf:type owl:Class ;
         
-        rdfs:subClassOf :Thing .
+        rdfs:subClassOf :Thing ;
+        
+        rdfs:comment "A specific person, place, or thing." .
 
 
 
@@ -221,13 +257,17 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :Event rdf:type owl:Class ;
        
-       rdfs:subClassOf :Relation .
+       rdfs:subClassOf :Relation ;
+       
+       rdfs:comment "An Event is a Relation that has a time and a place, either of both of which may be unknown." .
 
 
 
 ###  http://adept-kb.bbn.com/adept-base#ExternalID
 
-:ExternalID rdf:type owl:Class .
+:ExternalID rdf:type owl:Class ;
+            
+            rdfs:comment "Represents the link between a PredicateArgument and an ID defined in an external source (ex. Wikipedia)." .
 
 
 
@@ -235,7 +275,9 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :GenericThing rdf:type owl:Class ;
               
-              rdfs:subClassOf :Thing .
+              rdfs:subClassOf :Thing ;
+              
+              rdfs:comment "Class for representing a generic class of things as a linguistic token." .
 
 
 
@@ -243,13 +285,17 @@ xsd:duration rdf:type rdfs:Datatype .
 
 :Number rdf:type owl:Class ;
         
-        rdfs:subClassOf :Thing .
+        rdfs:subClassOf :Thing ;
+        
+        rdfs:comment "A numeric value." .
 
 
 
 ###  http://adept-kb.bbn.com/adept-base#PredicateArgument
 
-:PredicateArgument rdf:type owl:Class .
+:PredicateArgument rdf:type owl:Class ;
+                   
+                   rdfs:comment "The top class of the ontology for things which can be the arguments of predicates (Relations)." .
 
 
 
@@ -259,14 +305,16 @@ xsd:duration rdf:type rdfs:Datatype .
           
           rdfs:subClassOf :PredicateArgument ,
                           [ rdf:type owl:Restriction ;
-                            owl:onProperty :validTemporalSpan ;
-                            owl:allValuesFrom :TemporalSpan
-                          ] ,
-                          [ rdf:type owl:Restriction ;
                             owl:onProperty :argument ;
                             owl:onClass :PredicateArgument ;
                             owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
-                          ] .
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :validTemporalSpan ;
+                            owl:allValuesFrom :TemporalSpan
+                          ] ;
+          
+          rdfs:comment "A Relation between two or more PredicateArguments.  Relations have roles (object properties within the ontology) which point to their arguments.  A relation can have multiple instances of the same role, indicating that there is some uncertainty between the arguments." .
 
 
 
@@ -276,6 +324,14 @@ xsd:duration rdf:type rdfs:Datatype .
               
               rdfs:subClassOf :Relation ,
                               [ rdf:type owl:Restriction ;
+                                owl:onProperty :beginDate ;
+                                owl:allValuesFrom :Date
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :endDate ;
+                                owl:allValuesFrom :Date
+                              ] ,
+                              [ rdf:type owl:Restriction ;
                                 owl:onProperty :endDate ;
                                 owl:onClass :Date ;
                                 owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
@@ -284,15 +340,9 @@ xsd:duration rdf:type rdfs:Datatype .
                                 owl:onProperty :beginDate ;
                                 owl:onClass :Date ;
                                 owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :beginDate ;
-                                owl:allValuesFrom :Date
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :endDate ;
-                                owl:allValuesFrom :Date
-                              ] .
+                              ] ;
+              
+              rdfs:comment "A TemporalSpan is a Relation between at least one of a start date and an end date.  It is used to label another Relation for a period during which the Relation is thought to hold." .
 
 
 
@@ -305,7 +355,9 @@ xsd:duration rdf:type rdfs:Datatype .
                          owl:onProperty :coherenceConfidence ;
                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                          owl:onDataRange xsd:float
-                       ] .
+                       ] ;
+       
+       rdfs:comment "Class for all Things which might be PredicateArguments (and are not Relations)." .
 
 
 

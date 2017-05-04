@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
@@ -28,8 +31,8 @@ import static com.google.common.base.Preconditions.checkArgument;
  * the evaluation site</a> for more details.  This class is primarily for loading
  * the output of non-ADEPT systems.  ADEPT-based event argument systems
  * should prefer to populate {@link adept.common.DocumentEventArgument}s directly.
- * <p/>
- * <p></p>No fields will ever be null or contain null.</p>
+ * <p>
+ * No fields will ever be null or contain null.
  */
 public final class TACKBP2014EventArgument {
 
@@ -75,7 +78,15 @@ public final class TACKBP2014EventArgument {
      * Creates a {@code TACK2014EventArgument}. No arguments may be null or contain null. All
      * {@link adept.common.TokenOffset} arguments are in terms of character offsets.
      *
-     * @param predicateJustifications May not be empty.
+     * @param documentID May not be null or empty
+     * @param eventType May not be null
+     * @param argumentRole
+     * @param realis May not be null
+     * @param canonicalArgumentChunk May not be null
+     * @param canonicalArgumentString May not be null or empty
+     * @param baseFiller May not be null
+     * @param predicateJustifications May not be null or contain null elements
+     * @param additionalArgumentJustifications May not be null
      */
     public static TACKBP2014EventArgument create(String documentID,
                                                  IType eventType,
@@ -180,7 +191,7 @@ public final class TACKBP2014EventArgument {
      * strictly required. Will never be empty.
      */
     public ImmutableSet<TokenOffset> getPredicateJustifications() {
-        return (ImmutableSet<TokenOffset>) predicateJustifications;
+        return predicateJustifications;
     }
 
     /**
@@ -192,6 +203,6 @@ public final class TACKBP2014EventArgument {
      * @return
      */
     public ImmutableSet<TokenOffset> getAdditionalArgumentJustifications() {
-        return (ImmutableSet<TokenOffset>) additionalArgumentJustifications;
+        return additionalArgumentJustifications;
     }
 }

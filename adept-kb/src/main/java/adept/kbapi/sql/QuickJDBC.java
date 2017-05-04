@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.sql;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import adept.kbapi.KBConfigurationException;
 import adept.kbapi.KBParameters;
@@ -36,7 +39,10 @@ public class QuickJDBC {
 	private static final int MAX_ACTIVE_CONNECTIONS = 50;
 	private static final int MAX_IDLE_CONNECTIONS = 8;
 	private static final int REMOVE_ABANDONED_TIMEOUT = 5 * 60; // in seconds
+	private static final int MAX_CONNECTION_LIFETIME = 60 * 1000; // in milliseconds
 
+	private ConnectionStatistics connectionStatistics;
+	
 	public QuickJDBC(KBParameters kbParameters) throws KBConfigurationException {
 		this(kbParameters, null);
 	}
@@ -44,6 +50,7 @@ public class QuickJDBC {
 	public QuickJDBC(KBParameters kbParameters, String defaultSchema)
 			throws KBConfigurationException {
 		this.defaultSchema = defaultSchema;
+		connectionStatistics = new ConnectionStatistics(); 
 		initialize(kbParameters);
 	}
 
@@ -62,13 +69,14 @@ public class QuickJDBC {
 		connectionPool.setUsername(kbParameters.metadataUsername);
 		connectionPool.setPassword(kbParameters.metadataPassword);
 		connectionPool.setDriverClassName("org.postgresql.Driver");
-		connectionPool.setInitialSize(3);
+		connectionPool.setInitialSize(1);
 		connectionPool.setDefaultAutoCommit(false);
 		connectionPool.setMaxTotal(MAX_ACTIVE_CONNECTIONS);
 		connectionPool.setMaxIdle(MAX_IDLE_CONNECTIONS);
 		connectionPool.setRemoveAbandonedTimeout(REMOVE_ABANDONED_TIMEOUT);
 		connectionPool.setRemoveAbandonedOnBorrow(true);
 		connectionPool.setRemoveAbandonedOnMaintenance(true);
+		connectionPool.setMaxConnLifetimeMillis(MAX_CONNECTION_LIFETIME);
 	}
 
 	/**
@@ -82,7 +90,7 @@ public class QuickJDBC {
 			setSearchPathPreparedStmt.executeUpdate();
 			setSearchPathPreparedStmt.close();
 		}
-		return connection;
+		return connectionStatistics.wrapConnection(connection);
 	}
 
 	/**
@@ -133,5 +141,9 @@ public class QuickJDBC {
 
 	public void close() throws SQLException {
 		connectionPool.close();
+	}
+	
+	public ConnectionStatistics getConnectionStatistics(){
+		return connectionStatistics;
 	}
 }

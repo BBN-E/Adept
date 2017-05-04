@@ -1,21 +1,25 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 
 import java.util.HashSet;
 import java.util.List;
@@ -50,9 +54,9 @@ public class KBGenericThing extends KBThing {
 	 * @param canonicalString
 	 * @param provenances
 	 */
-	private KBGenericThing(KBID kbID, OntType type, String canonicalString,
-			Set<KBProvenance> provenances) {
-		super(kbID, provenances, canonicalString);
+	private KBGenericThing(KB kb, KBID kbID, OntType type, String canonicalString,
+			Optional<Set<KBProvenance>> provenances) {
+		super(kb, kbID, provenances, canonicalString);
 		Preconditions.checkNotNull(type);
 		this.type = type;
 	}
@@ -81,8 +85,9 @@ public class KBGenericThing extends KBThing {
 	 * Get an insertionBuilder for a given {@link GenericThing}. Chunks passed
 	 * in will be used as provenances.
 	 * 
-	 * @param type
-	 * @param canonicalString
+	 * @param genericThing
+	 * @param provenances
+	 * @param ontologyMap
 	 * @return
 	 */
 	public static InsertionBuilder genericThingInsertionBuilder(GenericThing genericThing,
@@ -138,20 +143,16 @@ public class KBGenericThing extends KBThing {
 		 * @return
 		 * @throws KBUpdateException
 		 * 
-		 * @see adept.kbapi.model.KBPredicateArgument.InsertionBuilder#insert(adept.kbapi.KB)
 		 */
 		@Override
 		public KBGenericThing insert(KB kb) throws KBUpdateException {
 			kb.insertGenericThing(this);
-			return build();
+			return build(kb, false);
 		}
 
-		protected KBGenericThing build() {
-			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
-			for (KBProvenance.InsertionBuilder provenanceBuilder : getProvenances()) {
-				provenances.add(provenanceBuilder.build());
-			}
-			return new KBGenericThing(kbid, type, canonicalString, provenances);
+		protected KBGenericThing build(KB kb, boolean deferProvenances) {
+			Optional<Set<KBProvenance>> provenances = buildProvenances(deferProvenances);
+			return new KBGenericThing(kb, kbid, type, canonicalString, provenances);
 		}
 
 		/**
@@ -186,7 +187,6 @@ public class KBGenericThing extends KBThing {
 	 * 
 	 * @return
 	 * 
-	 * @see adept.kbapi.model.KBThing#updateBuilder()
 	 */
 	@Override
 	public UpdateBuilder updateBuilder() {
@@ -202,23 +202,25 @@ public class KBGenericThing extends KBThing {
 		}
 
 		@Override
-		public KBID getKBID() {
-			return kbGenericThing.getKBID();
-		}
-
-		@Override
 		public KBGenericThing update(KB kb) throws KBUpdateException {
+			Set<KBProvenance> oldProvenances = null;
+			try{
+				oldProvenances = getProvenances();
+				checkProvenancesToRemove();
+			}catch(KBQueryException e){
+				throw new KBUpdateException("Could not load provenances for original object",e);
+			}
 			kb.updateKBPredicateArgumentProvenances(this);
 			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
 			for (KBProvenance.InsertionBuilder provenanceBuilder : getNewProvenances()) {
 				provenances.add(provenanceBuilder.build());
 			}
-			for (KBProvenance kbProvenance : getProvenances()) {
+			for (KBProvenance kbProvenance : oldProvenances) {
 				if (!getProvenancesToRemove().contains(kbProvenance)) {
 					provenances.add(kbProvenance);
 				}
 			}
-			return new KBGenericThing(getKBID(), getType(), getCanonicalString(), provenances);
+			return new KBGenericThing(kb, getKBID(), getType(), getCanonicalString(), Optional.of(provenances));
 		}
 
 		/**

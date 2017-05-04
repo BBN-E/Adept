@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.io;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -48,7 +51,7 @@ import adept.common.TokenStream;
 import adept.common.TokenizerType;
 import adept.common.TranscriptType;
 import adept.utilities.PassageAttributes;
-import adept.utilities.OpenNLPTokenizer;
+import adept.utilities.StanfordTokenizer;
 
 import java.util.*;
 
@@ -120,7 +123,7 @@ public class LDCCorpusReader {
         adeptDocument.setValue(text);
 //        tokenStream.setDocument(adeptDocument);
 
-        TokenizerType tokenizerType = TokenizerType.APACHE_OPENNLP;
+        TokenizerType tokenizerType = TokenizerType.STANFORD_CORENLP;
         TranscriptType transcriptType = TranscriptType.SOURCE;
         ChannelName channelName = ChannelName.NONE;
         ContentType contentType = ContentType.TEXT;
@@ -139,8 +142,7 @@ public class LDCCorpusReader {
 
             currTagBegin = tagStart;
             String contentString = text.substring(lastTagEnd, currTagBegin);
-//	    System.out.println("Content: " + contentString);
-            TokenStream contentTokenStream = OpenNLPTokenizer.getInstance().tokenize(contentString, adeptDocument);
+            TokenStream contentTokenStream = StanfordTokenizer.getInstance().tokenize(contentString, adeptDocument);
             for (Token t : contentTokenStream) {
                 CharOffset tOffset = t.getCharOffset();
 
@@ -302,7 +304,7 @@ public class LDCCorpusReader {
 
         //		adeptDocument.setHeadline(headline);
 
-        List newPostList = new ArrayList<ConversationElement>();
+        List<ConversationElement> newPostList = new ArrayList<>();
         for (ConversationElement p : postList) {
             ConversationElement newPost = assignPostToQuotes(p);
             newPostList.add(newPost);
@@ -399,10 +401,10 @@ public class LDCCorpusReader {
                     Element passage = (Element) passages.item(i);
                     if (passage != null) {
                         String passageText = passage.getFirstChild().getNodeValue();
-                        long passageId = (long) i;
+                        long passageId = i;
                         String sarcasmValue = "";
                         if (!passage.getAttribute("pid").equals("")) {
-                            passageId = Long.valueOf(passage.getAttribute("pid"));
+                            passageId = Long.parseLong(passage.getAttribute("pid"));
                         }
                         if (!passage.getAttribute("sarcasm").equals("")) {
                             sarcasmValue = passage.getAttribute("sarcasm");

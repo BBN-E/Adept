@@ -1,24 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
-/*
- * 
- */
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +26,14 @@ import java.util.List;
 import com.hp.hpl.jena.ontology.OntClass;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import java.io.Serializable;
 
 
 /**
  * The Class Relation.
  */
-public class ArgumentTuple extends HltContent {
+public class ArgumentTuple extends HltContent implements Serializable {
+	private static final long serialVersionUID = -5705128021475287368L;
 
 	/** The type. */
 	protected final IType tupleType;
@@ -94,6 +96,14 @@ public class ArgumentTuple extends HltContent {
 		return bOK;
 	}
 	
+	/**
+	 * @return the context chunk
+	 */
+	public Chunk getContext()
+	{
+		return context;
+	}
+
 	/**
 	 * Sets the context.
 	 */
@@ -226,6 +236,7 @@ public class ArgumentTuple extends HltContent {
 	/**
 	 * Adds justification chunk
 	 * 
+	 * @param justification the chunk to add
 	 */
 	public void addJustification(Chunk justification)
 	{
@@ -236,7 +247,7 @@ public class ArgumentTuple extends HltContent {
 	/**
 	 * Gets justification chunks
 	 * 
-	 * @return List<Chunk> justifications
+	 * @return justifications
 	 */
 	public List<Chunk> getJustifications()
 	{

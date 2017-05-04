@@ -1,60 +1,47 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.utilities;
 
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
-
-import java.net.URL;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Scanner;
+
 import adept.common.Corpus;
 import adept.common.Document;
 import adept.common.HltContentContainer;
-import adept.common.Pair;
-import adept.common.ConversationElementTag;
-import adept.io.Writer;
+import adept.io.AMRDocumentReader;
 import adept.io.Reader;
-
-import adept.serialization.BinaryFromJSONSerializer;
-import adept.serialization.JSONSerializer;
+import adept.io.Writer;
+import adept.serialization.JSONBinarySerializer;
+import adept.serialization.JSONStringSerializer;
 import adept.serialization.SerializationType;
-import adept.serialization.XMLSerializer;
-import adept.utilities.DocumentMaker;
-import adept.utilities.CommandLineArgParse;
-import adept.utilities.DeftReaderArgParse;
-import adept.io.LDCCorpusReader;
+import adept.serialization.XMLStringSerializer;
 
 
 /**
@@ -64,13 +51,13 @@ public class DeftReaderApp
 {
 	
 	/** The xml serializer. */
-	private static XMLSerializer xmlSerializer;
+	private static XMLStringSerializer xmlStringSerializer;
 
 	/** The json serializer. */
-	private static JSONSerializer jsonSerializer;
+	private static JSONStringSerializer jsonStringSerializer;
 
 	/** The binary serializer. */
-	private static BinaryFromJSONSerializer binarySerializer;
+	private static JSONBinarySerializer jsonBinarySerializer;
 
 	/** The logger. */
     private static Logger logger;
@@ -90,113 +77,115 @@ public class DeftReaderApp
     /** The serialization type. */
     private static SerializationType serializationType;
 
+    private static void setTheArgs(DeftReaderArgParse args) {
+    	DeftReaderApp.theArgs = args;
+    }
+    
 	/**
 	 * The main method.
 	 *
 	 * @param args the arguments
 	 */
-	public void Run(String[] args)
-	{
-		/** initialize and configure */
-		theArgs = new DeftReaderArgParse( args);
-		if ( theArgs.bHelp || theArgs.bVersion) return;
-		if ( !theArgs.bRunOneFile && !theArgs.bRunList) 
-		{
-			System.out.println("Invalid arguments - exiting.");
-			return;
+    public void Run(String[] args)
+    {
+      /** initialize and configure */
+      DeftReaderApp.setTheArgs(new DeftReaderArgParse(args));
+      if ( DeftReaderApp.theArgs.bHelp || DeftReaderApp.theArgs.bVersion) return;
+      if ( !DeftReaderApp.theArgs.bRunOneFile && !DeftReaderApp.theArgs.bRunList) 
+      {
+        System.out.println("Invalid arguments - exiting.");
+        return;
+      }
+      //
+      try {
+        initialize();
+        boolean bFirst = true;
+        int fileCount = 0;
+        boolean bSuccess = true;
+        if ( theArgs.bRunOneFile)
+        {
+          File fInFile = new File(theArgs.inputFile);
+          File fAnnFile = null;
+          if(!isNullOrEmpty(theArgs.annotationFile))
+            fAnnFile = new File(theArgs.annotationFile);
+          if(!fInFile.exists()) 
+          {
+            System.out.println("Input file not found:  " + theArgs.inputFile);
+            logger.info("Input file not found:  " + theArgs.inputFile);
+            return;
+          }
+          serialize(processInputFile(fInFile,fAnnFile), theArgs.outputFile);
+          ++fileCount;
         }
-		//
-		initialize();
-		boolean bFirst = true;
-		int fileCount = 0;
-		boolean bSuccess = true;
-		if ( theArgs.bRunOneFile)
-		{
-    		File fInFile = new File(theArgs.inputFile);
-            File fAnnFile = null;
-            if(!isNullOrEmpty(theArgs.annotationFile))
-                fAnnFile = new File(theArgs.annotationFile);
-            if(!fInFile.exists()) 
-			{
-                System.out.println("Input file not found:  " + theArgs.inputFile);
-                logger.info("Input file not found:  " + theArgs.inputFile);
-                return;
-            }
-            serialize(processInputFile(fInFile,fAnnFile), theArgs.outputFile);
-            ++fileCount;
-		}
         else if ( theArgs.bRunList)
-		{
-            File[] inFiles = getDirectoryContents(theArgs.inputDirectory);
-            if(inFiles == null || inFiles.length == 0)
+        {
+          File[] inFiles = getDirectoryContents(theArgs.inputDirectory);
+          if(inFiles == null || inFiles.length == 0)
+          {
+            System.out.println("Unusable input directory - exiting.");
+            logger.info("Unusable input directory - exiting.");
+            return;
+          }
+          File outDir = new File(theArgs.outputDirectory);
+          if(!outDir.exists())
+          {
+            if(!outDir.mkdirs())
             {
-                System.out.println("Unusable input directory - exiting.");
-                logger.info("Unusable input directory - exiting.");
-                return;
+              System.out.println("Unable to create directory: " + outDir.getAbsolutePath());
+              logger.info("Unable to create directory: " + outDir.getAbsolutePath());
+              return;
             }
-            File outDir = new File(theArgs.outputDirectory);
-            if(!outDir.exists())
-            {
-                if(!outDir.mkdirs())
-                {
-                    System.out.println("Unable to create directory: " + outDir.getAbsolutePath());
-                    logger.info("Unable to create directory: " + outDir.getAbsolutePath());
-                    return;
-                }
-                System.out.println("Created directory: " + outDir.getAbsolutePath());
-                logger.info("Created directory: " + outDir.getAbsolutePath());
-            }
-            if(outDir == null)
-            {
-                System.out.println("Unusuable output directory - exiting.");
-                logger.info("Unusuable output directory - exiting.");
-            }
-            boolean hasAnnotations = false;
-            File[] annFiles = null;
-            if(!isNullOrEmpty(theArgs.annotationDirectory))
+            System.out.println("Created directory: " + outDir.getAbsolutePath());
+            logger.info("Created directory: " + outDir.getAbsolutePath());
+          }
+          boolean hasAnnotations = false;
+          File[] annFiles = null;
+          if(!isNullOrEmpty(theArgs.annotationDirectory))
             annFiles = getDirectoryContents(theArgs.annotationDirectory);
-            hasAnnotations = annFiles != null && annFiles.length > 0;
-            for(int x = 0; x < inFiles.length; x++)
+          hasAnnotations = annFiles != null && annFiles.length > 0;
+          for(int x = 0; x < inFiles.length; x++)
+          {
+            File fInFile = new File(inFiles[x].getAbsolutePath());
+            File fOutFile = new File(outDir, fInFile.getName());
+            File fAnnFile = null;
+            if (hasAnnotations)
             {
-				File fInFile = new File(inFiles[x].getAbsolutePath());
-                File fOutFile = new File(outDir, fInFile.getName());
-                File fAnnFile = null;
-                if(hasAnnotations)
+              File fAnnFileCandidate = new File(annFiles[x].getAbsolutePath());
+              boolean corr = filesCorrespond(fInFile,fAnnFileCandidate);
+              if(corr)
+                fAnnFile = fAnnFileCandidate;
+              else
+              {
+                System.out.println("trying again: " + fInFile.getName());
+                File newFAnnFileCandidate = null;
+                int dot = fInFile.getName().indexOf(".");
+                String name = fInFile.getName().substring(0,dot);
+                System.out.println("name: " + name);
+                for(int attempt = 0; attempt < annFiles.length; attempt++)
                 {
-                    File fAnnFileCandidate = new File(annFiles[x].getAbsolutePath());
-                    boolean corr = filesCorrespond(fInFile,fAnnFileCandidate);
-                    if(corr)
-                        fAnnFile = fAnnFileCandidate;
-                    else
-                    {
-                        System.out.println("trying again: " + fInFile.getName());
-                        File newFAnnFileCandidate = null;
-                        int dot = fInFile.getName().indexOf(".");
-                        String name = fInFile.getName().substring(0,dot);
-                        System.out.println("name: " + name);
-                        for(int attempt = 0; attempt < annFiles.length; attempt++)
-                        {
-                            if(annFiles[attempt].getName().contains(name))
-                            {
-                                newFAnnFileCandidate = annFiles[attempt];
-                            }
-                        }
-                        System.out.println("trying: " + newFAnnFileCandidate.getAbsolutePath());
-                        fAnnFile = filesCorrespond(fInFile,newFAnnFileCandidate) ? newFAnnFileCandidate : null;
-                    }
+                  if(annFiles[attempt].getName().contains(name))
+                  {
+                    newFAnnFileCandidate = annFiles[attempt];
+                  }
                 }
-                HltContentContainer hltcc = processInputFile(fInFile,fAnnFile);
-                serialize(hltcc, fOutFile.getAbsolutePath());
-                bFirst = false;
-                ++fileCount;
-
-                Scanner in = new Scanner(System.in);
-                String input = in.nextLine();
+                System.out.println("trying: " + newFAnnFileCandidate.getAbsolutePath());
+                fAnnFile = filesCorrespond(fInFile,newFAnnFileCandidate) ? newFAnnFileCandidate : null;
+              }
             }
-		}
+            HltContentContainer hltcc = processInputFile(fInFile,fAnnFile);
+            serialize(hltcc, fOutFile.getAbsolutePath());
+            bFirst = false;
+            ++fileCount;
+          }
+        }
         System.out.println("Processed " + fileCount + " files.");
         logger.info("Processed " + fileCount + " files.");
-	}
+      } catch (Exception e) {
+        logger.error("Caught Exception: ", e);
+        System.err.format("Caught Exception %s%n", e.getClass().getName());
+        System.exit(1);
+      }
+    }
 
     /**
      * Checks if is null or empty.
@@ -212,8 +201,9 @@ public class DeftReaderApp
 
     /**
      * Initializes logger, serializers, and such.
+     * @throws IOException
      */
-    public void initialize()
+    public void initialize() throws IOException
     {
 		System.out.println("Current Directory: " + System.getProperty("user.dir"));
 		String packageName = new Object(){}.getClass().getPackage().getName();
@@ -221,23 +211,17 @@ public class DeftReaderApp
 
 		/** Initialize logger instance */
 		logger = LoggerFactory.getLogger(new Object(){}.getClass());
-		try {
-			/** The log config file path. */
-			logConfigFilePath = packagePath + "log4j.file.properties";
-			DataInputStream rf = new DataInputStream(Reader.findStreamInClasspathOrFileSystem(logConfigFilePath));
-			PropertyConfigurator.configure(rf);
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();			
-		}	
+		/** The log config file path. */
+		logConfigFilePath = packagePath + "log4j.file.properties";
+		DataInputStream rf = new DataInputStream(Reader.findStreamInClasspathOrFileSystem(logConfigFilePath));
+		PropertyConfigurator.configure(rf);
 		logger.info("Current Directory: " + System.getProperty("user.dir"));
 		logger.info("JUnit version " + junit.runner.Version.id());
 
-
 		/** Initialize serializer instances */
-		xmlSerializer = new XMLSerializer(SerializationType.XML);
-		jsonSerializer = new JSONSerializer(SerializationType.JSON);
-		binarySerializer = new BinaryFromJSONSerializer(SerializationType.BINARY);
+		xmlStringSerializer = new XMLStringSerializer();
+		jsonStringSerializer = new JSONStringSerializer();
+		jsonBinarySerializer = new JSONBinarySerializer();
 
         if(theArgs.inputFormat == null)
         {
@@ -322,6 +306,9 @@ public class DeftReaderApp
     		//process coNLL 2011
 		hltcc = Reader.getInstance().CoNLLtoHltContentContainer(fInFile.getAbsolutePath());;
     	}
+        else if ( "amr".equals(inputFormat.toLowerCase()) ) {
+                hltcc = AMRDocumentReader.getInstance().createAMRContentContainer(fInFile.getAbsolutePath());
+        }
     	else {
     		System.out.println("Unrecognized input format: " + inputFormat + ". Defaulting to 'text'.");
     		logger.info("Unrecognized input format: " + inputFormat + ". Defaulting to 'text'.");
@@ -377,7 +364,7 @@ public class DeftReaderApp
 		String uri = file.getAbsolutePath();
 		String language = "English";
 		HltContentContainer hltcc = new HltContentContainer();
-        Document document = DocumentMaker.getInstance().createDefaultDocument(docId, corpus, docType, uri, language, uri, hltcc);
+        Document document = DocumentMaker.getInstance().createDocument(docId, corpus, docType, uri, language, uri, hltcc);
         //Document document = DocumentMaker.getInstance().createCleanedXMLDocument(docId, corpus, docType, uri, language, uri, hltcc, true);
         //        List<PassageAttributes> passageAttributesList = new ArrayList<PassageAttributes>();			
         //        String text = Reader.getInstance().readFileIntoString(file.getAbsolutePath());
@@ -411,50 +398,42 @@ public class DeftReaderApp
 	 * @param hltcontentcontainer the hltcontentcontainer
 	 * @param outputFilename extensionless full filepath to write serialized results too
 	 * @return the string
+	 * @throws UnsupportedEncodingException 
+	 * @throws FileNotFoundException 
 	 */
-    public String serialize(HltContentContainer hltcontentcontainer, String outputFilename)
-    {
-    	if ( hltcontentcontainer == null) return null;
-    	String outputFormat = theArgs.outputFormat;
-    	String serialized = null;
-    	try {
-    		if ( !isNullOrEmpty(outputFilename))
-    		{
-    			if ( "xml".equals(outputFormat.toLowerCase()) ) {
-    				serialized = xmlSerializer.serializeAsString(hltcontentcontainer);
-    				outputFilename += ".xml";
-    				if ( theArgs.bTableOutput)
-    					printHltContent.writeFile(outputFilename, outputFilename + ".txt");
-    			}
-    			else if ( "json".equals(outputFormat.toLowerCase()) ) {
-    				serialized = jsonSerializer.serializeAsString(hltcontentcontainer);
-    				outputFilename += ".json";
-    			}
-                else if ( "binary".equals(outputFormat.toLowerCase()) ) {
-    				byte[] array = binarySerializer.serializeAsByteArray(hltcontentcontainer);
-    				serialized = new String(array);
-    				outputFilename += ".bin";
-    			}
-    			else {
-    				System.out.println("Unrecognized output format: " + outputFormat + ". Defaulting to 'xml'.");
-    				serialized = xmlSerializer.serializeAsString(hltcontentcontainer);
-    				outputFilename += ".xml";
-    			}
+  public String serialize(HltContentContainer hltcontentcontainer, String outputFilename) throws UnsupportedEncodingException, FileNotFoundException {
+    if (hltcontentcontainer == null)
+      return null;
+    String outputFormat = theArgs.outputFormat;
+    String serialized = null;
+    if (!isNullOrEmpty(outputFilename)) {
+      if ("xml".equals(outputFormat.toLowerCase())) {
+        serialized = xmlStringSerializer.serializeToString(hltcontentcontainer);
+        outputFilename += ".xml";
+        if (theArgs.bTableOutput)
+          printHltContent.writeFile(outputFilename, outputFilename + ".txt");
+      } else if ("json".equals(outputFormat.toLowerCase())) {
+        serialized = jsonStringSerializer.serializeToString(hltcontentcontainer);
+        outputFilename += ".json";
+      } else if ("binary".equals(outputFormat.toLowerCase())) {
+        byte[] array = jsonBinarySerializer.serializeToByteArray(hltcontentcontainer);
+        serialized = new String(array);
+        outputFilename += ".bin";
+      } else {
+        System.out.println("Unrecognized output format: " + outputFormat + ". Defaulting to 'xml'.");
+        serialized = xmlStringSerializer.serializeToString(hltcontentcontainer);
+        outputFilename += ".xml";
+      }
 
-    			System.out.println("Writing to:  " + outputFilename);
-    			Writer.getInstance().writeToFile(outputFilename,clean(serialized));
-    			logger.info("file written with serialized values");
-    		}
-    		else
-    		{
-    			logger.info("Serialized values could not be written to file. Output filename undefined.");
-    		}
-
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
-    	return serialized;
+      System.out.println("Writing to:  " + outputFilename);
+      Writer.getInstance().writeToFile(outputFilename, clean(serialized));
+      logger.info("file written with serialized values");
+    } else {
+      logger.info("Serialized values could not be written to file. Output filename undefined.");
     }
+
+    return serialized;
+  }
 
     /**
      * The main method.

@@ -1,24 +1,34 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.unittests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.NodeIterator;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.update.GraphStoreFactory;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,16 +36,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Random;
-
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 
 import adept.common.ChannelName;
 import adept.common.CharOffset;
@@ -53,6 +60,7 @@ import adept.common.EventMentionArgument;
 import adept.common.EventText;
 import adept.common.HltContentContainer;
 import adept.common.Item;
+import adept.common.KBID;
 import adept.common.OntType;
 import adept.common.Pair;
 import adept.common.RelationMention;
@@ -74,6 +82,7 @@ import adept.kbapi.KBOntologyMap;
 import adept.kbapi.KBOntologyModel;
 import adept.kbapi.KBParameters;
 import adept.kbapi.KBPredicateArgument;
+import adept.kbapi.KBProvenance;
 import adept.kbapi.KBQueryException;
 import adept.kbapi.KBRelation;
 import adept.kbapi.KBRelationArgument;
@@ -82,14 +91,12 @@ import adept.kbapi.KBTemporalSpan;
 import adept.kbapi.KBTextProvenance;
 import adept.kbapi.KBUpdateException;
 import adept.kbapi.sql.QuickJDBC;
+import adept.kbapi.sql.SqlQueryBuilder;
 import adept.metadata.SourceAlgorithm;
 import adept.utilities.DocumentMaker;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.NodeIterator;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.update.GraphStoreFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public abstract class KBUnitTest {
 	private final Random rand = new Random();
@@ -145,7 +152,7 @@ public abstract class KBUnitTest {
 
 	protected void initializeDataStores() {
 		try {
-			schemaName = "unittest" + rand.nextInt(100000);
+			schemaName = "unittest" + rand.nextInt(1000000);
 
 			Model model = ModelFactory.createRDFSModel(ModelFactory.createDefaultModel());
 			model.read(getClass().getResourceAsStream("/adept/ontology/adept-base.ttl"), "", "TTL");
@@ -188,7 +195,7 @@ public abstract class KBUnitTest {
 			kb = new KB(unitTestKBParameters, schemaName, sparqlService);
 
 			HltContentContainer hltContentContainer = new HltContentContainer();
-			Document document = DocumentMaker.getInstance().createDefaultDocument("sample.txt",
+			Document document = DocumentMaker.getInstance().createDocument("sample.txt",
 					null, "Text", "sample_entity_1.txt", "English",
 					Reader.getAbsolutePathFromClasspathOrFileSystem("adept/kbapi/sample.txt"),
 					hltContentContainer);
@@ -223,7 +230,7 @@ public abstract class KBUnitTest {
 	protected Chunk createTestChunk() {
 		try {
 			HltContentContainer hltContentContainer = new HltContentContainer();
-			Document document = DocumentMaker.getInstance().createDefaultDocument("sample.txt",
+			Document document = DocumentMaker.getInstance().createDocument("sample.txt",
 					null, "Text", "sample_entity_1.txt", "English",
 					Reader.getAbsolutePathFromClasspathOrFileSystem("adept/kbapi/sample.txt"),
 					hltContentContainer);
@@ -240,6 +247,37 @@ public abstract class KBUnitTest {
 			Assert.fail("Unable to create test chunk. " + ex.getMessage());
 		}
 		return null;
+	}
+
+	protected String getChunkIDByProvenance(KBProvenance provenance) {
+		try {
+			PreparedStatement preparedStatement = SqlQueryBuilder.createGetChunkIDByProvenance(provenance, sqlConnection);
+			ResultSet result = preparedStatement.executeQuery();
+			if (result.next()) {
+				return result.getString("chunk");
+			} else {
+				throw new Exception("Provenance KBID not found");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Assert.fail("Unable to get Chunk for Provenance " + provenance.getKBID().getObjectID() + ": " + ex.getMessage());
+		}
+		return null;
+	}
+
+	protected List<String> getOrphanChunkIDs() {
+		List<String> orphanChunks = new ArrayList<String>();
+		try {
+			PreparedStatement preparedStatement = SqlQueryBuilder.createGetOrphanTextChunksQuery(sqlConnection);
+			ResultSet result = preparedStatement.executeQuery();
+			while (result.next()) {
+				orphanChunks.add(result.getString("ID"));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Assert.fail("Unable to get orphan Chunks: " + ex.getMessage());
+		}
+		return orphanChunks;
 	}
 
 	protected Pair<Entity, List<EntityMention>> createTestEntityWithMentions(String entityType,

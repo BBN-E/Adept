@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.utilities;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static org.kohsuke.args4j.ExampleMode.ALL;
 import org.kohsuke.args4j.Argument;
@@ -23,6 +26,8 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.BooleanOptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +69,7 @@ public class CommandLineArgParse {
 	public String inputDirectory;
 	//
 	/** The input format. */
-	@Option(name="--input_format",usage=" --input_format <format>   Valid input file formats are 'SGML' or 'text'.\n")
+	@Option(name="--input_format",usage=" --input_format <format>   Valid input file formats are 'SGML' or 'text' or 'amr'.\n")
 	public String inputFormat;
 	//
 	/** The input language. */
@@ -132,6 +137,8 @@ public class CommandLineArgParse {
 	
 	/** The b quiet. */
 	protected boolean bQuiet = false;
+
+  private static final Logger logger = LoggerFactory.getLogger(CommandLineArgParse.class);
 	
 	/**
 	 * Prints the message.
@@ -151,13 +158,11 @@ public class CommandLineArgParse {
 	public CommandLineArgParse(String[] args) {
 		// Note args4j requires an Object as a parameter, so must create "this".
 		//CommandLineArgParse theProcessor = new CommandLineArgParse();
-		boolean bContinue;
+		boolean bContinue = false;
 		try {
 			bContinue = this.parseCommandLine(args);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			bContinue = false;
+			logger .error("Exception caught: ", e);
 		}
 		if ( bVerbose )
 		{
@@ -169,7 +174,7 @@ public class CommandLineArgParse {
 			{
 				this.dumpArguments();
 			}
-			return;
+			throw new IllegalArgumentException("Invalid Command Line Parameter");
 		}
 		// User has not requested early exit.
 		bQuiet = true;
@@ -393,7 +398,7 @@ public class CommandLineArgParse {
 					+ "    --cross_doc                    Process list of input files for cross-document references.\n"
 					+ "    -i, --input_file <filename>    A single input file to be run.\n"
 					+ "    --input_directory <directory>  Input files will be read from this directory.\n"
-					+ "    --input_format <format>        Valid input file formats are 'SGML' or 'text'.\n"
+					+ "    --input_format <format>        Valid input file formats are 'SGML' or 'text' or 'amr'.\n"
 					+ "    --input_language <language>    Sets the language of the input files.\n" 
 					+ "                                   The only supported value at this time is 'english'.\n"
 					+ "    -l, --input_list <filename>    A file containing a list of input file names without path, one per line.\n"

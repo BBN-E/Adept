@@ -1,0 +1,63 @@
+###########################################################################################################
+##
+## * Number of entities|relations|events: 	This is the count of distinct objects inserted by the system.
+##
+## * Confidence Range: 	This is range in confidence reported by the system for entities/relations/events. 
+##	If the min and max number are the same, the system is probably using a default value for confidence.
+##		These values are aggregated from column D of the entities.csv and column C of relations.csv and 
+##		events.csv
+##
+## * Max Mention Count: 	This is largest number of document level justifications for the 
+## entity/relation/event. 
+##	If the number is 1, then the system is probably doing one of the following
+##		 (a) Processing only a small number of documents (this would lead to a low value for 'Number of 
+##			 entities|relations|events' as well). 
+##		 (b) Never performing coreference for the object type (i.e. implementing a 'shatter baseline') 
+##		 (c) Filtering to a single justification when populating the KB.
+##		This value is aggregated from column E of the entities.csv and column D of relations.csv and 
+##		events.csv
+##
+## * Max Distinct Docs: 	This the number of distinct documents for which justifications for the object 
+##	can be found.
+##	If the number is 1, then the system is probably doing one of the following
+##		 (a) Processing only a single document (this would lead to a low value for 'Number of 
+##			 entities|relations|events' as well). 
+##		 (b) Never performing cross-document coreference for the object type (i.e. implementing a 'shatter 
+##			 baseline' across documents) 
+##		 (c) Filtering to a single justification when populating the KB.
+##		This value is aggregated from column F of the entities.csv and column E of relations.csv and 
+##		events.csv
+##
+## * Max Distinct Strings (entities only): 	This the number of distinct mention level strings for this 
+## entity. If the number is 1 and the 'Max Mention Count' is greater than 1, it is likely the system's only
+## form of coreference is exact string match.
+##		This value is aggregated from column G of the entities.csv
+##
+## * Number of Arguments Range (events/relations/sentiments/beliefs only): 	This is the range in reported number of 
+## arguments for an event, relation, sentiment, belief.  For relations, the expected number of arguments is 2. For 
+## events, the expected number of arguments will vary by the the event type.
+## If the min/max is 0, then the system is reporting some (or all) relations/events without any 
+## arguments. For events, if the number is 1, it is likely the system is finding arguments but not 
+## linking them (the 2015 EAL task). For events, if the number is less 4, it is likely the system 
+## either processed only a small number of documents or doesn't find all argument in the ontology.
+##		This value is aggregated from column P of relations.csv, events.csv, sentiments.csv, and beliefs.csv
+##
+## * Entity Types (entities only): 	The set of types found by the system.  This could include any of: 
+##  Organization, Location, Person, GeoPoliticalEntity,(add more).
+## 	This summary can be useful in understanding what subset of the ontology a system has focused on 
+##  (e.g. Person, but not Organization).
+##	If the system only ran on a small number of documents, some types could be missing because they 
+##  did not appear in the data. If a system assigns multiple types to the same entity, these will appear 
+##	in a comma separated list between square brackets.  For example [Person, Organization].  
+##		This list is aggregated from column A of entities.csv
+##
+## * Relation/Event Types and Roles: 	The set of Event/Relation/Sentiment/Belief types 
+## paired with the roles found by the system. 
+##	The format for this list is Type1:{Role1, Role2, ..., RoleN}; Type2:{Role1, Role2, ..., RoleN}.
+##	This summary can be useful in understanding what subset of the ontology a system has focused on 
+##  (e.g. Place, but not Time roles). For sentiments/belief, Role includes both the Role and the ontology 
+## 	of the thing in that role (e.g. "target(adept.kbapi.KBRelationArgument)"). 
+##	If the system only ran on a small number of documents, some types/roles could be missing because 
+##  they did not appear in the data. 
+##		This types in this list are aggregated from column A. Their are collected from Q and beyond. 
+#########################################################################################################

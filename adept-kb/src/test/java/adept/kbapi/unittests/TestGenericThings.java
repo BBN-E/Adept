@@ -1,21 +1,25 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.unittests;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -198,4 +202,40 @@ public class TestGenericThings extends KBUnitTest {
 		Assert.assertEquals("Inserted and Queried Generic Things don't match", result, queryResult);
 		
 	}
+	
+	@Test
+	public void testGenericThingsBadType() throws KBQueryException, KBUpdateException,
+			FileNotFoundException {
+		OntType crimeType = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "InvalidType");
+		KBGenericThing.InsertionBuilder builder = KBGenericThing.genericThingInsertionBuilder(
+				crimeType, "larceny");
+
+		KBTextProvenance.InsertionBuilder provenanceBuilder = getTestKBTextProvenanceBuilder();
+		builder.addProvenance(provenanceBuilder);
+		KBUpdateException exception = null;
+		try{
+			builder.insert(kb);
+		}catch(KBUpdateException e){
+			//This should be thrown!
+			exception = e;
+		}
+		Assert.assertTrue("Inserting generic thing with bad type should throw exception.", exception != null);
+	}
+	
+	@Test
+	public void testCorpusIdNoCorpusName() throws KBQueryException, KBUpdateException,
+			FileNotFoundException {
+		OntType crimeType = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Crime");
+		KBGenericThing.InsertionBuilder builder = KBGenericThing.genericThingInsertionBuilder(
+				crimeType, "larceny");
+
+		KBTextProvenance.InsertionBuilder provenanceBuilder = KBTextProvenance.builder().setBeginOffset(1).setEndOffset(2)
+				.setCorpusID("TEST_CORPUS_ID")
+				.setCorpusType("TEST_CORPUS_TYPE").setCorpusURI("TEST_CORPUS_URI")
+				.setDocumentID("TEST_DOCUMENT_ID").setDocumentPublicationDate("2015-11-18")
+				.setSourceLanguage("TEST_SOURCE_LANGUAGE");;
+		builder.addProvenance(provenanceBuilder);
+		KBGenericThing larceny = builder.insert(kb);
+	}
+	
 }

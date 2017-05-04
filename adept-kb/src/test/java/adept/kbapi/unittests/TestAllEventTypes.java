@@ -1,25 +1,31 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
 package adept.kbapi.unittests;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,6 +75,7 @@ import adept.kbapi.KBOntologyMap;
 import adept.kbapi.KBOntologyModel;
 import adept.kbapi.KBPredicateArgument;
 import adept.kbapi.KBQueryException;
+import adept.kbapi.KBUpdateException;
 import adept.metadata.SourceAlgorithm;
 import adept.utilities.DocumentMaker;
 
@@ -108,6 +115,7 @@ public class TestAllEventTypes extends KBUnitTest {
         rereEventTypesWithArguments.put("endposition",Arrays.asList("entity","person","position","time","place"));
         rereEventTypesWithArguments.put("nominate",Arrays.asList("agent","person","position","time","place"));
         rereEventTypesWithArguments.put("elect",Arrays.asList("agent","person","position","time","place"));
+        rereEventTypesWithArguments.put("elect",Arrays.asList("entity","person","position","time","place"));
         rereEventTypesWithArguments.put("transaction",Arrays.asList("giver","recipient","beneficiary","time","place"));
         rereEventTypesWithArguments.put("transferownership",Arrays.asList("thing","giver","recipient","beneficiary","time","place"));
         rereEventTypesWithArguments.put("transfermoney",Arrays.asList("money","giver","recipient","beneficiary","time","place"));        
@@ -163,7 +171,7 @@ public class TestAllEventTypes extends KBUnitTest {
     }
     
     private void confirmEventWithTypeExists(String eventType, KBOntologyMap ontologyMap) throws KBQueryException, InvalidPropertiesFormatException, FileNotFoundException, IOException {
-        OntType adeptType = ((Optional<OntType>)ontologyMap.getKBTypeForType(new Type(eventType))).get();
+        OntType adeptType = (ontologyMap.getKBTypeForType(new Type(eventType))).get();
         
         List<KBEvent> events = kb.getEventsByType(adeptType);
 
@@ -185,7 +193,7 @@ public class TestAllEventTypes extends KBUnitTest {
             HashMap<Item, KBPredicateArgument> argumentMap = new HashMap<Item, KBPredicateArgument>();
             
             Type actualEventType = new Type(eventType);
-            OntType adeptType = ((Optional<OntType>)KBOntologyMap.getRichEREOntologyMap().getKBTypeForType(actualEventType)).get();
+            OntType adeptType = KBOntologyMap.getRichEREOntologyMap().getKBTypeForType(actualEventType).get();
             
             // create event mention
             EventMention.Builder eventMentionBuilder = EventMention.builder(actualEventType);            
@@ -199,11 +207,11 @@ public class TestAllEventTypes extends KBUnitTest {
             
             int entityId = 1;
             for (String rereArgument : rereEventTypesWithArguments.get(eventType)) {
-                OntType kbArgument = ((Optional<OntType>)KBOntologyMap.getRichEREOntologyMap().getKBTypeForType(new Type(eventType+"."+rereArgument))).get();
+                OntType kbArgument = KBOntologyMap.getRichEREOntologyMap().getKBTypeForType(new Type(eventType+"."+rereArgument)).get();
                 String kbArgType = KBOntologyModel.instance().getRelationArgumentTypes().get(adeptType.getType()).get(kbArgument.getType());
                 if (kbArgType.equals("Date")) {
                     HltContentContainer hltContentContainer = new HltContentContainer();
-                    Document document = DocumentMaker.getInstance().createDefaultDocument("sample_date.txt",
+                    Document document = DocumentMaker.getInstance().createDocument("sample_date.txt",
                                     null, "Text", "sample_date_1.txt", "English",
                                     Reader.getAbsolutePathFromClasspathOrFileSystem("adept/kbapi/sample_date.txt"),
                                     hltContentContainer);
@@ -320,15 +328,14 @@ public class TestAllEventTypes extends KBUnitTest {
         }
     }
     
-    private KBEvent createTestEventFromTacRelationWithArguments(String relationType) {
-        try {            
+    private KBEvent createTestEventFromTacRelationWithArguments(String relationType) throws KBUpdateException, InvalidPropertiesFormatException, FileNotFoundException, IOException, URISyntaxException {
             float relationConfidence = 0.9f;
             float relationMentionConfidence = 0.8f;
 
             HashMap<Item, KBPredicateArgument> argumentMap = new HashMap<Item, KBPredicateArgument>();
             
             Type actualEventType = new Type(relationType);
-            OntType adeptType = ((Optional<OntType>)KBOntologyMap.getTACOntologyMap().getKBTypeForType(actualEventType)).get();
+            OntType adeptType = KBOntologyMap.getTACOntologyMap().getKBTypeForType(actualEventType).get();
             
             // create relation mention
             RelationMention.Builder relationMentionBuilder = RelationMention.builder(actualEventType);
@@ -341,11 +348,11 @@ public class TestAllEventTypes extends KBUnitTest {
             
             int entityId = 1;
             for (String rereArgument : tacRelationTypesWithArguments.get(relationType)) {
-                OntType kbArgument = ((Optional<OntType>)KBOntologyMap.getTACOntologyMap().getKBTypeForType(new Type(relationType+"."+rereArgument))).get();
+                OntType kbArgument = KBOntologyMap.getTACOntologyMap().getKBTypeForType(new Type(relationType+"."+rereArgument)).get();
                 String kbArgType = KBOntologyModel.instance().getRelationArgumentTypes().get(adeptType.getType()).get(kbArgument.getType());
                 if (kbArgType.equals("Date")) {
                     HltContentContainer hltContentContainer = new HltContentContainer();
-                    Document document = DocumentMaker.getInstance().createDefaultDocument("sample_date.txt",
+                    Document document = DocumentMaker.getInstance().createDocument("sample_date.txt",
                                     null, "Text", "sample_date_1.txt", "English",
                                     Reader.getAbsolutePathFromClasspathOrFileSystem("adept/kbapi/sample_date.txt"),
                                     hltContentContainer);
@@ -452,10 +459,5 @@ public class TestAllEventTypes extends KBUnitTest {
             
             KBEvent.InsertionBuilder insertionBuilder = KBEvent.eventInsertionBuilder(documentRelation, argumentMap, KBOntologyMap.getTACOntologyMap());
             return insertionBuilder.insert(kb);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.fail();
-            return null;
-        }
     }
 }

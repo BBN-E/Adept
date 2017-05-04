@@ -1,31 +1,37 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import java.io.Serializable;
 import java.util.Map;
 
-public class DocumentMentalStateArgument extends HltContent implements HasScoredUnaryAttributes {
-    private final IType role;
+public class DocumentMentalStateArgument extends HltContent implements HasScoredUnaryAttributes, Serializable {
+
+	private static final long serialVersionUID = -6012702623129668755L;
+	private final IType role;
     private final DocumentMentalStateArgument.Filler filler;
     private final ImmutableMap<IType, Float> attributes;
     private ImmutableSet<? extends MentalStateMention.Filler> provenances;
@@ -81,7 +87,8 @@ public class DocumentMentalStateArgument extends HltContent implements HasScored
      * Creates a builder to create a relation argument of the specified type.
      * @param role May not be {@code null}.
      * @param entity May not be {@code null}.
-     * @param confidence
+     * @param confidence the confidence for this new mention
+     * @return the new Builder. Useful for chaining.
      */
     public static Builder builder(IType role, Filler entity, float confidence) {
         return new Builder(role, entity, confidence);
@@ -107,12 +114,12 @@ public class DocumentMentalStateArgument extends HltContent implements HasScored
 
         public Builder setAttributes(Map<? extends IType, Float> attributes) {
         	checkArgument(attributes!=null);
-            for (final IType arg : attributes.keySet()) {
-            	checkArgument(arg!=null);
-                checkArgument(attributes.get(arg)!=null);
-            }  
-            this.attributes.putAll(attributes);
-            return this;
+        	for (final Map.Entry<? extends IType, Float> entry : attributes.entrySet()) {
+           	checkArgument(entry.getKey()!=null);
+            checkArgument(entry.getValue()!=null);
+          }  
+          this.attributes.putAll(attributes);
+          return this;
         }
 
         public Builder addAttribute(IType attribute, float score) {
@@ -151,8 +158,9 @@ public class DocumentMentalStateArgument extends HltContent implements HasScored
      *
      * This class is locally immutable.
      */
-    public static final class Filler {
-    	private final Optional<Entity> entity;
+    public static final class Filler implements Serializable {
+		private static final long serialVersionUID = 7228313063217427861L;
+		private final Optional<Entity> entity;
         private final Optional<NumericValue> strength;
     	private final Optional<DocumentRelation> documentRelation;        
         private final Optional<DocumentRelationArgument> documentRelationArgument;
@@ -234,7 +242,7 @@ public class DocumentMentalStateArgument extends HltContent implements HasScored
         }
         
         /**
-         * @return
+         * @return this Filler as an Item.
          */
         public Optional<Item> asItem() {
             if (asEntity().isPresent()) {

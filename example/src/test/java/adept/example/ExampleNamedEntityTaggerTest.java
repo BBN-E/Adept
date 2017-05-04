@@ -26,7 +26,6 @@ import adept.common.Document;
 import adept.common.EntityMention;
 import adept.common.Sentence;
 import adept.common.TokenOffset;
-import adept.common.TokenizerType;
 import adept.common.HltContentContainer;
 import adept.common.Passage;
 import adept.utilities.DocumentMaker;
@@ -47,7 +46,7 @@ public class ExampleNamedEntityTaggerTest {
 	@Test
 	public void Test() {
 	    HltContentContainer hltContainer = new HltContentContainer();
-		Document doc = DocumentMaker.getInstance().createDefaultDocument(null, null, null, null, "English",
+		Document doc = DocumentMaker.getInstance().createDocument(
 				ClassLoader.getSystemResource("ExampleNamedEntityTaggerTest.txt").getFile(),hltContainer);
 		for(Passage p : hltContainer.getPassages())
 			System.out.println("PASSAGE::: " + p.getTokenOffset().getBegin() + "  " + p.getTokenOffset().getEnd());

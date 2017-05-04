@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.unittests;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static org.junit.Assert.assertTrue;
 
@@ -92,8 +95,11 @@ public class TestRelation extends KBUnitTest {
 				relationMentionConfidence);
 		testQueryRelationByType(expectedResultType);
 		testQueryRelationByArg(kbEntity1.getKBID());
+		testQueryRelationByArgs(kbEntity1.getKBID(), kbEntity2.getKBID());
+		Assert.assertTrue("Should be no relations with Jimmy argument", kb.getRelationsByArgs(kbEntity1.getKBID(), new KBID("Jimmy", KBOntologyModel.DATA_INSTANCES_PREFIX)).size() ==0);
 		testQueryRelationByArgAndType(kbEntity1.getKBID(), "LivesIn", 0);
 		testQueryRelationByStringRef("BBN Technologies");
+		testQueryRelationByRegex("BBN.*", false);
 
 		KBTextProvenance.InsertionBuilder newArgumentProvenanceBuilder = KBTextProvenance.builder(
 				createTestChunk(), 0.3f);
@@ -216,6 +222,27 @@ public class TestRelation extends KBUnitTest {
 
 		assertTrue("Expected external kb id \"External_Resident_Relation\" not found", assertion);
 	}
+	
+	private void testQueryRelationByArgs(KBID entityKbId, KBID otherArgKBID) throws KBQueryException {
+		boolean assertion = false;
+
+		List<KBRelation> relationIds = kb.getRelationsByArgs(entityKbId, otherArgKBID);
+		int size = relationIds.size();
+		assertTrue("Size of relations is not > 0", size > 0);
+
+		for (KBRelation relation : relationIds) {
+			List<KBID> externalKbIds = kb.getExternalKBIDs(relation.getKBID());
+			for (KBID kbId : externalKbIds) {
+				if (kbId.getObjectID().equals("External_Resident_Relation")) {
+					assertion = true;
+					break;
+				}
+			}
+
+		}
+
+		assertTrue("Expected external kb id \"External_Resident_Relation\" not found", assertion);
+	}
 
 	private void testQueryRelationByArgAndType(KBID entityId, String expectedType,
 			int expectedNumberOfIds) throws KBQueryException {
@@ -249,6 +276,29 @@ public class TestRelation extends KBUnitTest {
 					Assert.fail("Relation mentions do not match the expected argument string. Expected \""
 							+ stringReference + "\" got \"" + textProvenance.getValue() + "\".");
 				}
+			}
+		}
+	}
+	
+	/**
+	 * this query method looks for the relation justification chunk. If this is
+	 * not correctly set, the query returns empty handed.
+	 */
+	private void testQueryRelationByRegex(String regex, boolean caseSensitive) throws KBQueryException {
+		List<KBRelation> relations = kb.getRelationsByRegexMatch(regex, caseSensitive);
+
+		int size = relations.size();
+		assertTrue("Size of relations is not greater than zero", size > 0);
+
+		for (KBRelation relation : relations) {
+
+			int mentionsSize = relation.getProvenances().size();
+			assertTrue("Size of relation mentions is not greater than 0.", mentionsSize > 0);
+
+			// for each mention, check presence of justification
+			for (KBProvenance provenance : relation.getProvenances()) {
+				KBTextProvenance textProvenance = (KBTextProvenance) provenance;
+				assertTrue("Relation justification is null", textProvenance.getValue() != null);
 			}
 		}
 	}

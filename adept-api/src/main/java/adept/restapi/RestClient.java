@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.restapi;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 //import java.lang.*;
 import java.io.File;
@@ -36,9 +39,9 @@ import org.eclipse.jetty.util.UrlEncoded;
 import adept.common.Corpus;
 import adept.common.HltContentContainer;
 import adept.io.Writer;
-import adept.serialization.JSONSerializer;
+import adept.serialization.JSONStringSerializer;
 import adept.serialization.SerializationType;
-import adept.serialization.XMLSerializer;
+import adept.serialization.XMLStringSerializer;
 import adept.utilities.printHltContent;
 
 
@@ -125,7 +128,7 @@ public class RestClient
 				break;
 			}
 			else {
-				System.out.printf("Server not yet up...sleeping for %dms and trying again.\n", sleepMS);
+				System.out.printf("Server not yet up...sleeping for %dms and trying again.%n", sleepMS);
 				try {
 					//thread to sleep for the specified number of milliseconds
 					Thread.sleep(sleepMS);
@@ -212,16 +215,16 @@ public class RestClient
 	 */
 	protected void saveHLTCC( String outfile, String responseContent ) {
 		try {
-			JSONSerializer jsonSerializer = new JSONSerializer(SerializationType.JSON);
+			JSONStringSerializer jsonStringSerializer = new JSONStringSerializer();
 			HltContentContainer hltcc = 
-					(HltContentContainer) jsonSerializer.deserializeString(responseContent,HltContentContainer.class);
+					(HltContentContainer) jsonStringSerializer.deserializeFromString(responseContent,HltContentContainer.class);
 			if ( hltcc == null ) 
 			{
 				System.out.println("Null HLT content container.");
 				return;
 			}
-			XMLSerializer xmlSerializer = new XMLSerializer(SerializationType.XML);
-			String xmlTemp = xmlSerializer.serializeAsString(hltcc);
+			XMLStringSerializer xmlStringSerializer = new XMLStringSerializer();
+			String xmlTemp = xmlStringSerializer.serializeToString(hltcc);
 			String xmlFilename = outfile + ".xml";
 			System.out.println("Writing to:  " + xmlFilename);
 			Writer.getInstance().writeToFile(xmlFilename,xmlTemp);

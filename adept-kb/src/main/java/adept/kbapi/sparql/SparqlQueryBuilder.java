@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.sparql;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.List;
 import java.util.UUID;
@@ -69,10 +72,24 @@ public class SparqlQueryBuilder {
 					"   UNION " +
 					"	{ adept-data:%1$s a rdf:Statement} " +
 					"    FILTER NOT EXISTS{ " +
-					"        ?subClass rdfs:subClassOf ?type " +
+					"        ?subClass rdfs:subClassOf ?type ." +
+					"		 adept-data:%1$s a ?subClass . " +
 					"        FILTER (?subClass != ?type) " +
 					"    } " +
 					"} ";
+
+	private static final String GET_IDS_BY_TYPE =
+			PREFIXES +
+					"SELECT ?id " +
+					"WHERE { " +
+					"  ?id a %s " +
+					"  %s " +
+					"} ";
+
+	private static final String MINUS_IDS_BY_TYPE =
+					"  MINUS { " +
+					"    ?id a %s " +
+					"  } ";
 
 	private static final String GET_REIFIED_STMT_ID_BY_SUBJECT_AND_PREDICATE =
 			PREFIXES
@@ -149,6 +166,16 @@ public class SparqlQueryBuilder {
 					"   FILTER(?subject != adept-base:Number && ?subject != adept-base:Date) " +
 					"} ";
 
+	private static final String GET_GENERIC_THING_TYPES =
+			PREFIXES +
+					"SELECT DISTINCT " +
+					"?subject " +
+					"WHERE { " +
+					"   ?subject rdfs:subClassOf adept-base:GenericThing . " +
+					"   FILTER(!isblank(?subject)) " +
+					"   FILTER(?subject != adept-base:GenericThing) " +
+					"} ";
+
 	private static final String GET_LEAF_RELATION_TYPES =
 			PREFIXES +
 					"SELECT DISTINCT " +
@@ -186,8 +213,15 @@ public class SparqlQueryBuilder {
 
 	private static final String GET_RELATION_ID_BY_RELATION_ARGUMENT_ID =
 			PREFIXES
-					+ "SELECT ?relationID "
-					+ " WHERE {adept-data:%s rdf:subject ?relationID }";
+					+ "SELECT ?relationID ?type"
+					+ " WHERE {adept-data:%s rdf:subject ?relationID . "
+					+ "?relationID a ?type . "
+					+ "    ?type rdfs:subClassOf adept-base:PredicateArgument  "
+ 					+ "    FILTER NOT EXISTS{ "
+					+ "        ?subClass rdfs:subClassOf ?type "
+					+ "        FILTER (?subClass != ?type) "
+					+ "    } "
+					+ "}";
 
 	private static final String GET_EVENT_REALIS_TYPES =
 			PREFIXES
@@ -213,6 +247,71 @@ public class SparqlQueryBuilder {
 					"  FILTER (?predicate != adept-base:validTemporalSpan) " +
 					"} " +
 					"ORDER BY ?subject";
+
+	private static final String ARGUMENT_QUERY_BLOCK = "{ " +
+			"    #Get the argument bits, if it's an entity \n" +
+			"    ?argument adept-base:canonicalMention ?entityCanonicalMention; " +
+			"		 adept-base:canonicalString ?entityCanonicalString; " +
+			"        adept-base:confidence ?entityconfidence; " +
+			"        a ?entityType . " +
+			"    ?entityTypeStatement a rdf:Statement; " +
+			"        rdf:subject ?argument; " +
+			"        rdf:predicate rdf:type; " +
+			"        rdf:object ?entityType; " +
+			"        adept-base:confidence ?entityTypeConfidence . " +
+			"    ?entityCanonicalMention " +
+			"        adept-base:confidence ?canonicalMentionConfidence . " +
+			"}UNION{ " +
+			"    # Get the argument bits, if ?argument is a a RelationArgument \n" +
+			"    ?argument a rdf:Statement; " +
+			"      adept-base:confidence ?relationArgumentConfidence; " +
+			"      rdf:predicate ?relationArgumentType; " +
+			"      rdf:object ?relationArgumentStatement . " +
+			"}UNION{ " +
+			"    # Get the argument bits, if ?argument is a number \n" +
+			"    ?argument a adept-base:Number; " +
+			"        rdf:value ?numberValue " +
+			"}UNION { " +
+			"    # Get the argument bits, if ?argument is a temporal span \n" +
+			"    ?argument a adept-base:TemporalSpan . " +
+			"    OPTIONAL { " +
+			"        ?beginDateStatement rdf:subject ?argument; " +
+			"        	rdf:type rdf:Statement; " +
+			"        	rdf:predicate adept-base:beginDate; " +
+			"        	rdf:object ?beginDate . " +
+			"		 ?beginDate adept-base:timex2String ?beginDateValue . " +
+			"	} " +
+			"    OPTIONAL { " +
+			"        ?endDateStatement rdf:subject ?argument; " +
+			"        	rdf:type rdf:Statement; " +
+			"        	rdf:predicate adept-base:endDate; " +
+			"        	rdf:object ?endDate . " +
+			"		 ?endDate adept-base:timex2String ?endDateValue . " +
+			"	} " +
+			"}UNION { " +
+			"    # Get the argument bits, if ?argument is a date \n" +
+			"    ?argument a adept-base:Date; " +
+			"      	adept-base:timex2String ?date " +
+			"}UNION { " +
+			"    # Get the argument bits, if ?argument is a relation \n" +
+			"    ?argument a ?argumentRelationType . " +
+			"    ?argumentRelationType rdfs:subClassOf adept-base:Relation . " +
+			"      FILTER NOT EXISTS { " +
+			"       ?argumentRelationTypeSubClass rdfs:subClassOf ?argumentRelationType . " +
+			"       ?argument rdf:type ?argumentRelationTypeSubClass " +
+			"       FILTER (?argumentRelationTypeSubClass != ?argumentRelationType ) " +
+			"      } " +
+			"}UNION { " +
+			"    # Get the argument bits, if ?argument is a generic thing \n" +
+			"    ?argument adept-base:canonicalString ?genericThingCanonicalString ; " +
+			"               a ?genericThingType " +
+			"    FILTER NOT EXISTS { " +
+			"       ?subClass rdfs:subClassOf ?genericThingType . " +
+			"       ?argument a ?subClass " +
+			"       FILTER (?subClass != ?genericThingType) " +
+			"    } " +
+			"    FILTER NOT EXISTS { ?argument adept-base:canonicalMention ?entityCanonicalMention } " +
+			"} " ;
 
 	private static final String QUERY_TRIPLES_BY_SUBJECT_URI =
 			PREFIXES
@@ -282,9 +381,10 @@ public class SparqlQueryBuilder {
 	private static final String INSERT_ENTITY_TEMPLATE =
 			PREFIXES
 					+ "INSERT DATA"
-					+ "{ adept-data:%s    adept-base:canonicalMention  " + "\"%s\" ;"
+					+ "{ adept-data:%s    adept-base:canonicalMention  " + "adept-data:%s ;"
 					+ "                         adept-base:canonicalString  " + "\"%s\"  ;"
-					+ "                         adept-base:confidence  " + "\"%s\"^^xsd:float" + " ." + "}   ";
+					+ "                         adept-base:confidence  " + "\"%s\"^^xsd:float" + " ."
+					+ "  adept-data:%s    adept-base:confidence  " + "\"%s\"^^xsd:float" + " ." + "}   ";
 
 	/** Templates related to Timex Date insertion */
 	private static final String INSERT_TIMEX_VALUE_TEMPLATE =
@@ -314,15 +414,6 @@ public class SparqlQueryBuilder {
 					+ "                         rdf:predicate  " + "rdf:type ;"
 					+ "                         adept-base:confidence  " + "\"%s\"^^xsd:float" + " ." + "}   ";
 
-	private static final String CANONICALMENTION_REIFICATION_TEMPLATE =
-			PREFIXES
-					+ "INSERT DATA"
-					+ "{ adept-data:%s    rdf:type    rdf:Statement    ;"
-					+ "                         rdf:subject  " + "adept-data:%s ;"
-					+ "                         rdf:object  " + "\"%s\"  ;"
-					+ "                         rdf:predicate  " + "adept-base:canonicalMention ;"
-					+ "                         adept-base:confidence  " + "\"%s\"^^xsd:float" + " ." + "}   ";
-
 	private static final String EXTERNALKBID_INSERTION_TEMPLATE =
 			PREFIXES
 					+ "INSERT DATA"
@@ -334,14 +425,14 @@ public class SparqlQueryBuilder {
 			PREFIXES
 					+ "INSERT DATA"
 					+ "{ adept-data:%s    adept-base:externalID    adept-data:%s  .}";
-        
+
         private static final String EXTERNALKBID_DELETION_TEMPLATE =
 			PREFIXES
 					+ "DELETE WHERE"
 					+ "{ ?id              rdf:type                         adept-base:ExternalID ;"
 					+ "                   adept-base:externalKbElementId   \"%s\"  ;"
-					+ "                   adept-base:externalKbName        \"%s\"  .   "     
-                    + "  adept-data:%s    adept-base:externalID            ?id  .}   ";          
+					+ "                   adept-base:externalKbName        \"%s\"  .   "
+                    + "  adept-data:%s    adept-base:externalID            ?id  .}   ";
 
 	/** Templates related to KB entity update */
 	private static String UPDATE_ENTITY_CONFIDENCE_TEMPLATE =
@@ -355,22 +446,12 @@ public class SparqlQueryBuilder {
 			PREFIXES
 					+ "DELETE WHERE"
 					+ "{ adept-data:%s    adept-base:canonicalMention    ?o1   ;"
-					+ "                   adept-base:canonicalString    ?o2   ." + "} ;"
-					+ "DELETE WHERE"
-					+ "{ ?s    rdf:type    rdf:Statement    ;"
-					+ "                         rdf:subject  " + "adept-data:%s ;"
-					+ "                         rdf:object  " + "?o ;"
-					+ "                         adept-base:confidence  " + "?c ;"
-					+ "                         rdf:predicate  " + "adept-base:canonicalMention ." + "};   "
+					+ "                   adept-base:canonicalString    ?o2   ."
+					+ "            ?o1    adept-base:confidence    ?o3   ;" + "} ;"
 					+ "INSERT DATA"
-					+ "{ adept-data:%s    adept-base:canonicalMention  " + "\"%s\" ;"
-					+ "                   adept-base:canonicalString  " + "\"%s\"  ." + "} ; "
-					+ "INSERT DATA"
-					+ "{ adept-data:%s    rdf:type    rdf:Statement    ;"
-					+ "                         rdf:subject  " + "adept-data:%s ;"
-					+ "                         rdf:object  " + "\"%s\"  ;"
-					+ "                         rdf:predicate  " + "adept-base:canonicalMention ;"
-					+ "                         adept-base:confidence  " + "\"%s\"^^xsd:float" + " ." + "}   ";
+					+ "{ adept-data:%s    adept-base:canonicalMention  " + "adept-data:%s ;"
+					+ "                   adept-base:canonicalString  " + "\"%s\"  ."
+					+ "  adept-data:%s    adept-base:confidence  " + "\"%s\"^^xsd:float" + " ." + "} ;";
 
 	private static final String DELETE_ENTITY_TYPES_TEMPLATE =
 			PREFIXES +
@@ -529,6 +610,21 @@ public class SparqlQueryBuilder {
 					+ "         adept-base:externalKbElementId   \"%s\" ;"
 					+ "         adept-base:externalKbName        \"%s\" . }";
 
+	private static final String QUERY_ADEPTID_BY_EXTERNAL_ID_NAME_AND_TYPE =
+			PREFIXES
+					+ "SELECT ?subject "
+					+ "WHERE { "
+					+ "?subject     adept-base:externalID ?externalId  ."
+					+ "?externalId  rdf:type  adept-base:ExternalID ;"
+					+ "             adept-base:externalKbElementId   \"%s\" ;"
+					+ "             adept-base:externalKbName        \"%s\" . "
+					+ "?typeId rdf:subject ?subject ."
+					+ "?typeId rdf:predicate rdf:type ."
+					+ "?typeId rdf:type rdf:Statement ."
+					+ "?typeId rdf:object ?type ."
+					+ " FILTER (?type = adept-core:%s)."
+					+ "}";
+
 	private static final String QUERY_ADEPTID_BY_EXTERNAL_ID_AND_NAME =
 			PREFIXES
 					+ "SELECT ?subject "
@@ -565,110 +661,77 @@ public class SparqlQueryBuilder {
 
 	private static final String QUERY_ENTITY_DATA_BY_IDS =
 			PREFIXES +
-					"SELECT ?id ?confidence ?canonicalMention ?canonicalMentionConfidence ?type ?typeConfidence " +
+					"SELECT ?id ?confidence ?canonicalMention ?canonicalMentionConfidence ?type ?typeConfidence ?entityCanonicalString " +
 					"WHERE { " +
 					"  ?id a adept-base:Entity . " +
 					"  FILTER (?id in (%s)) " +
 					"  ?id adept-base:confidence ?confidence . " +
-					"  ?id adept-base:canonicalMention ?canonicalMention . " +
+					"  ?id adept-base:canonicalMention ?canonicalMention ; " +
+					"	 adept-base:canonicalString ?entityCanonicalString . " +
 					"  ?typeId rdf:subject ?id . " +
 					"  ?typeId rdf:predicate rdf:type . " +
 					"  ?typeId rdf:type rdf:Statement . " +
 					"  ?typeId rdf:object ?type . " +
 					"  ?typeId adept-base:confidence ?typeConfidence . " +
-					"  ?canonicalMentionId rdf:subject ?id . " +
-					"  ?canonicalMentionId rdf:type rdf:Statement . " +
-					"  ?canonicalMentionId rdf:predicate adept-base:canonicalMention . " +
-					"  ?canonicalMentionId rdf:object ?canonicalMention . " +
-					"  ?canonicalMentionId adept-base:confidence ?canonicalMentionConfidence ;     " +
+					"  ?canonicalMention adept-base:confidence ?canonicalMentionConfidence . " +
+					"}";
 
+
+	private static final String QUERY_ENTITY_DATA_BY_TYPE =
+			PREFIXES +
+					"SELECT ?id ?confidence ?canonicalMention ?canonicalMentionConfidence ?type ?typeConfidence ?entityCanonicalString " +
+					"WHERE { " +
+					"  ?id a adept-base:Entity . " +
+					"  ?id adept-base:confidence ?confidence . " +
+					"  ?id adept-base:canonicalMention ?canonicalMention ; " +
+					"		adept-base:canonicalString ?entityCanonicalString . " +
+					"  ?typeId rdf:subject ?id . " +
+					"  ?typeId rdf:predicate rdf:type . " +
+					"  ?typeId rdf:type rdf:Statement . " +
+					"  ?typeId rdf:object ?type . " +
+					"  FILTER (?type = adept-core:%s) " +
+					"  ?typeId adept-base:confidence ?typeConfidence . " +
+					"  ?canonicalMention adept-base:confidence ?canonicalMentionConfidence . " +
 					"}";
 
 	private static final String QUERY_RELATION_BY_ID =
 			PREFIXES +
 					"SELECT * " +
 					"WHERE{ " +
-					"adept-data:%s ?role ?argument ; " +
-					"    adept-base:confidence ?relationConfidence ; " +
-					"    rdf:type ?relationType . " +
+					"adept-data:%s rdf:type ?relationType ; " +
+					"    adept-base:confidence ?relationConfidence . " +
 					"FILTER NOT EXISTS { " +
 					"    ?subClass rdfs:subClassOf ?relationType . " +
 					"    adept-data:%1$s a ?subClass " +
 					"    FILTER (?subClass != ?relationType) " +
 					"} " +
 					"  FILTER(?relationType != adept-base:Thing) " +
+					"  FILTER(?relationType != adept-base:Relation) " +
+					" OPTIONAL { " +
+					" adept-data:%1$s ?role ?argument . " +
 					"?kbRelationArgumentID a rdf:Statement; " +
 					"    rdf:subject adept-data:%1$s; " +
 					"    rdf:predicate ?role; " +
 					"    rdf:object ?argument; " +
 					"    adept-base:confidence ?argumentConfidence . " +
-					"{ " +
-					"    #Get the argument bits, if it's an entity \n" +
-					"    ?argument adept-base:canonicalMention ?entityCanonicalMention; " +
-					"        adept-base:confidence ?entityconfidence; " +
-					"        a ?entityType . " +
-					"    ?entityTypeStatement a rdf:Statement; " +
-					"        rdf:subject ?argument; " +
-					"        rdf:predicate rdf:type; " +
-					"        rdf:object ?entityType; " +
-					"        adept-base:confidence ?entityTypeConfidence . " +
-					"    ?canonicalMentionId rdf:subject ?argument; " +
-					"        rdf:type rdf:Statement; " +
-					"        rdf:predicate adept-base:canonicalMention; " +
-					"        rdf:object ?entityCanonicalMention; " +
-					"        adept-base:confidence ?canonicalMentionConfidence " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a a RelationArgument \n" +
-					"    ?argument a rdf:Statement; " +
-					"      adept-base:confidence ?relationArgumentConfidence; " +
-					"      rdf:predicate ?relationArgumentType; " +
-					"      rdf:object ?relationArgumentStatement . " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a number \n" +
-					"    ?argument a adept-base:Number; " +
-					"        rdf:value ?numberValue " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a temporal span \n" +
-					"    ?argument a adept-base:TemporalSpan . " +
-					"    OPTIONAL { " +
-					"        ?beginDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:beginDate; " +
-					"        	rdf:object ?beginDate . " +
-					"		 ?beginDate adept-base:timex2String ?beginDateValue . " +
-					"	} " +
-					"    OPTIONAL { " +
-					"        ?endDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:endDate; " +
-					"        	rdf:object ?endDate . " +
-					"		 ?endDate adept-base:timex2String ?endDateValue . " +
-					"	} " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a date \n" +
-					"    ?argument a adept-base:Date; " +
-					"      	adept-base:timex2String ?date " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a relation \n" +
-					"    ?argument a ?argumentRelationType . " +
-					"    ?argumentRelationType rdfs:subClassOf adept-base:Relation . " +
-					"      FILTER NOT EXISTS { " +
-					"       ?argumentRelationTypeSubClass rdfs:subClassOf ?argumentRelationType . " +
-					"       ?argument rdf:type ?argumentRelationTypeSubClass " +
-					"       FILTER (?argumentRelationTypeSubClass != ?argumentRelationType ) " +
-					"      } " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a generic thing \n" +
-					"    ?argument adept-base:canonicalString ?genericThingCanonicalString ; " +
-					"               a ?genericThingType " +
-					"    FILTER NOT EXISTS { " +
-					"       ?subClass rdfs:subClassOf ?genericThingType . " +
-					"       ?argument a ?subClass " +
-					"       FILTER (?subClass != ?genericThingType) " +
-					"    } " +
-					"    FILTER NOT EXISTS { ?argument adept-base:canonicalMention ?entityCanonicalMention } " +
-					"} " +
+					ARGUMENT_QUERY_BLOCK +
+					" } " +
 					"} ORDER BY ?role ?argument ";
+
+  private static final String QUERY_RELATION_BY_ID_WITHOUT_ARGS =
+      PREFIXES +
+	  "SELECT ?relationId ?relationType ?relationConfidence " +
+	  "WHERE{ " +
+	  "adept-data:%s rdf:type ?relationType ; " +
+	  "    adept-base:confidence ?relationConfidence . " +
+	  "FILTER NOT EXISTS { " +
+	  "    ?subClass rdfs:subClassOf ?relationType . " +
+	  "    adept-data:%1$s a ?subClass " +
+	  "    FILTER (?subClass != ?relationType) " +
+	  "} " +
+	  "  FILTER(?relationType != adept-base:Thing) " +
+	  "  FILTER(?relationType != adept-base:Relation) ." +
+	  "}";
 
 	private static final String QUERY_RELATIONS_BY_IDS =
 			PREFIXES +
@@ -684,77 +747,14 @@ public class SparqlQueryBuilder {
 					"    FILTER (?subClass != ?relationType) " +
 					"} " +
 					" %s " +
+					" OPTIONAL { " +
 					"?kbRelationArgumentID a rdf:Statement; " +
 					"    rdf:subject ?relationId; " +
 					"    rdf:predicate ?role; " +
 					"    rdf:object ?argument; " +
 					"    adept-base:confidence ?argumentConfidence . " +
 					"?relationId ?role ?argument . " +
-					"{ " +
-					"    #Get the argument bits, if it's an entity \n" +
-					"    ?argument adept-base:canonicalMention ?entityCanonicalMention; " +
-					"        adept-base:confidence ?entityconfidence; " +
-					"        a ?entityType . " +
-					"    ?entityTypeStatement a rdf:Statement; " +
-					"        rdf:subject ?argument; " +
-					"        rdf:predicate rdf:type; " +
-					"        rdf:object ?entityType; " +
-					"        adept-base:confidence ?entityTypeConfidence . " +
-					"    ?canonicalMentionId rdf:subject ?argument; " +
-					"        rdf:type rdf:Statement; " +
-					"        rdf:predicate adept-base:canonicalMention; " +
-					"        rdf:object ?entityCanonicalMention; " +
-					"        adept-base:confidence ?canonicalMentionConfidence " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a a RelationArgument \n" +
-					"    ?argument a rdf:Statement; " +
-					"      adept-base:confidence ?relationArgumentConfidence; " +
-					"      rdf:predicate ?relationArgumentType; " +
-					"      rdf:object ?relationArgumentStatement . " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a number \n" +
-					"    ?argument a adept-base:Number; " +
-					"        rdf:value ?numberValue " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a temporal span \n" +
-					"    ?argument a adept-base:TemporalSpan . " +
-					"    OPTIONAL { " +
-					"        ?beginDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:beginDate; " +
-					"        	rdf:object ?beginDate . " +
-					"		 ?beginDate adept-base:timex2String ?beginDateValue . " +
-					"	} " +
-					"    OPTIONAL { " +
-					"        ?endDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:endDate; " +
-					"        	rdf:object ?endDate . " +
-					"		 ?endDate adept-base:timex2String ?endDateValue . " +
-					"	} " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a date \n" +
-					"    ?argument a adept-base:Date; " +
-					"      	adept-base:timex2String ?date " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a relation \n" +
-					"    ?argument a ?argumentRelationType . " +
-					"    ?argumentRelationType rdfs:subClassOf adept-base:Relation . " +
-					"      FILTER NOT EXISTS { " +
-					"       ?argumentRelationTypeSubClass rdfs:subClassOf ?argumentRelationType . " +
-					"       ?argument rdf:type ?argumentRelationTypeSubClass " +
-					"       FILTER (?argumentRelationTypeSubClass != ?argumentRelationType ) " +
-					"      } " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a generic thing \n" +
-					"    ?argument adept-base:canonicalString ?genericThingCanonicalString ; " +
-					"               a ?genericThingType " +
-					"    FILTER NOT EXISTS { " +
-					"       ?subClass rdfs:subClassOf ?genericThingType . " +
-					"       ?argument a ?subClass " +
-					"       FILTER (?subClass != ?genericThingType) " +
-					"    } " +
-					"    FILTER NOT EXISTS { ?argument adept-base:canonicalMention ?entityCanonicalMention } " +
+					ARGUMENT_QUERY_BLOCK +
 					"} " +
 					"} ORDER BY ?role ?argument ";
 
@@ -774,74 +774,10 @@ public class SparqlQueryBuilder {
 					"?kbRelationArgumentID a rdf:Statement; " +
 					"    rdf:subject ?relationId; " +
 					"    rdf:predicate ?role; " +
-					"    rdf:object ?argument; " +
-					"    adept-base:confidence ?argumentConfidence . " +
-					"{ " +
-					"    #Get the argument bits, if it's an entity \n" +
-					"    ?argument adept-base:canonicalMention ?entityCanonicalMention; " +
-					"        adept-base:confidence ?entityconfidence; " +
-					"        a ?entityType . " +
-					"    ?entityTypeStatement a rdf:Statement; " +
-					"        rdf:subject ?argument; " +
-					"        rdf:predicate rdf:type; " +
-					"        rdf:object ?entityType; " +
-					"        adept-base:confidence ?entityTypeConfidence . " +
-					"    ?canonicalMentionId rdf:subject ?argument; " +
-					"        rdf:type rdf:Statement; " +
-					"        rdf:predicate adept-base:canonicalMention; " +
-					"        rdf:object ?entityCanonicalMention; " +
-					"        adept-base:confidence ?canonicalMentionConfidence " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a a RelationArgument \n" +
-					"    ?argument a rdf:Statement; " +
-					"      adept-base:confidence ?relationArgumentConfidence; " +
-					"      rdf:predicate ?relationArgumentType; " +
-					"      rdf:object ?relationArgumentStatement . " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a number \n" +
-					"    ?argument a adept-base:Number; " +
-					"        rdf:value ?numberValue " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a temporal span \n" +
-					"    ?argument a adept-base:TemporalSpan . " +
-					"    OPTIONAL { " +
-					"        ?beginDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:beginDate; " +
-					"        	rdf:object ?beginDate . " +
-					"		 ?beginDate adept-base:timex2String ?beginDateValue . " +
-					"	} " +
-					"    OPTIONAL { " +
-					"        ?endDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:endDate; " +
-					"        	rdf:object ?endDate . " +
-					"		 ?endDate adept-base:timex2String ?endDateValue . " +
-					"	} " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a date \n" +
-					"    ?argument a adept-base:Date; " +
-					"      	adept-base:timex2String ?date " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a relation \n" +
-					"    ?argument a ?argumentRelationType . " +
-					"    ?argumentRelationType rdfs:subClassOf adept-base:Relation . " +
-					"      FILTER NOT EXISTS { " +
-					"       ?argumentRelationTypeSubClass rdfs:subClassOf ?argumentRelationType . " +
-					"       ?argument rdf:type ?argumentRelationTypeSubClass " +
-					"       FILTER (?argumentRelationTypeSubClass != ?argumentRelationType ) " +
-					"      } " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a generic thing \n" +
-					"    ?argument adept-base:canonicalString ?genericThingCanonicalString ; " +
-					"               a ?genericThingType " +
-					"    FILTER NOT EXISTS { " +
-					"       ?subClass rdfs:subClassOf ?genericThingType . " +
-					"       ?argument a ?subClass " +
-					"       FILTER (?subClass != ?genericThingType) " +
-					"    } " +
-					"    FILTER NOT EXISTS { ?argument adept-base:canonicalMention ?entityCanonicalMention } " +
-					"} " +
+					"    rdf:object ?argument . " +
+					"# This triple in additional query block for performance optimization \n"+
+					" {?kbRelationArgumentID   adept-base:confidence ?argumentConfidence . } " +
+					ARGUMENT_QUERY_BLOCK +
 					"} ORDER BY ?role ?argument ";
 
 	private static final String QUERY_RELATIONS_BY_ARGUMENT =
@@ -870,72 +806,98 @@ public class SparqlQueryBuilder {
 					"    rdf:predicate ?role; " +
 					"    rdf:object ?argument; " +
 					"    adept-base:confidence ?argumentConfidence . " +
-					"{ " +
-					"    #Get the argument bits, if it's an entity \n" +
-					"    ?argument adept-base:canonicalMention ?entityCanonicalMention; " +
-					"        adept-base:confidence ?entityconfidence; " +
-					"        a ?entityType . " +
-					"    ?entityTypeStatement a rdf:Statement; " +
-					"        rdf:subject ?argument; " +
-					"        rdf:predicate rdf:type; " +
-					"        rdf:object ?entityType; " +
-					"        adept-base:confidence ?entityTypeConfidence . " +
-					"    ?canonicalMentionId rdf:subject ?argument; " +
-					"        rdf:type rdf:Statement; " +
-					"        rdf:predicate adept-base:canonicalMention; " +
-					"        rdf:object ?entityCanonicalMention; " +
-					"        adept-base:confidence ?canonicalMentionConfidence " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a a RelationArgument \n" +
-					"    ?argument a rdf:Statement; " +
-					"      adept-base:confidence ?relationArgumentConfidence; " +
-					"      rdf:predicate ?relationArgumentType; " +
-					"      rdf:object ?relationArgumentStatement . " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a number \n" +
-					"    ?argument a adept-base:Number; " +
-					"        rdf:value ?numberValue " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a temporal span \n" +
-					"    ?argument a adept-base:TemporalSpan . " +
-					"    OPTIONAL { " +
-					"        ?beginDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:beginDate; " +
-					"        	rdf:object ?beginDate . " +
-					"		 ?beginDate adept-base:timex2String ?beginDateValue . " +
-					"	} " +
-					"    OPTIONAL { " +
-					"        ?endDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:endDate; " +
-					"        	rdf:object ?endDate . " +
-					"		 ?endDate adept-base:timex2String ?endDateValue . " +
-					"	} " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a date \n" +
-					"    ?argument a adept-base:Date; " +
-					"      	adept-base:timex2String ?date " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a relation \n" +
-					"    ?argument a ?argumentRelationType . " +
-					"    ?argumentRelationType rdfs:subClassOf adept-base:Relation . " +
-					"      FILTER NOT EXISTS { " +
-					"       ?argumentRelationTypeSubClass rdfs:subClassOf ?argumentRelationType . " +
-					"       ?argument rdf:type ?argumentRelationTypeSubClass " +
-					"       FILTER (?argumentRelationTypeSubClass != ?argumentRelationType ) " +
-					"      } " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a generic thing \n" +
-					"    ?argument adept-base:canonicalString ?genericThingCanonicalString ; " +
-					"               a ?genericThingType " +
-					"    FILTER NOT EXISTS { " +
-					"       ?subClass rdfs:subClassOf ?genericThingType . " +
-					"       ?argument a ?subClass " +
-					"       FILTER (?subClass != ?genericThingType) " +
-					"    } " +
-					"    FILTER NOT EXISTS { ?argument adept-base:canonicalMention ?entityCanonicalMention } " +
+					ARGUMENT_QUERY_BLOCK +
+					"} ORDER BY ?relationId ?role ?argument ";
+
+	private static final String QUERY_RELATIONS_BY_ARGUMENTS =
+			PREFIXES +
+					"SELECT * " +
+					"WHERE{ " +
+					"?relationId ?otherRole1 <%s> . " +
+					"FILTER NOT EXISTS { " +
+					"    ?subProp1 rdfs:subPropertyOf ?otherRole1 . " +
+					"    ?relationId ?subProp1 <%1$s> . " +
+					"    FILTER ( ?subProp1 != ?otherRole1 ) " +
 					"} " +
+					"?relationId ?otherRole2 <%s> . " +
+					"FILTER NOT EXISTS { " +
+					"    ?subProp2 rdfs:subPropertyOf ?otherRole2 . " +
+					"    ?relationId ?subProp2 <%2$s> . " +
+					"    FILTER ( ?subProp2 != ?otherRole2 ) " +
+					"} " +
+					"?relationId ?role ?argument . " +
+					"?relationId adept-base:confidence ?relationConfidence . " +
+					"?relationId rdf:type ?relationType . " +
+					"FILTER NOT EXISTS {?subClass rdfs:subClassOf ?relationType . " +
+					"   ?relationId rdf:type ?subClass " +
+					"   FILTER ( ?subClass != ?relationType ) " +
+					"} " +
+					"FILTER NOT EXISTS { " +
+					"   ?relationType rdfs:subClassOf adept-base:Event . " +
+					" } " +
+					"FILTER (?relationType != adept-core:Sentiment && ?relationType != adept-core:Belief && ?relationType != adept-base:Thing) " +
+					"?kbRelationArgumentID a rdf:Statement; " +
+					"    rdf:subject ?relationId; " +
+					"    rdf:predicate ?role; " +
+					"    rdf:object ?argument; " +
+					"    adept-base:confidence ?argumentConfidence . " +
+					ARGUMENT_QUERY_BLOCK +
+					"} ORDER BY ?relationId ?role ?argument ";
+
+	private static final String QUERY_SENTIMENTS_BY_ARGUMENTS =
+			PREFIXES +
+					"SELECT * " +
+					"WHERE{ " +
+					"?relationId ?otherRole1 <%s> . " +
+					"FILTER NOT EXISTS { " +
+					"    ?subProp1 rdfs:subPropertyOf ?otherRole1 . " +
+					"    ?relationId ?subProp1 <%1$s> . " +
+					"    FILTER ( ?subProp1 != ?otherRole1 ) " +
+					"} " +
+					"?relationId ?otherRole2 <%s> . " +
+					"FILTER NOT EXISTS { " +
+					"    ?subProp2 rdfs:subPropertyOf ?otherRole2 . " +
+					"    ?relationId ?subProp2 <%2$s> . " +
+					"    FILTER ( ?subProp2 != ?otherRole2 ) " +
+					"} " +
+					"?relationId ?role ?argument . " +
+					"?relationId adept-base:confidence ?relationConfidence . " +
+					"?relationId rdf:type adept-core:Sentiment ." +
+					" BIND (adept-core:Sentiment AS ?relationType) "+
+					"?kbRelationArgumentID a rdf:Statement; " +
+					"    rdf:subject ?relationId; " +
+					"    rdf:predicate ?role; " +
+					"    rdf:object ?argument; " +
+					"    adept-base:confidence ?argumentConfidence . " +
+					ARGUMENT_QUERY_BLOCK +
+					"} ORDER BY ?relationId ?role ?argument ";
+
+	private static final String QUERY_BELIEFS_BY_ARGUMENTS =
+			PREFIXES +
+					"SELECT * " +
+					"WHERE{ " +
+					"?relationId ?otherRole1 <%s> . " +
+					"FILTER NOT EXISTS { " +
+					"    ?subProp1 rdfs:subPropertyOf ?otherRole1 . " +
+					"    ?relationId ?subProp1 <%1$s> . " +
+					"    FILTER ( ?subProp1 != ?otherRole1 ) " +
+					"} " +
+					"?relationId ?otherRole2 <%s> . " +
+					"FILTER NOT EXISTS { " +
+					"    ?subProp2 rdfs:subPropertyOf ?otherRole2 . " +
+					"    ?relationId ?subProp2 <%2$s> . " +
+					"    FILTER ( ?subProp2 != ?otherRole2 ) " +
+					"} " +
+					"?relationId ?role ?argument . " +
+					"?relationId adept-base:confidence ?relationConfidence . " +
+					"?relationId rdf:type adept-core:Belief ." +
+					" BIND (adept-core:Belief AS ?relationType) "+
+					"?kbRelationArgumentID a rdf:Statement; " +
+					"    rdf:subject ?relationId; " +
+					"    rdf:predicate ?role; " +
+					"    rdf:object ?argument; " +
+					"    adept-base:confidence ?argumentConfidence . " +
+					ARGUMENT_QUERY_BLOCK +
 					"} ORDER BY ?relationId ?role ?argument ";
 
 	private static final String QUERY_EVENTS_BY_ARGUMENT =
@@ -962,72 +924,40 @@ public class SparqlQueryBuilder {
 					"    rdf:predicate ?role; " +
 					"    rdf:object ?argument; " +
 					"    adept-base:confidence ?argumentConfidence . " +
-					"{ " +
-					"    #Get the argument bits, if it's an entity \n" +
-					"    ?argument adept-base:canonicalMention ?entityCanonicalMention; " +
-					"        adept-base:confidence ?entityconfidence; " +
-					"        a ?entityType . " +
-					"    ?entityTypeStatement a rdf:Statement; " +
-					"        rdf:subject ?argument; " +
-					"        rdf:predicate rdf:type; " +
-					"        rdf:object ?entityType; " +
-					"        adept-base:confidence ?entityTypeConfidence . " +
-					"    ?canonicalMentionId rdf:subject ?argument; " +
-					"        rdf:type rdf:Statement; " +
-					"        rdf:predicate adept-base:canonicalMention; " +
-					"        rdf:object ?entityCanonicalMention; " +
-					"        adept-base:confidence ?canonicalMentionConfidence " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a a RelationArgument \n" +
-					"    ?argument a rdf:Statement; " +
-					"      adept-base:confidence ?relationArgumentConfidence; " +
-					"      rdf:predicate ?relationArgumentType; " +
-					"      rdf:object ?relationArgumentStatement . " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a number \n" +
-					"    ?argument a adept-base:Number; " +
-					"        rdf:value ?numberValue " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a temporal span \n" +
-					"    ?argument a adept-base:TemporalSpan . " +
-					"    OPTIONAL { " +
-					"        ?beginDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:beginDate; " +
-					"        	rdf:object ?beginDate . " +
-					"		 ?beginDate adept-base:timex2String ?beginDateValue . " +
-					"	} " +
-					"    OPTIONAL { " +
-					"        ?endDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:endDate; " +
-					"        	rdf:object ?endDate . " +
-					"		 ?endDate adept-base:timex2String ?endDateValue . " +
-					"	} " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a date \n" +
-					"    ?argument a adept-base:Date; " +
-					"      	adept-base:timex2String ?date " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a relation \n" +
-					"    ?argument a ?argumentRelationType . " +
-					"    ?argumentRelationType rdfs:subClassOf adept-base:Relation . " +
-					"      FILTER NOT EXISTS { " +
-					"       ?argumentRelationTypeSubClass rdfs:subClassOf ?argumentRelationType . " +
-					"       ?argument rdf:type ?argumentRelationTypeSubClass " +
-					"       FILTER (?argumentRelationTypeSubClass != ?argumentRelationType ) " +
-					"      } " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a generic thing \n" +
-					"    ?argument adept-base:canonicalString ?genericThingCanonicalString ; " +
-					"               a ?genericThingType " +
-					"    FILTER NOT EXISTS { " +
-					"       ?subClass rdfs:subClassOf ?genericThingType . " +
-					"       ?argument a ?subClass " +
-					"       FILTER (?subClass != ?genericThingType) " +
-					"    } " +
-					"    FILTER NOT EXISTS { ?argument adept-base:canonicalMention ?entityCanonicalMention } " +
+					ARGUMENT_QUERY_BLOCK +
+					"} ORDER BY ?role ?argument ";
+
+	private static final String QUERY_EVENTS_BY_ARGUMENTS =
+			PREFIXES +
+					"SELECT * " +
+					"WHERE{ " +
+					"?relationId ?otherRole1 <%s> . " +
+					"FILTER NOT EXISTS { " +
+					"    ?subProp1 rdfs:subPropertyOf ?otherRole1 . " +
+					"    ?relationId ?subProp1 <%1$s> . " +
+					"    FILTER ( ?subProp1 != ?otherRole1 ) " +
 					"} " +
+					"?relationId ?otherRole2 <%s> . " +
+					"FILTER NOT EXISTS { " +
+					"    ?subProp2 rdfs:subPropertyOf ?otherRole2 . " +
+					"    ?relationId ?subProp2 <%2$s> . " +
+					"    FILTER ( ?subProp2 != ?otherRole2 ) " +
+					"} " +
+					"?relationId ?role ?argument . " +
+					"?relationId adept-base:confidence ?relationConfidence . " +
+					"?relationType rdfs:subClassOf adept-base:Event . " +
+					"?relationId rdf:type ?relationType . " +
+					"FILTER NOT EXISTS {?subClass rdfs:subClassOf ?relationType . " +
+					"   ?relationId rdf:type ?subClass " +
+					"   FILTER ( ?subClass != ?relationType ) " +
+					"} " +
+					"FILTER (?relationType != adept-core:Sentiment && ?relationType != adept-core:Belief) " +
+					"?kbRelationArgumentID a rdf:Statement; " +
+					"    rdf:subject ?relationId; " +
+					"    rdf:predicate ?role; " +
+					"    rdf:object ?argument; " +
+					"    adept-base:confidence ?argumentConfidence . " +
+					ARGUMENT_QUERY_BLOCK +
 					"} ORDER BY ?role ?argument ";
 
 	private static final String QUERY_RELATIONS_BY_ARGUMENT_AND_TYPE =
@@ -1054,72 +984,7 @@ public class SparqlQueryBuilder {
 					"    rdf:predicate ?role; " +
 					"    rdf:object ?argument; " +
 					"    adept-base:confidence ?argumentConfidence . " +
-					"{ " +
-					"    #Get the argument bits, if it's an entity \n" +
-					"    ?argument adept-base:canonicalMention ?entityCanonicalMention; " +
-					"        adept-base:confidence ?entityconfidence; " +
-					"        a ?entityType . " +
-					"    ?entityTypeStatement a rdf:Statement; " +
-					"        rdf:subject ?argument; " +
-					"        rdf:predicate rdf:type; " +
-					"        rdf:object ?entityType; " +
-					"        adept-base:confidence ?entityTypeConfidence . " +
-					"    ?canonicalMentionId rdf:subject ?argument; " +
-					"        rdf:type rdf:Statement; " +
-					"        rdf:predicate adept-base:canonicalMention; " +
-					"        rdf:object ?entityCanonicalMention; " +
-					"        adept-base:confidence ?canonicalMentionConfidence " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a a RelationArgument \n" +
-					"    ?argument a rdf:Statement; " +
-					"      adept-base:confidence ?relationArgumentConfidence; " +
-					"      rdf:predicate ?relationArgumentType; " +
-					"      rdf:object ?relationArgumentStatement . " +
-					"}UNION{ " +
-					"    # Get the argument bits, if ?argument is a number \n" +
-					"    ?argument a adept-base:Number; " +
-					"        rdf:value ?numberValue " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a temporal span \n" +
-					"    ?argument a adept-base:TemporalSpan . " +
-					"    OPTIONAL { " +
-					"        ?beginDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:beginDate; " +
-					"        	rdf:object ?beginDate . " +
-					"		 ?beginDate adept-base:timex2String ?beginDateValue . " +
-					"	} " +
-					"    OPTIONAL { " +
-					"        ?endDateStatement rdf:subject ?argument; " +
-					"        	rdf:type rdf:Statement; " +
-					"        	rdf:predicate adept-base:endDate; " +
-					"        	rdf:object ?endDate . " +
-					"		 ?endDate adept-base:timex2String ?endDateValue . " +
-					"	} " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a date \n" +
-					"    ?argument a adept-base:Date; " +
-					"      	adept-base:timex2String ?date " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a relation \n" +
-					"    ?argument a ?argumentRelationType . " +
-					"    ?argumentRelationType rdfs:subClassOf adept-base:Relation . " +
-					"      FILTER NOT EXISTS { " +
-					"       ?argumentRelationTypeSubClass rdfs:subClassOf ?argumentRelationType . " +
-					"       ?argument rdf:type ?argumentRelationTypeSubClass " +
-					"       FILTER (?argumentRelationTypeSubClass != ?argumentRelationType ) " +
-					"      } " +
-					"}UNION { " +
-					"    # Get the argument bits, if ?argument is a generic thing \n" +
-					"    ?argument adept-base:canonicalString ?genericThingCanonicalString ; " +
-					"               a ?genericThingType " +
-					"    FILTER NOT EXISTS { " +
-					"       ?subClass rdfs:subClassOf ?genericThingType . " +
-					"       ?argument a ?subClass " +
-					"       FILTER (?subClass != ?genericThingType) " +
-					"    } " +
-					"    FILTER NOT EXISTS { ?argument adept-base:canonicalMention ?entityCanonicalMention } " +
-					"} " +
+					ARGUMENT_QUERY_BLOCK +
 					"} ORDER BY ?role ?argument ";
 
 	private static final String GET_ARGUMENT_RELATION_ARGUMENT_BY_ID =
@@ -1133,6 +998,7 @@ public class SparqlQueryBuilder {
 					"{ " +
 					"    #Get the argument bits, if it's an entity \n" +
 					"    ?argument adept-base:canonicalMention ?entityCanonicalMention; " +
+					"		 adept-base:canonicalString ?entityCanonicalString; " +
 					"        adept-base:confidence ?entityconfidence; " +
 					"        a ?entityType . " +
 					"    ?entityTypeStatement a rdf:Statement; " +
@@ -1140,11 +1006,8 @@ public class SparqlQueryBuilder {
 					"        rdf:predicate rdf:type; " +
 					"        rdf:object ?entityType; " +
 					"        adept-base:confidence ?entityTypeConfidence . " +
-					"    ?canonicalMentionId rdf:subject ?entity; " +
-					"        rdf:type rdf:Statement; " +
-					"        rdf:predicate adept-base:canonicalMention; " +
-					"        rdf:object ?entityCanonicalMention; " +
-					"        adept-base:confidence ?canonicalMentionConfidence " +
+					"    ?entityCanonicalMention " +
+					"        adept-base:confidence ?canonicalMentionConfidence . " +
 					"}UNION{ " +
 					"    # Get the argument bits, if ?argument is a a RelationArgument \n" +
 					"    ?argument a rdf:Statement; " +
@@ -1202,7 +1065,7 @@ public class SparqlQueryBuilder {
 			PREFIXES +
 					"SELECT ?class " +
 					"WHERE { adept-base:Entity a ?class }";
-        
+
     private static final String GET_RELATED_ENTITIES =
                     PREFIXES +
                                     "SELECT DISTINCT * " +
@@ -1210,6 +1073,7 @@ public class SparqlQueryBuilder {
                                     "    adept-data:%s ( %s ) ?relatedEntityId " +
                                     "    FILTER (?relatedEntityId != adept-data:%1$s) " +
                                     "  	?relatedEntityId adept-base:canonicalMention ?entityCanonicalMention; " +
+                                    "		adept-base:canonicalString ?entityCanonicalString; " +
                                     "		adept-base:confidence ?entityconfidence; " +
                                     "		a ?entityType . " +
                                     "	?entityTypeStatement a rdf:Statement; " +
@@ -1217,13 +1081,10 @@ public class SparqlQueryBuilder {
                                     "		rdf:predicate rdf:type; " +
                                     "		rdf:object ?entityType; " +
                                     "		adept-base:confidence ?entityTypeConfidence . " +
-                                    "	?canonicalMentionId rdf:subject ?relatedEntityId; " +
-                                    "		rdf:type rdf:Statement; " +
-                                    "		rdf:predicate adept-base:canonicalMention; " +
-                                    "		rdf:object ?entityCanonicalMention; " +
-                                    "		adept-base:confidence ?canonicalMentionConfidence" +
+                                    "	?entityCanonicalMention " +
+                                    "		adept-base:confidence ?canonicalMentionConfidence . " +
                                     "} ";
-    
+
     private static final String GET_RELATED_ENTITIES_BY_RELATION_TYPE =
                     PREFIXES +
                                     "SELECT DISTINCT * " +
@@ -1233,6 +1094,7 @@ public class SparqlQueryBuilder {
                                     "    ?relationId adept-core:entity ?relatedEntityId ; " +
                                     "    		a adept-core:%s . " +
                                     "  	?relatedEntityId adept-base:canonicalMention ?entityCanonicalMention; " +
+                                    "		adept-base:canonicalString ?entityCanonicalString; " +
                                     "		adept-base:confidence ?entityconfidence; " +
                                     "		a ?entityType . " +
                                     "	?entityTypeStatement a rdf:Statement; " +
@@ -1240,11 +1102,8 @@ public class SparqlQueryBuilder {
                                     "		rdf:predicate rdf:type; " +
                                     "		rdf:object ?entityType; " +
                                     "		adept-base:confidence ?entityTypeConfidence . " +
-                                    "	?canonicalMentionId rdf:subject ?relatedEntityId; " +
-                                    "		rdf:type rdf:Statement; " +
-                                    "		rdf:predicate adept-base:canonicalMention; " +
-                                    "		rdf:object ?entityCanonicalMention; " +
-                                    "		adept-base:confidence ?canonicalMentionConfidence" +
+                                    "	?entityCanonicalMention " +
+                                    "		adept-base:confidence ?canonicalMentionConfidence . " +
                                     "} ";
 
 	/*** Query builder methods **/
@@ -1270,14 +1129,14 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Query createGetRelationConfidenceQuery(String relationId) {
 		return QueryFactory.create(String.format(GET_RELATION_CONFIDENCE, relationId));
 	}
 
 	/**
-	 * 
+	 *
 	 * Create query to get ID of the statement(s) that contains given subject
 	 * and predicate values
 	 */
@@ -1287,7 +1146,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * Create query to get ID of the statement(s) that contains given subject
 	 * and object values
 	 */
@@ -1298,7 +1157,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * Create query to get ID of the statement(s) that contains given subject,
 	 * predicate and object values
 	 */
@@ -1308,7 +1167,7 @@ public class SparqlQueryBuilder {
 
 	/**
 	 * Create query to get all triples about a given subject.
-	 * 
+	 *
 	 */
 	public Query createGetTriplesBySubjectURIQuery(String kbUri) {
 		return QueryFactory.create(String.format(QUERY_TRIPLES_BY_SUBJECT_URI,
@@ -1317,7 +1176,7 @@ public class SparqlQueryBuilder {
 
 	/**
 	 * Create query to get leaf type a given subject.
-	 * 
+	 *
 	 */
 	public Query createGetLeafTypeBySubjectURIQuery(String kbUri) {
 		return QueryFactory.create(String.format(GET_LEAF_TYPE, SparqlUtils.escape(kbUri)));
@@ -1325,14 +1184,14 @@ public class SparqlQueryBuilder {
 
 	/**
 	 * create query to get all KB elements having a given type.
-	 * 
+	 *
 	 */
 	public Query createGetSubjectsByTypeQuery(String type) {
 		return QueryFactory.create(String.format(QUERY_SUBJECTS_BY_TYPE, SparqlUtils.escape(type)));
 	}
 
 	/**
-	 * 
+	 *
 	 * create query to get all KB elements having a given object value.
 	 */
 	public Query createGetTriplesByObjectURIQuery(String kbUri) {
@@ -1341,7 +1200,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * Create query to get tuples of RelationType|Argument|ArgumentType
 	 */
 	public Query createGetRelationTypeTuplesQuery() {
@@ -1349,7 +1208,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * Create query to get type subclasses
 	 */
 	public Query createGetTypeSubclassesQuery() {
@@ -1357,7 +1216,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * Create query to get all entity types
 	 */
 	public Query createGetEntityTypeQuery() {
@@ -1365,8 +1224,16 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
+	 *
+	 * Create query to get all entity types
+	 */
+	public Query createGetGenericThingTypeQuery() {
+		return QueryFactory.create(GET_GENERIC_THING_TYPES);
+	}
+
+	/**
 	 * create query to check if a given KB element exists on the triple store.
-	 * 
+	 *
 	 */
 	public Query createDoesKBObjectExistQuery(String kbUri) {
 		return QueryFactory.create(String.format(DOES_OBJECT_EXIST, SparqlUtils.escape(kbUri)));
@@ -1396,19 +1263,20 @@ public class SparqlQueryBuilder {
 
 	/**
 	 * create update statement to insert new entity into the KB.
-	 * 
+	 *
 	 * This method is also responsible for checking that the entity type(s) are
 	 * valid Adept ontology types.
-	 * 
+	 *
 	 */
 	public UpdateRequest createEntityInsertQueries(
 			KBEntity.InsertionBuilder entityInsertionBuilder, String entityId) {
-		String canonicalMentionSqlId = entityInsertionBuilder.getCanonicalMention().getKBID()
+		String canonicalMentionSqlId = entityInsertionBuilder.getCanonicalMentionID()
 				.getObjectID();
 		UpdateRequest updateRequest = UpdateFactory.create(String.format(INSERT_ENTITY_TEMPLATE,
 				SparqlUtils.escape(entityId), SparqlUtils.escape(canonicalMentionSqlId),
-				SparqlUtils.escape(entityInsertionBuilder.getCanonicalMention().getValue()),
-				entityInsertionBuilder.getConfidence()));
+				SparqlUtils.escape(entityInsertionBuilder.getCanonicalMentionValue()),
+				entityInsertionBuilder.getConfidence(),
+				SparqlUtils.escape(canonicalMentionSqlId), entityInsertionBuilder.getCanonicalMentionConfidence()));
 
 		for (OntType itype : entityInsertionBuilder.getTypes().keySet()) {
 			String type = itype.getType();
@@ -1425,24 +1293,18 @@ public class SparqlQueryBuilder {
 					SparqlUtils.escape(type), entityInsertionBuilder.getTypes().get(itype)));
 		}
 
-		String mentionStmtId = UUID.randomUUID().toString();
-		updateRequest.add(String.format(CANONICALMENTION_REIFICATION_TEMPLATE,
-				SparqlUtils.escape(mentionStmtId), SparqlUtils.escape(entityId),
-				SparqlUtils.escape(canonicalMentionSqlId),
-				entityInsertionBuilder.getCanonicalMentionConfidence()));
-
 		return updateRequest;
 	}
 
 	/**
-	 * 
+	 *
 	 * create statements to update an existing KB entity. Entity confidence,
 	 * canonical mention and canonical string value are overwritten. If the
 	 * updated entity has a new type associated with it, the type is appended to
 	 * the existing types in the triple store with appropriate confidence. If
 	 * the confidence of an existing type is different in the updated entity,
 	 * that confidence is overwritten.\
-	 * 
+	 *
 	 * If the updated entity conatins at least one type that does not map to a
 	 * valid Adept ontology type, the update fails.
 	 */
@@ -1457,20 +1319,19 @@ public class SparqlQueryBuilder {
 			// overwrite entity confidence
 			updateRequest = updateRequest.add(String.format(UPDATE_ENTITY_CONFIDENCE_TEMPLATE,
 					SparqlUtils.escape(entityId), SparqlUtils.escape(entityId),
-					entityUpdateBuilder.getNewConfidence(), SparqlUtils.escape(entityId)));
+					entityUpdateBuilder.getNewConfidence()));
 		}
 
 		if (canonicalMentionSqlId != null) {
 			// overwrite canonical mention, canonical string, canonical mention
 			// confidence
-			String mentionStmtId = UUID.randomUUID().toString();
 			updateRequest.add(String.format(UPDATE_CANONICAL_MENTION_TEMPLATE,
 					SparqlUtils.escape(entityId), SparqlUtils.escape(entityId),
-					SparqlUtils.escape(entityId), SparqlUtils.escape(canonicalMentionSqlId),
-					SparqlUtils.escape(entityUpdateBuilder.getNewCanonicalMention().getValue()),
-					mentionStmtId, SparqlUtils.escape(entityId),
 					SparqlUtils.escape(canonicalMentionSqlId),
-					entityUpdateBuilder.getNewCanonicalMentionConfidence()));
+					SparqlUtils.escape(entityUpdateBuilder.getNewCanonicalMention().getValue()),
+					SparqlUtils.escape(canonicalMentionSqlId),
+					entityUpdateBuilder.getNewCanonicalMentionConfidence()
+					));
 		}
 
 		// Remove all existing entity types and then re-add based on the new
@@ -1497,9 +1358,9 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * create statements to insert a new KB relation.
-	 * 
+	 *
 	 * This method is responsible for checking that the type of the relation
 	 * being inserted is a valid Adept ontology type. If not, fail.
 	 */
@@ -1517,7 +1378,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * create statements to insert a new KB sentiment.
 	 */
 	public UpdateRequest createSentimentInsertQueries(DocumentSentiment documentSentiment,
@@ -1530,7 +1391,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * create statements to insert a new KB mental state.
 	 */
 	public UpdateRequest createMentalStateInsertQueries(DocumentMentalState<?> documentMentalState,
@@ -1545,7 +1406,7 @@ public class SparqlQueryBuilder {
 	/**
 	 * create statements to insert arguments corresponding to a KB relation into
 	 * the triple store.
-	 * 
+	 *
 	 * This method is responsible for checking that the argument type being
 	 * inserted is (or maps to) a valid Adept ontology type.
 	 */
@@ -1557,7 +1418,8 @@ public class SparqlQueryBuilder {
 		}
 
 		UpdateRequest updateRequest = UpdateFactory.create(String.format(INSERT_ARGUMENT_TEMPLATE,
-				SparqlUtils.escape(relationId), role.getURI(), SparqlUtils.escape(argumentKbUri)));
+				SparqlUtils.escape(relationId), role.getURI(), SparqlUtils.escape(
+		    argumentKbUri)));
 
 		updateRequest.add(String.format(ARGUMENT_REIFICATION_TEMPLATE,
 				SparqlUtils.escape(argumentStmtId), SparqlUtils.escape(relationId),
@@ -1582,20 +1444,20 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * create statements to update argument confidence of an existing KB
 	 * relation.
 	 */
 	public UpdateRequest createArgumentConfidenceUpdateQueries(String stmtId, float confidence) {
 
 		UpdateRequest updateRequest = UpdateFactory.create(String.format(
-				UPDATE_ARGUMENT_CONFIDENCE_TEMPLATE, stmtId, stmtId, confidence));
+		    UPDATE_ARGUMENT_CONFIDENCE_TEMPLATE, stmtId, stmtId, confidence));
 
 		return updateRequest;
 	}
 
 	/**
-	 * 
+	 *
 	 * create statements to insert a Date type element into the KB.
 	 */
 	public UpdateRequest createDateInsertQueries(String dateId, String dateString, String xsdDate,
@@ -1609,7 +1471,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * create delete KB element queries
 	 */
 	public UpdateRequest createDeleteQueries(String kbUri) {
@@ -1622,7 +1484,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * create query to update the confidence value on an existing relation.
 	 */
 	public UpdateRequest createRelationConfidenceUpdateQuery(String kbUri, float confidence) {
@@ -1686,7 +1548,8 @@ public class SparqlQueryBuilder {
 	 */
 	public Query createGetTimexValueForDateIDQuery(String kbUri) {
 		return QueryFactory
-				.create(String.format(QUERY_TIMEX_DATE_BY_ID, SparqlUtils.escape(kbUri)));
+				.create(String
+				    .format(QUERY_TIMEX_DATE_BY_ID, SparqlUtils.escape(kbUri)));
 	}
 
 	/**
@@ -1753,7 +1616,7 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * @param numericValue
+	 * @param number
 	 * @param id
 	 * @return
 	 */
@@ -1785,6 +1648,13 @@ public class SparqlQueryBuilder {
 				SparqlUtils.escape(externalKbElementId), SparqlUtils.escape(externalKbName)));
 	}
 
+	public Query createGetAdeptIdByExternalIdNameAndType(String externalKbElementId,
+			String externalKbName, String type) {
+		return QueryFactory.create(String.format(QUERY_ADEPTID_BY_EXTERNAL_ID_NAME_AND_TYPE,
+				SparqlUtils.escape(externalKbElementId), SparqlUtils.escape
+						(externalKbName),type));
+	}
+
 	public Query createGetExternalIdsByAdeptId(String kbUri) {
 		return QueryFactory.create(String.format(QUERY_EXTERNALIDS_BY_ADEPTID,
 				SparqlUtils.escape(kbUri)));
@@ -1800,7 +1670,7 @@ public class SparqlQueryBuilder {
 				externalIDStmtID));
 		return updateRequest;
 	}
-        
+
     public UpdateRequest createExternalIDDeleteQueries(String adeptKbElementId,
 			String externalKbElementId, String externalKbName) {
 		UpdateRequest updateRequest = UpdateFactory.create(String.format(
@@ -1893,6 +1763,10 @@ public class SparqlQueryBuilder {
 	 */
 	public UpdateRequest createGenericThingInsertQueries(OntType type, String canonicalString,
 			String genericThingId) {
+		if (!KBOntologyModel.instance().getGenericThingTypes().contains(type.getType())) {
+			throw new RuntimeException("Invalid entity type: " + type
+					+ ". Entity insertion failed.");
+		}
 		UpdateRequest updateRequest = UpdateFactory.create(String.format(
 				INSERT_GENERIC_THING_TEMPLATE, SparqlUtils.escape(genericThingId), type.getURI(),
 				SparqlUtils.escape(canonicalString)));
@@ -1919,27 +1793,45 @@ public class SparqlQueryBuilder {
 				SparqlUtils.escape(canonicalString), type.getURI()));
 	}
 
+	public Query createGetIdsByTypeQuery(String type, String[] ignoredTypes) {
+		StringBuilder minusTypes = new StringBuilder();
+		for (String ignoredType : ignoredTypes) {
+			minusTypes.append(String.format(MINUS_IDS_BY_TYPE, ignoredType));
+		}
+		return QueryFactory.create(String.format(GET_IDS_BY_TYPE, type, minusTypes));
+	}
+
 	/**
 	 * Create query to get information for multiple entities
-	 * 
+	 *
 	 */
 	public Query createGetInformationForMultipleEntitiesQuery(List<String> kbUris) {
 		if (kbUris == null || kbUris.isEmpty()) {
 			return null;
 		}
-		String subjectString = "";
+		StringBuilder subjectString = new StringBuilder();
 		for (String kbUri : kbUris) {
-			subjectString += "adept-data:" + kbUri + ", ";
+			subjectString.append("adept-data:").append(kbUri).append(", ");
 		}
-		subjectString = subjectString.substring(0, subjectString.length() - 2);
+		subjectString.setLength(subjectString.length() - 2);
 		return QueryFactory.create(String.format(QUERY_ENTITY_DATA_BY_IDS,
-				SparqlUtils.escape(subjectString)));
+				SparqlUtils.escape(subjectString.toString())));
+	}
+
+	public Query createGetEntitiesByTypeQuery(String type) {
+		return QueryFactory.create(String.format(QUERY_ENTITY_DATA_BY_TYPE,
+				SparqlUtils.escape(type)));
 	}
 
 	public Query createGetRelationByIdQuery(String id) {
 		String temp = String.format(QUERY_RELATION_BY_ID, SparqlUtils.escape(id));
 		return QueryFactory.create(temp);
 	}
+
+  public Query createGetRelationByIdWithoutArgsQuery(String id) {
+    String temp = String.format(QUERY_RELATION_BY_ID_WITHOUT_ARGS, SparqlUtils.escape(id));
+    return QueryFactory.create(temp);
+  }
 
 	public Query createGetRelationsByIdsQuery(List<String> ids) {
 		return createGetRelationsByIdsQuery(
@@ -1962,18 +1854,18 @@ public class SparqlQueryBuilder {
 	}
 
 	private Query createGetRelationsByIdsQuery(List<String> ids, String typeClause) {
-		String idString = "";
+		StringBuilder idString = new StringBuilder();
 		for (String id : ids) {
-			idString += "?relationId = adept-data:" + id + " || ";
+			idString.append("?relationId = adept-data:").append(id).append(" || ");
 		}
-		idString = idString.substring(0, idString.length() - 4);
+		idString.setLength(idString.length() - 4);
 		return QueryFactory.create(String.format(QUERY_RELATIONS_BY_IDS,
-				SparqlUtils.escape(idString), typeClause));
+				SparqlUtils.escape(idString.toString()), typeClause));
 	}
 
 	/**
 	 * create query to get all KB relations having a given type.
-	 * 
+	 *
 	 */
 	public Query createGetRelationsByTypeQuery(String type) {
 		return QueryFactory
@@ -1983,6 +1875,11 @@ public class SparqlQueryBuilder {
 	public Query createGetRelationsByArgumentQuery(String argumentId) {
 		return QueryFactory.create(String.format(QUERY_RELATIONS_BY_ARGUMENT,
 				SparqlUtils.escape(argumentId)));
+	}
+
+	public Query createGetRelationsByArgumentsQuery(KBID arg1, KBID arg2) {
+		return QueryFactory.create(String.format(QUERY_RELATIONS_BY_ARGUMENTS,
+				SparqlUtils.escape(arg1.getKBNamespace()+arg1.getObjectID()), SparqlUtils.escape(arg2.getKBNamespace()+arg2.getObjectID())));
 	}
 
 	public Query createGetEventsByArgumentQuery(String argumentId) {
@@ -2013,30 +1910,45 @@ public class SparqlQueryBuilder {
 	public Query createGetEntityClassQuery() {
 		return QueryFactory.create(String.format(GET_ENTITY_CLASS));
 	}
-        
+
     public Query createGetRelatedEntitiesQuery(String entityId, int depth) {
-        String depthString = "";
+        StringBuilder depthString = new StringBuilder();
         for (int i = 0; i < depth; i++) {
-            depthString += "^adept-core:entity / adept-core:entity";
+            depthString.append("^adept-core:entity / adept-core:entity");
             if (i + 1 < depth) {
-                depthString += " / ";
+                depthString.append(" / ");
             }
         }
-        
-        String query = String.format(GET_RELATED_ENTITIES, SparqlUtils.escape(entityId), SparqlUtils.escape(depthString));//, Integer.toString(depth));
+
+        String query = String.format(GET_RELATED_ENTITIES, SparqlUtils.escape(entityId), SparqlUtils.escape(depthString.toString()));//, Integer.toString(depth));
         return QueryFactory.create(query);
     }
-    
+
     public Query createGetRelatedEntitiesByRelationTypeQuery(String entityId, int depth, String type) {
-        String depthString = "";
+        StringBuilder depthString = new StringBuilder();
         for (int i = 0; i < depth; i++) {
-            depthString += "^adept-core:entity / adept-core:entity";
+            depthString.append("^adept-core:entity / adept-core:entity");
             if (i + 1 < depth) {
-                depthString += " / ";
+                depthString.append(" / ");
             }
         }
-        
-        String query = String.format(GET_RELATED_ENTITIES_BY_RELATION_TYPE, SparqlUtils.escape(entityId), SparqlUtils.escape(depthString), SparqlUtils.escape(type));//, Integer.toString(depth));
+
+        String query = String.format(GET_RELATED_ENTITIES_BY_RELATION_TYPE, SparqlUtils.escape(entityId), SparqlUtils.escape(depthString.toString()), SparqlUtils.escape(type));//, Integer.toString(depth));
         return QueryFactory.create(query);
     }
+
+	public Query createGetSentimentsByArgumentsQuery(KBID arg1, KBID arg2) {
+		return QueryFactory.create(String.format(QUERY_SENTIMENTS_BY_ARGUMENTS,
+				SparqlUtils.escape(arg1.getKBNamespace()+arg1.getObjectID()), SparqlUtils.escape(arg2.getKBNamespace()+arg2.getObjectID())));
+	}
+
+	public Query createGetBeliefsByArgumentsQuery(KBID arg1, KBID arg2) {
+		return QueryFactory.create(String.format(QUERY_BELIEFS_BY_ARGUMENTS,
+				SparqlUtils.escape(arg1.getKBNamespace()+arg1.getObjectID()), SparqlUtils.escape(arg2.getKBNamespace()+arg2.getObjectID())));
+	}
+
+	public Query createGetEventsByArgumentsQuery(KBID arg1, KBID arg2) {
+		return QueryFactory.create(String.format(QUERY_EVENTS_BY_ARGUMENTS,
+				SparqlUtils.escape(arg1.getKBNamespace()+arg1.getObjectID()), SparqlUtils.escape(arg2.getKBNamespace()+arg2.getObjectID())));
+	}
 }

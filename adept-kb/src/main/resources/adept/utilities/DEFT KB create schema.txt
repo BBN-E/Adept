@@ -112,3 +112,85 @@ CREATE TABLE "OverlappingDocument"
   documentname character varying(100) NOT NULL,
   CONSTRAINT "PK_OverlappingDocument" PRIMARY KEY (overlappingdocumentid)
 );
+
+-- Table: "OpenIEArguments"
+
+CREATE TABLE "OpenIEArguments"
+(
+  "ID" text NOT NULL,
+  confidence double precision,
+  value text,
+  CONSTRAINT "OpenIEArguments_pkey" PRIMARY KEY ("ID")
+);
+
+CREATE INDEX "OpenIEArguments_ID" on "OpenIEArguments" ("ID");
+
+-- Table: "OpenIEReations"
+
+CREATE TABLE "OpenIERelations"
+(
+  "ID" text NOT NULL,
+  confidence double precision,
+  predicate text NOT NULL,
+  "arg1ID" text,
+  "arg2ID" text,
+  CONSTRAINT "OpenIERelations_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT "OpenIERelations_arg1ID_fkey" FOREIGN KEY ("arg1ID")
+      REFERENCES "OpenIEArguments" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "OpenIERelations_arg2ID_fkey" FOREIGN KEY ("arg2ID")
+      REFERENCES "OpenIEArguments" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE INDEX "OpenIERelations_ID" on "OpenIERelations" ("ID");
+CREATE INDEX "OpenIERelations_arg1ID" on "OpenIERelations" ("arg1ID");
+CREATE INDEX "OpenIERelations_arg2ID" on "OpenIERelations" ("arg2ID");
+
+-- Table: "OpenIEReationProvenances"
+
+CREATE TABLE "OpenIERelationProvenances"
+(
+  "openIERelationID" text NOT NULL,
+  confidence double precision,
+  "ID" text NOT NULL,
+  chunk text,
+  "sourceAlgorithm" text,
+  CONSTRAINT "OpenIERelationProvenances_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT "OpenIERelationProvenances_openIERelationID_fkey" FOREIGN KEY
+    ("openIERelationID")
+      REFERENCES "OpenIERelations" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "OpenIERelationProvenances_chunk_fkey" FOREIGN KEY (chunk)
+      REFERENCES "TextChunks" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "OpenIERelationProvenances_sourceAlgorithm_fkey" FOREIGN KEY ("sourceAlgorithm")
+      REFERENCES "SourceAlgorithms" ("algorithmName") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE INDEX "OpenIERelationProvenances_openIERelationID" on "OpenIERelationProvenances" ("openIERelationID");
+
+-- Table: "OpenIEArgumentProvenances"
+
+CREATE TABLE "OpenIEArgumentProvenances"
+(
+  "openIEArgumentID" text NOT NULL,
+  confidence double precision,
+  "ID" text NOT NULL,
+  chunk text,
+  "sourceAlgorithm" text,
+  CONSTRAINT "OpenIEArgumentProvenances_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT "OpenIEArgumentProvenances_openIEArgumentID_fkey" FOREIGN KEY
+    ("openIEArgumentID")
+      REFERENCES "OpenIEArguments" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "OpenIEArgumentProvenances_chunk_fkey" FOREIGN KEY (chunk)
+      REFERENCES "TextChunks" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "OpenIEArgumentProvenances_sourceAlgorithm_fkey" FOREIGN KEY ("sourceAlgorithm")
+      REFERENCES "SourceAlgorithms" ("algorithmName") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE INDEX "OpenIEArgumentProvenances_openIEArgumentID" on "OpenIEArgumentProvenances" ("openIEArgumentID");

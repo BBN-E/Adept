@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +26,7 @@ import java.util.Set;
 import adept.common.KBID;
 import adept.common.OntType;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 /**
@@ -31,9 +35,9 @@ import com.google.common.base.Preconditions;
  */
 public abstract class KBMentalState extends KBRelation {
 
-	protected KBMentalState(KBID kbID, OntType eventType, float confidence,
-			Set<KBRelationArgument> arguments, Set<KBProvenance> provenances) {
-		super(kbID, eventType, confidence, arguments, provenances);
+	protected KBMentalState(KB kb, KBID kbID, OntType eventType, float confidence,
+			Set<KBRelationArgument> arguments, Optional<Set<KBProvenance>> provenances) {
+		super(kb, kbID, eventType, confidence, arguments, provenances);
 	}
 
 	public abstract static class InsertionBuilder<T extends KBMentalState> extends
@@ -87,26 +91,23 @@ public abstract class KBMentalState extends KBRelation {
 		@Override
 		public T insert(KB kb) throws KBUpdateException {
 			kb.insertRelation(this);
-			return build();
+			return build(kb, false);
 		}
 
-		protected T build() {
+		protected T build(KB kb, boolean deferProvenances) {
 			Preconditions.checkNotNull(kbid);
 			Preconditions.checkArgument(getConfidence() >= 0);
-			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
-			for (KBProvenance.InsertionBuilder provenanceBuilder : getProvenances()) {
-				provenances.add(provenanceBuilder.build());
-			}
+			Optional<Set<KBProvenance>> provenances = buildProvenances(deferProvenances);
 			Set<KBRelationArgument> arguments = new HashSet<KBRelationArgument>();
 			for (KBRelationArgument.InsertionBuilder argumentBuilder : getArguments()) {
-				arguments.add(argumentBuilder.build(argumentBuilder.kbid));
+				arguments.add(argumentBuilder.build(kb, argumentBuilder.kbid, deferProvenances));
 			}
 
-			return buildMentalState(kbid, getConfidence(), arguments, provenances);
+			return buildMentalState(kb, kbid, getConfidence(), arguments, provenances);
 		}
 
-		protected abstract T buildMentalState(KBID kbid, float confidence,
-				Set<KBRelationArgument> arguments, Set<KBProvenance> provenances);
+		protected abstract T buildMentalState(KB kb, KBID kbid, float confidence,
+				Set<KBRelationArgument> arguments, Optional<Set<KBProvenance>> provenances);
 	}
 
 	public abstract class UpdateBuilder<T extends KBMentalState> extends
@@ -117,12 +118,19 @@ public abstract class KBMentalState extends KBRelation {
 
 		@Override
 		public T update(KB kb) throws KBUpdateException {
+			Set<KBProvenance> oldProvenances = null;;
+			try{
+				oldProvenances = getProvenances();
+				checkProvenancesToRemove();
+			} catch (KBQueryException e) {
+				throw new KBUpdateException("Could not load provenances for original object",e);
+			}
 			kb.updateRelation(this);
 			Set<KBProvenance> updatedProvenances = new HashSet<KBProvenance>();
 			for (KBProvenance.InsertionBuilder provenanceBuilder : getNewProvenances()) {
 				updatedProvenances.add(provenanceBuilder.build());
 			}
-			for (KBProvenance kbProvenance : getProvenances()) {
+			for (KBProvenance kbProvenance : oldProvenances) {
 				if (!getProvenancesToRemove().contains(kbProvenance)) {
 					updatedProvenances.add(kbProvenance);
 				}
@@ -143,12 +151,12 @@ public abstract class KBMentalState extends KBRelation {
 					arguments.add(oldArgument);
 				}
 			}
-			return buildMentalState(getKBRelation().getKBID(),
+			return buildMentalState(kb, getKBRelation().getKBID(),
 					getNewConfidence() != null ? getNewConfidence() : getKBRelation()
 							.getConfidence(), arguments, updatedProvenances);
 		}
 
-		protected abstract T buildMentalState(KBID kbid, float confidence,
+		protected abstract T buildMentalState(KB kb, KBID kbid, float confidence,
 				Set<KBRelationArgument> arguments, Set<KBProvenance> provenances);
 	}
 

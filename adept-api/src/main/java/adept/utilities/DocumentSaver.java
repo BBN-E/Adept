@@ -1,46 +1,31 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.utilities;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import adept.common.*;
+import adept.io.Writer;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-
-import adept.common.ChannelName;
-import adept.common.CharOffset;
-import adept.common.ContentType;
-import adept.common.Corpus;
-import adept.common.Document;
-import adept.common.SentenceSimilarity;
-import adept.common.EntityMention;
-import adept.common.PartOfSpeech;
-import adept.common.Sentence;
-import adept.common.SyntacticChunk;
-import adept.common.Token;
-import adept.common.TokenOffset;
-import adept.common.TokenStream;
-import adept.common.TokenType;
-import adept.common.TokenizerType;
-import adept.common.TranscriptType;
-import adept.common.Type;
-import adept.io.LDCCorpusWriter;
-import adept.io.Writer;
 
 
 /**
@@ -81,7 +66,6 @@ public class DocumentSaver {
 	 * @param synChunkList the syn chunk list
 	 * @param entityList the entity list
 	 * @param filename the filename
-	 * @return the document
 	 */
 	
 	// Save the HltContentContainer object in CoNLL input format.  
@@ -194,4 +178,15 @@ public class DocumentSaver {
 		}
 		Writer.getInstance().writeToFile(filename, sb.toString());
 	}
+
+    public void saveDeceptionDetectionDocument (Document document,
+       List<DeceptionTheory> deceptionTheoryList,
+       String filename){
+        StringBuffer sb = new StringBuffer();
+        for ( int i = 0; i < deceptionTheoryList.size(); ++i){
+            DeceptionTheory deceptionTheory = deceptionTheoryList.get(i);
+            sb.append ( deceptionTheory.isDeceptive()?"lie":"truth" + "|" + deceptionTheory.getChunk().getValue()+"\n");
+        }
+        Writer.getInstance().writeToFile(filename, sb.toString());
+    }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  #%L
+  adept-kb
+  %%
+  Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+
+  Run with:
+  adept/adept-kb/target/appassembler/bin/TacFormatConverter <output_folder> <RunName> -params <path_to_this_file>
+  -->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Parameters needed to successfully connect to a triple store and insert KB objects into it</comment>
+<entry key="tripleStoreUrl">http://deft-kb-03.bbn.com:7802/parliament</entry>
+<entry key="metadataUrl">jdbc:postgresql://deft-kb-03.bbn.com:7702/postgres</entry>
+<entry key="metadataUsername">bbn_user</entry>
+<entry key="metadataPassword">DEFTkb123$_AX7k8E</entry>
+
+<!-- Suffix for triple store query url.  Should be  /query for Jena+TDB, /sparql for Parliament -->
+<entry key="queryURLSuffix">/sparql</entry>
+<!-- Suffix for triple store update url.  Should be  /update for Jena+TDB, /sparql for Parliament -->
+<entry key="updateURLSuffix">/sparql</entry>
+<!-- Whether to use Parliament update processors.  Should be  false for Jena+TDB, true for Parliament -->
+<entry key="useParliamentUpdates">true</entry>
+</properties>
+

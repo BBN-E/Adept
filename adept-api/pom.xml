@@ -4,8 +4,7 @@
   <parent>
     <groupId>adept</groupId>
     <artifactId>adept</artifactId>
-    <relativePath>..</relativePath>
-    <version>2.2</version>
+    <version>2.7.0</version>
   </parent>
   <artifactId>adept-api</artifactId>
   <name>adept-api</name>
@@ -13,43 +12,29 @@
     <name>Raytheon BBN Technologies</name>
   </organization>
   <description>The project file to build and run ADEPT applications using Maven</description>
+  <packaging>jar</packaging>
   <build>
-    <sourceDirectory>src/main/java</sourceDirectory>
-    <testSourceDirectory>src/test/java</testSourceDirectory>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-        <directory>src/test/resources</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </testResource>
-    </testResources>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefirePluginVersion}</version>
+        <artifactId>maven-changelog-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
         <configuration>
-          <includes>
-          </includes>
           <excludes>
-		  </excludes>
-          <workingDirectory>${project.basedir}/target/test-classes</workingDirectory>
-          <skipTests>${skipUnitTests}</skipTests>
+            <exclude>${project.basedir}/src/main/test/resources/**/*.xml</exclude>
+          </excludes>
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipAfterFailureCount>1</skipAfterFailureCount>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>${sourcePluginVersion}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -59,60 +44,112 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9.1</version>
-		<!-- Uncomment this configuration to produce one huge RTF of javadoc. -->
-		<!--
-		<configuration> 
- 	        <doclet>com.tarsec.javadoc.pdfdoclet.PDFDoclet</doclet> 
- 	        <docletPath>${settings.localRepository}/net/sf/pdfdoclet/1.0.2/pdfdoclet-1.0.2.jar</docletPath> 
- 	        <useStandardDocletOptions>false</useStandardDocletOptions> 
- 			<maxmemory>512m</maxmemory> 
- 			<doclet>com.docflex.javadoc.Doclet</doclet> 
- 			<docletPath>/nfs/raid59/u12/DEFT/tools/docflex-doclet-1.6.1/lib/docflex-doclet.jar</docletPath> 
- 			<additionalparam> 
- 			-template /nfs/raid59/u12/DEFT/tools/docflex-doclet-1.6.1/templates/javadoc/PlainDoc.tpl 
- 			-p:windowTitle "ADEPT API Specifications v3.7" 
- 			-p:docTitle "ADEPT API Specifications v3.7" 
- 			-format RTF 
- 			-nodialog 
- 			-launchviewer=false 
- 			-d ${project.build.directory}/site/ 
- 			-f ${project.build.directory}/site/adept-api-spec-v3.rtf 
- 			</additionalparam> 
- 			<destDir>site</destDir> 
- 			<name>site</name> 
- 			<description> 
- 			ADEPT API Specifications v3.7 
- 			</description> 
- 		</configuration> 
-		-->
-        <configuration>
-          <show>private</show>
-          <doclet>org.jboss.apiviz.APIviz</doclet>
-          <docletArtifact>
-            <groupId>org.jboss.apiviz</groupId>
-            <artifactId>apiviz</artifactId>
-            <version>1.3.2.GA</version>
-          </docletArtifact>
-          <useStandardDocletOptions>true</useStandardDocletOptions>
-          <charset>UTF-8</charset>
-          <encoding>UTF-8</encoding>
-          <docencoding>UTF-8</docencoding>
-          <breakiterator>true</breakiterator>
-          <version>true</version>
-          <author>true</author>
-          <keywords>true</keywords>
-          <additionalparam>
-            -sourceclasspath ${project.build.outputDirectory}
-          </additionalparam>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>normal-javadoc</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>javadoc-html</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <show>private</show>
+              <doclet>org.jboss.apiviz.APIviz</doclet>
+              <docletArtifact>
+                <groupId>org.jboss.apiviz</groupId>
+                <artifactId>apiviz</artifactId>
+                <version>1.3.2.GA</version>
+              </docletArtifact>
+              <useStandardDocletOptions>true</useStandardDocletOptions>
+              <charset>UTF-8</charset>
+              <encoding>UTF-8</encoding>
+              <docencoding>UTF-8</docencoding>
+              <breakiterator>true</breakiterator>
+              <version>true</version>
+              <author>true</author>
+              <keywords>true</keywords>
+              <additionalparam>
+                -sourceclasspath ${project.build.outputDirectory}
+              </additionalparam>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>javadoc-rtf</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <doclet>com.tarsec.javadoc.pdfdoclet.PDFDoclet</doclet>
+              <docletPath>${settings.localRepository}/net/sf/pdfdoclet/1.0.2/pdfdoclet-1.0.2.jar</docletPath>
+              <useStandardDocletOptions>false</useStandardDocletOptions>
+              <maxmemory>512m</maxmemory>
+              <doclet>com.docflex.javadoc.Doclet</doclet>
+              <docletPath>/nfs/raid59/u12/DEFT/tools/docflex-doclet-1.6.1/lib/docflex-doclet.jar</docletPath>
+              <additionalparam>
+                -template /nfs/raid59/u12/DEFT/tools/docflex-doclet-1.6.1/templates/javadoc/PlainDoc.tpl
+                -p:windowTitle "ADEPT API Specifications v${adeptApiSpecVersion}"
+                -p:docTitle "ADEPT API Specifications v${adeptApiSpecVersion}"
+                -format RTF
+                -nodialog
+                -launchviewer=false
+                -d ${project.build.directory}/site/
+                -f ${project.build.directory}/site/adept-api-spec-v${adeptApiSpecVersion}.rtf
+              </additionalparam>
+              <destDir>site</destDir>
+              <name>site</name>
+              <description>
+                ADEPT API Specifications v${adeptApiSpecVersion}
+              </description>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <dependencies>
+    <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+      <classifier>models</classifier>
+    </dependency>
+    <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+      <classifier>sources</classifier>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -126,7 +163,7 @@
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>1.4.8</version>
+      <version>${xstreamVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -216,26 +253,11 @@
       <artifactId>guava</artifactId>
       <version>${guavaDependencyVersion}</version>
     </dependency>
-	<dependency>
-	  <groupId>com.google.guava</groupId>
-	  <artifactId>guava-testlib</artifactId>
-	  <version>${guavaDependencyVersion}</version>
-	</dependency>
-<dependency>
-  <groupId>org.apache.opennlp</groupId>
-  <artifactId>opennlp-tools</artifactId>
-  <version>1.6.0</version>
-</dependency>
-<!--dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.3</version>
-    </dependency-->
-<!--dependency>
-      <groupId>net.sf</groupId>
-      <artifactId>pdfdoclet</artifactId>
-      <version>1.0.2</version>
-    </dependency-->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-testlib</artifactId>
+      <version>${guavaDependencyVersion}</version>
+    </dependency>
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
@@ -252,9 +274,25 @@
       <version>2.4</version>
     </dependency>
     <dependency>
-	  <groupId>org.apache.shiro</groupId>
-	  <artifactId>shiro-core</artifactId>
-	  <version>1.2.3</version>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-core</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-core</artifactId>
+      <version>1.2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpclient</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>

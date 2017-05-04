@@ -1,25 +1,29 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.unittests;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,6 +71,7 @@ import adept.kbapi.KBDate;
 import adept.kbapi.KBEntity;
 import adept.kbapi.KBNumber;
 import adept.kbapi.KBOntologyMap;
+import adept.kbapi.KBOntologyModel;
 import adept.kbapi.KBPredicateArgument;
 import adept.kbapi.KBProvenance;
 import adept.kbapi.KBQueryException;
@@ -95,7 +100,7 @@ public class TestSentiment extends KBUnitTest {
 
 	@Test
 	public void testSentiment() throws KBQueryException, KBUpdateException,
-			InvalidPropertiesFormatException, IOException {
+			InvalidPropertiesFormatException, IOException, URISyntaxException {
 		// create sentiment
 		buildSentiment(initialSentimentConfidence, sentimentMentionConfidence);
 
@@ -105,10 +110,13 @@ public class TestSentiment extends KBUnitTest {
 		sentimentInsertionBuilder.addExternalKBId(new KBID("External_Sentiment", "ExampleKB"));
 		KBSentiment kbSentiment = sentimentInsertionBuilder.insert(kb);
 		assertEqualsAndHashCodeByQueryByKBID(kbSentiment);
-
+		List<KBRelationArgument> arguments = new ArrayList<KBRelationArgument>(kbSentiment.getArguments());
 		testQuerySentimentById(kbSentiment.getKBID(), 1, initialSentimentConfidence,
 				documentSentiment.getArguments().size(), sentimentMentionConfidence);
 		testQuerySentimentByArg(kbEntity1.getKBID());
+		Assert.assertTrue("Should find KBSentiment by two arguments", kb.getSentimentsByArgs(arguments.get(0).getTarget().getKBID(), arguments.get(1).getTarget().getKBID()).size() > 0);
+		Assert.assertTrue("Should find KBSentiment by two arguments", kb.getSentimentsByArgs(arguments.get(0).getTarget().getKBID(), arguments.get(1).getTarget().getKBID()).get(0).getKBID().equals(kbSentiment.getKBID()));
+		Assert.assertTrue("Should not find KBSentiment with bad argument", kb.getSentimentsByArgs(arguments.get(0).getKBID(), new KBID("Jimmy", KBOntologyModel.DATA_INSTANCES_PREFIX)).size() == 0);
 		testQuerySentimentByStringRef("BBN Technologies");
 
 		KBRelationArgument argument = kbSentiment.getArguments().iterator().next();
@@ -129,7 +137,7 @@ public class TestSentiment extends KBUnitTest {
 
 	private void buildSentiment(float sentimentConfidence, float sentimentMentionConfidence)
 			throws KBUpdateException, KBQueryException, InvalidPropertiesFormatException,
-			IOException {
+			IOException, URISyntaxException {
 		// create and insert entity into KB
 		Pair<Entity, List<EntityMention>> entityWithMentions = createTestEntityWithMentions(
 				defaultEntityType, defaultEntityConfidence, defaultEntityMentionType,
@@ -148,7 +156,7 @@ public class TestSentiment extends KBUnitTest {
 		HltContentContainer hltContentContainer = new HltContentContainer();
 		Document document = DocumentMaker
 				.getInstance()
-				.createDefaultDocument(
+				.createDocument(
 						"sample_numbers_2.txt",
 						null,
 						"Text",
@@ -204,7 +212,7 @@ public class TestSentiment extends KBUnitTest {
 		provenances.add(sentimentMentionBuilder.build());
 
 		HltContentContainer dateHltContentContainer = new HltContentContainer();
-		Document dateDocument = DocumentMaker.getInstance().createDefaultDocument(
+		Document dateDocument = DocumentMaker.getInstance().createDocument(
 				"sample_date.txt", null, "Text", "sample_date_1.txt", "English",
 				Reader.getAbsolutePathFromClasspathOrFileSystem("adept/kbapi/sample_date.txt"),
 				dateHltContentContainer);

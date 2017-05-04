@@ -1,29 +1,39 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.restapi;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.log4j.PropertyConfigurator;
+import org.eclipse.jetty.util.UrlEncoded;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletConfig;
@@ -32,20 +42,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.PropertyConfigurator;
-import org.eclipse.jetty.util.UrlEncoded;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import adept.common.Corpus;
 import adept.common.Document;
+import adept.common.DocumentList;
 import adept.common.HltContentContainer;
-import adept.io.Reader;
-import adept.serialization.JSONSerializer;
-import adept.serialization.XMLSerializer;
-import adept.serialization.SerializationType;
-import adept.utilities.DocumentMaker;
 import adept.common.TokenizerType;
+import adept.io.Reader;
+import adept.io.Writer;
+import adept.serialization.JSONStringSerializer;
+import adept.utilities.DocumentMaker;
 
 
 
@@ -54,76 +58,67 @@ import adept.common.TokenizerType;
  */
 public abstract class RestServlet extends HttpServlet
 {
-    
+
     /** Default serial version UID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The serializer. */
-	private JSONSerializer serializer;
-	
+	private JSONStringSerializer serializer;
+
 	/** The state. */
 	protected ServerState state = ServerState.STOPPED;
-	
+
 	/** The logger. */
 	private static Logger logger;
-	
+
 	/** The log config file path. */
 	private static String logConfigFilePath;
 
     /** The type of tokenizer to be used. */
-    protected TokenizerType tokenizerType = TokenizerType.APACHE_OPENNLP;
+    protected TokenizerType tokenizerType = TokenizerType.STANFORD_CORENLP;
 
 
     /**
 	 * Abstract methods.
 	 */
 	protected  abstract void doActivate();
-	
+
 	/**
 	 * Do deactivate.
 	 */
 	protected  abstract void doDeactivate();
-	
-	/**
-	 * Do process.
-	 *
-	 * @param document the document
-	 * @return the hlt content container
-	 */
+
 	protected  abstract HltContentContainer doProcess(Document document, HltContentContainer hltContentContainer);
-	
+
+	protected  abstract HltContentContainer doProcess(DocumentList documentList);
+
 	protected void setState(ServerState serverState) {
 		state = serverState;
 	}
 
-	/** Locking mechanism for 
-     * algorithms that do not support 
+	/** Locking mechanism for
+     * algorithms that do not support
      * concurrent execution
      */
-    private boolean locked = false;
     private final ReentrantLock lock = new ReentrantLock();
-    
-    public boolean isLocked()
-    {
-    	return locked;
-    }
-    
+
+
     public boolean isThreadSafe()
     {
     	return true;
     }
-    	
+
 	/**
 	 * Instantiates a new stanford core nlp servlet.
 	 */
 	public RestServlet()
-	{		
-		//state = ServerState.INITIALIZING;		
+	{
+		//state = ServerState.INITIALIZING;
 	}
 
-        
-	
-	
+
+
+
     // not needed for now
 	/* (non-Javadoc)
      * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
@@ -138,12 +133,12 @@ public abstract class RestServlet extends HttpServlet
 	 * @see javax.servlet.GenericServlet#init()
 	 */
 	@Override
-	public void init() throws ServletException 
+	public void init() throws ServletException
 	{
 		super.init();
 		try {
             state = ServerState.INITIALIZING;
- 	
+
 			/** The log config file path. */
 			String packageName = new Object(){}.getClass().getPackage().getName();
 			String packagePath = packageName.replace(".", "/") + "/";
@@ -153,15 +148,14 @@ public abstract class RestServlet extends HttpServlet
 			logConfigFilePath = packagePath + "log4j.file.properties";
 			DataInputStream rf = new DataInputStream(Reader.findStreamInClasspathOrFileSystem(logConfigFilePath));
 			PropertyConfigurator.configure(rf);
-			logger.info("JUnit version " + junit.runner.Version.id());
 			// call to subclass.
 			doActivate();
-			serializer = new JSONSerializer(SerializationType.JSON);
+			serializer = new JSONStringSerializer();
 			state = ServerState.IDLE;
 		} catch (IOException e2) {
 			// TODO Auto-generated catch block
-			e2.printStackTrace();			
-		}	
+			e2.printStackTrace();
+		}
 	}
 
 
@@ -169,7 +163,7 @@ public abstract class RestServlet extends HttpServlet
 	 * @see javax.servlet.GenericServlet#destroy()
 	 */
 	@Override
-	public void destroy() 
+	public void destroy()
 	{
 		super.destroy();
 		// call to subclass.
@@ -188,138 +182,174 @@ public abstract class RestServlet extends HttpServlet
 	//@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-		response.setContentType("application/octet-stream");
-        response.setStatus(HttpServletResponse.SC_OK);  
+		response.setContentType("text/plain; charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write("Server is: " + state);
-        response.getWriter().flush();	
+        response.getWriter().flush();
     }
-    
-    
+
+    /**
+     * Build a document filename based on the provided document ID.
+     *
+     * Protect against directory traversal attacks
+     *
+     * @param docId the Document ID to use
+     * @throws ServletException
+     */
+    protected String checkPath(final String docId) throws ServletException {
+      if (null == docId || docId.isEmpty()) {
+        logger.error("No Document ID provided in request!");
+        throw new ServletException("Invalid Parameter");
+      }
+      String tempFilename = String.format("temp.%s-%d", docId, System.nanoTime());
+
+    	File file = new File(tempFilename);
+    	if (file.isAbsolute()) {
+    		// Absolute files are not allowed - could be used to alter existing files
+    		logger.error("Attempt to use absolute path '{0}' - internal error!", tempFilename);
+    		throw new ServletException("Invalid parameter");
+    	}
+    	String canonicalPath = null;
+    	String absolutePath = null;
+    	try {
+    		canonicalPath = file.getCanonicalPath();
+    		absolutePath = file.getAbsolutePath();
+    	} catch (IOException e) {
+    		logger.error("Could not obtain path for '{0}' - internal error!", tempFilename, e);
+    		throw new ServletException(String.format("Invalid parameter - could not obtain path for %s", tempFilename), e);
+    	}
+    	// if cpath != apath, then attempted traversal
+    	if (!canonicalPath.equals(absolutePath)) {
+    		logger.error("canonical path '{0}' != absolute path '{1}' with given path '{2}' -- Traversal attack?!", canonicalPath, absolutePath, tempFilename);
+    		throw new ServletException("Invalid parameter");
+    	}
+    	return tempFilename;
+    }
+
+	public List<HltContentContainer> parseHltContentContainers(HttpServletRequest request) throws FileUploadException, IOException, ServletException {
+		List<HltContentContainer> ret = new LinkedList<>();
+		if (ServletFileUpload.isMultipartContent(request)) {
+			for (FileItem fi : new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request)) {
+				String docId = fi.getFieldName();
+				String tempFilename = "temp." + docId + "-" + System.nanoTime();
+				// Path Traversal Check.  OK to ignore PT_RELATIVE_PATH_TRAVERSAL
+				checkPath(tempFilename);
+				String fileContents = fi.isFormField() ? fi.getString() : Reader.getInstance().convertStreamToString(fi.getInputStream());
+				Writer.getInstance().writeToFile(tempFilename, fileContents);
+				System.out.println("Created " + tempFilename);
+				HltContentContainer hltcc = new HltContentContainer();
+				String uri = new File(tempFilename).getAbsolutePath();
+				DocumentMaker.getInstance().createDocument(
+						docId,
+						null,
+						request.getHeader("documentType"),
+						uri,
+						request.getHeader("documentLanguage"),
+						uri,
+						hltcc,
+						tokenizerType
+				);
+				ret.add(hltcc);
+			}
+		} else {
+			String docId = request.getHeader("documentId");
+			// Path Traversal Check.  OK to ignore next three PT_RELATIVE_PATH_TRAVERSAL
+			String tempFilename = checkPath(request.getHeader("documentId"));
+			String fileContents = Reader.getInstance().convertStreamToString(request.getInputStream());
+			Writer.getInstance().writeToFile(tempFilename, fileContents); // Path Traversal obviated. See above
+			System.out.println("Created " + tempFilename);
+			HltContentContainer hltcc = new HltContentContainer();
+			String uri = new File(tempFilename).getAbsolutePath(); // Path Traversal obviated. See above
+			DocumentMaker.getInstance().createDocument(
+					docId,
+					null,
+					request.getHeader("documentType"),
+					uri,
+					request.getHeader("documentLanguage"),
+					uri,
+					hltcc,
+					tokenizerType
+			);
+			ret.add(hltcc);
+		}
+		return ret;
+	}
+
+	public DocumentList hltContentContainersToDocumentList(List<HltContentContainer> hltccs) {
+		DocumentList ret = new DocumentList();
+		for (HltContentContainer hltcc : hltccs) {
+			ret.add(hltcc.getDocument());
+		}
+		return ret;
+	}
+
+
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-    	File tempFile = null;
+		if (!isThreadSafe() && !lock.tryLock()) {
+			response.setContentType("text/plain; charset=UTF-8");
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		        response.getWriter().write("Server is busy processing input and does not support parallel requests.\n");
+			response.getWriter().flush();
+			return;
+		}
     	try
-    	{     		
+    	{
     		// get request URI
     		String encodedURI = request.getRequestURI();
     		String decodedMethodName = UrlEncoded.decodeString(encodedURI, 0, encodedURI.length(), "UTF-8");
-    		
-    		// get request body
-    		InputStream is = request.getInputStream();
-			String tempFilename = "temp." + request.getHeader( "documentFilename");
-			// Note Oregon's process() creates folder with URI from tempFile, so delete by name.
-			boolean bOK = deleteFolder(new File(tempFilename));
-			if ( ! bOK ) System.out.println("ERROR: Unable to delete " + tempFilename);
-			tempFile = new File(tempFilename);
-			int byteCount = 0;
-    		try {
-    		    OutputStream os = new FileOutputStream(tempFile);
-    		    try {
-    		        byte[] buffer = new byte[4096];
-    		        for (int n; (n = is.read(buffer)) != -1; ) 
-    		        {
-    		            os.write(buffer, 0, n);
-    		            byteCount += n;
-    		        }
-    		    }
-    		    finally { os.close(); }
-    		}
-    		finally { is.close(); }    	
-    		System.out.println("Created " + tempFilename);
-    		
+
+			List<HltContentContainer> inputs = parseHltContentContainers(request);
     		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-   		
-    		if(byteCount>0) 
-    		{
-    			if (decodedMethodName.equals("/process")) 
+
+    			if (decodedMethodName.equals("/process"))
         		{
-    				/** Create a document object. */
-    				String documentId = request.getHeader( "documentId");
-    				String documentCorpus = request.getHeader( "documentCorpus" );
-    				String documentType = request.getHeader( "documentType");
-    				String documentLanguage = request.getHeader( "documentLanguage");
-    				Corpus corpus = null;
-    				String uri = tempFile.getAbsolutePath(); 
-    				// TODO documentCorpus
-					HltContentContainer hltcc = new HltContentContainer();
-					Document document = DocumentMaker.getInstance().createDefaultDocument(
-							documentId, 
-							corpus, 
-							documentType, 
-							uri, 
-							documentLanguage, 
-							uri,		// filename
-							hltcc,
-                            tokenizerType);
-    				System.out.println("Created document length = " + byteCount);
-    				
-    				if(this.isLocked())
-    				{
-    					response.setContentType("application/octet-stream");
-    	    			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-    				}
-    				else
-    				{
-    					boolean lockstate = false;
-    					HltContentContainer hltcontentcontainer = doSuperclassProcess(document,hltcc,lockstate);
-            			if (hltcontentcontainer == null) 
-            			{
-            				// set response fields
-            				if(lockstate)
-            				{
-            					response.setContentType("application/octet-stream");
-            	    			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            				}
-            				else
-            				{
-            					System.out.println("ERROR: Unable to create HltContentContainer.");
-            	    			response.setContentType("application/octet-stream");
-            	    			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            				}
-            					    
-            			}
-            			else 
-            			{
-            				// set response fields
-            				System.out.println("Returning HltContentContainer.");
-        	    			response.setContentType("application/octet-stream");
-        	    			response.setStatus(HttpServletResponse.SC_OK);
-        	    			response.getWriter().write(serializer.serializeAsString(hltcontentcontainer));
-        	    			response.getWriter().flush();	    				    			
-            			}    				
-    				}
-        			
+					HltContentContainer hltcontentcontainer = doSuperclassProcess(inputs);
+					try {
+						if (hltcontentcontainer == null) {
+							System.out.println("ERROR: Unable to create HltContentContainer.");
+							response.setContentType("text/plain; charset=UTF-8");
+							response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+						} else {
+							// set response fields
+							System.out.println("Returning HltContentContainer.");
+							response.setContentType("text/plain; charset=UTF-8");
+							response.setStatus(HttpServletResponse.SC_OK);
+							response.getWriter().write(serializer.serializeToString(hltcontentcontainer));
+							response.getWriter().flush();
+						}
+					} finally {
+						for (HltContentContainer hltcc : inputs) {
+							String docTempFileUri = hltcc.getDocument().getUri();
+							if(new File(docTempFileUri).delete())
+								System.out.println("SUCCESS: Temporary file " + docTempFileUri + " deleted successfully");
+							else
+								System.out.println("WARNING: Problem deleting temporary file " + docTempFileUri + " in RestServlet during clean up phase");
+						}
+					}
+
         		}
         		else if (decodedMethodName.equals("/processAsync"))
         		{
         			//TODO:call processAsync()
         		}
-    		}
-    		
-    		// delete temp file created
-    		if(tempFile.delete())
-    			System.out.println("SUCCESS: Temporary file deleted successfully");
-    		else 
-    			System.out.println("WARNING: Problem deleting temporary file in RestServlet during clean up phase");
     	}
     	catch(Exception e)
     	{
-    		if(tempFile!=null)
-    		{
-    			if(tempFile.delete())
-        			System.out.println("SUCCESS: Temporary file deleted successfully");
-        		else 
-        			System.out.println("WARNING: Problem deleting temporary file in RestServlet during clean up phase");
-        		e.printStackTrace();
-    		}
-    		
+    		e.printStackTrace();
     	}
+		finally {
+			if (!isThreadSafe()) {
+				lock.unlock();
+			}
+		}
     }
-    
+
     /**
      * Delete folder.
      *
@@ -341,53 +371,25 @@ public abstract class RestServlet extends HttpServlet
         bOK &= folder.delete();
         return bOK;
     }
-    
 
-    
-    /**
-     * Do process.
-     *
-     * @param document the document
-     * @return the hlt content container
-     */
-    private HltContentContainer doSuperclassProcess(Document document, HltContentContainer hltcontentcontainer, boolean lockstate)  
+
+    private HltContentContainer doSuperclassProcess(List<HltContentContainer> inputList)
     {
-    	if(!this.isThreadSafe())
-    	{
-    		boolean result = lock.tryLock();
-    		if(!result)
-    		{
-    			lockstate = true;
-    			return null;
-    		}
-    		else locked = true;
-    	}
-    	try
-    	{
-    		// call process function in AdeptModule
-            if(hltcontentcontainer==null) hltcontentcontainer = new HltContentContainer();
         	long start = System.currentTimeMillis();
-        	
-        	
-        	// call to subclass.
-        	hltcontentcontainer = doProcess( document, hltcontentcontainer);
+			HltContentContainer hltcontentcontainer;
+			if (inputList.size() > 1) {
+				hltcontentcontainer = doProcess(hltContentContainersToDocumentList(inputList));
+			} else {
+				HltContentContainer hltContentContainerIn = inputList.get(0);
+				hltcontentcontainer = doProcess(hltContentContainerIn.getDocument(), hltContentContainerIn);
+			}
         	if (hltcontentcontainer ==null) state = ServerState.ERROR;
         	else state=ServerState.IDLE;
             long end = System.currentTimeMillis();
-        	        
+
             System.out.println("Processing took: " + (end - start) + "ms");
             logger.info("Processing took: " + (end - start) + "ms");
             return hltcontentcontainer;
+    }
 
-    	}
-        finally
-        {
-        	if(!this.isThreadSafe())
-        	{
-        		lock.unlock();
-        		locked = false;
-        	}
-        }
-    }   
-    
 }

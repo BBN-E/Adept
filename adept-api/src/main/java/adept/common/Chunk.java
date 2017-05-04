@@ -1,27 +1,28 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
-/*
- * 
- */
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import com.google.common.base.Objects;
 import java.util.List;
+import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -30,7 +31,9 @@ import static com.google.common.base.Preconditions.checkArgument;
  * The Class Chunk, which is a sequence of tokens that comprise 
  * a phrase or other syntactic unit within a sentence.
  */
-public class Chunk extends HltContent {
+public class Chunk extends HltContent implements Serializable {
+
+	private static final long serialVersionUID = -6481662260010444789L;
 
 	/** The token stream. */
 	protected TokenStream tokenStream;
@@ -57,6 +60,25 @@ public class Chunk extends HltContent {
 		this.tokenStream = tokenStream;
         this.charOffset = new CharOffset(tokenStream.get(tokenOffset.getBegin()).getCharOffset().getBegin(),tokenStream.get(tokenOffset.getEnd()).getCharOffset().getEnd());
 		this.setValue();
+	}
+
+	public Chunk(CharOffset charOffset, TokenStream tokenStream) {
+		checkArgument(charOffset != null);
+		checkArgument(tokenStream != null);
+		int tokenOffsetBegin = -1;
+		int tokenOffsetEnd = -1;
+		for (int i = 0; i < tokenStream.size(); i++) {
+			if (tokenStream.get(i).getCharOffset().getBegin() == charOffset.getBegin()) {
+				tokenOffsetBegin = i;
+			}
+			if (tokenStream.get(i).getCharOffset().getEnd() == charOffset.getEnd()) {
+				tokenOffsetEnd = i;
+			}
+		}
+		this.tokenOffset = new TokenOffset(tokenOffsetBegin, tokenOffsetEnd);
+		this.tokenStream = tokenStream;
+		this.charOffset = charOffset;
+		setValue();
 	}
 
 	/**
@@ -239,35 +261,41 @@ public class Chunk extends HltContent {
 	}
 	
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || obj.getClass() != Chunk.class)
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
-		Chunk chunk = (Chunk) obj;
-		if ( ! isCompatible(chunk)) return false;
-		return (chunk.tokenOffset.getBegin() == this.tokenOffset.getBegin() 
-				&& chunk.tokenOffset.getEnd() == this.tokenOffset.getEnd() 
-                                && chunk.tokenStream.getDocument() == this.tokenStream.getDocument()
-				&& (chunk.charOffset.getBegin() == this.charOffset.getBegin() 
-                                && chunk.charOffset.getEnd() == this.charOffset.getEnd())
-                                && chunk.value.equals(this.value));
+		if (getClass() != obj.getClass())
+			return false;
+		Chunk other = (Chunk) obj;
+		if (charOffset == null) {
+			if (other.charOffset != null)
+				return false;
+		} else if (!charOffset.equals(other.charOffset))
+			return false;
+		if (tokenOffset == null) {
+			if (other.tokenOffset != null)
+				return false;
+		} else if (!tokenOffset.equals(other.tokenOffset))
+			return false;
+		if (tokenStream == null) {
+			if (other.tokenStream != null)
+				return false;
+		} else if (!tokenStream.equals(other.tokenStream))
+			return false;
+		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
-                return Objects.hashCode(this.tokenOffset.getBegin(), this.tokenOffset.getEnd(), 
-                                        this.tokenStream.getDocument(), this.charOffset.getBegin(), 
-                                        this.charOffset.getEnd(), this.value);
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((charOffset == null) ? 0 : charOffset.hashCode());
+		result = prime * result + ((tokenOffset == null) ? 0 : tokenOffset.hashCode());
+		result = prime * result + ((tokenStream == null) ? 0 : tokenStream.hashCode());
+		return result;
 	}
 
 }

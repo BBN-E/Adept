@@ -1,22 +1,25 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 // Next line is site-specific.
 package adept.utilities;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 
 import java.io.IOException;
@@ -50,17 +53,7 @@ public class TestRegressionTestClass extends RegressionTest
 		System.out.println("Current Directory: " + System.getProperty("user.dir"));
 		String packageName = new Object(){}.getClass().getPackage().getName();
 		String packagePath = packageName.replace(".", "/") + "/";
-		try {
-			if(args.length>0 && args[0].equals("ERROR"))
-			{
-				testErrorCase=true;
-				args = Arrays.copyOfRange(args, 1, args.length);
-			}
-			new TestRegressionTestClass().Run(packagePath, configFilename, args);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 
 	// The rest is applicable to any subclass of RegressionTest.

@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.io;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import adept.common.Document;
 import adept.common.HltContentContainer;
@@ -36,7 +39,7 @@ public class TestLDCCorpusReader {
 	public void test(String filename) {
         // TODO HLTCC not used
         HltContentContainer hltContentContainer = new HltContentContainer();
-        Document document = DocumentMaker.getInstance().createDefaultDocument( filename, hltContentContainer);
+        Document document = DocumentMaker.getInstance().createDocument( filename, hltContentContainer);
 		System.out.println("Metadata: " + document.getDocId() + "\n" + document.getDocType()
 				+ "\n" + document.getHeadline());
 		//System.out.println("Value: \n" + document.getValue());

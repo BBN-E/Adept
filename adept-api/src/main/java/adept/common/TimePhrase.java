@@ -1,32 +1,35 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
-/*
- * 
- */
 package adept.common;
 
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import com.google.common.base.Objects;
+import java.io.Serializable;
 
 
 /**
  * The Class TimePhrase.
  */
-public class TimePhrase extends Chunk {
+public class TimePhrase extends Chunk implements Serializable {
+
+	private static final long serialVersionUID = 1849809648701519675L;
 
 	/** The type. */
 	private IType type;
@@ -106,39 +109,42 @@ public class TimePhrase extends Chunk {
 		this.resolution = resolution;
 	}
 
-	/**
-	 * 
-	 * @return
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(resolution, resolutionType, type, this.tokenOffset.getBegin(), this.tokenOffset.getEnd(), 
-                this.tokenStream.getDocument(), this.charOffset.getBegin(), 
-                this.charOffset.getEnd(), this.value);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((resolution == null) ? 0 : resolution.hashCode());
+		result = prime * result + ((resolutionType == null) ? 0 : resolutionType.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
 	}
 
-	/**
-	 * 
-	 * @param obj
-	 * @return
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof TimePhrase))
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
 			return false;
-		TimePhrase timePhrase = (TimePhrase) obj;
-		return (((timePhrase.resolution == null && resolution == null) || timePhrase.resolution.equals(resolution)) &&
-				((timePhrase.resolutionType == null && resolutionType == null) || timePhrase.resolutionType.equals(resolutionType)) &&
-				((timePhrase.type == null && type == null) || timePhrase.type.equals(type)) &&
-				timePhrase.tokenOffset.getBegin() == this.tokenOffset.getBegin() &&
-						timePhrase.tokenOffset.getEnd() == this.tokenOffset.getEnd() &&
-								timePhrase.value.equals(this.value));
+		if (getClass() != obj.getClass())
+			return false;
+		TimePhrase other = (TimePhrase) obj;
+		if (resolution == null) {
+			if (other.resolution != null)
+				return false;
+		} else if (!resolution.equals(other.resolution))
+			return false;
+		if (resolutionType == null) {
+			if (other.resolutionType != null)
+				return false;
+		} else if (!resolutionType.equals(other.resolutionType))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
 	}
-	
-	
+
 
 }

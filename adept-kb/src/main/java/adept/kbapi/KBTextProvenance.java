@@ -1,39 +1,42 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 
 import java.util.UUID;
 
 import adept.common.Chunk;
 import adept.common.KBID;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-
 /**
  * A textual provenance for a KB Object.
- * 
+ *
  * May involve multiple chunks of text.
- * 
+ *
  * This object is not first-class in the KB, and may only be inserted or removed
  * as part of the insertion or removal of a first-class object which owns it.
- * 
- * 
+ *
+ *
  * @author dkolas
  */
 public class KBTextProvenance extends KBProvenance {
@@ -462,6 +465,49 @@ public class KBTextProvenance extends KBProvenance {
 			return chunkId;
 		}
 	}
+
+  	public UpdateBuilder getUpdateBuilder(){
+		return new UpdateBuilder(this.getKBID());
+	}
+
+  	public class UpdateBuilder extends KBProvenance.UpdateBuilder{
+
+	  KBID sourceEntityKBID;
+
+
+	  private UpdateBuilder(KBID provenanceKBID){
+	    setKBID(provenanceKBID);
+	  }
+
+	  protected KBTextProvenance build() {
+	    return new KBTextProvenance(getKBID(), confidence, sourceAlgorithmName,
+		contributingSiteName, value, beginOffset, endOffset, documentID, documentURI,
+		documentPublicationDate, sourceLanguage, corpusType, corpusName, corpusURI,
+		corpusID);
+	  }
+
+	  protected void update(KB kb){
+		//TODO: add update implementation in KB.java
+
+	  }
+
+	  /**
+	   * @return the KBID of entity that has this provenance
+	   */
+	  public KBID getSourceEntityKBID() {
+	    return sourceEntityKBID;
+	  }
+
+	  /**
+	   * @param kbid
+	   *            the new KBID of the source entity to replace current one with
+	   */
+	  public void setSourceEntityKBID(KBID kbid) {
+	    Preconditions.checkNotNull(kbid);
+	    this.sourceEntityKBID = kbid;
+	  }
+
+  	}
 
 	@Override
 	public boolean equals(Object o) {

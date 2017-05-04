@@ -1,23 +1,27 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.serialization;
 
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,16 +40,24 @@ public class LoadSerializedHccXmlData {
 		String outDir = "/nfs/mercury-04/u40/deft/ERE_xdoc_ncc_2/";
 		File folder = new File(dataDir);
 		File[] listOfFiles = folder.listFiles();
-
+		if (null == listOfFiles) {
+			System.out.println(String.format("ERROR!! '%s' is not a directory or does not exist!", dataDir));
+			System.exit(-1);
+		}
 		// Initialize serializer instance
-		XMLSerializer xmls = new XMLSerializer(SerializationType.XML);		
+		XMLStringSerializer xmls = new XMLStringSerializer();		
 		
 	    for (int i = 0; i < listOfFiles.length; i++) {
 	      if (listOfFiles[i].isFile()) {
 	        System.out.println("File " + listOfFiles[i].getName());	        
-	        String serialized = Reader.getInstance().readFileIntoString(listOfFiles[i].getPath());	        
+	        String serialized;
+	        try {
+				serialized = Reader.getInstance().readFileIntoString(listOfFiles[i].getPath());
+			} catch (IOException e) {
+	        	throw new RuntimeException(e);
+			}
 			// deserialize
-	        HltContentContainer hcc = (HltContentContainer) xmls.deserializeString(serialized,
+	        HltContentContainer hcc = (HltContentContainer) xmls.deserializeFromString(serialized,
 	        		HltContentContainer.class);
 	        
 	        if (hcc.getPassages() == null) {	        	
@@ -87,7 +99,7 @@ public class LoadSerializedHccXmlData {
 				em.setEntityIdDistribution(entityIdDist);
 			}
 			// serialize
-			String hcc_s = xmls.serializeAsString(hcc);
+			String hcc_s = xmls.serializeToString(hcc);
 			String outFile = outDir + "/" + listOfFiles[i].getName() + ".xml";
 			Writer.getInstance().writeToFile(outFile, hcc_s);
 

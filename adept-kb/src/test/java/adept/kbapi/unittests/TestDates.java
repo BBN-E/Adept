@@ -1,25 +1,29 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.unittests;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,9 +55,9 @@ import adept.utilities.DocumentMaker;
 public class TestDates extends KBUnitTest {
 
 	@Test
-	public void testDates() throws KBQueryException, KBUpdateException, FileNotFoundException {
+	public void testDates() throws KBQueryException, KBUpdateException, FileNotFoundException, URISyntaxException {
 		HltContentContainer hltContentContainer = new HltContentContainer();
-		Document document = DocumentMaker.getInstance().createDefaultDocument("sample_date.txt",
+		Document document = DocumentMaker.getInstance().createDocument("sample_date.txt",
 				null, "Text", "sample_date_1.txt", "English",
 				Reader.getAbsolutePathFromClasspathOrFileSystem("adept/kbapi/sample_date.txt"),
 				hltContentContainer);

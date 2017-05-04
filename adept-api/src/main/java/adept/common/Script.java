@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import com.google.common.collect.ImmutableSet;
 
@@ -24,25 +27,26 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Represents a generic pattern of events with some relation to one another.
  * For example, "criminal justice proceedings", which would involve charges, arrests, trials,
- * sentenceings, etc.
- * <p/>
+ * sentencings, etc.
+ * <p>
  * All script-related classes are "locally immutable" so long as the {@link adept.common.IType} implementation
  * used is. However, they all inherit from the mutable {@link adept.common.HltContent} class, whose associated
  * fields are mutable.   The {@link #hashCode()} and  {@link #equals(Object)} implementations are the default.
  */
 public final class Script extends HltContent {
 
-    private final ImmutableSet<ScriptEvent> scriptEvents;
-    private final ImmutableSet<ScriptLink> scriptLinks;
-    private final ImmutableSet<ScriptVariableBinaryConstraint> binaryConstraints;
+  private static final long serialVersionUID = 6512830087309931935L;
+  private final ImmutableSet<ScriptEvent> scriptEvents;
+  private final ImmutableSet<ScriptLink> scriptLinks;
+  private final ImmutableSet<ScriptVariableBinaryConstraint> binaryConstraints;
 
-    private Script(Iterable<ScriptEvent> scriptEvents,
+  private Script(Iterable<ScriptEvent> scriptEvents,
                    Iterable<ScriptLink> scriptLinks,
                    Iterable<ScriptVariableBinaryConstraint> binaryConstraints) {
-        this.scriptEvents = ImmutableSet.copyOf(scriptEvents);
-        this.scriptLinks = ImmutableSet.copyOf(scriptLinks);
-        this.binaryConstraints = ImmutableSet.copyOf(binaryConstraints);
-    }
+      this.scriptEvents = ImmutableSet.copyOf(scriptEvents);
+      this.scriptLinks = ImmutableSet.copyOf(scriptLinks);
+      this.binaryConstraints = ImmutableSet.copyOf(binaryConstraints);
+  }
 
     /**
      * Creates a new {@code Script} from the specified events, links, and constraints.

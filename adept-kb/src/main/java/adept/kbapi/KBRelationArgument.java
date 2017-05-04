@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,6 +29,7 @@ import adept.common.KBID;
 import adept.common.OntType;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 /**
@@ -92,9 +96,9 @@ public class KBRelationArgument extends KBPredicateArgument {
 	 * @param provenances
 	 * @param confidence
 	 */
-	private KBRelationArgument(KBID kbID, OntType role, KBPredicateArgument target,
-			Set<KBProvenance> provenances, float confidence) {
-		super(kbID, provenances);
+	private KBRelationArgument(KB kb, KBID kbID, OntType role, KBPredicateArgument target,
+			Optional<Set<KBProvenance>> provenances, float confidence) {
+		super(kb, kbID, provenances);
 
 		this.role = checkNotNull(role);
 		this.target = checkNotNull(target);
@@ -119,17 +123,17 @@ public class KBRelationArgument extends KBPredicateArgument {
 	 * Create a new UpdateBuilder for updating this KBRelationArgument.
 	 * Confidence and provenances are updatable.
 	 * 
-	 * @return {@link UpdateBuilder}
+	 * @return {@link KBRelationArgument.UpdateBuilder}
 	 */
 	public UpdateBuilder updateBuilder() {
-		return new UpdateBuilder(this);
+		return new UpdateBuilder();
 	}
 
 	/**
 	 * Class for creating a new KBRelationArgument. Only intended to be saved by
 	 * other classes in this package, i.e, {@link KBRelation}.
 	 * 
-	 * Does not inherit from {@link KBPredicateArgument#InsertionBuilder}
+	 * Does not inherit from {@link KBPredicateArgument}
 	 * because this object cannot be saved on its own.
 	 * 
 	 */
@@ -191,12 +195,19 @@ public class KBRelationArgument extends KBPredicateArgument {
 		 * @param kbID
 		 * @return
 		 */
-		protected KBRelationArgument build(KBID kbID) {
-			Set<KBProvenance> builtProvenances = new HashSet<KBProvenance>();
-			for (KBProvenance.InsertionBuilder provenanceBuilder : getProvenances()) {
-				builtProvenances.add(provenanceBuilder.build());
+		protected KBRelationArgument build(KB kb, KBID kbID, boolean deferProvenances) {
+			
+			Optional<Set<KBProvenance>> provenances = null;
+			if (deferProvenances){
+				provenances = Optional.absent();
+			}else{
+				Set<KBProvenance> builtProvenances = new HashSet<KBProvenance>();
+				for (KBProvenance.InsertionBuilder provenanceBuilder : getProvenances()) {
+					builtProvenances.add(provenanceBuilder.build());
+				}
+				provenances = Optional.of(builtProvenances);
 			}
-			return new KBRelationArgument(kbID, role, target, builtProvenances, confidence);
+			return new KBRelationArgument(kb, kbID, role, target, provenances, confidence);
 		}
 
 		/**
@@ -204,8 +215,7 @@ public class KBRelationArgument extends KBPredicateArgument {
 		 * will be saved when the KBRelationArgument is inserted, which is when
 		 * the object that owns this KBrelationArgument is inserted.
 		 * 
-		 * @param provenance
-		 * @return
+		 * @param provenances
 		 */
 		public void addProvenances(Set<KBProvenance.InsertionBuilder> provenances) {
 			this.provenances.addAll(provenances);
@@ -229,24 +239,22 @@ public class KBRelationArgument extends KBPredicateArgument {
 	 * @author dkolas
 	 */
 	public class UpdateBuilder {
-		private KBRelationArgument kbRelationArgument = null;
 		private Set<KBProvenance.InsertionBuilder> newProvenances;
 		private Set<KBProvenance> provenancesToRemove;
 
 		private Float newConfidence;
 
-		private UpdateBuilder(KBRelationArgument kbRelationArgument) {
-			this.kbRelationArgument = kbRelationArgument;
+		private UpdateBuilder() {
 			newProvenances = new HashSet<KBProvenance.InsertionBuilder>();
 			provenancesToRemove = new HashSet<KBProvenance>();
 		}
 
 		public KBID getKBID() {
-			return kbRelationArgument.getKBID();
+			return KBRelationArgument.this.getKBID();
 		}
 
 		protected KBRelationArgument getKBRelationArgument() {
-			return kbRelationArgument;
+			return KBRelationArgument.this;
 		}
 
 		public Set<KBProvenance.InsertionBuilder> getNewProvenances() {
@@ -277,8 +285,6 @@ public class KBRelationArgument extends KBPredicateArgument {
 		 * @return
 		 */
 		public UpdateBuilder removeProvenance(KBProvenance provenance) {
-			Preconditions.checkArgument(kbRelationArgument.getProvenances().contains(provenance),
-					"This relation does not contain the given provenance.");
 			provenancesToRemove.add(provenance);
 			return this;
 		}
@@ -299,22 +305,32 @@ public class KBRelationArgument extends KBPredicateArgument {
 		 * @param kb
 		 * @return
 		 * 
-		 * @see adept.kbapi.model.KBPredicateArgument.UpdateBuilder#update(adept.kbapi.KB)
 		 */
 		protected KBRelationArgument update(KB kb) throws KBUpdateException {
+			Set<KBProvenance> oldProvenances = null;
+			try{
+				oldProvenances = getProvenances();
+				for (KBProvenance provenanceToRemove : provenancesToRemove){
+					Preconditions.checkArgument(oldProvenances.contains(provenanceToRemove),
+							"KBPredicateArgument does not contain provenance to remove: "+provenanceToRemove 
+							);
+				}
+			}catch(KBQueryException e){
+				throw new KBUpdateException("Could not load provenances for original object",e);
+			}
 			kb.updateRelationArgument(this);
 			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
 			for (KBProvenance.InsertionBuilder provenanceBuilder : getNewProvenances()) {
 				provenances.add(provenanceBuilder.build());
 			}
-			for (KBProvenance kbProvenance : kbRelationArgument.getProvenances()) {
+			for (KBProvenance kbProvenance : oldProvenances) {
 				if (!getProvenancesToRemove().contains(kbProvenance)) {
 					provenances.add(kbProvenance);
 				}
 			}
-			return new KBRelationArgument(kbRelationArgument.getKBID(), kbRelationArgument.role,
-					kbRelationArgument.target, provenances,
-					getNewConfidence() != null ? getNewConfidence() : kbRelationArgument.confidence);
+			return new KBRelationArgument(kb, getKBID(), role,
+					target, Optional.of(provenances),
+					getNewConfidence() != null ? getNewConfidence() : confidence);
 		}
 
 	}

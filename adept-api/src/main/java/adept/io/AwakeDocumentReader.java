@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.io;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +36,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -54,13 +59,13 @@ import adept.common.TokenizerType;
 import adept.common.TranscriptType;
 import adept.common.Sarcasm.Judgment;
 
-import adept.serialization.BinaryFromJSONSerializer;
-import adept.serialization.JSONSerializer;
+import adept.serialization.JSONBinarySerializer;
+import adept.serialization.JSONStringSerializer;
 import adept.serialization.SerializationType;
-import adept.serialization.XMLSerializer;
+import adept.serialization.XMLStringSerializer;
 
 import adept.utilities.PassageAttributes;
-import adept.utilities.OpenNLPTokenizer;
+import adept.utilities.StanfordTokenizer;
 import adept.utilities.printHltContent;
 
 
@@ -69,8 +74,9 @@ import adept.utilities.printHltContent;
  * The Class AwakeDocumentReader.
  */
 public class AwakeDocumentReader {
+  private static final Logger logger = LoggerFactory.getLogger(AwakeDocumentReader.class);
 	
-	protected static String _XsdFilename = "AWAKE.xsd";
+	protected static final String _XsdFilename = "AWAKE.xsd";
 	
 	/**
 	 * Singleton instance and getter method.
@@ -89,7 +95,7 @@ public class AwakeDocumentReader {
 	}
 	
 	// For smoke test
-	public static void main(String[] args) throws UnsupportedEncodingException {
+	public static void main(String[] args) {
 		String filename;
 		if ( args.length > 0){
 			filename = args[0];
@@ -115,42 +121,47 @@ public class AwakeDocumentReader {
 		System.out.println("Passage count = " + hltcc.getPassages().size());
 		//
 		String xmlFilename = nameOnly + ".out.xml"; 
-		XMLSerializer xmlSerializer = new XMLSerializer(SerializationType.XML);
-		String xmlTemp = xmlSerializer.serializeAsString(hltcc);
-		System.out.println("Writing to:  " + xmlFilename);
-		Writer.getInstance().writeToFile(xmlFilename,xmlTemp);
-		printHltContent.writeFile(xmlFilename, xmlFilename + ".txt");
+		XMLStringSerializer xmlStringSerializer = new XMLStringSerializer();
+		try {
+  		String xmlTemp = xmlStringSerializer.serializeToString(hltcc);
+  		System.out.println("Writing to:  " + xmlFilename);
+  		Writer.getInstance().writeToFile(xmlFilename,xmlTemp);
+  		printHltContent.writeFile(xmlFilename, xmlFilename + ".txt");
+		} catch (Exception e) {
+		  System.err.format("Exception %s caught%n", e.getClass().getName());
+		  logger.error("Exception caught: ", e);
+		  System.exit(1);
+		}
 	}	
 	
 	/**
 	 * Creates the default document. The argument filename *must* be non-null.
 	 *
-	 * @param docId the doc id
-	 * @param corpus the corpus
-	 * @param docType the doc type
-	 * @param uri the uri
-	 * @param language the language
 	 * @param filename the filename
-	 * @param hltcontainer the hltcontainer
-	 * @param tokenize the tokenize
-	 * @return the document
+	 * @return the document in a {@code HltContentContainer}
 	 */
 	public HltContentContainer createAwakeDocument(
 			String filename ) {
 		System.out.println("Creating ADEPT document from file: " + filename);
-		org.w3c.dom.Document w3cDoc = Reader.getInstance().readXML(filename);
-		if(w3cDoc == null) {
-			System.out.println("Error: Awake file not found.");
-			return null;
+		org.w3c.dom.Document w3cDoc;
+		try {
+			w3cDoc = Reader.getInstance().readXML(filename);
+			if (w3cDoc == null) {
+				System.out.println("Error: Awake file not found.");
+				return null;
+			}
+			org.w3c.dom.Document xsdDoc = Reader.getInstance().readXML(_XsdFilename);
+			if (xsdDoc == null) {
+				System.out.println("Error: XSD file not found.");
+			}
+			else if ( ! validateXMLSchema( w3cDoc, xsdDoc) ) {
+				System.out.println("Awake file failed validation.");
+				return null;
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		org.w3c.dom.Document xsdDoc = Reader.getInstance().readXML(_XsdFilename);
-		if(xsdDoc == null) {
-			System.out.println("Error: XSD file not found.");
-		}
-		else if ( ! validateXMLSchema( w3cDoc, xsdDoc) ) {
-			System.out.println("Awake file failed validation.");
-			return null;
-		}
+
 		System.out.println("Loading input document as XML-formatted Awake file");
 		List<PassageAttributes> passageAttributesList = new ArrayList<PassageAttributes>();		
 		adept.common.Document adeptDocument = AwakeDocumentReader.getInstance().readDocument(w3cDoc, passageAttributesList);
@@ -159,7 +170,7 @@ public class AwakeDocumentReader {
 			return null;
 		}
 		// First tokenize document.  Then match up first and last tokens using character offsets of passage.
-		TokenStream tokenStream = OpenNLPTokenizer.getInstance().tokenize(adeptDocument.getValue(), adeptDocument);
+		TokenStream tokenStream = StanfordTokenizer.getInstance().tokenize(adeptDocument.getValue(), adeptDocument);
 //		tokenStream.setDocument(adeptDocument);								
 //		adeptDocument.addTokenStream(tokenStream);
 		System.out.println("Number of passages: " + passageAttributesList.size());				
@@ -282,7 +293,7 @@ public class AwakeDocumentReader {
 			sb.append(passageValueSurrogatesRemoved);// + "\n");
 			//
 			PassageAttributes pa = new PassageAttributes();
-			long passageId = Long.valueOf(passage.getAttribute("passage_id")).longValue();
+			long passageId = Long.parseLong(passage.getAttribute("passage_id"));
 			pa.setPassageId(passageId);
 			String speaker = passage.getAttribute("speaker");
 			pa.setSpeaker(speaker);

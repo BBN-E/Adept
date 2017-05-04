@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.HashSet;
 import java.util.Map;
@@ -37,9 +40,9 @@ public class KBTemporalSpan extends KBRelation {
 	public static final OntType temporalSpanType = new OntType(
 			KBOntologyModel.ONTOLOGY_BASE_PREFIX, "TemporalSpan");
 
-	private KBTemporalSpan(KBID kbID, float confidence, Set<KBRelationArgument> arguments,
-			Set<KBProvenance> provenances) {
-		super(kbID, temporalSpanType, confidence, arguments, provenances);
+	private KBTemporalSpan(KB kb, KBID kbID, float confidence, Set<KBRelationArgument> arguments,
+			Optional<Set<KBProvenance>> provenances) {
+		super(kb, kbID, temporalSpanType, confidence, arguments, provenances);
 	}
 
 	public static InsertionBuilder temporalSpanInsertionBuilder(float confidence) {
@@ -137,22 +140,19 @@ public class KBTemporalSpan extends KBRelation {
 		@Override
 		public KBTemporalSpan insert(KB kb) throws KBUpdateException {
 			kb.insertRelation(this);
-			return build();
+			return build(kb, false);
 		}
 
-		protected KBTemporalSpan build() {
+		protected KBTemporalSpan build(KB kb, boolean deferProvenances) {
 			Preconditions.checkNotNull(kbid);
 			Preconditions.checkArgument(getConfidence() >= 0);
-			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
-			for (KBProvenance.InsertionBuilder provenanceBuilder : getProvenances()) {
-				provenances.add(provenanceBuilder.build());
-			}
+			Optional<Set<KBProvenance>> provenances = buildProvenances(deferProvenances);
 			Set<KBRelationArgument> arguments = new HashSet<KBRelationArgument>();
 			for (KBRelationArgument.InsertionBuilder argumentBuilder : getArguments()) {
-				arguments.add(argumentBuilder.build(argumentBuilder.kbid));
+				arguments.add(argumentBuilder.build(kb, argumentBuilder.kbid, deferProvenances));
 			}
 
-			return new KBTemporalSpan(kbid, getConfidence(), arguments, provenances);
+			return new KBTemporalSpan(kb, kbid, getConfidence(), arguments, provenances);
 		}
 
 		/**
@@ -187,18 +187,25 @@ public class KBTemporalSpan extends KBRelation {
 
 		@Override
 		public KBTemporalSpan update(KB kb) throws KBUpdateException {
+			Set<KBProvenance> oldProvenances = null;
+			try{
+				oldProvenances = getKBRelation().getProvenances();
+				checkProvenancesToRemove();
+			} catch (KBQueryException e) {
+				throw new KBUpdateException("Could not load provenances for original object",e);
+			}
 			kb.updateKBPredicateArgumentProvenances(this);
 			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
 			for (KBProvenance.InsertionBuilder provenanceBuilder : getNewProvenances()) {
 				provenances.add(provenanceBuilder.build());
 			}
-			for (KBProvenance kbProvenance : getKBRelation().getProvenances()) {
+			for (KBProvenance kbProvenance : oldProvenances) {
 				if (!getProvenancesToRemove().contains(kbProvenance)) {
 					provenances.add(kbProvenance);
 				}
 			}
-			return new KBTemporalSpan(getKBRelation().getKBID(), getConfidence(), getArguments(),
-					provenances);
+			return new KBTemporalSpan(kb, getKBRelation().getKBID(), getConfidence(), getArguments(),
+					Optional.of(provenances));
 		}
 
 		/**

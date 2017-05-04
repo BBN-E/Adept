@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  #%L
+  adept-kb
+  %%
+  Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Mapping from the TAC classes to adept ontology classes</comment>
@@ -114,7 +134,7 @@
 
 <!--  EVENT ARGUMENTS -->
 <entry key="per:cause_of_death.arg-1">person</entry>
-<entry key="per:cause_of_death.arg-2">agent</entry>
+<entry key="per:cause_of_death.arg-2">causeOfDeath</entry>
 <entry key="per:city_of_death.arg-1">person</entry>
 <entry key="per:city_of_death.arg-2">place</entry>
 <entry key="per:stateorprovince_of_death.arg-1">person</entry>
@@ -148,10 +168,14 @@
 <entry key="per:city_of_death.arg-2.type">City</entry>
 <entry key="per:stateorprovince_of_death.arg-2.type">StateProvince</entry>
 <entry key="per:country_of_death.arg-2.type">Country</entry>
+<entry key="org:city_of_headquarters.arg-2.type">City</entry>
+<entry key="org:stateprovince_of_headquarters.arg-2.type">StateProvince</entry>
+<entry key="org:country_of_headquarters.arg-2.type">Country</entry>
 
 <!--  mapping of generic things (slot filler) types -->
 <entry key="url">URL</entry>
 <entry key="title">Title</entry>
 <entry key="crime">Crime</entry>
+<entry key="causeofDeath">CauseOfDeath</entry>
 
 </properties>

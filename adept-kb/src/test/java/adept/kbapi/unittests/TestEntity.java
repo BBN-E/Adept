@@ -1,27 +1,31 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi.unittests;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 
@@ -163,45 +167,45 @@ public class TestEntity extends KBUnitTest {
 			assertion = false;
 			assertionFailureText += "No entity returned from getEntityById(). ";
 		}
-
-		String entityType = KBOntologyMap.getTACOntologyMap()
-				.getTypeForKBType(getTypeWithHighestConfidenceForKBEntity(kbEntity)).get()
-				.getType();
-		if (!entityType.equals(expectedEntityType)) {
-			assertion = false;
-			assertionFailureText += "Entity type " + entityType
-					+ " does not match expected entity type of " + expectedEntityType + ". ";
-		}
-
-		if (kbEntity.getConfidence() != expectedEntityConfidence) {
-			assertion = false;
-			assertionFailureText += "Entity confidence " + kbEntity.getConfidence()
-					+ " does not match expected entity confidence of " + expectedEntityConfidence
-					+ ". ";
-		}
-
-		if (kbEntity.getCanonicalMentionConfidence() != expectedCanonicalMentionConfidence) {
-			assertion = false;
-			assertionFailureText += "Entity canonical mention confidence "
-					+ kbEntity.getCanonicalMentionConfidence()
-					+ " does not match expected canonical mention confidence of "
-					+ expectedCanonicalMentionConfidence + ". ";
-		}
-
-		for (Pair<String, Double> expectedEntityTypeWithConfidence : expectedEntityTypesWithConfidences) {
-			OntType expectedType = KBOntologyMap.getTACOntologyMap()
-					.getKBTypeForType(new Type(expectedEntityTypeWithConfidence.getL())).get();
-
-			if (!kbEntity.getTypes().containsKey(expectedType)
-					|| !kbEntity.getTypes().get(expectedType)
-							.equals(expectedEntityTypeWithConfidence.getR().floatValue())) {
+		if (null != kbEntity) {
+			String entityType = KBOntologyMap.getTACOntologyMap()
+					.getTypeForKBType(getTypeWithHighestConfidenceForKBEntity(kbEntity)).get()
+					.getType();
+			if (!entityType.equals(expectedEntityType)) {
 				assertion = false;
-				assertionFailureText += "No matching entity type of type " + expectedType.getType()
-						+ " with confidence " + expectedEntityTypeWithConfidence.getR()
-						+ " found. ";
+				assertionFailureText += "Entity type " + entityType
+						+ " does not match expected entity type of " + expectedEntityType + ". ";
+			}
+	
+			if (kbEntity.getConfidence() != expectedEntityConfidence) {
+				assertion = false;
+				assertionFailureText += "Entity confidence " + kbEntity.getConfidence()
+						+ " does not match expected entity confidence of " + expectedEntityConfidence
+						+ ". ";
+			}
+	
+			if (kbEntity.getCanonicalMentionConfidence() != expectedCanonicalMentionConfidence) {
+				assertion = false;
+				assertionFailureText += "Entity canonical mention confidence "
+						+ kbEntity.getCanonicalMentionConfidence()
+						+ " does not match expected canonical mention confidence of "
+						+ expectedCanonicalMentionConfidence + ". ";
+			}
+	
+			for (Pair<String, Double> expectedEntityTypeWithConfidence : expectedEntityTypesWithConfidences) {
+				OntType expectedType = KBOntologyMap.getTACOntologyMap()
+						.getKBTypeForType(new Type(expectedEntityTypeWithConfidence.getL())).get();
+	
+				if (!kbEntity.getTypes().containsKey(expectedType)
+						|| !kbEntity.getTypes().get(expectedType)
+								.equals(expectedEntityTypeWithConfidence.getR().floatValue())) {
+					assertion = false;
+					assertionFailureText += "No matching entity type of type " + expectedType.getType()
+							+ " with confidence " + expectedEntityTypeWithConfidence.getR()
+							+ " found. ";
+				}
 			}
 		}
-
 		assertTrue(assertionFailureText, assertion);
 	}
 
@@ -332,44 +336,44 @@ public class TestEntity extends KBUnitTest {
 			assertion = false;
 			assertionFailureText += "No entity returned from getAdeptEntityByExternalID(). ";
 		}
-
-		String entityType = KBOntologyMap.getTACOntologyMap()
-				.getTypeForKBType(getTypeWithHighestConfidenceForKBEntity(testEntity)).get()
-				.getType();
-		if (!entityType.equals(expectedEntityType)) {
-			assertion = false;
-			assertionFailureText += "Entity type " + entityType
-					+ " does not match expected entity type of " + expectedEntityType + ". ";
-		}
-
-		if (testEntity.getConfidence() != expectedEntityConfidence) {
-			assertion = false;
-			assertionFailureText += "Entity confidence " + testEntity.getConfidence()
-					+ " does not match expected entity confidence of " + expectedEntityConfidence
-					+ ". ";
-		}
-
-		if (testEntity.getCanonicalMentionConfidence() != expectedCanonicalMentionConfidence) {
-			assertion = false;
-			assertionFailureText += "Entity canonical mention confidence "
-					+ testEntity.getCanonicalMentionConfidence()
-					+ " does not match expected canonical mention confidence of "
-					+ expectedCanonicalMentionConfidence + ". ";
-		}
-
-		for (Pair<String, Double> expectedEntityTypeWithConfidence : expectedEntityTypesWithConfidences) {
-			OntType expectedType = KBOntologyMap.getTACOntologyMap()
-					.getKBTypeForType(new Type(expectedEntityTypeWithConfidence.getL())).get();
-			if (!testEntity.getTypes().containsKey(expectedType)
-					|| !testEntity.getTypes().get(expectedType)
-							.equals(expectedEntityTypeWithConfidence.getR().floatValue())) {
+		if (null != testEntity) {
+			String entityType = KBOntologyMap.getTACOntologyMap()
+					.getTypeForKBType(getTypeWithHighestConfidenceForKBEntity(testEntity)).get()
+					.getType();
+			if (!entityType.equals(expectedEntityType)) {
 				assertion = false;
-				assertionFailureText += "No matching entity type of type " + expectedType
-						+ " with confidence " + expectedEntityTypeWithConfidence.getR()
-						+ " found. ";
+				assertionFailureText += "Entity type " + entityType
+						+ " does not match expected entity type of " + expectedEntityType + ". ";
+			}
+	
+			if (testEntity.getConfidence() != expectedEntityConfidence) {
+				assertion = false;
+				assertionFailureText += "Entity confidence " + testEntity.getConfidence()
+						+ " does not match expected entity confidence of " + expectedEntityConfidence
+						+ ". ";
+			}
+	
+			if (testEntity.getCanonicalMentionConfidence() != expectedCanonicalMentionConfidence) {
+				assertion = false;
+				assertionFailureText += "Entity canonical mention confidence "
+						+ testEntity.getCanonicalMentionConfidence()
+						+ " does not match expected canonical mention confidence of "
+						+ expectedCanonicalMentionConfidence + ". ";
+			}
+	
+			for (Pair<String, Double> expectedEntityTypeWithConfidence : expectedEntityTypesWithConfidences) {
+				OntType expectedType = KBOntologyMap.getTACOntologyMap()
+						.getKBTypeForType(new Type(expectedEntityTypeWithConfidence.getL())).get();
+				if (!testEntity.getTypes().containsKey(expectedType)
+						|| !testEntity.getTypes().get(expectedType)
+								.equals(expectedEntityTypeWithConfidence.getR().floatValue())) {
+					assertion = false;
+					assertionFailureText += "No matching entity type of type " + expectedType
+							+ " with confidence " + expectedEntityTypeWithConfidence.getR()
+							+ " found. ";
+				}
 			}
 		}
-
 		assertTrue(assertionFailureText, assertion);
 	}
 
@@ -384,4 +388,69 @@ public class TestEntity extends KBUnitTest {
 		}
 		return currentOntType;
 	}
+	
+	@Test
+	public void testInvalidEntityType() throws KBQueryException {
+		KBEntity.InsertionBuilder entity = KBEntity.entityInsertionBuilder(
+						Collections.singletonMap(new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "INVALID_TYPE"), .1f),
+						generateProvenance("invalidType"),
+						.1f, .1f);
+		KBUpdateException exception = null;
+		try{
+			entity.insert(kb);
+		}catch(KBUpdateException e){
+			//This should be thrown!
+			exception = e;
+		}
+		Assert.assertTrue("Inserting entity with bad type should throw exception.", exception != null);
+	}
+	
+	@Test 
+	public void testGetPersonByExternalID() throws KBQueryException, KBUpdateException{
+		KBEntity.InsertionBuilder personBuilder = KBEntity.entityInsertionBuilder(
+				Collections.singletonMap(new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Person"), .1f), generateProvenance("Person"), .1f, .1f);
+		KBID testExternalKBID = new KBID("test","testid");
+		personBuilder.addExternalKBId(testExternalKBID);
+		
+		KBEntity person = personBuilder.insert(kb);
+		
+		Optional<KBPredicateArgument> queryResult = kb.getKBObjectByExternalID(testExternalKBID);
+		
+		Assert.assertTrue("Person by external Id should exist", queryResult.isPresent());
+		Assert.assertEquals("Queried person should be same as inserted person", person, queryResult.get()); 
+		
+	}
+	
+	@Test 
+	public void testGetFemaleByExternalID() throws KBQueryException, KBUpdateException{
+		KBEntity.InsertionBuilder personBuilder = KBEntity.entityInsertionBuilder(
+				Collections.singletonMap(new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Female"), .1f), generateProvenance("Person"), .1f, .1f);
+		KBID testExternalKBID = new KBID("test","testid");
+		personBuilder.addExternalKBId(testExternalKBID);
+		
+		KBEntity person = personBuilder.insert(kb);
+		
+		Optional<KBPredicateArgument> queryResult = kb.getKBObjectByExternalID(testExternalKBID);
+		
+		Assert.assertTrue("Person by external Id should exist", queryResult.isPresent());
+		Assert.assertEquals("Queried person should be same as inserted person", person, queryResult.get()); 
+		
+	}
+	
+	@Test 
+	public void testGetMaleByExternalID() throws KBQueryException, KBUpdateException{
+		KBEntity.InsertionBuilder personBuilder = KBEntity.entityInsertionBuilder(
+				Collections.singletonMap(new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Male"), .1f), generateProvenance("Person"), .1f, .1f);
+		KBID testExternalKBID = new KBID("test","testid");
+		personBuilder.addExternalKBId(testExternalKBID);
+		
+		KBEntity person = personBuilder.insert(kb);
+		
+		Optional<KBPredicateArgument> queryResult = kb.getKBObjectByExternalID(testExternalKBID);
+		
+		Assert.assertTrue("Person by external Id should exist", queryResult.isPresent());
+		Assert.assertEquals("Queried person should be same as inserted person", person, queryResult.get()); 
+		
+	}
+
 }

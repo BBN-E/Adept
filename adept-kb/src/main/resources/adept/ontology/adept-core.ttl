@@ -5,2348 +5,2633 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix adept-base: <http://adept-kb.bbn.com/adept-base#> .
-@base <http://adept-kb.bbn.com/adept-core> .
 
-<http://adept-kb.bbn.com/adept-core> rdf:type owl:Ontology ;
-                                     
-                                     owl:imports <http://adept-kb.bbn.com/adept-base> .
+<http://adept-kb.bbn.com/adept-core> a owl:Ontology ;
+	owl:imports <http://adept-kb.bbn.com/adept-base> .
+# 
+# 
+# #################################################################
+# #
+# #    Object Properties
+# #
+# #################################################################
+# 
+# 
+# http://adept-kb.bbn.com/adept-base#argument
+
+adept-base:argument a owl:ObjectProperty .
+# 
+# http://adept-kb.bbn.com/adept-base#thing
+
+adept-base:thing a owl:ObjectProperty ;
+	rdfs:comment "A role that points to any adept-base:Thing." .
+# 
+# http://adept-kb.bbn.com/adept-core#adjudicator
+
+:adjudicator a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "The adjudicator in a JusticeEvent" .
+# 
+# http://adept-kb.bbn.com/adept-core#affiliatedEntity
+
+:affiliatedEntity a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "affiliatedEntity role.  Replaces generic org/entity roles in several RichERE relations since the roles would become ambiguous with subproperty inference." .
+# 
+# http://adept-kb.bbn.com/adept-core#age
+
+:age a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:argument ;
+	rdfs:comment "age role." .
+# 
+# http://adept-kb.bbn.com/adept-core#agent
+
+:agent a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "agent role." .
+# 
+# http://adept-kb.bbn.com/adept-core#artifact
+
+:artifact a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing ;
+	rdfs:comment "artifact role" .
+# 
+# http://adept-kb.bbn.com/adept-core#attacker
+
+:attacker a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "attacker role." .
+# 
+# http://adept-kb.bbn.com/adept-core#audience
+
+:audience a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "audience role." .
+# 
+# http://adept-kb.bbn.com/adept-core#beneficiary
+
+:beneficiary a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "beneficiary role." .
+# 
+# http://adept-kb.bbn.com/adept-core#broadcaster
+
+:broadcaster a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "broadcaster role.  Renamed from generic entity role to avoid ambiguity with subproperty inference." .
+# 
+# http://adept-kb.bbn.com/adept-core#causeOfDeath
+
+:causeOfDeath a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing ;
+	rdfs:comment "causeOfDeath role" .
+# 
+# http://adept-kb.bbn.com/adept-core#child
+
+:child a owl:ObjectProperty ;
+	rdfs:subPropertyOf :person ;
+	rdfs:comment "child role." .
+# 
+# http://adept-kb.bbn.com/adept-core#crime
+
+:crime a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:argument ;
+	rdfs:range :Crime ;
+	rdfs:comment "crime role." .
+# 
+# http://adept-kb.bbn.com/adept-core#defendant
+
+:defendant a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "defendant role." .
+# 
+# http://adept-kb.bbn.com/adept-core#destination
+
+:destination a owl:ObjectProperty ;
+	rdfs:subPropertyOf :location ;
+	rdfs:comment "destination role." .
+# 
+# http://adept-kb.bbn.com/adept-core#employeeMember
+
+:employeeMember a owl:ObjectProperty ;
+	rdfs:subPropertyOf :person ;
+	rdfs:comment "employeeMember role." .
+# 
+# http://adept-kb.bbn.com/adept-core#entity
+
+:entity a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing ;
+	rdfs:comment "A role that points to an adept-base:Entity" .
+# 
+# http://adept-kb.bbn.com/adept-core#finedEntity
+
+:finedEntity a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "finedEntity role.  Renamed from generic entity role to avoid ambiguity with subproperty inference." .
+# 
+# http://adept-kb.bbn.com/adept-core#founder
+
+:founder a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "founder role." .
+# 
+# http://adept-kb.bbn.com/adept-core#giver
+
+:giver a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "giver role." .
+# 
+# http://adept-kb.bbn.com/adept-core#goal
+
+:goal a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing .
+# 
+# http://adept-kb.bbn.com/adept-core#instrument
+
+:instrument a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing ;
+	rdfs:comment "instrument role." .
+# 
+# http://adept-kb.bbn.com/adept-core#investorShareholder
+
+:investorShareholder a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "investorShareholder role." .
+# 
+# http://adept-kb.bbn.com/adept-core#leader
+
+:leader a owl:ObjectProperty ;
+	rdfs:subPropertyOf :person ;
+	rdfs:comment "leader role." .
+# 
+# http://adept-kb.bbn.com/adept-core#locatedEntity
+
+:locatedEntity a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "locatedEntity role.  Renamed from generic entity role to avoid ambiguity with subproperty inference." .
+# 
+# http://adept-kb.bbn.com/adept-core#location
+
+:location a owl:ObjectProperty ;
+	owl:equivalentProperty :place ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "location role." .
+# 
+# http://adept-kb.bbn.com/adept-core#member
+
+:member a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "member role." .
+# 
+# http://adept-kb.bbn.com/adept-core#message
+
+:message a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing .
+# 
+# http://adept-kb.bbn.com/adept-core#money
+
+:money a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing ;
+	rdfs:comment "money role." .
+# 
+# http://adept-kb.bbn.com/adept-core#number
+
+:number a owl:ObjectProperty ;
+	rdfs:comment "number role." .
+# 
+# http://adept-kb.bbn.com/adept-core#organization
+
+:organization a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:range :Organization ;
+	rdfs:comment "organization role." .
+# 
+# http://adept-kb.bbn.com/adept-core#origin
+
+:origin a owl:ObjectProperty ;
+	rdfs:subPropertyOf :location ;
+	rdfs:comment "origin role." .
+# 
+# http://adept-kb.bbn.com/adept-core#owner
+
+:owner a owl:ObjectProperty ;
+	rdfs:subPropertyOf :person ;
+	rdfs:comment "owner role." .
+# 
+# http://adept-kb.bbn.com/adept-core#parent
+
+:parent a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "parent role." .
+# 
+# http://adept-kb.bbn.com/adept-core#person
+
+:person a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "A role that points to an adept-core:Person." .
+# 
+# http://adept-kb.bbn.com/adept-core#place
+
+:place a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "place role." .
+# 
+# http://adept-kb.bbn.com/adept-core#plaintiff
+
+:plaintiff a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "plaintiff role." .
+# 
+# http://adept-kb.bbn.com/adept-core#position
+
+:position a owl:ObjectProperty ;
+	owl:equivalentProperty :role ;
+	rdfs:subPropertyOf adept-base:argument ;
+	rdfs:comment "position role (as in position in an organization)" .
+# 
+# http://adept-kb.bbn.com/adept-core#prosecutor
+
+:prosecutor a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "prosecutor role." .
+# 
+# http://adept-kb.bbn.com/adept-core#recipient
+
+:recipient a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "recipient role." .
+# 
+# http://adept-kb.bbn.com/adept-core#role
+
+:role a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:argument ;
+	rdfs:comment "'role' role, as in role in an organization" .
+# 
+# http://adept-kb.bbn.com/adept-core#sentence
+
+:sentence a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:argument ;
+	rdfs:comment "sentence role, as in a sentence for a crime" .
+# 
+# http://adept-kb.bbn.com/adept-core#source
+
+:source a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "source role." .
+# 
+# http://adept-kb.bbn.com/adept-core#strength
+
+:strength a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:argument ;
+	rdfs:comment "The strength of a sentiment or belief" .
+# 
+# http://adept-kb.bbn.com/adept-core#studentAlumni
+
+:studentAlumni a owl:ObjectProperty ;
+	rdfs:subPropertyOf :person ;
+	rdfs:comment "studentAlumni role." .
+# 
+# http://adept-kb.bbn.com/adept-core#subOrganization
+
+:subOrganization a owl:ObjectProperty ;
+	rdfs:subPropertyOf :organization ;
+	rdfs:comment "subOrganization role." .
+# 
+# http://adept-kb.bbn.com/adept-core#target
+
+:target a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing ;
+	rdfs:comment "target role." .
+# 
+# http://adept-kb.bbn.com/adept-core#thread
+
+:thread a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing ;
+	rdfs:comment "thread role." .
+# 
+# http://adept-kb.bbn.com/adept-core#time
+
+:time a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:argument ;
+	rdfs:comment "time role." .
+# 
+# http://adept-kb.bbn.com/adept-core#transferredThing
+
+:transferredThing a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:thing ;
+	rdfs:comment "transferredThing role.  Renamed from generic thing role to avoid ambiguity with subproperty inference." .
+# 
+# http://adept-kb.bbn.com/adept-core#url
+
+:url a owl:ObjectProperty ;
+	rdfs:subPropertyOf adept-base:argument ;
+	rdfs:comment "url role." .
+# 
+# http://adept-kb.bbn.com/adept-core#victim
+
+:victim a owl:ObjectProperty ;
+	rdfs:subPropertyOf :person ;
+	rdfs:comment "victim role." .
+# 
+# http://adept-kb.bbn.com/adept-core#withinEntity
+
+:withinEntity a owl:ObjectProperty ;
+	rdfs:subPropertyOf :entity ;
+	rdfs:comment "withinEntity role.  Renamed from the generic entity role to avoid ambiguity with subproperty reasoning." .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Classes
+# #
+# #################################################################
+# 
+# 
+# http://adept-kb.bbn.com/adept-base#Event
+
+adept-base:Event a owl:Class ;
+	rdfs:subClassOf _:genid1 .
+
+_:genid1 a owl:Restriction ;
+	owl:onProperty :place ;
+	owl:allValuesFrom adept-base:Entity .
+
+adept-base:Event rdfs:subClassOf _:genid2 .
+
+_:genid2 a owl:Restriction ;
+	owl:onProperty :time ;
+	owl:allValuesFrom adept-base:Date .
+
+adept-base:Event rdfs:subClassOf _:genid3 .
+
+_:genid3 a owl:Restriction ;
+	owl:onProperty :place ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+adept-base:Event rdfs:subClassOf _:genid4 .
+
+_:genid4 a owl:Restriction ;
+	owl:onProperty :time ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Date .
+# 
+# http://adept-kb.bbn.com/adept-base#Relation
+
+adept-base:Relation a owl:Class .
+# 
+# http://adept-kb.bbn.com/adept-base#Thing
+
+adept-base:Thing a owl:Class .
+# 
+# http://adept-kb.bbn.com/adept-core#Acquit
+
+:Acquit a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid5 .
+
+_:genid5 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Acquit rdfs:subClassOf _:genid6 .
+
+_:genid6 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Acquit rdfs:subClassOf _:genid7 .
+
+_:genid7 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Acquit rdfs:subClassOf _:genid8 .
+
+_:genid8 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Acquit rdfs:comment "From RichERE 'acquit'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Actual
+
+:Actual a owl:Class ;
+	rdfs:comment "A possible realis type for Events, indicating that the event actually transpired." .
+# 
+# http://adept-kb.bbn.com/adept-core#Appeal
+
+:Appeal a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid9 .
+
+_:genid9 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Appeal rdfs:subClassOf _:genid10 .
+
+_:genid10 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Appeal rdfs:subClassOf _:genid11 .
+
+_:genid11 a owl:Restriction ;
+	owl:onProperty :prosecutor ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Appeal rdfs:subClassOf _:genid12 .
+
+_:genid12 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Appeal rdfs:subClassOf _:genid13 .
+
+_:genid13 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Appeal rdfs:subClassOf _:genid14 .
+
+_:genid14 a owl:Restriction ;
+	owl:onProperty :prosecutor ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Appeal rdfs:comment "From RichERE 'appeal'" .
+# 
+# http://adept-kb.bbn.com/adept-core#ArrestJail
+
+:ArrestJail a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid15 .
+
+_:genid15 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
+
+:ArrestJail rdfs:subClassOf _:genid16 .
+
+_:genid16 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
+
+:ArrestJail rdfs:subClassOf _:genid17 .
+
+_:genid17 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:ArrestJail rdfs:subClassOf _:genid18 .
+
+_:genid18 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
+
+:ArrestJail rdfs:comment "From RichERE 'arrestjail'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Artifact
+
+:Artifact a owl:Class ;
+	rdfs:subClassOf :Manufacture , _:genid19 .
+
+_:genid19 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Artifact rdfs:subClassOf _:genid20 .
+
+_:genid20 a owl:Restriction ;
+	owl:onProperty :artifact ;
+	owl:allValuesFrom adept-base:Thing .
+
+:Artifact rdfs:subClassOf _:genid21 .
+
+_:genid21 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:allValuesFrom adept-base:Thing .
+
+:Artifact rdfs:subClassOf _:genid22 .
+
+_:genid22 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Artifact rdfs:subClassOf _:genid23 .
+
+_:genid23 a owl:Restriction ;
+	owl:onProperty :artifact ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
+
+:Artifact rdfs:subClassOf _:genid24 .
+
+_:genid24 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
+
+:Artifact rdfs:comment "From RichERE 'artifact'" .
+# 
+# http://adept-kb.bbn.com/adept-core#AskRequest
+
+:AskRequest a owl:Class ;
+	rdfs:subClassOf :Correspondence .
+# 
+# http://adept-kb.bbn.com/adept-core#Attack
+
+:Attack a owl:Class ;
+	rdfs:subClassOf :Conflict , _:genid25 .
+
+_:genid25 a owl:Restriction ;
+	owl:onProperty :attacker ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Attack rdfs:subClassOf _:genid26 .
+
+_:genid26 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:allValuesFrom adept-base:Thing .
+
+:Attack rdfs:subClassOf _:genid27 .
+
+_:genid27 a owl:Restriction ;
+	owl:onProperty :target ;
+	owl:allValuesFrom adept-base:Thing .
+
+:Attack rdfs:subClassOf _:genid28 .
+
+_:genid28 a owl:Restriction ;
+	owl:onProperty :attacker ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Attack rdfs:subClassOf _:genid29 .
+
+_:genid29 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
+
+:Attack rdfs:subClassOf _:genid30 .
+
+_:genid30 a owl:Restriction ;
+	owl:onProperty :target ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
+
+:Attack rdfs:comment "From RichERE 'attack'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Attempt
+
+:Attempt a owl:Class ;
+	rdfs:subClassOf adept-base:Event , _:genid31 .
+
+_:genid31 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Attempt rdfs:subClassOf _:genid32 .
+
+_:genid32 a owl:Restriction ;
+	owl:onProperty :goal ;
+	owl:allValuesFrom :Goal .
+
+:Attempt rdfs:subClassOf _:genid33 .
+
+_:genid33 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Attempt rdfs:subClassOf _:genid34 .
+
+_:genid34 a owl:Restriction ;
+	owl:onProperty :goal ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Goal .
+# 
+# http://adept-kb.bbn.com/adept-core#BeBorn
+
+:BeBorn a owl:Class ;
+	rdfs:subClassOf :LifeEvent ;
+	rdfs:comment "From RichERE 'beborn'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Belief
+
+:Belief a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid35 .
+
+_:genid35 a owl:Restriction ;
+	owl:onProperty :source ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Belief rdfs:subClassOf _:genid36 .
+
+_:genid36 a owl:Restriction ;
+	owl:onProperty :strength ;
+	owl:allValuesFrom adept-base:Number .
+
+:Belief rdfs:subClassOf _:genid37 .
+
+_:genid37 a owl:Restriction ;
+	owl:onProperty :target ;
+	owl:allValuesFrom adept-base:PredicateArgument .
+
+:Belief rdfs:subClassOf _:genid38 .
+
+_:genid38 a owl:Restriction ;
+	owl:onProperty :source ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Belief rdfs:subClassOf _:genid39 .
+
+_:genid39 a owl:Restriction ;
+	owl:onProperty :target ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:PredicateArgument .
+
+:Belief rdfs:subClassOf _:genid40 .
+
+_:genid40 a owl:Restriction ;
+	owl:onProperty :strength ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Number .
+
+:Belief rdfs:comment "A Relation that describes a belief held by an agent.  Added through discussions with the BeST group." .
+# 
+# http://adept-kb.bbn.com/adept-core#Broadcast
+
+:Broadcast a owl:Class ;
+	rdfs:subClassOf :Contact , _:genid41 .
+
+_:genid41 a owl:Restriction ;
+	owl:onProperty :audience ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Broadcast rdfs:subClassOf _:genid42 .
+
+_:genid42 a owl:Restriction ;
+	owl:onProperty :broadcaster ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Broadcast rdfs:subClassOf _:genid43 .
+
+_:genid43 a owl:Restriction ;
+	owl:onProperty :audience ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Broadcast rdfs:subClassOf _:genid44 .
+
+_:genid44 a owl:Restriction ;
+	owl:onProperty :broadcaster ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Broadcast rdfs:comment "From RichERE 'broadcast'" .
+# 
+# http://adept-kb.bbn.com/adept-core#BusinessEvent
+
+:BusinessEvent a owl:Class ;
+	rdfs:subClassOf adept-base:Event , _:genid45 .
+
+_:genid45 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom adept-base:Entity .
+
+:BusinessEvent rdfs:subClassOf _:genid46 .
+
+_:genid46 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:BusinessEvent rdfs:comment "From RichERE 'business' event type." , "From RichERE 'declarebankruptcy'" .
+# 
+# http://adept-kb.bbn.com/adept-core#BusinessRelationship
+
+:BusinessRelationship a owl:Class ;
+	rdfs:subClassOf :InterpersonalRelationship , _:genid47 .
+
+_:genid47 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
+
+:BusinessRelationship rdfs:comment "From RichERE 'business'" .
+# 
+# http://adept-kb.bbn.com/adept-core#CauseOfDeath
+
+:CauseOfDeath a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for a cause of death." .
+# 
+# http://adept-kb.bbn.com/adept-core#CertainlyExpressedRelation
+
+:CertainlyExpressedRelation a owl:Class ;
+	rdfs:subClassOf adept-base:Relation ;
+	rdfs:comment "A class that funcitons as a tag for Relations that are expressed with certainty in text.  This class is currently not used in the KB API." .
+# 
+# http://adept-kb.bbn.com/adept-core#ChargeIndict
+
+:ChargeIndict a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid48 .
+
+_:genid48 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:allValuesFrom adept-base:Entity .
+
+:ChargeIndict rdfs:subClassOf _:genid49 .
+
+_:genid49 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:allValuesFrom adept-base:Entity .
+
+:ChargeIndict rdfs:subClassOf _:genid50 .
+
+_:genid50 a owl:Restriction ;
+	owl:onProperty :prosecutor ;
+	owl:allValuesFrom adept-base:Entity .
+
+:ChargeIndict rdfs:subClassOf _:genid51 .
+
+_:genid51 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:ChargeIndict rdfs:subClassOf _:genid52 .
+
+_:genid52 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:ChargeIndict rdfs:subClassOf _:genid53 .
+
+_:genid53 a owl:Restriction ;
+	owl:onProperty :prosecutor ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:ChargeIndict rdfs:comment "From RichERE 'chargeindict'" .
+# 
+# http://adept-kb.bbn.com/adept-core#City
+
+:City a owl:Class ;
+	rdfs:subClassOf :GeoPoliticalEntity ;
+	rdfs:comment "Subclass of GeoPoliticalEntity representing a City.  This was added to separate the role/class semantics of TAC relations like org:city_of_headquarters." .
+# 
+# http://adept-kb.bbn.com/adept-core#Command
+
+:Command a owl:Class ;
+	rdfs:subClassOf :Correspondence .
+# 
+# http://adept-kb.bbn.com/adept-core#Commodity
+
+:Commodity a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for a commodity." .
+# 
+# http://adept-kb.bbn.com/adept-core#Conflict
+
+:Conflict a owl:Class ;
+	rdfs:subClassOf adept-base:Event ;
+	rdfs:comment "From RichERE 'conflict'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Contact
+
+:Contact a owl:Class ;
+	rdfs:subClassOf adept-base:Event , _:genid54 .
+
+_:genid54 a owl:Restriction ;
+	owl:onProperty :entity ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Contact rdfs:subClassOf _:genid55 .
+
+_:genid55 a owl:Restriction ;
+	owl:onProperty :entity ;
+	owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Contact rdfs:comment "From RichERE 'contact' event type.  Also represents RichERE 'contact.contact' sub event type, since it has no further properties." .
+# 
+# http://adept-kb.bbn.com/adept-core#Convict
+
+:Convict a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid56 .
+
+_:genid56 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Convict rdfs:subClassOf _:genid57 .
+
+_:genid57 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Convict rdfs:subClassOf _:genid58 .
+
+_:genid58 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Convict rdfs:subClassOf _:genid59 .
+
+_:genid59 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Convict rdfs:comment "From RichERE 'convict'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Correspondence
+
+:Correspondence a owl:Class ;
+	rdfs:subClassOf :Contact , _:genid60 .
+
+_:genid60 a owl:Restriction ;
+	owl:onProperty :message ;
+	owl:allValuesFrom :Message .
+
+:Correspondence rdfs:subClassOf _:genid61 .
+
+_:genid61 a owl:Restriction ;
+	owl:onProperty :message ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Message .
+
+:Correspondence rdfs:comment "From RichERE 'correspondence'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Country
+
+:Country a owl:Class ;
+	rdfs:subClassOf :GeoPoliticalEntity ;
+	rdfs:comment "Subclass of GeoPoliticalEntity representing a Country.  This was added to separate the role/class semantics of TAC relations like org:country_of_headquarters." .
+# 
+# http://adept-kb.bbn.com/adept-core#Crime
+
+:Crime a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for a crime." .
+# 
+# http://adept-kb.bbn.com/adept-core#DeclareBankruptcy
+
+:DeclareBankruptcy a owl:Class ;
+	rdfs:subClassOf :BusinessEvent .
+# 
+# http://adept-kb.bbn.com/adept-core#Demonstrate
+
+:Demonstrate a owl:Class ;
+	rdfs:subClassOf :Conflict , _:genid62 .
+
+_:genid62 a owl:Restriction ;
+	owl:onProperty :entity ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Demonstrate rdfs:subClassOf _:genid63 .
+
+_:genid63 a owl:Restriction ;
+	owl:onProperty :entity ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Demonstrate rdfs:comment "From RichERE 'demonstrate'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Die
+
+:Die a owl:Class ;
+	rdfs:subClassOf :LifeEvent , _:genid64 .
+
+_:genid64 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Die rdfs:subClassOf _:genid65 .
+
+_:genid65 a owl:Restriction ;
+	owl:onProperty :causeOfDeath ;
+	owl:allValuesFrom :CauseOfDeath .
+
+:Die rdfs:subClassOf _:genid66 .
+
+_:genid66 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:allValuesFrom adept-base:Thing .
+
+:Die rdfs:subClassOf _:genid67 .
+
+_:genid67 a owl:Restriction ;
+	owl:onProperty :victim ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Die rdfs:subClassOf _:genid68 .
+
+_:genid68 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Die rdfs:subClassOf _:genid69 .
+
+_:genid69 a owl:Restriction ;
+	owl:onProperty :causeOfDeath ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :CauseOfDeath .
+
+:Die rdfs:subClassOf _:genid70 .
+
+_:genid70 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
+
+:Die rdfs:subClassOf _:genid71 .
+
+_:genid71 a owl:Restriction ;
+	owl:onProperty :victim ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
+
+:Die rdfs:comment "From RichERE 'die'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Divorce
+
+:Divorce a owl:Class ;
+	rdfs:subClassOf :LifeEvent , _:genid72 .
+
+_:genid72 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
+
+:Divorce rdfs:comment "From RichERE 'divorce'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Elect
+
+:Elect a owl:Class ;
+	rdfs:subClassOf :PersonnelEvent , _:genid73 .
+
+_:genid73 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
+
+:Elect rdfs:subClassOf _:genid74 .
+
+_:genid74 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:Elect rdfs:comment "From RichERE 'elect'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Email
+
+:Email a owl:Class ;
+	rdfs:subClassOf :Correspondence .
+# 
+# http://adept-kb.bbn.com/adept-core#EmploymentMembership
+
+:EmploymentMembership a owl:Class ;
+	rdfs:subClassOf :OrganizationalAffiliation , _:genid75 .
+
+_:genid75 a owl:Restriction ;
+	owl:onProperty :employeeMember ;
+	owl:allValuesFrom :Person .
+
+:EmploymentMembership rdfs:subClassOf _:genid76 .
+
+_:genid76 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom adept-base:Entity .
+
+:EmploymentMembership rdfs:subClassOf _:genid77 .
+
+_:genid77 a owl:Restriction ;
+	owl:onProperty :employeeMember ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
+
+:EmploymentMembership rdfs:subClassOf _:genid78 .
+
+_:genid78 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
+
+:EmploymentMembership rdfs:comment "From RichERE 'employmentmembership'" .
+# 
+# http://adept-kb.bbn.com/adept-core#EndOrganization
+
+:EndOrganization a owl:Class ;
+	rdfs:subClassOf :BusinessEvent , _:genid79 .
 
+_:genid79 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-#################################################################
-#
-#    Object Properties
-#
-#################################################################
+:EndOrganization rdfs:comment "From RichERE 'endorg'" .
+# 
+# http://adept-kb.bbn.com/adept-core#EndPosition
 
+:EndPosition a owl:Class ;
+	rdfs:subClassOf :PersonnelEvent , _:genid80 .
 
-###  http://adept-kb.bbn.com/adept-base#argument
+_:genid80 a owl:Restriction ;
+	owl:onProperty :withinEntity ;
+	owl:allValuesFrom adept-base:Entity .
 
-adept-base:argument rdf:type owl:ObjectProperty .
+:EndPosition rdfs:subClassOf _:genid81 .
 
+_:genid81 a owl:Restriction ;
+	owl:onProperty :withinEntity ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:EndPosition rdfs:comment "From RichERE 'endposition'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Endorsement
 
-###  http://adept-kb.bbn.com/adept-base#thing
+:Endorsement a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid82 .
 
-adept-base:thing rdf:type owl:ObjectProperty .
+_:genid82 a owl:Restriction ;
+	owl:onProperty :entity ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Endorsement rdfs:subClassOf _:genid83 .
 
+_:genid83 a owl:Restriction ;
+	owl:onProperty :thread ;
+	owl:allValuesFrom :Thread .
 
-###  http://adept-kb.bbn.com/adept-core#adjudicator
+:Endorsement rdfs:subClassOf _:genid84 .
 
-:adjudicator rdf:type owl:ObjectProperty ;
-             
-             rdfs:subPropertyOf :entity .
+_:genid84 a owl:Restriction ;
+	owl:onProperty :entity ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Endorsement rdfs:subClassOf _:genid85 .
 
+_:genid85 a owl:Restriction ;
+	owl:onProperty :thread ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Thread .
 
-###  http://adept-kb.bbn.com/adept-core#affiliatedEntity
+:Endorsement rdfs:comment "This relation represents the endorsement of a Thread in a discussion forum towards an entity.  Added primarily for the Community Endorsement algorithm." .
+# 
+# http://adept-kb.bbn.com/adept-core#Execute
 
-:affiliatedEntity rdf:type owl:ObjectProperty ;
-                  
-                  rdfs:subPropertyOf :entity .
+:Execute a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid86 .
 
+_:genid86 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Execute rdfs:subClassOf _:genid87 .
 
-###  http://adept-kb.bbn.com/adept-core#age
+_:genid87 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
-:age rdf:type owl:ObjectProperty ;
-     
-     rdfs:subPropertyOf adept-base:argument .
+:Execute rdfs:subClassOf _:genid88 .
 
+_:genid88 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Execute rdfs:subClassOf _:genid89 .
 
-###  http://adept-kb.bbn.com/adept-core#agent
+_:genid89 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
-:agent rdf:type owl:ObjectProperty ;
-       
-       rdfs:subPropertyOf :entity .
+:Execute rdfs:comment "From RichERE 'execute'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Extradite
 
+:Extradite a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid90 .
 
+_:genid90 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#artifact
+:Extradite rdfs:subClassOf _:genid91 .
 
-:artifact rdf:type owl:ObjectProperty ;
-          
-          rdfs:subPropertyOf adept-base:thing .
+_:genid91 a owl:Restriction ;
+	owl:onProperty :destination ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Extradite rdfs:subClassOf _:genid92 .
 
+_:genid92 a owl:Restriction ;
+	owl:onProperty :origin ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#attacker
+:Extradite rdfs:subClassOf _:genid93 .
 
-:attacker rdf:type owl:ObjectProperty ;
-          
-          rdfs:subPropertyOf :entity .
+_:genid93 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
+:Extradite rdfs:subClassOf _:genid94 .
 
+_:genid94 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#audience
+:Extradite rdfs:subClassOf _:genid95 .
 
-:audience rdf:type owl:ObjectProperty ;
-          
-          rdfs:subPropertyOf :entity .
+_:genid95 a owl:Restriction ;
+	owl:onProperty :destination ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Extradite rdfs:subClassOf _:genid96 .
 
+_:genid96 a owl:Restriction ;
+	owl:onProperty :origin ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#beneficiary
+:Extradite rdfs:subClassOf _:genid97 .
 
-:beneficiary rdf:type owl:ObjectProperty ;
-             
-             rdfs:subPropertyOf :entity .
+_:genid97 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:Extradite rdfs:comment "From RichERE 'extradite'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Facility
 
+:Facility a owl:Class ;
+	rdfs:subClassOf adept-base:Entity ;
+	rdfs:comment "From RichERE / TAC 'FAC'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Failed
 
-###  http://adept-kb.bbn.com/adept-core#broadcaster
+:Failed a owl:Class ;
+	rdfs:subClassOf :Negated , :Planned ;
+	rdfs:comment "A possible realis type for Events, indicating that the event was planned by some agent but then did not transpire." .
+# 
+# http://adept-kb.bbn.com/adept-core#FamilyRelationship
 
-:broadcaster rdf:type owl:ObjectProperty ;
-             
-             rdfs:subPropertyOf :entity .
+:FamilyRelationship a owl:Class ;
+	rdfs:subClassOf :InterpersonalRelationship , _:genid98 .
 
+_:genid98 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:FamilyRelationship rdfs:comment "From RichERE 'family'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Female
 
-###  http://adept-kb.bbn.com/adept-core#child
+:Female a owl:Class ;
+	rdfs:subClassOf :Person ;
+	rdfs:comment "Subclass of Person for persons identifying as Female.  Added for gender recognition algorithms." .
+# 
+# http://adept-kb.bbn.com/adept-core#Fine
 
-:child rdf:type owl:ObjectProperty ;
-       
-       rdfs:subPropertyOf :person .
+:Fine a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid99 .
 
+_:genid99 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Fine rdfs:subClassOf _:genid100 .
 
-###  http://adept-kb.bbn.com/adept-core#crime
+_:genid100 a owl:Restriction ;
+	owl:onProperty :finedEntity ;
+	owl:allValuesFrom adept-base:Entity .
 
-:crime rdf:type owl:ObjectProperty ;
-       
-       rdfs:subPropertyOf adept-base:argument ;
-       
-       rdfs:range :Crime .
+:Fine rdfs:subClassOf _:genid101 .
 
+_:genid101 a owl:Restriction ;
+	owl:onProperty :money ;
+	owl:allValuesFrom :Money .
 
+:Fine rdfs:subClassOf _:genid102 .
 
-###  http://adept-kb.bbn.com/adept-core#defendant
+_:genid102 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-:defendant rdf:type owl:ObjectProperty ;
-           
-           rdfs:subPropertyOf :entity .
+:Fine rdfs:subClassOf _:genid103 .
 
+_:genid103 a owl:Restriction ;
+	owl:onProperty :finedEntity ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Fine rdfs:subClassOf _:genid104 .
 
-###  http://adept-kb.bbn.com/adept-core#destination
+_:genid104 a owl:Restriction ;
+	owl:onProperty :money ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Money .
 
-:destination rdf:type owl:ObjectProperty ;
-             
-             rdfs:subPropertyOf :location .
+:Fine rdfs:comment "From RichERE 'fine'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Founder
 
+:Founder a owl:Class ;
+	rdfs:subClassOf :OrganizationalAffiliation , _:genid105 .
 
+_:genid105 a owl:Restriction ;
+	owl:onProperty :founder ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#employeeMember
+:Founder rdfs:subClassOf _:genid106 .
 
-:employeeMember rdf:type owl:ObjectProperty ;
-                
-                rdfs:subPropertyOf :person .
+_:genid106 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
+:Founder rdfs:subClassOf _:genid107 .
 
+_:genid107 a owl:Restriction ;
+	owl:onProperty :founder ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#entity
+:Founder rdfs:subClassOf _:genid108 .
 
-:entity rdf:type owl:ObjectProperty ;
-        
-        rdfs:subPropertyOf adept-base:thing .
+_:genid108 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
+:Founder rdfs:comment "From RichERE 'founder'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Future
 
+:Future a owl:Class ;
+	rdfs:subClassOf :NonActual ;
+	rdfs:comment "A possible realis type for Events, indicating that the event may happen in the future." .
+# 
+# http://adept-kb.bbn.com/adept-core#Gather
 
-###  http://adept-kb.bbn.com/adept-core#finedEntity
+:Gather a owl:Class ;
+	rdfs:subClassOf :TransferOwnership .
+# 
+# http://adept-kb.bbn.com/adept-core#Generic
 
-:finedEntity rdf:type owl:ObjectProperty ;
-             
-             rdfs:subPropertyOf :entity .
+:Generic a owl:Class ;
+	rdfs:subClassOf :NonActual ;
+	rdfs:comment "A possible realis type for Events, indicating that this event instance represents a generic class of events as opposed to a specific event." .
+# 
+# http://adept-kb.bbn.com/adept-core#GeoPoliticalEntity
 
+:GeoPoliticalEntity a owl:Class ;
+	rdfs:subClassOf adept-base:Entity ;
+	rdfs:comment "From RichERE / TAC 'GPE'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Goal
 
+:Goal a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing .
+# 
+# http://adept-kb.bbn.com/adept-core#Hypothetical
 
-###  http://adept-kb.bbn.com/adept-core#founder
+:Hypothetical a owl:Class ;
+	rdfs:subClassOf :NonActual ;
+	rdfs:comment "A possible realis type for events, indicating that the event is posed as a hypothetical." .
+# 
+# http://adept-kb.bbn.com/adept-core#InferredRelation
 
-:founder rdf:type owl:ObjectProperty ;
-         
-         rdfs:subPropertyOf :entity .
+:InferredRelation a owl:Class ;
+	rdfs:subClassOf adept-base:Relation ;
+	rdfs:comment "A class that funcitons as a tag for Relations that have not been expressed via text, but were rather inferred from other relations.  Currently not supported via the KB API." .
+# 
+# http://adept-kb.bbn.com/adept-core#Injure
 
+:Injure a owl:Class ;
+	rdfs:subClassOf :LifeEvent , _:genid109 .
 
+_:genid109 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#giver
+:Injure rdfs:subClassOf _:genid110 .
 
-:giver rdf:type owl:ObjectProperty ;
-       
-       rdfs:subPropertyOf :entity .
+_:genid110 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:allValuesFrom adept-base:Thing .
 
+:Injure rdfs:subClassOf _:genid111 .
 
+_:genid111 a owl:Restriction ;
+	owl:onProperty :victim ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#instrument
+:Injure rdfs:subClassOf _:genid112 .
 
-:instrument rdf:type owl:ObjectProperty ;
-            
-            rdfs:subPropertyOf adept-base:thing .
+_:genid112 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Injure rdfs:subClassOf _:genid113 .
 
+_:genid113 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
 
-###  http://adept-kb.bbn.com/adept-core#investorShareholder
+:Injure rdfs:subClassOf _:genid114 .
 
-:investorShareholder rdf:type owl:ObjectProperty ;
-                     
-                     rdfs:subPropertyOf :entity .
+_:genid114 a owl:Restriction ;
+	owl:onProperty :victim ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:Injure rdfs:comment "From RichERE 'injure'" .
+# 
+# http://adept-kb.bbn.com/adept-core#InterpersonalRelationship
 
+:InterpersonalRelationship a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid115 .
 
-###  http://adept-kb.bbn.com/adept-core#leader
+_:genid115 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
-:leader rdf:type owl:ObjectProperty ;
-        
-        rdfs:subPropertyOf :person .
+:InterpersonalRelationship rdfs:subClassOf _:genid116 .
 
+_:genid116 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:InterpersonalRelationship rdfs:comment "From RichERE 'personal social' relations" .
+# 
+# http://adept-kb.bbn.com/adept-core#InvestorShareholder
 
-###  http://adept-kb.bbn.com/adept-core#locatedEntity
+:InvestorShareholder a owl:Class ;
+	rdfs:subClassOf :OrganizationalAffiliation , _:genid117 .
 
-:locatedEntity rdf:type owl:ObjectProperty ;
-               
-               rdfs:subPropertyOf :entity .
+_:genid117 a owl:Restriction ;
+	owl:onProperty :investorShareholder ;
+	owl:allValuesFrom adept-base:Entity .
 
+:InvestorShareholder rdfs:subClassOf _:genid118 .
 
+_:genid118 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-###  http://adept-kb.bbn.com/adept-core#location
+:InvestorShareholder rdfs:subClassOf _:genid119 .
 
-:location rdf:type owl:ObjectProperty ;
-          
-          rdfs:subPropertyOf :entity ;
-          
-          owl:equivalentProperty :place .
+_:genid119 a owl:Restriction ;
+	owl:onProperty :investorShareholder ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:InvestorShareholder rdfs:subClassOf _:genid120 .
 
+_:genid120 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
-###  http://adept-kb.bbn.com/adept-core#member
+:InvestorShareholder rdfs:comment "From RichERE 'investshareholder'" .
+# 
+# http://adept-kb.bbn.com/adept-core#JusticeEvent
 
-:member rdf:type owl:ObjectProperty ;
-        
-        rdfs:subPropertyOf :entity .
+:JusticeEvent a owl:Class ;
+	rdfs:subClassOf adept-base:Event , _:genid121 .
 
+_:genid121 a owl:Restriction ;
+	owl:onProperty :crime ;
+	owl:allValuesFrom :Crime .
 
+:JusticeEvent rdfs:subClassOf _:genid122 .
 
-###  http://adept-kb.bbn.com/adept-core#money
+_:genid122 a owl:Restriction ;
+	owl:onProperty :crime ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Crime .
 
-:money rdf:type owl:ObjectProperty ;
-       
-       rdfs:subPropertyOf adept-base:thing .
+:JusticeEvent rdfs:comment "From RichERE 'justice'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Leadership
 
+:Leadership a owl:Class ;
+	rdfs:subClassOf :OrganizationalAffiliation , _:genid123 .
 
+_:genid123 a owl:Restriction ;
+	owl:onProperty :affiliatedEntity ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#number
+:Leadership rdfs:subClassOf _:genid124 .
 
-:number rdf:type owl:ObjectProperty .
+_:genid124 a owl:Restriction ;
+	owl:onProperty :leader ;
+	owl:allValuesFrom :Person .
 
+:Leadership rdfs:subClassOf _:genid125 .
 
+_:genid125 a owl:Restriction ;
+	owl:onProperty :affiliatedEntity ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#organization
+:Leadership rdfs:subClassOf _:genid126 .
 
-:organization rdf:type owl:ObjectProperty ;
-              
-              rdfs:range :Organization ;
-              
-              rdfs:subPropertyOf :entity .
+_:genid126 a owl:Restriction ;
+	owl:onProperty :leader ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:Leadership rdfs:comment "From RichERE 'leadership'" .
+# 
+# http://adept-kb.bbn.com/adept-core#LifeEvent
 
+:LifeEvent a owl:Class ;
+	rdfs:subClassOf adept-base:Event , _:genid127 .
 
-###  http://adept-kb.bbn.com/adept-core#origin
+_:genid127 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
-:origin rdf:type owl:ObjectProperty ;
-        
-        rdfs:subPropertyOf :location .
+:LifeEvent rdfs:subClassOf _:genid128 .
 
+_:genid128 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:LifeEvent rdfs:comment "From RichERE 'life'" .
+# 
+# http://adept-kb.bbn.com/adept-core#LocatedNear
 
-###  http://adept-kb.bbn.com/adept-core#owner
+:LocatedNear a owl:Class ;
+	rdfs:subClassOf :PhysicalLocation , _:genid129 .
 
-:owner rdf:type owl:ObjectProperty ;
-       
-       rdfs:subPropertyOf :person .
+_:genid129 a owl:Restriction ;
+	owl:onProperty :locatedEntity ;
+	owl:allValuesFrom adept-base:Entity .
 
+:LocatedNear rdfs:subClassOf _:genid130 .
 
+_:genid130 a owl:Restriction ;
+	owl:onProperty :locatedEntity ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#parent
+:LocatedNear rdfs:comment "From RichERE 'locatednear'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Location
 
-:parent rdf:type owl:ObjectProperty ;
-        
-        rdfs:subPropertyOf :entity .
+:Location a owl:Class ;
+	rdfs:subClassOf adept-base:Entity ;
+	rdfs:comment "From RichERE / TAC 'LOC'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Male
 
+:Male a owl:Class ;
+	rdfs:subClassOf :Person ;
+	rdfs:comment "Subclass of Person for persons identifying as Male.  Added for gender recognition algorithms." .
+# 
+# http://adept-kb.bbn.com/adept-core#Manufacture
 
+:Manufacture a owl:Class ;
+	rdfs:subClassOf adept-base:Event ;
+	rdfs:comment "From RichERE 'manufacture'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Marry
 
-###  http://adept-kb.bbn.com/adept-core#person
+:Marry a owl:Class ;
+	rdfs:subClassOf :LifeEvent , _:genid131 .
 
-:person rdf:type owl:ObjectProperty ;
-        
-        rdfs:subPropertyOf :entity .
+_:genid131 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:Marry rdfs:comment "From RichERE 'marry'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Meet
 
+:Meet a owl:Class ;
+	rdfs:subClassOf :Contact ;
+	rdfs:comment "From RichERE 'meet'" .
+# 
+# http://adept-kb.bbn.com/adept-core#MemberOriginReligionEthnicity
 
-###  http://adept-kb.bbn.com/adept-core#place
+:MemberOriginReligionEthnicity a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid132 .
 
-:place rdf:type owl:ObjectProperty ;
-       
-       rdfs:subPropertyOf :entity .
+_:genid132 a owl:Restriction ;
+	owl:onProperty :affiliatedEntity ;
+	owl:allValuesFrom adept-base:Entity .
 
+:MemberOriginReligionEthnicity rdfs:subClassOf _:genid133 .
 
+_:genid133 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
-###  http://adept-kb.bbn.com/adept-core#plaintiff
+:MemberOriginReligionEthnicity rdfs:subClassOf _:genid134 .
 
-:plaintiff rdf:type owl:ObjectProperty ;
-           
-           rdfs:subPropertyOf :entity .
+_:genid134 a owl:Restriction ;
+	owl:onProperty :affiliatedEntity ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:MemberOriginReligionEthnicity rdfs:subClassOf _:genid135 .
 
+_:genid135 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
-###  http://adept-kb.bbn.com/adept-core#position
+:MemberOriginReligionEthnicity rdfs:comment "From TAC member-origin-religion-ethnicity.  Probably has significant semantic overlap with OrganizationPoliticalReligiousAffiliation, but the catchall nature of both classes prevents useful semantic subdivision." .
+# 
+# http://adept-kb.bbn.com/adept-core#Membership
 
-:position rdf:type owl:ObjectProperty ;
-          
-          rdfs:subPropertyOf adept-base:argument ;
-          
-          owl:equivalentProperty :role .
+:Membership a owl:Class ;
+	rdfs:subClassOf :PartWhole , _:genid136 .
 
+_:genid136 a owl:Restriction ;
+	owl:onProperty :member ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Membership rdfs:subClassOf _:genid137 .
 
-###  http://adept-kb.bbn.com/adept-core#prosecutor
+_:genid137 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom adept-base:Entity .
 
-:prosecutor rdf:type owl:ObjectProperty ;
-            
-            rdfs:subPropertyOf :entity .
+:Membership rdfs:subClassOf _:genid138 .
 
+_:genid138 a owl:Restriction ;
+	owl:onProperty :member ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Membership rdfs:subClassOf _:genid139 .
 
-###  http://adept-kb.bbn.com/adept-core#recipient
+_:genid139 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-:recipient rdf:type owl:ObjectProperty ;
-           
-           rdfs:subPropertyOf :entity .
+:Membership rdfs:comment "From RichERE 'membership'.  Moved from the 'personal social' (InterpersonalRelationship) superclass to PartWhole because it made more semantic sense." .
+# 
+# http://adept-kb.bbn.com/adept-core#MergeOrganization
 
+:MergeOrganization a owl:Class ;
+	rdfs:subClassOf :BusinessEvent , _:genid140 .
 
+_:genid140 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-###  http://adept-kb.bbn.com/adept-core#role
+:MergeOrganization rdfs:subClassOf _:genid141 .
 
-:role rdf:type owl:ObjectProperty ;
-      
-      rdfs:subPropertyOf adept-base:argument .
+_:genid141 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
+:MergeOrganization rdfs:comment "From RichERE 'mergeorg'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Message
 
+:Message a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing .
+# 
+# http://adept-kb.bbn.com/adept-core#Money
 
-###  http://adept-kb.bbn.com/adept-core#sentence
+:Money a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for money." .
+# 
+# http://adept-kb.bbn.com/adept-core#Movement
 
-:sentence rdf:type owl:ObjectProperty ;
-          
-          rdfs:subPropertyOf adept-base:argument .
+:Movement a owl:Class ;
+	rdfs:subClassOf adept-base:Event ;
+	rdfs:comment "From RichERE 'movement'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Negated
 
+:Negated a owl:Class ;
+	rdfs:subClassOf :NonActual ;
+	rdfs:comment "A possible realis type for events, indicating that the event did not transpire." .
+# 
+# http://adept-kb.bbn.com/adept-core#Nominate
 
+:Nominate a owl:Class ;
+	rdfs:subClassOf :PersonnelEvent , _:genid142 .
 
-###  http://adept-kb.bbn.com/adept-core#source
+_:genid142 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
 
-:source rdf:type owl:ObjectProperty ;
-        
-        rdfs:subPropertyOf :entity .
+:Nominate rdfs:subClassOf _:genid143 .
 
+_:genid143 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Nominate rdfs:comment "From RichERE 'nominate'" .
+# 
+# http://adept-kb.bbn.com/adept-core#NonActual
 
-###  http://adept-kb.bbn.com/adept-core#strength
+:NonActual a owl:Class ;
+	rdfs:comment "A possible realis type for Events, indicating that the event did not actually transpire." .
+# 
+# http://adept-kb.bbn.com/adept-core#NumberOfEmployeesMembers
 
-:strength rdf:type owl:ObjectProperty ;
-          
-          rdfs:subPropertyOf adept-base:argument .
+:NumberOfEmployeesMembers a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid144 .
 
+_:genid144 a owl:Restriction ;
+	owl:onProperty :number ;
+	owl:allValuesFrom adept-base:Number .
 
+:NumberOfEmployeesMembers rdfs:subClassOf _:genid145 .
 
-###  http://adept-kb.bbn.com/adept-core#studentAlumni
+_:genid145 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-:studentAlumni rdf:type owl:ObjectProperty ;
-               
-               rdfs:subPropertyOf :person .
+:NumberOfEmployeesMembers rdfs:subClassOf _:genid146 .
 
+_:genid146 a owl:Restriction ;
+	owl:onProperty :number ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Number .
 
+:NumberOfEmployeesMembers rdfs:subClassOf _:genid147 .
 
-###  http://adept-kb.bbn.com/adept-core#subOrganization
+_:genid147 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
-:subOrganization rdf:type owl:ObjectProperty ;
-                 
-                 rdfs:subPropertyOf :organization .
+:NumberOfEmployeesMembers rdfs:comment "From TAC org:number_of_employees_members" .
+# 
+# http://adept-kb.bbn.com/adept-core#OrgHeadquarter
 
+:OrgHeadquarter a owl:Class ;
+	rdfs:subClassOf :PhysicalLocation , _:genid148 .
 
+_:genid148 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-###  http://adept-kb.bbn.com/adept-core#target
+:OrgHeadquarter rdfs:subClassOf _:genid149 .
 
-:target rdf:type owl:ObjectProperty ;
-        
-        rdfs:subPropertyOf adept-base:thing .
+_:genid149 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
+:OrgHeadquarter rdfs:comment "From RichERE 'orgheadquarter'" .
+# 
+# http://adept-kb.bbn.com/adept-core#OrgLocationOrigin
 
+:OrgLocationOrigin a owl:Class ;
+	rdfs:subClassOf :PhysicalLocation , _:genid150 .
 
-###  http://adept-kb.bbn.com/adept-core#time
+_:genid150 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-:time rdf:type owl:ObjectProperty ;
-      
-      rdfs:subPropertyOf adept-base:argument .
+:OrgLocationOrigin rdfs:subClassOf _:genid151 .
 
+_:genid151 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
+:OrgLocationOrigin rdfs:comment "From RichERE 'orglocationorigin'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Organization
 
-###  http://adept-kb.bbn.com/adept-core#transferredThing
+:Organization a owl:Class ;
+	rdfs:subClassOf adept-base:Entity ;
+	rdfs:comment "From RichERE / TAC 'ORG'" .
+# 
+# http://adept-kb.bbn.com/adept-core#OrganizationPoliticalReligiousAffiliation
 
-:transferredThing rdf:type owl:ObjectProperty ;
-                  
-                  rdfs:subPropertyOf adept-base:thing .
+:OrganizationPoliticalReligiousAffiliation a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid152 .
 
+_:genid152 a owl:Restriction ;
+	owl:onProperty :affiliatedEntity ;
+	owl:allValuesFrom adept-base:Entity .
 
+:OrganizationPoliticalReligiousAffiliation rdfs:subClassOf _:genid153 .
 
-###  http://adept-kb.bbn.com/adept-core#url
+_:genid153 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-:url rdf:type owl:ObjectProperty ;
-     
-     rdfs:subPropertyOf adept-base:argument .
+:OrganizationPoliticalReligiousAffiliation rdfs:subClassOf _:genid154 .
 
+_:genid154 a owl:Restriction ;
+	owl:onProperty :affiliatedEntity ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:OrganizationPoliticalReligiousAffiliation rdfs:subClassOf _:genid155 .
 
-###  http://adept-kb.bbn.com/adept-core#victim
+_:genid155 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
-:victim rdf:type owl:ObjectProperty ;
-        
-        rdfs:subPropertyOf :person .
+:OrganizationPoliticalReligiousAffiliation rdfs:comment "From RichERE 'org-political-religious-affiliation'.  Probably has significant semantic overlap with MemberOriginReligionEthnicity, but the catchall nature of both classes prevents useful semantic subdivision." .
+# 
+# http://adept-kb.bbn.com/adept-core#OrganizationWebsite
 
+:OrganizationWebsite a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid156 .
 
+_:genid156 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-###  http://adept-kb.bbn.com/adept-core#withinEntity
+:OrganizationWebsite rdfs:subClassOf _:genid157 .
 
-:withinEntity rdf:type owl:ObjectProperty ;
-              
-              rdfs:subPropertyOf :entity .
+_:genid157 a owl:Restriction ;
+	owl:onProperty :url ;
+	owl:allValuesFrom :URL .
 
+:OrganizationWebsite rdfs:subClassOf _:genid158 .
 
+_:genid158 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
+:OrganizationWebsite rdfs:subClassOf _:genid159 .
 
+_:genid159 a owl:Restriction ;
+	owl:onProperty :url ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :URL .
 
-#################################################################
-#
-#    Classes
-#
-#################################################################
+:OrganizationWebsite rdfs:comment "From RichERE 'orgwebsite'." .
+# 
+# http://adept-kb.bbn.com/adept-core#OrganizationalAffiliation
 
+:OrganizationalAffiliation a owl:Class ;
+	rdfs:subClassOf adept-base:Relation ;
+	rdfs:comment "From RichERE 'org affiliation' relations" .
+# 
+# http://adept-kb.bbn.com/adept-core#Origin
 
-###  http://adept-kb.bbn.com/adept-base#Event
+:Origin a owl:Class ;
+	rdfs:subClassOf :MemberOriginReligionEthnicity ;
+	rdfs:comment "From TAC per:origin" .
+# 
+# http://adept-kb.bbn.com/adept-core#Ownership
 
-adept-base:Event rdf:type owl:Class ;
-                 
-                 rdfs:subClassOf [ rdf:type owl:Restriction ;
-                                   owl:onProperty :place ;
-                                   owl:allValuesFrom adept-base:Entity
-                                 ] ,
-                                 [ rdf:type owl:Restriction ;
-                                   owl:onProperty :place ;
-                                   owl:onClass adept-base:Entity ;
-                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                 ] ,
-                                 [ rdf:type owl:Restriction ;
-                                   owl:onProperty :time ;
-                                   owl:allValuesFrom adept-base:Date
-                                 ] ,
-                                 [ rdf:type owl:Restriction ;
-                                   owl:onProperty :time ;
-                                   owl:onClass adept-base:Date ;
-                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                 ] .
+:Ownership a owl:Class ;
+	rdfs:subClassOf :OrganizationalAffiliation , _:genid160 .
 
+_:genid160 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
+:Ownership rdfs:subClassOf _:genid161 .
 
-###  http://adept-kb.bbn.com/adept-base#Relation
+_:genid161 a owl:Restriction ;
+	owl:onProperty :owner ;
+	owl:allValuesFrom :Person .
 
-adept-base:Relation rdf:type owl:Class .
+:Ownership rdfs:subClassOf _:genid162 .
 
+_:genid162 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
+:Ownership rdfs:subClassOf _:genid163 .
 
-###  http://adept-kb.bbn.com/adept-base#Thing
+_:genid163 a owl:Restriction ;
+	owl:onProperty :owner ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
-adept-base:Thing rdf:type owl:Class .
+:Ownership rdfs:comment "From RichERE 'ownership'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Pardon
 
+:Pardon a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid164 .
 
+_:genid164 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#Acquit
+:Pardon rdfs:subClassOf _:genid165 .
 
-:Acquit rdf:type owl:Class ;
-        
-        rdfs:subClassOf :JusticeEvent ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :adjudicator ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :adjudicator ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] .
+_:genid165 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Pardon rdfs:subClassOf _:genid166 .
 
+_:genid166 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#Actual
+:Pardon rdfs:subClassOf _:genid167 .
 
-:Actual rdf:type owl:Class .
+_:genid167 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Pardon rdfs:comment "From RichERE 'pardon'" .
+# 
+# http://adept-kb.bbn.com/adept-core#ParentChildRelationship
 
+:ParentChildRelationship a owl:Class ;
+	rdfs:subClassOf :FamilyRelationship , _:genid168 .
 
-###  http://adept-kb.bbn.com/adept-core#Appeal
+_:genid168 a owl:Restriction ;
+	owl:onProperty :child ;
+	owl:allValuesFrom :Person .
 
-:Appeal rdf:type owl:Class ;
-        
-        rdfs:subClassOf :JusticeEvent ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :prosecutor ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :prosecutor ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :adjudicator ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :adjudicator ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] .
+:ParentChildRelationship rdfs:subClassOf _:genid169 .
 
+_:genid169 a owl:Restriction ;
+	owl:onProperty :parent ;
+	owl:allValuesFrom :Person .
 
+:ParentChildRelationship rdfs:subClassOf _:genid170 .
 
-###  http://adept-kb.bbn.com/adept-core#ArrestJail
+_:genid170 a owl:Restriction ;
+	owl:onProperty :child ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
-:ArrestJail rdf:type owl:Class ;
-            
-            rdfs:subClassOf :JusticeEvent ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :person ;
-                              owl:allValuesFrom :Person
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :agent ;
-                              owl:allValuesFrom adept-base:Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :agent ;
-                              owl:onClass adept-base:Entity ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :person ;
-                              owl:onClass :Person ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] .
+:ParentChildRelationship rdfs:subClassOf _:genid171 .
 
+_:genid171 a owl:Restriction ;
+	owl:onProperty :parent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:ParentChildRelationship rdfs:comment "From TAC per:parents / per:children" .
+# 
+# http://adept-kb.bbn.com/adept-core#PartWhole
 
-###  http://adept-kb.bbn.com/adept-core#Artifact
+:PartWhole a owl:Class ;
+	rdfs:subClassOf adept-base:Relation ;
+	rdfs:comment "From RichERE 'part whole' relations." .
+# 
+# http://adept-kb.bbn.com/adept-core#Person
 
-:Artifact rdf:type owl:Class ;
-          
-          rdfs:subClassOf :Manufacture ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :agent ;
-                            owl:onClass adept-base:Entity ;
-                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                          ] ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :instrument ;
-                            owl:allValuesFrom adept-base:Thing
-                          ] ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :artifact ;
-                            owl:allValuesFrom adept-base:Thing
-                          ] ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :instrument ;
-                            owl:onClass adept-base:Thing ;
-                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                          ] ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :agent ;
-                            owl:allValuesFrom adept-base:Entity
-                          ] ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :artifact ;
-                            owl:onClass adept-base:Thing ;
-                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                          ] .
+:Person a owl:Class ;
+	rdfs:subClassOf adept-base:Entity ;
+	rdfs:comment "From RichERE / TAC 'PER'" .
+# 
+# http://adept-kb.bbn.com/adept-core#PersonAge
 
+:PersonAge a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid172 .
 
+_:genid172 a owl:Restriction ;
+	owl:onProperty :age ;
+	owl:allValuesFrom adept-base:Number .
 
-###  http://adept-kb.bbn.com/adept-core#Attack
+:PersonAge rdfs:subClassOf _:genid173 .
 
-:Attack rdf:type owl:Class ;
-        
-        rdfs:subClassOf :Conflict ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :instrument ;
-                          owl:onClass adept-base:Thing ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :target ;
-                          owl:allValuesFrom adept-base:Thing
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :attacker ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :attacker ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :instrument ;
-                          owl:allValuesFrom adept-base:Thing
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :target ;
-                          owl:onClass adept-base:Thing ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] .
+_:genid173 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
+:PersonAge rdfs:subClassOf _:genid174 .
 
+_:genid174 a owl:Restriction ;
+	owl:onProperty :age ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Number .
 
-###  http://adept-kb.bbn.com/adept-core#BeBorn
+:PersonAge rdfs:subClassOf _:genid175 .
 
-:BeBorn rdf:type owl:Class ;
-        
-        rdfs:subClassOf :LifeEvent .
+_:genid175 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:PersonAge rdfs:comment "From RichERE 'PersonAge'" .
+# 
+# http://adept-kb.bbn.com/adept-core#PersonnelEvent
 
+:PersonnelEvent a owl:Class ;
+	rdfs:subClassOf adept-base:Event , _:genid176 .
 
-###  http://adept-kb.bbn.com/adept-core#Belief
+_:genid176 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
-:Belief rdf:type owl:Class ;
-        
-        rdfs:subClassOf adept-base:Relation ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :strength ;
-                          owl:allValuesFrom :Number
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :strength ;
-                          owl:onClass :Number ;
-                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :source ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :target ;
-                          owl:onClass adept-base:PredicateArgument ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :target ;
-                          owl:allValuesFrom adept-base:PredicateArgument
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :source ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] .
+:PersonnelEvent rdfs:subClassOf _:genid177 .
 
+_:genid177 a owl:Restriction ;
+	owl:onProperty :position ;
+	owl:allValuesFrom :Title .
 
+:PersonnelEvent rdfs:subClassOf _:genid178 .
 
-###  http://adept-kb.bbn.com/adept-core#Broadcast
+_:genid178 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
-:Broadcast rdf:type owl:Class ;
-           
-           rdfs:subClassOf :Contact ,
-						   [ rdf:type owl:Restriction ;
-						     owl:onProperty :broadcaster ;
-							 owl:allValuesFrom adept-base:Entity
-						   ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :broadcaster ;
-                             owl:onClass adept-base:Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-						   [ rdf:type owl:Restriction ;
-						     owl:onProperty :audience ;
-							 owl:allValuesFrom adept-base:Entity
-						   ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :audience ;
-                             owl:onClass adept-base:Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] .
+:PersonnelEvent rdfs:subClassOf _:genid179 .
 
+_:genid179 a owl:Restriction ;
+	owl:onProperty :position ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Title .
 
+:PersonnelEvent rdfs:comment "From RichERE 'personnel'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Persuade
 
-###  http://adept-kb.bbn.com/adept-core#BusinessEvent
+:Persuade a owl:Class ;
+	rdfs:subClassOf :Correspondence .
+# 
+# http://adept-kb.bbn.com/adept-core#PhysicalLocation
 
-:BusinessEvent rdf:type owl:Class ;
-               
-               rdfs:subClassOf adept-base:Event ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :organization ;
-                                 owl:onClass adept-base:Entity ;
-                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                               ] ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :organization ;
-                                 owl:allValuesFrom adept-base:Entity
-                               ] .
+:PhysicalLocation a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid180 .
 
+_:genid180 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:allValuesFrom adept-base:Entity .
 
+:PhysicalLocation rdfs:subClassOf _:genid181 .
 
-###  http://adept-kb.bbn.com/adept-core#BusinessRelationship
+_:genid181 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-:BusinessRelationship rdf:type owl:Class ;
-                      
-                      rdfs:subClassOf :InterpersonalRelationship ,
-                                      [ rdf:type owl:Restriction ;
-                                        owl:onProperty :person ;
-                                        owl:onClass :Person ;
-                                        owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
-                                      ] .
+:PhysicalLocation rdfs:comment "From RichERE 'Physical' relations" .
+# 
+# http://adept-kb.bbn.com/adept-core#Planned
 
+:Planned a owl:Class ;
+	rdfs:subClassOf :NonActual ;
+	rdfs:comment "A possible realis type for events, indicating that the event was in planned by some agent." .
+# 
+# http://adept-kb.bbn.com/adept-core#Possess
 
+:Possess a owl:Class ;
+	rdfs:subClassOf adept-base:Event , _:genid182 .
 
-###  http://adept-kb.bbn.com/adept-core#CertainlyExpressedRelation
+_:genid182 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
 
-:CertainlyExpressedRelation rdf:type owl:Class ;
-                            
-                            rdfs:subClassOf adept-base:Relation .
+:Possess rdfs:subClassOf _:genid183 .
 
+_:genid183 a owl:Restriction ;
+	owl:onProperty :artifact ;
+	owl:allValuesFrom adept-base:Thing .
 
+:Possess rdfs:subClassOf _:genid184 .
 
-###  http://adept-kb.bbn.com/adept-core#ChargeIndict
+_:genid184 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-:ChargeIndict rdf:type owl:Class ;
-              
-              rdfs:subClassOf :JusticeEvent ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :defendant ;
-                                owl:allValuesFrom adept-base:Entity
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :prosecutor ;
-                                owl:allValuesFrom adept-base:Entity
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :adjudicator ;
-                                owl:onClass adept-base:Entity ;
-                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :defendant ;
-                                owl:onClass adept-base:Entity ;
-                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :adjudicator ;
-                                owl:allValuesFrom adept-base:Entity
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :prosecutor ;
-                                owl:onClass adept-base:Entity ;
-                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                              ] .
+:Possess rdfs:subClassOf _:genid185 .
 
+_:genid185 a owl:Restriction ;
+	owl:onProperty :artifact ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
+# 
+# http://adept-kb.bbn.com/adept-core#Purchase
 
+:Purchase a owl:Class ;
+	rdfs:subClassOf :TransferOwnership .
+# 
+# http://adept-kb.bbn.com/adept-core#ReleaseParole
 
-###  http://adept-kb.bbn.com/adept-core#City
+:ReleaseParole a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid186 .
 
-:City rdf:type owl:Class ;
-      
-      rdfs:subClassOf :GeoPoliticalEntity .
+_:genid186 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
 
+:ReleaseParole rdfs:subClassOf _:genid187 .
 
+_:genid187 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
-###  http://adept-kb.bbn.com/adept-core#Commodity
+:ReleaseParole rdfs:subClassOf _:genid188 .
 
-:Commodity rdf:type owl:Class ;
-           
-           rdfs:subClassOf adept-base:GenericThing .
+_:genid188 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:ReleaseParole rdfs:subClassOf _:genid189 .
 
+_:genid189 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
-###  http://adept-kb.bbn.com/adept-core#Conflict
+:ReleaseParole rdfs:comment "From RichERE 'releaseparole'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Religion
 
-:Conflict rdf:type owl:Class ;
-          
-          rdfs:subClassOf adept-base:Event .
+:Religion a owl:Class ;
+	rdfs:subClassOf :MemberOriginReligionEthnicity ;
+	rdfs:comment "From TAC per:religion" .
+# 
+# http://adept-kb.bbn.com/adept-core#Resident
 
+:Resident a owl:Class ;
+	rdfs:subClassOf :PhysicalLocation , _:genid190 .
 
+_:genid190 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
-###  http://adept-kb.bbn.com/adept-core#Contact
+:Resident rdfs:subClassOf _:genid191 .
 
-:Contact rdf:type owl:Class ;
-         
-         rdfs:subClassOf adept-base:Event ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :entity ;
-                           owl:allValuesFrom adept-base:Entity
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :entity ;
-                           owl:onClass adept-base:Entity ;
-                           owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
-                         ] .
+_:genid191 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:Resident rdfs:comment "From RichERE 'resident'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Role
 
+:Role a owl:Class ;
+	rdfs:subClassOf :InterpersonalRelationship , _:genid192 .
 
-###  http://adept-kb.bbn.com/adept-core#Convict
+_:genid192 a owl:Restriction ;
+	owl:onProperty :role ;
+	owl:allValuesFrom :Title .
 
-:Convict rdf:type owl:Class ;
-         
-         rdfs:subClassOf :JusticeEvent ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :defendant ;
-                           owl:allValuesFrom adept-base:Entity
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :defendant ;
-                           owl:onClass adept-base:Entity ;
-                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :adjudicator ;
-                           owl:allValuesFrom adept-base:Entity
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :adjudicator ;
-                           owl:onClass adept-base:Entity ;
-                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                         ] .
+:Role rdfs:subClassOf _:genid193 .
 
+_:genid193 a owl:Restriction ;
+	owl:onProperty :role ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Title .
 
+:Role rdfs:comment "From RichERE 'role'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Sentence
 
-###  http://adept-kb.bbn.com/adept-core#Correspondence
+:Sentence a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for a sentence (as in being sentenced for a crime)." .
+# 
+# http://adept-kb.bbn.com/adept-core#Sentencing
 
-:Correspondence rdf:type owl:Class ;
-                
-                rdfs:subClassOf :Contact .
+:Sentencing a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid194 .
 
+_:genid194 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Sentencing rdfs:subClassOf _:genid195 .
 
-###  http://adept-kb.bbn.com/adept-core#Country
+_:genid195 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:allValuesFrom adept-base:Entity .
 
-:Country rdf:type owl:Class ;
-         
-         rdfs:subClassOf :GeoPoliticalEntity .
+:Sentencing rdfs:subClassOf _:genid196 .
 
+_:genid196 a owl:Restriction ;
+	owl:onProperty :sentence ;
+	owl:allValuesFrom :Sentence .
 
+:Sentencing rdfs:subClassOf _:genid197 .
 
-###  http://adept-kb.bbn.com/adept-core#Crime
+_:genid197 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-:Crime rdf:type owl:Class ;
-       
-       rdfs:subClassOf adept-base:GenericThing .
+:Sentencing rdfs:subClassOf _:genid198 .
 
+_:genid198 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Sentencing rdfs:subClassOf _:genid199 .
 
-###  http://adept-kb.bbn.com/adept-core#DeclareBankruptcy
+_:genid199 a owl:Restriction ;
+	owl:onProperty :sentence ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Sentence .
 
-:DeclareBankruptcy rdf:type owl:Class ;
-                   
-                   rdfs:subClassOf :BusinessEvent .
+:Sentencing rdfs:comment "From RichERE event type 'sentence'.  Renamed to eliminate ambiguity between the event type (now Sentencing) and the Sentence received at a Sentencing." .
+# 
+# http://adept-kb.bbn.com/adept-core#Sentiment
 
+:Sentiment a owl:Class ;
+	rdfs:subClassOf adept-base:Relation , _:genid200 .
 
+_:genid200 a owl:Restriction ;
+	owl:onProperty :source ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#Demonstrate
+:Sentiment rdfs:subClassOf _:genid201 .
 
-:Demonstrate rdf:type owl:Class ;
-             
-             rdfs:subClassOf :Conflict ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :entity ;
-                               owl:allValuesFrom adept-base:Entity
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :entity ;
-                               owl:onClass adept-base:Entity ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                             ] .
+_:genid201 a owl:Restriction ;
+	owl:onProperty :strength ;
+	owl:allValuesFrom adept-base:Number .
 
+:Sentiment rdfs:subClassOf _:genid202 .
 
+_:genid202 a owl:Restriction ;
+	owl:onProperty :target ;
+	owl:allValuesFrom adept-base:PredicateArgument .
 
-###  http://adept-kb.bbn.com/adept-core#Die
+:Sentiment rdfs:subClassOf _:genid203 .
 
-:Die rdf:type owl:Class ;
-     
-     rdfs:subClassOf :LifeEvent ,
-					 [ rdf:type owl:Restriction ;
-					  owl:onProperty :victim ;
-					  owl:allValuesFrom adept-base:Entity
-					 ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :victim ;
-                       owl:onClass :Person ;
-                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :instrument ;
-                       owl:onClass adept-base:Thing ;
-                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :instrument ;
-                       owl:allValuesFrom adept-base:Thing
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :agent ;
-                       owl:onClass adept-base:Entity ;
-                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :agent ;
-                       owl:allValuesFrom adept-base:Entity
-                     ] .
+_:genid203 a owl:Restriction ;
+	owl:onProperty :source ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Sentiment rdfs:subClassOf _:genid204 .
 
+_:genid204 a owl:Restriction ;
+	owl:onProperty :target ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:PredicateArgument .
 
-###  http://adept-kb.bbn.com/adept-core#Divorce
+:Sentiment rdfs:subClassOf _:genid205 .
 
-:Divorce rdf:type owl:Class ;
-         
-         rdfs:subClassOf :LifeEvent ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :person ;
-                           owl:onClass :Person ;
-                           owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
-                         ] .
+_:genid205 a owl:Restriction ;
+	owl:onProperty :strength ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Number .
 
+:Sentiment rdfs:comment "A Relation that describes a sentiment held by an agent.  Added through discussions with the BeST group." .
+# 
+# http://adept-kb.bbn.com/adept-core#SiblingRelationship
 
+:SiblingRelationship a owl:Class ;
+	rdfs:subClassOf :FamilyRelationship ;
+	rdfs:comment "From TAC per:siblings" .
+# 
+# http://adept-kb.bbn.com/adept-core#SpousalRelationship
 
-###  http://adept-kb.bbn.com/adept-core#Elect
+:SpousalRelationship a owl:Class ;
+	rdfs:subClassOf :FamilyRelationship ;
+	rdfs:comment "From TAC per:spouse" .
+# 
+# http://adept-kb.bbn.com/adept-core#StartOrganization
 
-:Elect rdf:type owl:Class ;
-       
-       rdfs:subClassOf :PersonnelEvent ,
-                       [ rdf:type owl:Restriction ;
-                         owl:onProperty :agent ;
-                         owl:allValuesFrom adept-base:Entity
-                       ] ,
-                       [ rdf:type owl:Restriction ;
-                         owl:onProperty :agent ;
-                         owl:onClass adept-base:Entity ;
-                         owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                       ] .
+:StartOrganization a owl:Class ;
+	rdfs:subClassOf :BusinessEvent , _:genid206 .
 
+_:genid206 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
 
+:StartOrganization rdfs:subClassOf _:genid207 .
 
-###  http://adept-kb.bbn.com/adept-core#EmploymentMembership
+_:genid207 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-:EmploymentMembership rdf:type owl:Class ;
-                      
-                      rdfs:subClassOf :OrganizationalAffiliation ,
-                                      [ rdf:type owl:Restriction ;
-                                        owl:onProperty :employeeMember ;
-                                        owl:allValuesFrom :Person
-                                      ] ,
-                                      [ rdf:type owl:Restriction ;
-                                        owl:onProperty :organization ;
-                                        owl:allValuesFrom adept-base:Entity
-                                      ] ,
-                                      [ rdf:type owl:Restriction ;
-                                        owl:onProperty :organization ;
-                                        owl:onClass adept-base:Entity ;
-                                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                      ] ,
-                                      [ rdf:type owl:Restriction ;
-                                        owl:onProperty :employeeMember ;
-                                        owl:onClass :Person ;
-                                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                      ] .
+:StartOrganization rdfs:subClassOf _:genid208 .
 
+_:genid208 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:StartOrganization rdfs:comment "From RichERE 'startorg'" .
+# 
+# http://adept-kb.bbn.com/adept-core#StartPosition
 
-###  http://adept-kb.bbn.com/adept-core#EndOrganization
+:StartPosition a owl:Class ;
+	rdfs:subClassOf :PersonnelEvent , _:genid209 .
 
-:EndOrganization rdf:type owl:Class ;
-                 
-                 rdfs:subClassOf :BusinessEvent ,
-                                 [ rdf:type owl:Restriction ;
-                                   owl:onProperty :organization ;
-                                   owl:allValuesFrom :Organization
-                                 ] .
+_:genid209 a owl:Restriction ;
+	owl:onProperty :withinEntity ;
+	owl:allValuesFrom adept-base:Entity .
 
+:StartPosition rdfs:subClassOf _:genid210 .
 
+_:genid210 a owl:Restriction ;
+	owl:onProperty :withinEntity ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#EndPosition
+:StartPosition rdfs:comment "From RichERE 'startposition'" .
+# 
+# http://adept-kb.bbn.com/adept-core#StateProvince
 
-:EndPosition rdf:type owl:Class ;
-             
-             rdfs:subClassOf :PersonnelEvent ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :withinEntity ;
-                               owl:allValuesFrom adept-base:Entity
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :withinEntity ;
-                               owl:onClass adept-base:Entity ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                             ] .
+:StateProvince a owl:Class ;
+	rdfs:subClassOf :GeoPoliticalEntity ;
+	rdfs:comment "Subclass of GeoPoliticalEntity representing a State or Province.  This was added to separate the role/class semantics of TAC relations like org:stateorprovince_of_headquarters." .
+# 
+# http://adept-kb.bbn.com/adept-core#Steal
 
+:Steal a owl:Class ;
+	rdfs:subClassOf :TransferOwnership .
+# 
+# http://adept-kb.bbn.com/adept-core#StudentAlum
 
+:StudentAlum a owl:Class ;
+	rdfs:subClassOf :OrganizationalAffiliation , _:genid211 .
 
-###  http://adept-kb.bbn.com/adept-core#Execute
+_:genid211 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:allValuesFrom :Organization .
 
-:Execute rdf:type owl:Class ;
-         
-         rdfs:subClassOf :JusticeEvent ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :person ;
-                           owl:onClass :Person ;
-                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :agent ;
-                           owl:allValuesFrom adept-base:Entity
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :person ;
-                           owl:allValuesFrom :Person
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :agent ;
-                           owl:onClass adept-base:Entity ;
-                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                         ] .
+:StudentAlum rdfs:subClassOf _:genid212 .
 
+_:genid212 a owl:Restriction ;
+	owl:onProperty :studentAlumni ;
+	owl:allValuesFrom :Person .
 
+:StudentAlum rdfs:subClassOf _:genid213 .
 
-###  http://adept-kb.bbn.com/adept-core#Extradite
+_:genid213 a owl:Restriction ;
+	owl:onProperty :organization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
-:Extradite rdf:type owl:Class ;
-           
-           rdfs:subClassOf :JusticeEvent ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :person ;
-                             owl:allValuesFrom :Person
-                           ] ,
-						   [ rdf:type owl:Restriction ;
-						     owl:onProperty :origin ;
-							 owl:allValuesFrom adept-base:Entity
-						   ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :origin ;
-                             owl:onClass adept-base:Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :person ;
-                             owl:onClass :Person ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-						   [ rdf:type owl:Restriction ;
-						     owl:onProperty :destination ;
-							 owl:allValuesFrom adept-base:Entity
-						   ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :destination ;
-                             owl:onClass adept-base:Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :agent ;
-                             owl:onClass adept-base:Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :agent ;
-                             owl:allValuesFrom adept-base:Entity
-                           ] .
+:StudentAlum rdfs:subClassOf _:genid214 .
 
+_:genid214 a owl:Restriction ;
+	owl:onProperty :studentAlumni ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
+:StudentAlum rdfs:comment "From RichERE 'studentalum'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Subsidiary
 
-###  http://adept-kb.bbn.com/adept-core#Facility
+:Subsidiary a owl:Class ;
+	rdfs:subClassOf :PartWhole , _:genid215 .
 
-:Facility rdf:type owl:Class ;
-          
-          rdfs:subClassOf adept-base:Entity .
+_:genid215 a owl:Restriction ;
+	owl:onProperty :parent ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Subsidiary rdfs:subClassOf _:genid216 .
 
+_:genid216 a owl:Restriction ;
+	owl:onProperty :subOrganization ;
+	owl:allValuesFrom :Organization .
 
-###  http://adept-kb.bbn.com/adept-core#Failed
+:Subsidiary rdfs:subClassOf _:genid217 .
 
-:Failed rdf:type owl:Class ;
-        
-        rdfs:subClassOf :Negated ,
-                        :Planned .
+_:genid217 a owl:Restriction ;
+	owl:onProperty :parent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Subsidiary rdfs:subClassOf _:genid218 .
 
+_:genid218 a owl:Restriction ;
+	owl:onProperty :subOrganization ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Organization .
 
-###  http://adept-kb.bbn.com/adept-core#FamilyRelationship
+:Subsidiary rdfs:comment "From RichERE 'subsidiary'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Sue
 
-:FamilyRelationship rdf:type owl:Class ;
-                    
-                    rdfs:subClassOf :InterpersonalRelationship ,
-                                    [ rdf:type owl:Restriction ;
-                                      owl:onProperty :person ;
-                                      owl:onClass :Person ;
-                                      owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
-                                    ] .
+:Sue a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid219 .
 
+_:genid219 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Sue rdfs:subClassOf _:genid220 .
 
-###  http://adept-kb.bbn.com/adept-core#Fine
+_:genid220 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:allValuesFrom adept-base:Entity .
 
-:Fine rdf:type owl:Class ;
-      
-      rdfs:subClassOf :JusticeEvent ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :money ;
-                        owl:onClass :Money ;
-                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :finedEntity ;
-                        owl:onClass adept-base:Entity ;
-                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :finedEntity ;
-                        owl:allValuesFrom adept-base:Entity
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :adjudicator ;
-                        owl:onClass adept-base:Entity ;
-                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :adjudicator ;
-                        owl:allValuesFrom adept-base:Entity
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :money ;
-                        owl:allValuesFrom :Money
-                      ] .
+:Sue rdfs:subClassOf _:genid221 .
 
+_:genid221 a owl:Restriction ;
+	owl:onProperty :plaintiff ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Sue rdfs:subClassOf _:genid222 .
 
-###  http://adept-kb.bbn.com/adept-core#Founder
+_:genid222 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-:Founder rdf:type owl:Class ;
-         
-         rdfs:subClassOf :OrganizationalAffiliation ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :organization ;
-                           owl:allValuesFrom :Organization
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :organization ;
-                           owl:onClass :Organization ;
-                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :founder ;
-                           owl:onClass adept-base:Entity ;
-                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :founder ;
-                           owl:allValuesFrom adept-base:Entity
-                         ] .
+:Sue rdfs:subClassOf _:genid223 .
 
+_:genid223 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Sue rdfs:subClassOf _:genid224 .
 
-###  http://adept-kb.bbn.com/adept-core#Future
+_:genid224 a owl:Restriction ;
+	owl:onProperty :plaintiff ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-:Future rdf:type owl:Class ;
-        
-        rdfs:subClassOf :NonActual .
+:Sue rdfs:comment "From RichERE 'sue'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Thread
 
+:Thread a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for a discussion thread on a website." .
+# 
+# http://adept-kb.bbn.com/adept-core#Title
 
+:Title a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for an individual's title within an organization." .
+# 
+# http://adept-kb.bbn.com/adept-core#Transaction
 
-###  http://adept-kb.bbn.com/adept-core#Generic
+:Transaction a owl:Class ;
+	rdfs:subClassOf adept-base:Event , _:genid225 .
 
-:Generic rdf:type owl:Class ;
-         
-         rdfs:subClassOf :NonActual .
+_:genid225 a owl:Restriction ;
+	owl:onProperty :beneficiary ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Transaction rdfs:subClassOf _:genid226 .
 
+_:genid226 a owl:Restriction ;
+	owl:onProperty :giver ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#GeoPoliticalEntity
+:Transaction rdfs:subClassOf _:genid227 .
 
-:GeoPoliticalEntity rdf:type owl:Class ;
-                    
-                    rdfs:subClassOf adept-base:Entity .
+_:genid227 a owl:Restriction ;
+	owl:onProperty :recipient ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Transaction rdfs:subClassOf _:genid228 .
 
+_:genid228 a owl:Restriction ;
+	owl:onProperty :beneficiary ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#Hypothetical
+:Transaction rdfs:subClassOf _:genid229 .
 
-:Hypothetical rdf:type owl:Class ;
-              
-              rdfs:subClassOf :NonActual .
+_:genid229 a owl:Restriction ;
+	owl:onProperty :giver ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Transaction rdfs:subClassOf _:genid230 .
 
+_:genid230 a owl:Restriction ;
+	owl:onProperty :recipient ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#InferredRelation
+:Transaction rdfs:comment "From RichERE 'transaction'.  Also represents RichERE 'transaction.transaction'." .
+# 
+# http://adept-kb.bbn.com/adept-core#TransferMoney
 
-:InferredRelation rdf:type owl:Class ;
-                  
-                  rdfs:subClassOf adept-base:Relation .
+:TransferMoney a owl:Class ;
+	rdfs:subClassOf :Transaction , _:genid231 .
 
+_:genid231 a owl:Restriction ;
+	owl:onProperty :money ;
+	owl:allValuesFrom :Money .
 
+:TransferMoney rdfs:subClassOf _:genid232 .
 
-###  http://adept-kb.bbn.com/adept-core#Injure
+_:genid232 a owl:Restriction ;
+	owl:onProperty :money ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Money .
 
-:Injure rdf:type owl:Class ;
-        
-        rdfs:subClassOf :LifeEvent ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :agent ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :instrument ;
-                          owl:onClass adept-base:Thing ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :agent ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :instrument ;
-                          owl:allValuesFrom adept-base:Thing
-                        ] ,
-						[ rdf:type owl:Restriction ;
-						  owl:onProperty :victim ;
-						  owl:allValuesFrom adept-base:Entity
-						] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :victim ;
-                          owl:onClass :Person ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] .
+:TransferMoney rdfs:comment "From RichERE 'transfermoney'" .
+# 
+# http://adept-kb.bbn.com/adept-core#TransferOwnership
 
+:TransferOwnership a owl:Class ;
+	rdfs:subClassOf :Transaction , _:genid233 .
 
+_:genid233 a owl:Restriction ;
+	owl:onProperty :transferredThing ;
+	owl:allValuesFrom adept-base:Thing .
 
-###  http://adept-kb.bbn.com/adept-core#InterpersonalRelationship
+:TransferOwnership rdfs:subClassOf _:genid234 .
 
-:InterpersonalRelationship rdf:type owl:Class ;
-                           
-                           rdfs:subClassOf adept-base:Relation ,
-                                           [ rdf:type owl:Restriction ;
-                                             owl:onProperty :person ;
-                                             owl:onClass :Person ;
-                                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                           ] ,
-                                           [ rdf:type owl:Restriction ;
-                                             owl:onProperty :person ;
-                                             owl:allValuesFrom :Person
-                                           ] .
+_:genid234 a owl:Restriction ;
+	owl:onProperty :transferredThing ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
 
+:TransferOwnership rdfs:comment "From RichERE 'transferownership'" .
+# 
+# http://adept-kb.bbn.com/adept-core#Transport
 
+:Transport a owl:Class ;
+	rdfs:subClassOf :Movement , _:genid235 .
 
-###  http://adept-kb.bbn.com/adept-core#InvestorShareholder
+_:genid235 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom adept-base:Entity .
 
-:InvestorShareholder rdf:type owl:Class ;
-                     
-                     rdfs:subClassOf :OrganizationalAffiliation ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty :investorShareholder ;
-                                       owl:onClass adept-base:Entity ;
-                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                     ] ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty :organization ;
-                                       owl:onClass :Organization ;
-                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                     ] ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty :investorShareholder ;
-                                       owl:allValuesFrom adept-base:Entity
-                                     ] ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty :organization ;
-                                       owl:allValuesFrom :Organization
-                                     ] .
+:Transport rdfs:subClassOf _:genid236 .
 
+_:genid236 a owl:Restriction ;
+	owl:onProperty :destination ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Transport rdfs:subClassOf _:genid237 .
 
-###  http://adept-kb.bbn.com/adept-core#JusticeEvent
+_:genid237 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:allValuesFrom adept-base:Thing .
 
-:JusticeEvent rdf:type owl:Class ;
-              
-              rdfs:subClassOf adept-base:Event ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :crime ;
-                                owl:onClass :Crime ;
-                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :crime ;
-                                owl:allValuesFrom :Crime
-                              ] .
+:Transport rdfs:subClassOf _:genid238 .
 
+_:genid238 a owl:Restriction ;
+	owl:onProperty :origin ;
+	owl:allValuesFrom adept-base:Entity .
 
+:Transport rdfs:subClassOf _:genid239 .
 
-###  http://adept-kb.bbn.com/adept-core#Leadership
+_:genid239 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-:Leadership rdf:type owl:Class ;
-            
-            rdfs:subClassOf :OrganizationalAffiliation ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :leader ;
-                              owl:allValuesFrom :Person
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :affiliatedEntity ;
-                              owl:allValuesFrom adept-base:Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :affiliatedEntity ;
-                              owl:onClass adept-base:Entity ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :leader ;
-                              owl:onClass :Person ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] .
+:Transport rdfs:subClassOf _:genid240 .
 
+_:genid240 a owl:Restriction ;
+	owl:onProperty :destination ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Transport rdfs:subClassOf _:genid241 .
 
-###  http://adept-kb.bbn.com/adept-core#LifeEvent
+_:genid241 a owl:Restriction ;
+	owl:onProperty :instrument ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
 
-:LifeEvent rdf:type owl:Class ;
-           
-           rdfs:subClassOf adept-base:Event ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :person ;
-                             owl:onClass :Person ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :person ;
-                             owl:allValuesFrom :Person
-                           ] .
+:Transport rdfs:subClassOf _:genid242 .
 
+_:genid242 a owl:Restriction ;
+	owl:onProperty :origin ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:Transport rdfs:comment "A new class that fits between RichERE 'movement' and the transport of person and artifacts, which holds most of the Event's properties" .
+# 
+# http://adept-kb.bbn.com/adept-core#TransportArtifact
 
-###  http://adept-kb.bbn.com/adept-core#LocatedNear
+:TransportArtifact a owl:Class ;
+	rdfs:subClassOf :Transport , _:genid243 .
 
-:LocatedNear rdf:type owl:Class ;
-             
-             rdfs:subClassOf :PhysicalLocation ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :locatedEntity ;
-                               owl:onClass adept-base:Entity ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :locatedEntity ;
-                               owl:allValuesFrom adept-base:Entity
-                             ] .
+_:genid243 a owl:Restriction ;
+	owl:onProperty :artifact ;
+	owl:allValuesFrom adept-base:Thing .
 
+:TransportArtifact rdfs:subClassOf _:genid244 .
 
+_:genid244 a owl:Restriction ;
+	owl:onProperty :artifact ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Thing .
 
-###  http://adept-kb.bbn.com/adept-core#Location
+:TransportArtifact rdfs:comment "From RichERE 'transportartifact'" .
+# 
+# http://adept-kb.bbn.com/adept-core#TransportPerson
 
-:Location rdf:type owl:Class ;
-          
-          rdfs:subClassOf adept-base:Entity .
+:TransportPerson a owl:Class ;
+	rdfs:subClassOf :Transport , _:genid245 .
 
+_:genid245 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:allValuesFrom :Person .
 
+:TransportPerson rdfs:subClassOf _:genid246 .
 
-###  http://adept-kb.bbn.com/adept-core#Manufacture
+_:genid246 a owl:Restriction ;
+	owl:onProperty :person ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass :Person .
 
-:Manufacture rdf:type owl:Class ;
-             
-             rdfs:subClassOf adept-base:Event .
+:TransportPerson rdfs:comment "From RichERE 'transportperson'" .
+# 
+# http://adept-kb.bbn.com/adept-core#TrialHearing
 
+:TrialHearing a owl:Class ;
+	rdfs:subClassOf :JusticeEvent , _:genid247 .
 
+_:genid247 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#Marry
+:TrialHearing rdfs:subClassOf _:genid248 .
 
-:Marry rdf:type owl:Class ;
-       
-       rdfs:subClassOf :LifeEvent ,
-                       [ rdf:type owl:Restriction ;
-                         owl:onProperty :person ;
-                         owl:onClass :Person ;
-                         owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
-                       ] .
+_:genid248 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:allValuesFrom adept-base:Entity .
 
+:TrialHearing rdfs:subClassOf _:genid249 .
 
+_:genid249 a owl:Restriction ;
+	owl:onProperty :prosecutor ;
+	owl:allValuesFrom adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#Meet
+:TrialHearing rdfs:subClassOf _:genid250 .
 
-:Meet rdf:type owl:Class ;
-      
-      rdfs:subClassOf :Contact .
+_:genid250 a owl:Restriction ;
+	owl:onProperty :adjudicator ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:TrialHearing rdfs:subClassOf _:genid251 .
 
+_:genid251 a owl:Restriction ;
+	owl:onProperty :defendant ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
-###  http://adept-kb.bbn.com/adept-core#MemberOriginReligionEthnicity
+:TrialHearing rdfs:subClassOf _:genid252 .
 
-:MemberOriginReligionEthnicity rdf:type owl:Class ;
-                               
-                               rdfs:subClassOf adept-base:Relation ,
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :person ;
-                                                 owl:onClass :Person ;
-                                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                               ] ,
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :person ;
-                                                 owl:allValuesFrom :Person
-                                               ] ,
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :affiliatedEntity ;
-                                                 owl:onClass adept-base:Entity ;
-                                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                               ] ,
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty :affiliatedEntity ;
-                                                 owl:allValuesFrom adept-base:Entity
-                                               ] .
+_:genid252 a owl:Restriction ;
+	owl:onProperty :prosecutor ;
+	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onClass adept-base:Entity .
 
+:TrialHearing rdfs:comment "From RichERE 'trialhearing'" .
+# 
+# http://adept-kb.bbn.com/adept-core#URL
 
+:URL a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for a URL." .
+# 
+# http://adept-kb.bbn.com/adept-core#UncertainlyExpressedRelation
 
-###  http://adept-kb.bbn.com/adept-core#Membership
+:UncertainlyExpressedRelation a owl:Class ;
+	rdfs:subClassOf adept-base:Relation ;
+	rdfs:comment "A class that funcitons as a tag for Relations that are expressed without certainty in text.  This class is currently not used in the KB API." .
+# 
+# http://adept-kb.bbn.com/adept-core#Vehicle
 
-:Membership rdf:type owl:Class ;
-            
-            rdfs:subClassOf :PartWhole ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :organization ;
-                              owl:allValuesFrom adept-base:Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :member ;
-                              owl:allValuesFrom adept-base:Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :organization ;
-                              owl:onClass adept-base:Entity ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :member ;
-                              owl:onClass adept-base:Entity ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] .
+:Vehicle a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for a vehicle." .
+# 
+# http://adept-kb.bbn.com/adept-core#Weapon
 
-
-
-###  http://adept-kb.bbn.com/adept-core#MergeOrganization
-
-:MergeOrganization rdf:type owl:Class ;
-                   
-                   rdfs:subClassOf :BusinessEvent ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :organization ;
-                                     owl:onClass :Organization ;
-                                     owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :organization ;
-                                     owl:allValuesFrom :Organization
-                                   ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Money
-
-:Money rdf:type owl:Class ;
-       
-       rdfs:subClassOf adept-base:GenericThing .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Movement
-
-:Movement rdf:type owl:Class ;
-          
-          rdfs:subClassOf adept-base:Event .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Negated
-
-:Negated rdf:type owl:Class ;
-         
-         rdfs:subClassOf :NonActual .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Nominate
-
-:Nominate rdf:type owl:Class ;
-          
-          rdfs:subClassOf :PersonnelEvent ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :agent ;
-                            owl:onClass adept-base:Entity ;
-                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                          ] ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :agent ;
-                            owl:allValuesFrom adept-base:Entity
-                          ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#NonActual
-
-:NonActual rdf:type owl:Class .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Number
-
-:Number rdf:type owl:Class .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#NumberOfEmployeesMembers
-
-:NumberOfEmployeesMembers rdf:type owl:Class ;
-                          
-                          rdfs:subClassOf adept-base:Relation ,
-                                          [ rdf:type owl:Restriction ;
-                                            owl:onProperty :organization ;
-                                            owl:allValuesFrom :Organization
-                                          ] ,
-                                          [ rdf:type owl:Restriction ;
-                                            owl:onProperty :number ;
-                                            owl:onClass :Number ;
-                                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                          ] ,
-                                          [ rdf:type owl:Restriction ;
-                                            owl:onProperty :number ;
-                                            owl:allValuesFrom :Number
-                                          ] ,
-                                          [ rdf:type owl:Restriction ;
-                                            owl:onProperty :organization ;
-                                            owl:onClass :Organization ;
-                                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                          ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#OrgHeadquarter
-
-:OrgHeadquarter rdf:type owl:Class ;
-                
-                rdfs:subClassOf :PhysicalLocation ,
-                                [ rdf:type owl:Restriction ;
-                                  owl:onProperty :organization ;
-                                  owl:onClass :Organization ;
-                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                ] ,
-                                [ rdf:type owl:Restriction ;
-                                  owl:onProperty :organization ;
-                                  owl:allValuesFrom :Organization
-                                ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#OrgLocationOrigin
-
-:OrgLocationOrigin rdf:type owl:Class ;
-                   
-                   rdfs:subClassOf :PhysicalLocation ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :organization ;
-                                     owl:allValuesFrom :Organization
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :organization ;
-                                     owl:onClass :Organization ;
-                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                   ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Organization
-
-:Organization rdf:type owl:Class ;
-              
-              rdfs:subClassOf adept-base:Entity .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#OrganizationPoliticalReligiousAffiliation
-
-:OrganizationPoliticalReligiousAffiliation rdf:type owl:Class ;
-                                           
-                                           rdfs:subClassOf adept-base:Relation ,
-                                                           [ rdf:type owl:Restriction ;
-                                                             owl:onProperty :affiliatedEntity ;
-                                                             owl:onClass adept-base:Entity ;
-                                                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                                           ] ,
-                                                           [ rdf:type owl:Restriction ;
-                                                             owl:onProperty :organization ;
-                                                             owl:onClass :Organization ;
-                                                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                                           ] ,
-                                                           [ rdf:type owl:Restriction ;
-                                                             owl:onProperty :organization ;
-                                                             owl:allValuesFrom :Organization
-                                                           ] ,
-                                                           [ rdf:type owl:Restriction ;
-                                                             owl:onProperty :affiliatedEntity ;
-                                                             owl:allValuesFrom adept-base:Entity
-                                                           ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#OrganizationWebsite
-
-:OrganizationWebsite rdf:type owl:Class ;
-                     
-                     rdfs:subClassOf adept-base:Relation ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty :url ;
-                                       owl:onClass :URL ;
-                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                     ] ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty :organization ;
-                                       owl:allValuesFrom :Organization
-                                     ] ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty :organization ;
-                                       owl:onClass :Organization ;
-                                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                     ] ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty :url ;
-                                       owl:allValuesFrom :URL
-                                     ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#OrganizationalAffiliation
-
-:OrganizationalAffiliation rdf:type owl:Class ;
-                           
-                           rdfs:subClassOf adept-base:Relation .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Origin
-
-:Origin rdf:type owl:Class ;
-        
-        rdfs:subClassOf :MemberOriginReligionEthnicity .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Ownership
-
-:Ownership rdf:type owl:Class ;
-           
-           rdfs:subClassOf :OrganizationalAffiliation ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :owner ;
-                             owl:onClass :Person ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :organization ;
-                             owl:onClass :Organization ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :owner ;
-                             owl:allValuesFrom :Person
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :organization ;
-                             owl:allValuesFrom :Organization
-                           ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Pardon
-
-:Pardon rdf:type owl:Class ;
-        
-        rdfs:subClassOf :JusticeEvent ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :adjudicator ;
-                          owl:onClass adept-base:Entity ;
-                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :adjudicator ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] ,
-                        [ rdf:type owl:Restriction ;
-                          owl:onProperty :defendant ;
-                          owl:allValuesFrom adept-base:Entity
-                        ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#ParentChildRelationship
-
-:ParentChildRelationship rdf:type owl:Class ;
-                         
-                         rdfs:subClassOf :FamilyRelationship ,
-                                         [ rdf:type owl:Restriction ;
-                                           owl:onProperty :child ;
-                                           owl:onClass :Person ;
-                                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                         ] ,
-                                         [ rdf:type owl:Restriction ;
-                                           owl:onProperty :child ;
-                                           owl:allValuesFrom :Person
-                                         ] ,
-                                         [ rdf:type owl:Restriction ;
-                                           owl:onProperty :parent ;
-                                           owl:onClass :Person ;
-                                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                         ] ,
-                                         [ rdf:type owl:Restriction ;
-                                           owl:onProperty :parent ;
-                                           owl:allValuesFrom :Person
-                                         ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#PartWhole
-
-:PartWhole rdf:type owl:Class ;
-           
-           rdfs:subClassOf adept-base:Relation .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Person
-
-:Person rdf:type owl:Class ;
-        
-        rdfs:subClassOf adept-base:Entity .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#PersonAge
-
-:PersonAge rdf:type owl:Class ;
-           
-           rdfs:subClassOf adept-base:Relation ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :person ;
-                             owl:onClass :Person ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :age ;
-                             owl:allValuesFrom :Number
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :age ;
-                             owl:onClass :Number ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :person ;
-                             owl:allValuesFrom :Person
-                           ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#PersonnelEvent
-
-:PersonnelEvent rdf:type owl:Class ;
-                
-                rdfs:subClassOf adept-base:Event ,
-                                [ rdf:type owl:Restriction ;
-                                  owl:onProperty :person ;
-                                  owl:onClass :Person ;
-                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                ] ,
-                                [ rdf:type owl:Restriction ;
-                                  owl:onProperty :position ;
-                                  owl:allValuesFrom :Title
-                                ] ,
-                                [ rdf:type owl:Restriction ;
-                                  owl:onProperty :position ;
-                                  owl:onClass :Title ;
-                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                ] ,
-                                [ rdf:type owl:Restriction ;
-                                  owl:onProperty :person ;
-                                  owl:allValuesFrom :Person
-                                ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#PhysicalLocation
-
-:PhysicalLocation rdf:type owl:Class ;
-                  
-                  rdfs:subClassOf adept-base:Relation ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty :location ;
-                                    owl:allValuesFrom adept-base:Entity
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty :location ;
-                                    owl:onClass adept-base:Entity ;
-                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                  ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Planned
-
-:Planned rdf:type owl:Class ;
-         
-         rdfs:subClassOf :NonActual .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#ReleaseParole
-
-:ReleaseParole rdf:type owl:Class ;
-               
-               rdfs:subClassOf :JusticeEvent ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :agent ;
-                                 owl:allValuesFrom adept-base:Entity
-                               ] ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :person ;
-                                 owl:onClass :Person ;
-                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                               ] ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :agent ;
-                                 owl:onClass adept-base:Entity ;
-                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                               ] ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :person ;
-                                 owl:allValuesFrom :Person
-                               ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Religion
-
-:Religion rdf:type owl:Class ;
-          
-          rdfs:subClassOf :MemberOriginReligionEthnicity .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Resident
-
-:Resident rdf:type owl:Class ;
-          
-          rdfs:subClassOf :PhysicalLocation ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :person ;
-                            owl:onClass :Person ;
-                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                          ] ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty :person ;
-                            owl:allValuesFrom :Person
-                          ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Role
-
-:Role rdf:type owl:Class ;
-      
-      rdfs:subClassOf :InterpersonalRelationship ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :role ;
-                        owl:onClass :Title ;
-                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                      ] ,
-                      [ rdf:type owl:Restriction ;
-                        owl:onProperty :role ;
-                        owl:allValuesFrom :Title
-                      ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Sentence
-
-:Sentence rdf:type owl:Class ;
-          
-          rdfs:subClassOf adept-base:GenericThing .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Sentencing
-
-:Sentencing rdf:type owl:Class ;
-            
-            rdfs:subClassOf :JusticeEvent ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :sentence ;
-                              owl:onClass :Sentence ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :adjudicator ;
-                              owl:allValuesFrom adept-base:Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :defendant ;
-                              owl:onClass adept-base:Entity ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :sentence ;
-                              owl:allValuesFrom :Sentence
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :adjudicator ;
-                              owl:onClass adept-base:Entity ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :defendant ;
-                              owl:allValuesFrom adept-base:Entity
-                            ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Sentiment
-
-:Sentiment rdf:type owl:Class ;
-           
-           rdfs:subClassOf adept-base:Relation ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :source ;
-                             owl:allValuesFrom adept-base:Entity
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :strength ;
-                             owl:onClass :Number ;
-                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :source ;
-                             owl:onClass adept-base:Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :target ;
-                             owl:onClass adept-base:PredicateArgument ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :strength ;
-                             owl:allValuesFrom :Number
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :target ;
-                             owl:allValuesFrom adept-base:PredicateArgument
-                           ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#SiblingRelationship
-
-:SiblingRelationship rdf:type owl:Class ;
-                     
-                     rdfs:subClassOf :FamilyRelationship .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#SpousalRelationship
-
-:SpousalRelationship rdf:type owl:Class ;
-                     
-                     rdfs:subClassOf :FamilyRelationship .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#StartOrganization
-
-:StartOrganization rdf:type owl:Class ;
-                   
-                   rdfs:subClassOf :BusinessEvent ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :agent ;
-                                     owl:onClass adept-base:Entity ;
-                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :organization ;
-                                     owl:allValuesFrom :Organization
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :agent ;
-                                     owl:allValuesFrom adept-base:Entity
-                                   ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#StartPosition
-
-:StartPosition rdf:type owl:Class ;
-               
-               rdfs:subClassOf :PersonnelEvent ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :withinEntity ;
-                                 owl:onClass adept-base:Entity ;
-                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                               ] ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :withinEntity ;
-                                 owl:allValuesFrom adept-base:Entity
-                               ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#StateProvince
-
-:StateProvince rdf:type owl:Class ;
-               
-               rdfs:subClassOf :GeoPoliticalEntity .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#StudentAlum
-
-:StudentAlum rdf:type owl:Class ;
-             
-             rdfs:subClassOf :OrganizationalAffiliation ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :organization ;
-                               owl:onClass :Organization ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :studentAlumni ;
-                               owl:allValuesFrom :Person
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :studentAlumni ;
-                               owl:onClass :Person ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :organization ;
-                               owl:allValuesFrom :Organization
-                             ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Subsidiary
-
-:Subsidiary rdf:type owl:Class ;
-            
-            rdfs:subClassOf :PartWhole ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :parent ;
-                              owl:onClass adept-base:Entity ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :parent ;
-                              owl:allValuesFrom adept-base:Entity
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :subOrganization ;
-                              owl:allValuesFrom :Organization
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :subOrganization ;
-                              owl:onClass :Organization ;
-                              owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                            ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Sue
-
-:Sue rdf:type owl:Class ;
-     
-     rdfs:subClassOf :JusticeEvent ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :defendant ;
-                       owl:onClass adept-base:Entity ;
-                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :plaintiff ;
-                       owl:onClass adept-base:Entity ;
-                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :plaintiff ;
-                       owl:allValuesFrom adept-base:Entity
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :defendant ;
-                       owl:allValuesFrom adept-base:Entity
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :adjudicator ;
-                       owl:allValuesFrom adept-base:Entity
-                     ] ,
-                     [ rdf:type owl:Restriction ;
-                       owl:onProperty :adjudicator ;
-                       owl:onClass adept-base:Entity ;
-                       owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                     ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Title
-
-:Title rdf:type owl:Class ;
-       
-       rdfs:subClassOf adept-base:GenericThing .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Transaction
-
-:Transaction rdf:type owl:Class ;
-             
-             rdfs:subClassOf adept-base:Event ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :giver ;
-                               owl:allValuesFrom adept-base:Entity
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :beneficiary ;
-                               owl:allValuesFrom adept-base:Entity
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :beneficiary ;
-                               owl:onClass adept-base:Entity ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :recipient ;
-                               owl:onClass adept-base:Entity ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :giver ;
-                               owl:onClass adept-base:Entity ;
-                               owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :recipient ;
-                               owl:allValuesFrom adept-base:Entity
-                             ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#TransferMoney
-
-:TransferMoney rdf:type owl:Class ;
-               
-               rdfs:subClassOf :Transaction ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :money ;
-                                 owl:allValuesFrom :Money
-                               ] ,
-                               [ rdf:type owl:Restriction ;
-                                 owl:onProperty :money ;
-                                 owl:onClass :Money ;
-                                 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                               ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#TransferOwnership
-
-:TransferOwnership rdf:type owl:Class ;
-                   
-                   rdfs:subClassOf :Transaction ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :transferredThing ;
-                                     owl:onClass adept-base:Thing ;
-                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :transferredThing ;
-                                     owl:allValuesFrom adept-base:Thing
-                                   ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Transport
-
-:Transport rdf:type owl:Class ;
-           
-           rdfs:subClassOf :Movement ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :instrument ;
-                             owl:onClass adept-base:Thing ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :destination ;
-                             owl:onClass adept-base:Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :instrument ;
-                             owl:allValuesFrom adept-base:Thing
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :agent ;
-                             owl:onClass adept-base:Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :origin ;
-                             owl:allValuesFrom adept-base:Entity
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :origin ;
-                             owl:onClass adept-base:Entity ;
-                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :destination ;
-                             owl:allValuesFrom adept-base:Entity
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty :agent ;
-                             owl:allValuesFrom adept-base:Entity
-                           ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#TransportArtifact
-
-:TransportArtifact rdf:type owl:Class ;
-                   
-                   rdfs:subClassOf :Transport ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :artifact ;
-                                     owl:allValuesFrom adept-base:Thing
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty :artifact ;
-                                     owl:onClass adept-base:Thing ;
-                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                   ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#TransportPerson
-
-:TransportPerson rdf:type owl:Class ;
-                 
-                 rdfs:subClassOf :Transport ,
-                                 [ rdf:type owl:Restriction ;
-                                   owl:onProperty :person ;
-                                   owl:allValuesFrom :Person
-                                 ] ,
-                                 [ rdf:type owl:Restriction ;
-                                   owl:onProperty :person ;
-                                   owl:onClass :Person ;
-                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                 ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#TrialHearing
-
-:TrialHearing rdf:type owl:Class ;
-              
-              rdfs:subClassOf :JusticeEvent ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :adjudicator ;
-                                owl:onClass adept-base:Entity ;
-                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :adjudicator ;
-                                owl:allValuesFrom adept-base:Entity
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :defendant ;
-                                owl:onClass adept-base:Entity ;
-                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :prosecutor ;
-                                owl:allValuesFrom adept-base:Entity
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :defendant ;
-                                owl:allValuesFrom adept-base:Entity
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :prosecutor ;
-                                owl:onClass adept-base:Entity ;
-                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                              ] .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#URL
-
-:URL rdf:type owl:Class ;
-     
-     rdfs:subClassOf adept-base:GenericThing .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#UncertainlyExpressedRelation
-
-:UncertainlyExpressedRelation rdf:type owl:Class ;
-                              
-                              rdfs:subClassOf adept-base:Relation .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Vehicle
-
-:Vehicle rdf:type owl:Class ;
-         
-         rdfs:subClassOf adept-base:GenericThing .
-
-
-
-###  http://adept-kb.bbn.com/adept-core#Weapon
-
-:Weapon rdf:type owl:Class ;
-        
-        rdfs:subClassOf adept-base:GenericThing .
-
-
-
-
-###  Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net
-
+:Weapon a owl:Class ;
+	rdfs:subClassOf adept-base:GenericThing ;
+	rdfs:comment "Generic thing type for a weapon." .
+# 
+# Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi

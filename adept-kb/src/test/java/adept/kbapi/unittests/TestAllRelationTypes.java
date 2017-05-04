@@ -1,20 +1,25 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
 package adept.kbapi.unittests;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 
 import static org.junit.Assert.assertTrue;
 
@@ -61,6 +66,8 @@ import adept.kbapi.KBOntologyModel;
 import adept.kbapi.KBPredicateArgument;
 import adept.kbapi.KBQueryException;
 import adept.kbapi.KBRelation;
+import adept.kbapi.KBRelationArgument;
+import adept.kbapi.KBUpdateException;
 import adept.metadata.SourceAlgorithm;
 import adept.utilities.DocumentMaker;
 
@@ -163,7 +170,7 @@ public class TestAllRelationTypes extends KBUnitTest {
     }  
     
     private void confirmRelationWithTypeExists(String relationType, KBOntologyMap ontologyMap) throws KBQueryException, InvalidPropertiesFormatException, FileNotFoundException, IOException {
-        OntType adeptType = ((Optional<OntType>)ontologyMap.getKBTypeForType(new Type(relationType))).get();
+        OntType adeptType = ontologyMap.getKBTypeForType(new Type(relationType)).get();
         List<KBRelation> relationIds = kb.getRelationsByType(adeptType);
 
         assertTrue("No relations returned.", relationIds.size() > 0);
@@ -184,7 +191,7 @@ public class TestAllRelationTypes extends KBUnitTest {
             HashMap<Item, KBPredicateArgument> argumentMap = new HashMap<Item, KBPredicateArgument>();
 
             Type actualRelationType = new Type(relationType);
-            OntType adeptType = ((Optional<OntType>)ontologyMap.getKBTypeForType(actualRelationType)).get();
+            OntType adeptType = ontologyMap.getKBTypeForType(actualRelationType).get();
             
             // create relation mention
             RelationMention.Builder relationMentionBuilder = RelationMention.builder(actualRelationType);
@@ -198,11 +205,11 @@ public class TestAllRelationTypes extends KBUnitTest {
             int entityId = 1;
             HashMap<String, List<String>> relationTypesWithArguments = ontMapType.equals("tac") ? tacRelationTypesWithArguments : rereRelationTypesWithArguments;
             for (String mappingArgumentType : relationTypesWithArguments.get(relationType)) {
-                OntType kbArgument = ((Optional<OntType>)ontologyMap.getKBTypeForType(new Type(relationType+"."+mappingArgumentType))).get();
+                OntType kbArgument = ontologyMap.getKBTypeForType(new Type(relationType+"."+mappingArgumentType)).get();
                 String kbArgType = KBOntologyModel.instance().getRelationArgumentTypes().get(adeptType.getType()).get(kbArgument.getType());
                 if (kbArgType.equals("Number")) {
                         HltContentContainer hltContentContainer = new HltContentContainer();
-                        Document document = DocumentMaker.getInstance().createDefaultDocument("sample_numbers.txt",
+                        Document document = DocumentMaker.getInstance().createDocument("sample_numbers.txt",
                                         null, "Text", "sample_numbers.txt", "English",
                                         Reader.getAbsolutePathFromClasspathOrFileSystem("adept/kbapi/sample_numbers.txt"),
                                         hltContentContainer);
@@ -315,5 +322,28 @@ public class TestAllRelationTypes extends KBUnitTest {
             Assert.fail();
             return null;
         }
+    }
+    
+    @Test
+    public void testEndorsement() throws KBUpdateException, KBQueryException{
+    	OntType personType = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Person");
+    	KBEntity entity = KBEntity.entityInsertionBuilder(Collections.singletonMap(personType, .5f), generateProvenance("entity"), .5f, .5f).insert(kb);
+    	OntType threadType = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Thread");
+    	KBGenericThing genericThing = KBGenericThing.genericThingInsertionBuilder(threadType, "threadURL").insert(kb);
+    	OntType endorsementType = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Endorsement");
+    	KBRelation.InsertionBuilder relationBuilder = KBRelation.relationInsertionBuilder(endorsementType, .5f);
+    	OntType entityRole = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "entity");
+    	relationBuilder.addArgument(KBRelationArgument.insertionBuilder(entityRole, entity, .5f));
+    	OntType threadRole = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "thread");
+    	relationBuilder.addArgument(KBRelationArgument.insertionBuilder(threadRole, genericThing, .5f));
+    	
+    	relationBuilder.addProvenance(generateProvenance("endorsement provenance"));
+    	KBRelation insertedRelation = relationBuilder.insert(kb);
+    	
+    	KBRelation queriedRelation = kb.getRelationById(insertedRelation.getKBID());
+    	
+    	Assert.assertEquals("Inserted and queried objects should be .equals", insertedRelation, queriedRelation ); 
+    	
+    	
     }
 }

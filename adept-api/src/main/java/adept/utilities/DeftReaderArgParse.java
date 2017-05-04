@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.utilities;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static org.kohsuke.args4j.ExampleMode.ALL;
 import org.kohsuke.args4j.Argument;
@@ -47,7 +50,7 @@ public class DeftReaderArgParse extends CommandLineArgParse {
 	public String annotationDirectory;
 	//
 	/** The annotation format. */
-	@Option(name="--annotation_format",usage=" --annotation_format <format>   Valid annotation file formats are 'SGML' or 'text' or 'ERE' or 'CoNLL'.\n")
+	@Option(name="--annotation_format",usage=" --annotation_format <format>   Valid annotation file formats are 'SGML' or 'text' or 'ERE' or 'CoNLL' or 'amr'.\n")
 	public String annotationFormat;
 
 
@@ -124,7 +127,7 @@ public class DeftReaderArgParse extends CommandLineArgParse {
 					+ "                                   The file will be read from the current directory.\n"
 					+ "    -i, --input_file <filename>    A single input file to be run.\n"
 					+ "    --input_directory <directory>  Input files will be read from this directory.\n"
-					+ "    --input_format <format>        Valid input file formats are 'SGML' or 'text' or 'ERE' or 'CoNLL'.\n"
+					+ "    --input_format <format>        Valid input file formats are 'SGML' or 'text' or 'ERE' or 'CoNLL' or 'amr'.\n"
 					+ "    --input_language <language>    Sets the language of the input files.\n" 
 					+ "                                   The only supported value at this time is 'english'.\n"
 					+ "    -a, --annotation_file <filename>    A single annotation file to be run.\n"

@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.kbapi;
+
+/*-
+ * #%L
+ * adept-kb
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.HashSet;
 import java.util.Set;
@@ -53,13 +56,14 @@ public class KBDate extends KBThing {
 	private final Optional<String> xsdDateString;
 
 	/**
+	 * @param kb
 	 * @param kbID
-	 * @param provenances
-	 * @param canonicalString
+	 * @param timexString
+	 * @param xsdDateString
 	 */
-	protected KBDate(KBID kbID, Set<KBProvenance> provenances, String timexString,
+	protected KBDate(KB kb, KBID kbID, Optional<Set<KBProvenance>> provenances, String timexString,
 			Optional<String> xsdDateString) {
-		super(kbID, provenances, timexString);
+		super(kb, kbID, provenances, timexString);
 		this.timexString = timexString;
 		this.xsdDateString = xsdDateString;
 	}
@@ -145,8 +149,8 @@ public class KBDate extends KBThing {
 	 * provided timexValue are used to add provenances to the builder.
 	 * 
 	 * @param timexValue
-	 * @param provenances
-	 * @return
+	 * @param temporalResolutions
+	 * @return the new InsertionBuilder
 	 */
 	public static InsertionBuilder timexInsertionBuilder(TimexValue timexValue,
 			Set<TemporalResolution> temporalResolutions) {
@@ -170,7 +174,7 @@ public class KBDate extends KBThing {
 	 * provided xsdDate are used to add provenances to the builder.
 	 * 
 	 * @param xsdDate
-	 * @param provenances
+	 * @param temporalResolutions
 	 * @return
 	 */
 	public static InsertionBuilder xsdDateInsertionBuilder(XSDDate xsdDate,
@@ -215,6 +219,7 @@ public class KBDate extends KBThing {
 		 * @param xsdDateString
 		 */
 		private InsertionBuilder(String timexString, Optional<String> xsdDateString) {
+			super();
 			this.timexString = timexString;
 			this.xsdDateString = xsdDateString;
 		}
@@ -225,20 +230,16 @@ public class KBDate extends KBThing {
 		 * @param kb
 		 * @return
 		 * 
-		 * @see adept.kbapi.model.KBPredicateArgument.InsertionBuilder#insert(adept.kbapi.KB)
 		 */
 		@Override
 		public KBDate insert(KB kb) throws KBUpdateException {
 			kb.insertDateValue(this);
-			return build();
+			return build(kb, false);
 		}
 
-		protected KBDate build() {
-			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
-			for (KBProvenance.InsertionBuilder provenanceBuilder : getProvenances()) {
-				provenances.add(provenanceBuilder.build());
-			}
-			return new KBDate(kbid, provenances, timexString, xsdDateString);
+		protected KBDate build(KB kb, boolean deferProvenances) {
+			Optional<Set<KBProvenance>> provenances = buildProvenances(deferProvenances);
+			return new KBDate(kb, kbid, provenances, timexString, xsdDateString);
 		}
 
 		/**
@@ -260,11 +261,10 @@ public class KBDate extends KBThing {
 	 * 
 	 * @return
 	 * 
-	 * @see adept.kbapi.model.KBPredicateArgument#updateBuilder()
 	 */
 	@Override
 	public UpdateBuilder updateBuilder() {
-		return new UpdateBuilder(this);
+		return new UpdateBuilder();
 	}
 
 	/**
@@ -275,31 +275,29 @@ public class KBDate extends KBThing {
 	 * @author dkolas
 	 */
 	public class UpdateBuilder extends KBPredicateArgument.UpdateBuilder<UpdateBuilder, KBDate> {
-		private KBDate kbDate = null;
-
-		private UpdateBuilder(KBDate kbDate) {
-			this.kbDate = kbDate;
-		}
 
 		@Override
-		public KBID getKBID() {
-			return kbDate.getKBID();
-		}
-
-		@Override
-		public KBPredicateArgument update(KB kb) throws KBUpdateException {
+		public KBDate update(KB kb) throws KBUpdateException {
+			
+			Set<KBProvenance> oldProvenances = null;
+			try{
+				oldProvenances = getProvenances();
+				checkProvenancesToRemove();
+			}catch(KBQueryException e){
+				throw new KBUpdateException("Could not load provenances for original object",e);
+			}
 			kb.updateKBPredicateArgumentProvenances(this);
 			Set<KBProvenance> provenances = new HashSet<KBProvenance>();
 			for (KBProvenance.InsertionBuilder provenanceBuilder : getNewProvenances()) {
 				provenances.add(provenanceBuilder.build());
 			}
-			for (KBProvenance kbProvenance : kbDate.getProvenances()) {
+			for (KBProvenance kbProvenance : oldProvenances) {
 				if (!getProvenancesToRemove().contains(kbProvenance)) {
 					provenances.add(kbProvenance);
 				}
 			}
-			return new KBDate(kbDate.getKBID(), provenances, kbDate.getTimexString(),
-					kbDate.xsdDateString());
+			return new KBDate(kb, getKBID(), Optional.of(provenances), getTimexString(),
+					xsdDateString());
 		}
 
 		/**
@@ -317,7 +315,7 @@ public class KBDate extends KBThing {
 
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof KBDate)) {
+		if (null == o || (getClass() != o.getClass())) {
 			return false;
 		}
 		KBDate that = (KBDate) o;

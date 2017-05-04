@@ -1,24 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
-/*
- * 
- */
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +28,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import java.io.Serializable;
 
 
 // TODO: Check for nulls if needed in future.
@@ -37,12 +38,14 @@ import com.google.common.collect.Lists;
  * objects such as Coreference, EntityMention, Event, 
  * Passage, Relation and Sentence.
  */
-public class HltContentContainer extends HltContent {
-       
-    /** The coreferences. */
+public class HltContentContainer extends HltContent implements Serializable {
+
+	private static final long serialVersionUID = -1948855332958545063L;
+
+	/** The coreferences. */
 	// Keep these first so that XSLT will find complete EntityMention elements
 	// inside the <resolvedEntityMentions> element, rather than only references to EntityMentions.
-	private ImmutableList<Coreference> coreferences;
+	private List<Coreference> coreferences;
 	
 	/** The sentence similarities */
 	// Keep these before sentences for the same reason as above comment
@@ -87,6 +90,8 @@ public class HltContentContainer extends HltContent {
 
 	/** The sarcasms. */
 	private ImmutableList<Sarcasm> sarcasms;
+	
+	private ImmutableList<DeceptionTheory> deceptionTheories;
 
 	/** The committed beliefs. */
 	private ImmutableList<CommittedBelief> committedBeliefs;
@@ -403,7 +408,7 @@ public class HltContentContainer extends HltContent {
 	 *            the new coreferences
 	 */
 	public void setCoreferences(List<Coreference> coreferences) {
-		this.coreferences = ImmutableList.copyOf(coreferences);
+		this.coreferences = new ArrayList<Coreference>(coreferences);
 	}
 
 	/**
@@ -689,7 +694,7 @@ public class HltContentContainer extends HltContent {
 	}
     
     /**
-	 * Gets the event phrase.
+	 * Gets the event phrases.
 	 *
      * @deprecated
 	 * @return the event phrases
@@ -700,9 +705,9 @@ public class HltContentContainer extends HltContent {
 	}
 
 	/**
-	 * Sets the eventRelations.
+	 * Sets the event phrases.
 	 *
-	 * @param eventRelations the new eventRelations
+	 * @param eventPhrases the new event phrases
      * @deprecated
 	 */
     @Deprecated
@@ -1020,6 +1025,24 @@ public class HltContentContainer extends HltContent {
 	public Map<KBID, Float> getKBBeliefMapForBelief(DocumentBelief b)
 	{
 	    return this.documentBeliefToKBBeliefMap.get(b);
+	}
+	
+	/**
+	 * Gets the DeceptionTheories.
+	 * 
+	 * @return the deception theories
+	 */
+	public List<DeceptionTheory> getDeceptionTheories() {
+		return deceptionTheories;
+	}
+
+	/**
+	 * Sets the deception theories.
+	 * 
+	 * @param deceptionTheories
+	 */
+	public void setDeceptionTheories(List<DeceptionTheory> deceptionTheories) {
+		this.deceptionTheories = ImmutableList.copyOf(deceptionTheories);
 	}
 }
 

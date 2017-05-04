@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  #%L
+  adept-kb
+  %%
+  Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Mapping from the TAC classes to adept ontology classes</comment>
@@ -26,7 +46,8 @@
 <entry key="Subsidiary">org:subsidiaries</entry>
 <entry key="OrgHeadquarter">org:country_of_headquarters|org:stateprovince_of_headquarters|org:city_of_headquarters</entry>
 <entry key="PersonAge">per:age</entry>
-<entry key="Title">per:title</entry>
+<!--<entry key="Title">per:title</entry>-->
+<entry key="Role">per:title</entry>
 <entry key="MemberOriginReligionEthnicity">org:political_religious_affiliation</entry>
 <entry key="Religion">per:religion</entry>
 <entry key="Origin">per:origin</entry>
@@ -34,7 +55,7 @@
 <entry key="OrganizationWebsite">org:website</entry>
 
 <!--  EVENTS -->
-<!--entry key="Die">per:date_of_death</entry>
+<entry key="Die">per:date_of_death</entry>
 <entry key="Die">per:cause_of_death</entry>
 <entry key="BeBorn">per:date_of_birth</entry>
 <entry key="Die">per:city_of_death</entry>
@@ -45,7 +66,7 @@
 <entry key="BeBorn">per:country_of_birth|per:date_of_birth</entry>
 <entry key="StartOrganization">org:date_founded</entry>
 <entry key="EndOrganization">org:date_dissolved</entry>
-<entry key="ChargeIndict">per:charges</entry-->
+<entry key="ChargeIndict">per:charges</entry>
 
 <!--  mapping of relation argument types -->
 <!-- Of the two parent-child related types in TAC (per:children and per:parents),
@@ -55,9 +76,11 @@ the reverse mapping only supports per:children. -->
 <entry key="FamilyRelationship.person">arg-1|arg-2</entry>
 <entry key="SiblingRelationship.person">arg-1|arg-2</entry>
 <entry key="SpousalRelationship.person">arg-1|arg-2</entry>
-<entry key="EmploymentMembership.person">arg-1</entry>
+<!--<entry key="EmploymentMembership.person">arg-1</entry>-->
+<entry key="EmploymentMembership.employeemember">arg-1</entry>
 <entry key="EmploymentMembership.organization">arg-2</entry>
-<entry key="StudentAlum.person">arg-1</entry>
+<!--<entry key="StudentAlum.person">arg-1</entry>-->
+<entry key="StudentAlum.studentalumni">arg-1</entry>
 <entry key="StudentAlum.organization">arg-2</entry>
 <entry key="Resident.person">arg-1</entry>
 <entry key="Resident.location">arg-2</entry>
@@ -65,7 +88,8 @@ the reverse mapping only supports per:children. -->
 <entry key="InvestorShareholder.investorShareholder">arg-2</entry>
 <entry key="Founder.organization">arg-1</entry>
 <entry key="Founder.founder">arg-2</entry>
-<entry key="Leadership.organization">arg-1</entry>
+<!--<entry key="Leadership.organization">arg-1</entry>-->
+<entry key="Leadership.affiliatedentity">arg-1</entry>
 <entry key="Leadership.leader">arg-2</entry>
 <!-- Of the two membership related types in TAC (org:member_of and org:members),
 the reverse mapping only supports org:members -->
@@ -75,6 +99,8 @@ the reverse mapping only supports org:members -->
 <entry key="Subsidiary.parent">arg-2</entry>
 <entry key="Subsidiary.parent">arg-1</entry>
 <entry key="Subsidiary.subOrganization">arg-2</entry>
+<entry key="Origin.person">arg-1</entry>
+<entry key="Origin.affiliatedentity">arg-2</entry>
 <entry key="OrgHeadquarter.organization">arg-1</entry>
 <entry key="OrgHeadQuarter.location">arg-2</entry>
 <entry key="PersonAge.person">arg-1</entry>
@@ -88,10 +114,13 @@ the reverse mapping only supports org:members -->
 <entry key="NumberOfEmployeesMembers.number">arg-2</entry>
 <entry key="Title.person">arg-1</entry>
 <entry key="Title.role">arg-2</entry>
+<entry key="Role.person">arg-1</entry>
+<entry key="Role.role">arg-2</entry>
+
 
 
 <!-- EVENT ARGUMENTS -->
-<!-- entry key="BeBorn.person">arg-1</entry>
+<entry key="BeBorn.person">arg-1</entry>
 <entry key="BeBorn.location">arg-2</entry>
 <entry key="BeBorn.time">arg-2</entry>
 <entry key="Die.time">arg-2</entry>
@@ -103,6 +132,6 @@ the reverse mapping only supports org:members -->
 <entry key="StartOrganization.organization">arg-1</entry>
 <entry key="StartOrganization.time">arg-2</entry>
 <entry key="EndOrganization.organization">arg-1</entry>
-<entry key="EndOrganization.time">arg-2</entry-->
+<entry key="EndOrganization.time">arg-2</entry>
 
 </properties>

@@ -1,21 +1,24 @@
-/*
-* Copyright (C) 2016 Raytheon BBN Technologies Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
-
 package adept.common;
+
+/*-
+ * #%L
+ * adept-api
+ * %%
+ * Copyright (C) 2012 - 2017 Raytheon BBN Technologies
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,7 +27,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import java.io.Serializable;
 import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Represents some textual evidence that an event occurred.  Note that this evidence can take many forms:
@@ -41,12 +48,13 @@ import java.util.Map;
  <p>This class is locally immutable.</p>
 
  */
-public final class EventText extends HltContent implements HasScoredUnaryAttributes {
-    private final IType eventType;
+public final class EventText extends HltContent implements HasScoredUnaryAttributes, Serializable {
+	private static final long serialVersionUID = -7183453097126004685L;
+	private final IType eventType;
     private final ImmutableSet<Chunk> provenanceChunks;
     private final ImmutableMap<IType, Float> attributes;
     private final Float score;
-	
+
     private EventText(IType eventType, ImmutableSet<Chunk> provenanceChunks, ImmutableMap<IType, Float> attributes, Float score) {
         this.eventType = checkNotNull(eventType);
 
@@ -56,7 +64,7 @@ public final class EventText extends HltContent implements HasScoredUnaryAttribu
         this.attributes = ImmutableMap.copyOf(attributes);
 
         // no null check because it's optional
-        this.score = score;    	
+        this.score = score;
     }
 
     /**
@@ -107,16 +115,16 @@ public final class EventText extends HltContent implements HasScoredUnaryAttribu
         private ImmutableSet.Builder<Chunk> provenanceChunks = ImmutableSet.builder();
         private ImmutableMap.Builder<IType, Float> attributes = ImmutableMap.builder();
         private Float score = null;
-        
+
         private Builder(IType eventType, Iterable<? extends Chunk> provenanceChunks) {
         	// Do checks here because called from 2 places.
         	checkArgument(eventType!=null);
         	this.eventType = eventType;
-        	
+
         	checkArgument(provenanceChunks!=null);
             for (final Chunk chunk : provenanceChunks) {
             	checkArgument(chunk!=null);
-            }        	
+            }
             this.provenanceChunks.addAll(provenanceChunks);
         }
 
@@ -133,22 +141,55 @@ public final class EventText extends HltContent implements HasScoredUnaryAttribu
 
         public Builder setAttributes(Map<? extends IType, Float> attributes) {
         	checkArgument(attributes!=null);
-            for (final IType arg : attributes.keySet()) {
-            	checkArgument(arg!=null);
-                checkArgument(attributes.get(arg)!=null);
-            }          	
-            this.attributes.putAll(attributes);
-            return this;
+        	for (final Map.Entry<? extends IType, Float> entry : attributes.entrySet()) {
+           	checkArgument(entry.getKey()!=null);
+            checkArgument(entry.getValue()!=null);
+          }
+          this.attributes.putAll(attributes);
+          return this;
         }
 
         public Builder addAttribute(IType attribute, float score) {
         	checkArgument(attribute!=null);
             this.attributes.put(attribute, score);
-            return this;        
+            return this;
         }
 
         public EventText build() {
             return new EventText( eventType, provenanceChunks.build(), attributes.build(), score);
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final EventText eventText = (EventText) o;
+
+        if (!eventType.equals(eventText.eventType)) {
+            return false;
+        }
+        if (!provenanceChunks.equals(eventText.provenanceChunks)) {
+            return false;
+        }
+        if (!attributes.equals(eventText.attributes)) {
+            return false;
+        }
+        return !(score != null ? !score.equals(eventText.score) : eventText.score != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = eventType.hashCode();
+        result = 31 * result + provenanceChunks.hashCode();
+        result = 31 * result + attributes.hashCode();
+        result = 31 * result + (score != null ? score.hashCode() : 0);
+        return result;
     }
 }
