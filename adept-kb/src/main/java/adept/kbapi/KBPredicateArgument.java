@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +40,7 @@ package adept.kbapi;
  * #L%
  */
 
+import adept.common.KBID;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -28,8 +49,6 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import adept.common.KBID;
 
 /**
  * Superclass for all KB types which can be the argument of any predicate.
@@ -145,13 +164,13 @@ public abstract class KBPredicateArgument {
 	  	/**
 	   	* Link an existing provenance to this object. The updated state of the provenance
 		 * will be saved to the KB when update is called. This method will be called when
-		 * merging multiple KBEntities, so that their provenances can be re-linked with the
-		 * merged KBEntity.
+		 * merging multiple KB objects, so that their provenances can be re-linked with the
+		 * merged KB object.
 	   	*
 	   	* @param provenance
 	   	* @return
 	   	*/
-	  	protected BuilderType addProvenanceToUpdate(KBProvenance.UpdateBuilder provenance){
+	  	public BuilderType addProvenanceToUpdate(KBProvenance.UpdateBuilder provenance){
 	    		provenancesToUpdate.add(provenance);
 	    		return me();
 	  	}
@@ -250,6 +269,7 @@ public abstract class KBPredicateArgument {
 		public Set<KBID> getExternalKBIds() {
 			return externalKBIds;
 		}
+
 
 		protected abstract BuilderType me();
 

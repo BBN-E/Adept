@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi;
 
 /*-
@@ -51,11 +71,11 @@ public class KBOntologyMap {
 	private static KBOntologyMap tacMap;
 	private static KBOntologyMap adeptIdentityMap;
 
+
 	private KBOntologyModel ontologyModel;
 
 	private Map<String, String> ontologyMap;
 	private Map<String, String> reverseOntologyMap;
-
 	public KBOntologyMap(Map<String, String> ontologyMap, Map<String, String>
 			reverseOntologyMap) {
 		this.ontologyMap = ontologyMap;
@@ -63,9 +83,12 @@ public class KBOntologyMap {
 		this.ontologyModel = KBOntologyModel.instance();
 	}
 
+	private static HashMap<String, String> tacInverseMap;
+
 	public Optional<OntType> getKBTypeForType(IType type) {
 		String typeToMap = type.getType().toLowerCase();
-		String kbType = ontologyMap.containsKey(typeToMap) ? ontologyMap.get(typeToMap) : null;
+		String kbType = ontologyMap.containsKey(typeToMap) ? ontologyMap.get(typeToMap) :
+				(typeToMap.contains(".")?ontologyMap.get(typeToMap.substring(0,typeToMap.indexOf("."))):null);
 		if (kbType == null) {
 			return Optional.absent();
 		}
@@ -167,13 +190,16 @@ public class KBOntologyMap {
 	}
 
 	/**
-	 * Get a reference to the mapping from RichERE-&gt; Adept.
+	 * Get a reference to the mapping from RichERE-&gt; Adept. This method is deprecated.
+	 * Users are encouraged to use {@link #loadOntologyMap(String, String)} with specific
+	 * ontology mapping files.
 	 *
 	 * @return
 	 * @throws InvalidPropertiesFormatException
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
+	@Deprecated
 	public static KBOntologyMap getRichEREOntologyMap() throws InvalidPropertiesFormatException,
 			FileNotFoundException, IOException {
 		if (richEREMap == null) {
@@ -184,6 +210,24 @@ public class KBOntologyMap {
 	}
 
 	/**
+	 * Get a reference to the mapping from TAC-&gt; Adept. This method is deprecated. Users
+	 * are encouraged to use {@link #loadOntologyMap(String, String)} with specific
+	 * ontology mapping files.
+	 *
+	 * @return
+	 * @throws InvalidPropertiesFormatException
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static HashMap<String, String> getTACInverseMap() throws InvalidPropertiesFormatException,
+			FileNotFoundException, IOException {
+		if (tacInverseMap == null) {
+			tacInverseMap = readMapResource("adept/kbapi/tac-to-inverse.xml");
+		}
+		return tacInverseMap;
+	}
+
+	/**
 	 * Get a reference to the mapping from TAC-&gt; Adept.
 	 *
 	 * @return
@@ -191,10 +235,12 @@ public class KBOntologyMap {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
+	@Deprecated
 	public static KBOntologyMap getTACOntologyMap() throws InvalidPropertiesFormatException,
 			FileNotFoundException, IOException {
 		if (tacMap == null) {
-			tacMap = loadOntologyMap("adept/kbapi/tac-to-adept.xml", "adept/kbapi/adept-to-tac.xml");
+			tacMap = loadOntologyMap("adept/kbapi/stanford-to-adept.xml",
+					"adept/kbapi/adept-to-stanford.xml");
 		}
 		return tacMap;
 	}

@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi;
 
 /*-
@@ -19,6 +39,25 @@ package adept.kbapi;
  * limitations under the License.
  * #L%
  */
+
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.update.Update;
+import com.hp.hpl.jena.update.UpdateFactory;
+import com.hp.hpl.jena.update.UpdateProcessor;
+import com.hp.hpl.jena.update.UpdateRequest;
+
+import org.postgresql.util.PSQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -47,25 +86,6 @@ import adept.kbapi.sparql.SparqlUtils;
 import adept.kbapi.sql.ConnectionStatistics;
 import adept.kbapi.sql.QuickJDBC;
 import adept.kbapi.sql.SqlQueryBuilder;
-
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.update.Update;
-import com.hp.hpl.jena.update.UpdateFactory;
-import com.hp.hpl.jena.update.UpdateProcessor;
-import com.hp.hpl.jena.update.UpdateRequest;
-
-import org.postgresql.util.PSQLException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -134,6 +154,99 @@ public class KB {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Query most frequent KB entities by provenanceCount given a limit.
+	 *
+	 * @param limit: the number of most frequent entities to return
+	 * @return List of 'limit' number of most frequent KBEntities
+	 * @throws adept.kbapi.KBQueryException
+	 */
+	public List<KBEntity> getMostFrequentEntitiesByProvenanceCount(int
+			limit) throws KBQueryException {
+		return getMostFrequentEntitiesByProvenanceCount(limit,null);
+	}
+
+	/**
+	 * <p>
+	 * Query most frequent KB entities by documentCount given a limit.
+	 *
+	 * @param limit: the number of most frequent entities to return
+	 * @return List of 'limit' number of most frequent KBEntities
+	 * @throws adept.kbapi.KBQueryException
+	 */
+	public List<KBEntity> getMostFrequentEntitiesByDocumentCount(int limit)
+			throws KBQueryException {
+		return getMostFrequentEntitiesByDocumentCount(limit,null);
+	}
+
+	/**
+	 * <p>
+	 * Query most frequent KB entities by provenanceCount given a limit and an entityType.
+	 *
+	 * @param limit: the number of most frequent entities to return given the entityType
+	 * @param entityType: the OntType to filter most frequent entities by
+	 * @return List of 'limit' number of most frequent KBEntities of type entityType
+	 * @throws adept.kbapi.KBQueryException
+	 */
+	public List<KBEntity> getMostFrequentEntitiesByProvenanceCount(int
+			limit,
+			OntType
+			entityType) throws KBQueryException {
+		Query query = null;
+		if(entityType == null){
+			query = sparqlQueryBuilder
+					.createGetMostFrequentEntityIdsByProvenanceCountQuery(limit);
+		}else{
+			query = sparqlQueryBuilder
+					.createGetMostFrequentEntityIdsByProvenanceCountAndTypeQuery(limit,entityType);
+		}
+		QueryExecution qexec = sparqlService.getQueryExecution(query);
+		com.hp.hpl.jena.query.ResultSet resultSet = qexec.execSelect();
+		List<String> kbUris = new ArrayList<String>();
+		while (resultSet.hasNext()) {
+			QuerySolution item = resultSet.next();
+			RDFNode idNode = item.get("?id");
+			String id = idNode.asResource().getURI().split("#")[1];
+			kbUris.add(id);
+		}
+		return getEntitiesByIds(kbUris);
+	}
+
+	/**
+	 * <p>
+	 * Query most frequent KB entities by documentCount given a limit and
+	 * an entityType.
+	 *
+	 * @param limit: the number of most frequent entities to return given the entityType
+	 * @param entityType: the OntType to filter most frequent entities by
+	 * @return List of 'limit' number of most frequent KBEntities of type entityType
+	 * @throws adept.kbapi.KBQueryException
+	 */
+	public List<KBEntity> getMostFrequentEntitiesByDocumentCount(int
+			limit,
+			OntType
+					entityType) throws KBQueryException {
+		Query query = null;
+		if(entityType == null){
+			query = sparqlQueryBuilder
+					.createGetMostFrequentEntityIdsByDocumentCountQuery(limit);
+		}else{
+			query = sparqlQueryBuilder
+					.createGetMostFrequentEntityIdsByDocumentCountAndTypeQuery(limit,entityType);
+		}
+		QueryExecution qexec = sparqlService.getQueryExecution(query);
+		com.hp.hpl.jena.query.ResultSet resultSet = qexec.execSelect();
+		List<String> kbUris = new ArrayList<String>();
+		while (resultSet.hasNext()) {
+			QuerySolution item = resultSet.next();
+			RDFNode idNode = item.get("?id");
+			String id = idNode.asResource().getURI().split("#")[1];
+			kbUris.add(id);
+		}
+		return getEntitiesByIds(kbUris);
+	}
+
 	private List<KBEntity> getEntitiesByIds(List<String> kbUris) throws KBQueryException {
 		if (kbUris.isEmpty()) {
 			return new ArrayList<KBEntity>();
@@ -183,6 +296,31 @@ public class KB {
 				RDFNode typeConfidenceNode = item.get("?typeConfidence");
 				float typeConfidence = typeConfidenceNode.asLiteral().getFloat();
 
+				RDFNode provenanceCountNode = item.get
+						("?provenanceCount");
+				RDFNode documentCountNode = item.get
+						("?documentCount");
+				Optional<Integer> provenanceCount = Optional
+						.absent();
+				Optional<Integer> documentCount = Optional
+						.absent();
+				if(provenanceCountNode!=null) {
+					provenanceCount =
+							Optional
+									.of(
+					provenanceCountNode
+									.asLiteral()
+									.getInt());
+				}
+				if(documentCountNode!=null) {
+					documentCount =
+							Optional
+									.of(
+											documentCountNode
+													.asLiteral()
+													.getInt());
+				}
+
 				IntermediateEntity intermediateEntity = null;
 				for (IntermediateEntity exisitingIntermediateEntity : intermediateEntities) {
 					if (exisitingIntermediateEntity.id.equals(id)) {
@@ -197,6 +335,10 @@ public class KB {
 					intermediateEntity.canonicalMentionId = canonicalMention;
 					intermediateEntity.canonicalMentionString = canonicalString;
 					intermediateEntity.canonicalMentionConfidence = canonicalMentionConfidence;
+					intermediateEntity.provenanceCount =
+							provenanceCount;
+					intermediateEntity.documentCount =
+							documentCount;
 					intermediateEntities.add(intermediateEntity);
 				}
 				intermediateEntity.types.put(new OntType(typeNode.asResource()), typeConfidence);
@@ -210,7 +352,9 @@ public class KB {
 						intermediateEntity.canonicalMentionConfidence);
 				entityBuilder.setKBID(new KBID(intermediateEntity.id,
 						KBOntologyModel.DATA_INSTANCES_PREFIX));
-				entities.add(entityBuilder.build(this, true));
+				entities.add(entityBuilder.build(this,
+						true,intermediateEntity
+								.provenanceCount,intermediateEntity.documentCount));
 			}
 
 			return entities;
@@ -309,7 +453,7 @@ public class KB {
 	 * argument, then call the appropriate method based on type to query and
 	 * create the object. Then the object should be returned.
 	 *
-	 * @param argument
+	 * @param argumentKbUri
 	 * @return
 	 */
 	private KBPredicateArgument getPredicateArgumentByID(String argumentKbUri) throws KBQueryException {
@@ -332,7 +476,10 @@ public class KB {
 			return getKBDateByDateId(predicateArgumentKBID);
 		} else if (argumentType.equals("Statement")) {
 			return getArgumentRelationArgumentById(predicateArgumentKBID.getObjectID());
-		} else if (kbOntologyModel.getEntityTypes().contains(argumentType)) {
+		} else if (kbOntologyModel.getGenericThingTypes().contains(argumentType)) {
+			return getGenericThingByID(predicateArgumentKBID);
+		} else if (kbOntologyModel.getEntityTypes().contains
+				(argumentType)) {
 			return getEntityById(predicateArgumentKBID);
 		}
 		throw new KBQueryException("Could not load KBPredicateArgument for id: " + argumentKbUri);
@@ -1633,6 +1780,9 @@ public class KB {
 
 					kbRelationArgumentBuilder = buildRelationArgumentsFromDateQuerySolutions(
 							Arrays.asList(item)).get(0);
+				} else if (item.get("?genericThingCanonicalString") != null) {
+					kbRelationArgumentBuilder =
+							buildRelationArgumentsFromGenericThingQuerySolutions(Arrays.asList(item)).get(0);
 				} else {
 					KBRelation relation = getRelationById(new KBID(argumentId,
 							KBOntologyModel.DATA_INSTANCES_PREFIX));
@@ -1680,6 +1830,30 @@ public class KB {
 				canonicalMentionId = SparqlUtils.getLocalName(canonicalMentionNode.asResource());
 			}
 			String canonicalMentionString = item.get("?entityCanonicalString").asLiteral().getString();
+			RDFNode provenanceCountNode = item.get
+					("?provenanceCount");
+			RDFNode documentCountNode = item.get
+					("?documentCount");
+			Optional<Integer> provenanceCount = Optional
+					.absent();
+			Optional<Integer> documentCount = Optional
+					.absent();
+			if(provenanceCountNode!=null) {
+				provenanceCount =
+						Optional
+								.of(
+										provenanceCountNode
+												.asLiteral()
+												.getInt());
+			}
+			if(documentCountNode!=null) {
+				documentCount =
+						Optional
+								.of(
+										documentCountNode
+												.asLiteral()
+												.getInt());
+			}
 
 			Map<OntType, Float> entityTypes = entityTypeMap.get(argumentId);
 			KBEntity.InsertionBuilder entityBuilder = KBEntity.entityInsertionBuilder(
@@ -1695,7 +1869,10 @@ public class KB {
 						.split("#")[1];
 			}
 			relationArguments.add(buildKBRelationArgument(new OntType(item.get("?role")
-					.asResource()), entityBuilder.build(this, true), item.get("?argumentConfidence")
+					.asResource()), entityBuilder.build
+					(this, true, provenanceCount, documentCount),
+					item.get
+					("?argumentConfidence")
 					.asLiteral().getFloat(), new KBID(relationArgumentId,
 					KBOntologyModel.DATA_INSTANCES_PREFIX)));
 		}
@@ -1818,6 +1995,21 @@ public class KB {
 			OntType genericThingType = new OntType(item.get("?genericThingType").asResource());
 			String canonicalString = item.get("?genericThingCanonicalString").asLiteral()
 					.getString();
+			RDFNode provenanceCountNode = item.get
+					("?provenanceCount");
+			RDFNode documentCountNode = item.get
+					("?documentCount");
+			Optional<Integer> provenanceCount = Optional
+					.absent();
+			Optional<Integer> documentCount = Optional
+					.absent();
+			if(provenanceCountNode!=null) {
+				provenanceCount = Optional.of(provenanceCountNode.asLiteral().getInt());
+			}
+			if(documentCountNode!=null) {
+				documentCount =
+						Optional.of(documentCountNode.asLiteral().getInt());
+			}
 			KBGenericThing.InsertionBuilder genericThingBuilder = KBGenericThing
 					.genericThingInsertionBuilder(genericThingType, canonicalString);
 			genericThingBuilder
@@ -1826,7 +2018,10 @@ public class KB {
 			String relationArgumentId = item.get("?kbRelationArgumentID").asResource().getURI()
 					.split("#")[1];
 			relationArguments.add(buildKBRelationArgument(new OntType(item.get("?role")
-					.asResource()), genericThingBuilder.build(this, true), item.get("?argumentConfidence")
+					.asResource()), genericThingBuilder
+					.build(this, true,provenanceCount,documentCount)
+					, item.get
+					("?argumentConfidence")
 					.asLiteral().getFloat(), new KBID(relationArgumentId,
 					KBOntologyModel.DATA_INSTANCES_PREFIX)));
 		}
@@ -1874,7 +2069,7 @@ public class KB {
 
 	/**
 	 * get KB event IDs given event argument
-	 * 
+	 *
 	 * @param kbId
 	 * @return {@code List<KBEvent>} containing input URI as argument
 	 * @throws KBQueryException
@@ -2062,6 +2257,30 @@ public class KB {
 			float canonicalMentionConfidence = item.get("?canonicalMentionConfidence").asLiteral()
 					.getFloat();
 			float entityConfidence = item.get("?entityconfidence").asLiteral().getFloat();
+			RDFNode provenanceCountNode = item.get
+					("?provenanceCount");
+			RDFNode documentCountNode = item.get
+					("?documentCount");
+			Optional<Integer> provenanceCount = Optional
+					.absent();
+			Optional<Integer> documentCount = Optional
+					.absent();
+			if(provenanceCountNode!=null) {
+				provenanceCount =
+						Optional
+								.of(
+										provenanceCountNode
+												.asLiteral()
+												.getInt());
+			}
+			if(documentCountNode!=null) {
+				documentCount =
+						Optional
+								.of(
+										documentCountNode
+												.asLiteral()
+												.getInt());
+			}
 			RDFNode canonicalMentionNode = item.get("?entityCanonicalMention");
 			String canonicalMentionString = item.get("?entityCanonicalString").asLiteral().getString();
 			String canonicalMentionId;
@@ -2078,7 +2297,8 @@ public class KB {
 					canonicalMentionString, entityConfidence,
 					canonicalMentionConfidence);
 			entityBuilder.setKBID(new KBID(entityId, KBOntologyModel.DATA_INSTANCES_PREFIX));
-			relatedEntities.add(entityBuilder.build(this, true));
+			relatedEntities.add(entityBuilder.build(this, true,
+					provenanceCount,documentCount));
 		}
 
 		return relatedEntities;
@@ -2211,7 +2431,7 @@ public class KB {
 			}
 		//TODO End real code
 		//TODO Delete below loop to test over all items in DB
-//			for (int i = 0; i < 100; i++) {
+//			for (int i = 0; i < 200; i++) {
 //				// Get the entity by ID
 //				if (resultSet.hasNext()) {
 //					QuerySolution item = resultSet.next();
@@ -2280,6 +2500,12 @@ public class KB {
 			resultSet = preparedStmt.executeQuery();
 			while (resultSet.next()) {
 				KBTextProvenance.InsertionBuilder builder = KBTextProvenance.builder();
+				if(resultSet.getString("TP_TYPE")!=null) {
+					builder = KBEntityMentionProvenance.builder();
+					((KBEntityMentionProvenance.InsertionBuilder)builder)
+							.setType(resultSet.getString("TP_TYPE"));
+
+				}
 				builder.setConfidence(resultSet.getFloat("TP_confidence"));
 				builder.setBeginOffset(resultSet.getInt("Chunk_beginOffset"));
 				builder.setEndOffset(resultSet.getInt("Chunk_endOffset"));
@@ -2296,7 +2522,6 @@ public class KB {
 				builder.setSourceLanguage(resultSet.getString("SD_sourceLanguage"));
 				builder.setKBID(new KBID(resultSet.getString("TP_ID"),
 						KBOntologyModel.DATA_INSTANCES_PREFIX));
-
 				kbTextProvenances.add(builder);
 
 			}
@@ -2454,11 +2679,25 @@ public class KB {
 
 			String canonicalString = null;
 			OntType type = null;
+	    		Optional<Integer> provenanceCount = Optional
+			    .absent();
+		        Optional<Integer> documentCount = Optional
+			    .absent();
 
 			if (resultSet.hasNext()) {
 				QuerySolution item = resultSet.next();
 				canonicalString = item.getLiteral("?canonicalString").getLexicalForm();
 				type = new OntType(item.getResource("?type"));
+				RDFNode provenanceCountNode = item.get
+						("?provenanceCount");
+				RDFNode documentCountNode = item.get
+						("?documentCount");
+				if(provenanceCountNode!=null) {
+					provenanceCount = Optional.of(provenanceCountNode.asLiteral().getInt());
+				}
+				if(documentCountNode!=null) {
+					documentCount = Optional.of(documentCountNode.asLiteral().getInt());
+				}
 			} else {
 				throw new KBQueryException("No generic thing found in kb for ID = "
 						+ genericThingId.getObjectID());
@@ -2467,7 +2706,8 @@ public class KB {
 			KBGenericThing.InsertionBuilder genericThingBuilder = KBGenericThing
 					.genericThingInsertionBuilder(type, canonicalString);
 			genericThingBuilder.setKBID(genericThingId);
-			return genericThingBuilder.build(this, true);
+			return genericThingBuilder.build(this, true,
+					provenanceCount,documentCount);
 		} catch (Exception ex) {
 			throw new KBQueryException("Failed to query for generic thing with ID = "
 					+ genericThingId.getObjectID(), ex);
@@ -2498,9 +2738,21 @@ public class KB {
 			com.hp.hpl.jena.query.ResultSet resultSet = qexec.execSelect();
 
 			Resource idNode = null;
+			Optional<Integer> provenanceCount = Optional.absent();
+			Optional<Integer> documentCount = Optional.absent();
 			if (resultSet.hasNext()) {
 				QuerySolution item = resultSet.next();
 				idNode = item.getResource("?id");
+				RDFNode provenanceCountNode = item.get
+						("?provenanceCount");
+				RDFNode documentCountNode = item.get
+						("?documentCount");
+				if(provenanceCountNode!=null) {
+					provenanceCount = Optional.of(provenanceCountNode.asLiteral().getInt());
+				}
+				if(documentCountNode!=null) {
+					documentCount = Optional.of(documentCountNode.asLiteral().getInt());
+				}
 			} else {
 				return Optional.absent();
 			}
@@ -2512,7 +2764,8 @@ public class KB {
 					.genericThingInsertionBuilder(type, canonicalString);
 
 			genericThingBuilder.setKBID(kbId);
-			return Optional.of(genericThingBuilder.build(this, true));
+			return Optional.of(genericThingBuilder.build(this,
+					true,provenanceCount,documentCount));
 		} catch (Exception ex) {
 			throw new KBQueryException("Failed to query for generic thing with Type = "
 					+ type.getType() + " and value \"" + canonicalString + "\"", ex);
@@ -2570,6 +2823,8 @@ public class KB {
 		public String canonicalMentionId;
 		public String canonicalMentionString;
 		public float canonicalMentionConfidence;
+		public Optional<Integer> provenanceCount;
+		public Optional<Integer> documentCount;
 		public Map<OntType, Float> types = new HashMap<OntType, Float>();
 	}
 
@@ -2603,6 +2858,7 @@ public class KB {
 		Connection sqlConnection = null;
 		PreparedStatement chunkInsertBatchStatement = null;
 		PreparedStatement textProvenanceInsertBatchStatement = null;
+		PreparedStatement entityMentionTypeInsertBatchStatement = null;
 		PreparedStatement documentInsertBatchStatement = null;
 
 		try {
@@ -2611,6 +2867,8 @@ public class KB {
 					.prepareStatement(SqlQueryBuilder.insertTextChunk);
 			textProvenanceInsertBatchStatement = sqlConnection
 					.prepareStatement(SqlQueryBuilder.insertTextProvenance);
+			entityMentionTypeInsertBatchStatement = sqlConnection.prepareStatement
+					(SqlQueryBuilder.insertEntityMentionType);
 			documentInsertBatchStatement = sqlConnection.prepareStatement(SqlQueryBuilder.insertSourceDocument);
 
 			String entityId = UUID.randomUUID().toString();
@@ -2626,18 +2884,24 @@ public class KB {
 
 			// insert canonical mention
 			if (entityInsertionBuilder.getCanonicalMentionBuilder().isPresent()) {
-				KBTextProvenance.InsertionBuilder textMention = (KBTextProvenance.InsertionBuilder) entityInsertionBuilder.getCanonicalMentionBuilder().get();
+				KBEntityMentionProvenance.InsertionBuilder textMention = (KBEntityMentionProvenance
+						.InsertionBuilder) entityInsertionBuilder.getCanonicalMentionBuilder().get();
 
 				insertTextProvenance(entityId, textMention, chunkInsertBatchStatement, textProvenanceInsertBatchStatement,
 						documentInsertBatchStatement, sqlConnection);
+				insertEntityMentionType(textMention,
+						entityMentionTypeInsertBatchStatement,
+						sqlConnection);
 			}
 			//
 
 			// insert other entity mentions
 			for (KBProvenance.InsertionBuilder mention : entityInsertionBuilder.getProvenances()) {
-				KBTextProvenance.InsertionBuilder textMention = (KBTextProvenance.InsertionBuilder) mention;
+				KBEntityMentionProvenance.InsertionBuilder textMention = (KBEntityMentionProvenance
+						.InsertionBuilder) mention;
 
-				KBTextProvenance.InsertionBuilder canonicalMention = (KBTextProvenance.InsertionBuilder) entityInsertionBuilder.getCanonicalMentionBuilder().get();
+				KBEntityMentionProvenance.InsertionBuilder canonicalMention = (KBEntityMentionProvenance
+						.InsertionBuilder) entityInsertionBuilder.getCanonicalMentionBuilder().get();
 
 				if (!textMention.getChunkId().equals(canonicalMention.getChunkId())
 						|| textMention.getConfidence() != entityInsertionBuilder.getCanonicalMentionConfidence()){
@@ -2645,6 +2909,9 @@ public class KB {
 							chunkInsertBatchStatement,
 							textProvenanceInsertBatchStatement,
 							documentInsertBatchStatement,
+							sqlConnection);
+					insertEntityMentionType(textMention,
+							entityMentionTypeInsertBatchStatement,
 							sqlConnection);
 				} else {
 					textMention.kbid = entityInsertionBuilder.getCanonicalMentionID();
@@ -2655,6 +2922,7 @@ public class KB {
 			documentInsertBatchStatement.executeBatch();
 			chunkInsertBatchStatement.executeBatch();
 			textProvenanceInsertBatchStatement.executeBatch();
+			entityMentionTypeInsertBatchStatement.executeBatch();
 
 
 			// insert external KB ID mapping
@@ -3349,10 +3617,18 @@ public class KB {
 
 		String provenanceId = UUID.randomUUID().toString();
 		SqlQueryBuilder.addTextProvenanceInsertQueryToBatch(provenanceId, provenance.getChunkId(),
-				provenance.getSourceAlgorithmName() != null ? provenance.getSourceAlgorithmName()
-						: null, sourceUri, provenance.getConfidence(),
+				provenance.getSourceAlgorithmName(), sourceUri, provenance.getConfidence(),
 				textProvenanceInsertBatchStatement);
 		provenance.setKBID(new KBID(provenanceId, KBOntologyModel.DATA_INSTANCES_PREFIX));
+	}
+
+	private void insertEntityMentionType(KBEntityMentionProvenance.InsertionBuilder provenance,
+			PreparedStatement entittyMentionTypeInsertBatchStatement, Connection sqlConnection)
+			throws SQLException, UnsupportedEncodingException, MalformedURLException, IOException, PSQLException {
+		String entityMentionTypeId = UUID.randomUUID().toString();
+		SqlQueryBuilder.addEntityMentionTypeInsertQueryToBatch(entityMentionTypeId,
+				provenance.getKBID().getObjectID(), provenance.getType(),
+				entittyMentionTypeInsertBatchStatement);
 	}
 
 	private void deleteTextProvenance(KBID provenanceKbId,
@@ -3366,6 +3642,41 @@ public class KB {
     		SqlQueryBuilder.addTextProvenanceUpdateQueryToBatch(provenanceKbId.getObjectID(),
 		    newSourceUri.getObjectID(), textProvenanceUpdateBatchStatement);
   	}
+
+//	private void updateEntityMentionType(KBID provenanceKbId, String newType,
+//			PreparedStatement entityMentionTypeUpdateBatchStatement) throws SQLException {
+//		SqlQueryBuilder.addEntityMentionTypeUpdateQueryToBatch(provenanceKbId.getObjectID(),
+//				newType, entityMentionTypeUpdateBatchStatement);
+//	}
+
+	protected void updateGenericThingProvenanceAndDocumentCounts
+			(KBGenericThing.UpdateBuilder
+					genericThingUpdateBuilder) throws
+								   KBUpdateException{
+		String kbUri = genericThingUpdateBuilder.getKBID().getObjectID();
+
+		try {
+			// check if KB object to be updated exists in KB.
+			if (!doesKBObjectExist(kbUri)) {
+				throw new KBUpdateException("Entity to be updated does not exist in the KB.");
+			}
+			// execute updates in triple store
+			UpdateRequest genericThingUpdateRequest = UpdateFactory.create();
+
+			UpdateRequest genericThingUpdateQueries = sparqlQueryBuilder.createGenericThingUpdateQueries(
+					genericThingUpdateBuilder, kbUri);
+			if (genericThingUpdateQueries != null) {
+				for (Update update : genericThingUpdateQueries.getOperations()) {
+					genericThingUpdateRequest.add(update);
+				}
+			}
+
+			UpdateProcessor upp = sparqlService.getUpdateProcessor(genericThingUpdateRequest);
+			upp.execute();
+		} catch (Exception e) {
+			throw new KBUpdateException("Entity update failed: "+e.getMessage(), e);
+		}
+	}
 
 	/**
 	 * <p>
@@ -3393,7 +3704,9 @@ public class KB {
 		Connection sqlConnection = null;
 		PreparedStatement chunkInsertBatchStatement = null;
 		PreparedStatement textProvenanceInsertBatchStatement = null;
+		PreparedStatement entityMentionTypeInsertBatchStatement = null;
 	  	PreparedStatement textProvenanceUpdateBatchStatement = null;
+//	  	PreparedStatement entityMentionTypeUpdateBatchStatement = null;
 		PreparedStatement textProvenanceDeleteBatchStatement = null;
 		PreparedStatement documentInsertBatchStatement = null;
 
@@ -3403,8 +3716,12 @@ public class KB {
 					.prepareStatement(SqlQueryBuilder.insertTextChunk);
 			textProvenanceInsertBatchStatement = sqlConnection
 					.prepareStatement(SqlQueryBuilder.insertTextProvenance);
+			entityMentionTypeInsertBatchStatement = sqlConnection.prepareStatement
+					(SqlQueryBuilder.insertEntityMentionType);
 		  	textProvenanceUpdateBatchStatement = sqlConnection.prepareStatement
 			    (SqlQueryBuilder.updateTextProvenance);
+//		  	entityMentionTypeUpdateBatchStatement = sqlConnection.prepareStatement
+//					(SqlQueryBuilder.updateEntityMentionType);
 			textProvenanceDeleteBatchStatement = sqlConnection
 					.prepareStatement(SqlQueryBuilder.deleteTextProvenance);
 			documentInsertBatchStatement = sqlConnection.prepareStatement(SqlQueryBuilder.insertSourceDocument);
@@ -3419,19 +3736,26 @@ public class KB {
 				insertTextProvenance(kbUri, entityUpdateBuilder.getNewCanonicalMention(),
 						chunkInsertBatchStatement, textProvenanceInsertBatchStatement, documentInsertBatchStatement,
 						sqlConnection);
+				insertEntityMentionType(entityUpdateBuilder
+						.getNewCanonicalMention(),
+						entityMentionTypeInsertBatchStatement,sqlConnection);
 			}
 
 			for (KBProvenance.InsertionBuilder mention : entityUpdateBuilder.getNewProvenances()) {
-				KBTextProvenance.InsertionBuilder textMention = (KBTextProvenance.InsertionBuilder) mention;
+				KBEntityMentionProvenance.InsertionBuilder textMention = (KBEntityMentionProvenance
+						.InsertionBuilder) mention;
 				// ensure we aren't reinserting the canonical mention
 				if (entityUpdateBuilder.getNewCanonicalMention() == null
 						|| !textMention.getChunkId().equals(
 								entityUpdateBuilder.getNewCanonicalMention().getChunkId())
 						|| textMention.getConfidence() != entityUpdateBuilder
 								.getNewCanonicalMention().getConfidence()) {
-					insertTextProvenance(kbUri, (KBTextProvenance.InsertionBuilder) mention,
+					insertTextProvenance(kbUri, (KBEntityMentionProvenance.InsertionBuilder) mention,
 							chunkInsertBatchStatement, textProvenanceInsertBatchStatement, documentInsertBatchStatement,
 							sqlConnection);
+					insertEntityMentionType((KBEntityMentionProvenance
+							.InsertionBuilder) mention,
+							entityMentionTypeInsertBatchStatement,sqlConnection);
 				} else {
 					mention.kbid = entityUpdateBuilder.getNewCanonicalMention().kbid;
 				}
@@ -3450,12 +3774,18 @@ public class KB {
 				    ((KBTextProvenance.UpdateBuilder) mentionToUpdate)
 					.getSourceEntityKBID(),
 				    textProvenanceUpdateBatchStatement);
-		  	}
+//		    		updateEntityMentionType(mentionToUpdate.getKBID(),
+//						((KBEntityMentionProvenance.UpdateBuilder)
+//								mentionToUpdate).getNewType(),
+//						entityMentionTypeUpdateBatchStatement);
+			}
 
 			documentInsertBatchStatement.executeBatch();
 			chunkInsertBatchStatement.executeBatch();
 			textProvenanceInsertBatchStatement.executeBatch();
+			entityMentionTypeInsertBatchStatement.executeBatch();
 		  	textProvenanceUpdateBatchStatement.executeBatch();
+//		  	entityMentionTypeUpdateBatchStatement.executeBatch();
 			textProvenanceDeleteBatchStatement.executeBatch();
 
 
@@ -3739,6 +4069,8 @@ public class KB {
 					.prepareStatement(SqlQueryBuilder.insertTextChunk);
 		  PreparedStatement textProvenanceInsertBatchStatement = sqlConnection
 					.prepareStatement(SqlQueryBuilder.insertTextProvenance);
+		  PreparedStatement textProvenanceUpdateBatchStatement = sqlConnection.prepareStatement
+					(SqlQueryBuilder.updateTextProvenance);
 		  PreparedStatement textProvenanceDeleteBatchStatement = sqlConnection
 					.prepareStatement(SqlQueryBuilder.deleteTextProvenance);
 		  PreparedStatement documentInsertBatchStatement = sqlConnection.prepareStatement(SqlQueryBuilder.insertSourceDocument);
@@ -3761,6 +4093,12 @@ public class KB {
 					.getProvenancesToRemove()) {
 				deleteTextProvenance(mentionToRemove.getKBID(),
 				    textProvenanceDeleteBatchStatement);
+			}
+
+			for (KBProvenance.UpdateBuilder mention : relationArgumentUpdateBuilder.getProvenancesToUpdate()) {
+				updateTextProvenance(mention.getKBID(),
+						((KBTextProvenance.UpdateBuilder)mention).getSourceEntityKBID(),
+						textProvenanceUpdateBatchStatement);
 			}
 
 			if (relationArgumentUpdateBuilder.getNewConfidence() != null) {
@@ -4348,8 +4686,7 @@ public class KB {
 			if (!existingGenericThing.isPresent()) {
 				// insert date triples
 				UpdateRequest insertGenericThingRequest = sparqlQueryBuilder
-						.createGenericThingInsertQueries(insertionBuilder.getType(),
-								insertionBuilder.getCanonicalString(), genericThingId);
+						.createGenericThingInsertQueries(insertionBuilder, genericThingId);
 				UpdateProcessor upp = sparqlService.getUpdateProcessor(insertGenericThingRequest);
 				upp.execute();
 			}

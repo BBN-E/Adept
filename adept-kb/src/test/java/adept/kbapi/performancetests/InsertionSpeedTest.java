@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.performancetests;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi.performancetests;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +40,8 @@ package adept.kbapi.performancetests;
  * #L%
  */
 
+
+import com.hp.hpl.jena.query.ResultSet;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -42,50 +64,51 @@ import adept.common.Pair;
 import adept.kbapi.KB;
 import adept.kbapi.KBConfigurationException;
 import adept.kbapi.KBEntity;
+import adept.kbapi.KBEntityMentionProvenance;
 import adept.kbapi.KBOntologyModel;
 import adept.kbapi.KBParameters;
 import adept.kbapi.KBQueryException;
 import adept.kbapi.KBTextProvenance;
 import adept.kbapi.KBUpdateException;
 
-import com.hp.hpl.jena.query.ResultSet;
-  
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * 
+ *
  * @author dkolas
  */
 public class InsertionSpeedTest {
 
-	
+
 	private static final int PROVENANCES_PER_DOC = 25;
 	private static OntType weapon = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Person");
-	
+
 	/**
 	 * @param args
-	 * @throws IOException 
-	 * @throws KBConfigurationException 
-	 * @throws InvalidPropertiesFormatException 
-	 * @throws KBUpdateException 
-	 * @throws InterruptedException 
-	 * @throws KBQueryException 
-	 * @throws ExecutionException 
+	 * @throws IOException
+	 * @throws KBConfigurationException
+	 * @throws InvalidPropertiesFormatException
+	 * @throws KBUpdateException
+	 * @throws InterruptedException
+	 * @throws KBQueryException
+	 * @throws ExecutionException
 	 */
 	public static void main(String[] args) throws InvalidPropertiesFormatException, KBConfigurationException, IOException, KBUpdateException, InterruptedException, KBQueryException, ExecutionException {
 		String runName = "PerfRun"+System.currentTimeMillis()+"-";
 		KB kb = new KB(new KBParameters());
 //		System.out.println("Removing orphan metadata");
 		//kb.removeOrphanMetaData();
-		
+
 		System.out.println("Deleting old objects");
 		deleteOld(kb);
 		long manyInsertStart = System.currentTimeMillis();
 		System.out.println("Inserting many objects");
 		List<KBID> insertedObjects = new ArrayList<KBID>();
 		int numObjects = 1000;
-		
+
 		ExecutorService service = Executors.newFixedThreadPool(4);
 		List<Callable<Pair<KBID, Long>>> tasks = new ArrayList<Callable<Pair<KBID,Long>>>();
-		
+
 		for (int i=0; i<numObjects; i++){
 			tasks.add(new TimeInsertion(1, runName, kb, "-"+i));
 		}
@@ -95,15 +118,15 @@ public class InsertionSpeedTest {
 			insertedObjects.add(result.get().getL());
 			total += result.get().getR();
 		}
-		
+
 		long manyInsertTime = System.currentTimeMillis() - manyInsertStart;
-		
-		
+
+
 		int[] numbersToTime = new int[]{1,1000,2000,3000,4000,5000,6000,7000,8000,9000,10000, 1};
-		
+
 //		int[] numbersToTime = new int[]{1000};
 		List<Pair<KBID, Long>> results = new ArrayList<Pair<KBID,Long>>();
-		long[] queryTimes = new long[numbersToTime.length]; 
+		long[] queryTimes = new long[numbersToTime.length];
 		for (int i = 0; i < numbersToTime.length; i++) {
 			int numProvenances = numbersToTime[i];
 			System.out.println("Timing: "+numProvenances);
@@ -117,7 +140,7 @@ public class InsertionSpeedTest {
 			kb.deleteKBObject(result.getL());
 			results.add(result);
 		}
-				
+
 		File outputFile = new File(args[0]);
 		Writer writer = new BufferedWriter(new FileWriter(outputFile));
 		writer.write("Time to insert ("+numObjects+" objects): "+manyInsertTime+"\n\n\n");
@@ -129,7 +152,7 @@ public class InsertionSpeedTest {
 			writer.write(numbersToTime[i]+","+result.getR()+","+queryTimes[i]+"\n");
 		}
 		writer.close();
-		
+
 		System.out.println("Cleaning up...");
 		for (Pair<KBID, Long> result : results){
 			kb.deleteKBObject(result.getL());
@@ -138,15 +161,15 @@ public class InsertionSpeedTest {
 			kb.deleteKBObject(result);
 		}
 		kb.close();
-		
+
 	}
-	
+
 	/**
-	 * @throws KBUpdateException 
-	 * 
+	 * @throws KBUpdateException
+	 *
 	 */
 	private static void deleteOld(KB kb) throws KBUpdateException {
-		ResultSet resultSet = kb.executeSelectQuery("PREFIX adept-kb: <http://adept-kb.bbn.com/adept-core#> \r\n" + 
+		ResultSet resultSet = kb.executeSelectQuery("PREFIX adept-kb: <http://adept-kb.bbn.com/adept-core#> \r\n" +
 				"SELECT * WHERE { ?x a adept-kb:Weapon}");
 		while (resultSet.hasNext()){
 			String id = resultSet.next().get("?x").asResource().getURI();
@@ -156,18 +179,18 @@ public class InsertionSpeedTest {
 
 	/**
 	 * @param string
-	 * @throws KBUpdateException 
+	 * @throws KBUpdateException
 	 */
 	private static void deleteObj(String string, KB kb) throws KBUpdateException {
 		kb.deleteKBObject(new KBID(string, KBOntologyModel.DATA_INSTANCES_PREFIX));
 	}
 
 	private static Pair<KBID, Long> timeInsertion(int numProvenances, String runName, KB kb, String additionalNamePart) throws KBUpdateException{
-		
+
 		//String name = runName+numProvenances+additionalNamePart;
 		KBEntity.InsertionBuilder thing = KBEntity.entityInsertionBuilder(
 				Collections.singletonMap(weapon, .1f),
-				generateProvenance(numProvenances, 0),
+				generateProvenance(numProvenances, 0, "NOMINAL"),
 				.1f, .1f);
 		for (int i=0; i<numProvenances; i++){
 			thing.addProvenance(generateProvenance(numProvenances, i));
@@ -176,7 +199,7 @@ public class InsertionSpeedTest {
 		KBEntity insertedThing = thing.insert(kb);
 		return new Pair<KBID, Long>(insertedThing.getKBID(), System.currentTimeMillis()-start);
 	}
-	
+
 	protected static KBTextProvenance.InsertionBuilder generateProvenance(int numProvenances, int index) {
 		int docNum = index / PROVENANCES_PER_DOC;
 		KBTextProvenance.InsertionBuilder builder = KBTextProvenance.builder();
@@ -196,11 +219,22 @@ public class InsertionSpeedTest {
 		builder.setValue("ProvenanceValue"+index);
 		return builder;
 	}
-	
+
+	protected static KBEntityMentionProvenance.InsertionBuilder generateProvenance(int numProvenances,
+			int index, String entityMentionType){
+			checkNotNull(entityMentionType);
+			KBTextProvenance.InsertionBuilder builder = generateProvenance
+					(numProvenances,index);
+			KBEntityMentionProvenance.InsertionBuilder entityMentionBuilder =
+					new KBEntityMentionProvenance.InsertionBuilder(builder);
+			entityMentionBuilder.setType(entityMentionType);
+			return entityMentionBuilder;
+	}
+
 	private static class TimeInsertion implements Callable<Pair<KBID, Long>>{
 
-		
-		
+
+
 		private String additionalNamePart;
 		private KB kb;
 		private String runName;
@@ -223,7 +257,7 @@ public class InsertionSpeedTest {
 		public Pair<KBID, Long> call() throws Exception {
 			return timeInsertion(numProvenances, runName, kb, additionalNamePart);
 		}
-		
+
 	}
 
 }

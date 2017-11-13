@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +40,8 @@ package adept.kbapi;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 
 import java.util.Map;
 import java.util.Set;
@@ -28,14 +49,15 @@ import java.util.Set;
 import adept.common.Chunk;
 import adept.common.DocumentMentalStateArgument;
 import adept.common.DocumentSentiment;
+import adept.common.EntityMention;
 import adept.common.Item;
 import adept.common.KBID;
 import adept.common.MentalStateMention;
 import adept.common.OntType;
 import adept.common.RelationMention;
+import adept.common.TimePhrase;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * The Class KBSentiment represents a pointer to a Knowledge Base Entity
@@ -47,7 +69,7 @@ public class KBSentiment extends KBMentalState {
 
 	/**
 	 * Private constructor to be called only from builders.
-	 * 
+	 *
 	 * @param kbID
 	 * @param confidence
 	 * @param arguments
@@ -61,7 +83,7 @@ public class KBSentiment extends KBMentalState {
 	/**
 	 * Get a new insertion builder, populated only with the sentiment's
 	 * confidence.
-	 * 
+	 *
 	 * @param confidence
 	 * @return
 	 */
@@ -72,14 +94,14 @@ public class KBSentiment extends KBMentalState {
 	/**
 	 * Get a new insertion builder, copying information from the
 	 * {@link DocumentSentiment}.
-	 * 
+	 *
 	 * All arguments of the sentiment must have already been inserted into the
 	 * KB and be present in the insertedArgumentMap, which maps Document level
 	 * argument targets to KB level argument targets.
-	 * 
+	 *
 	 * Provenances will be copied from the {@link DocumentSentiment} into the
 	 * builder.
-	 * 
+	 *
 	 * @param documentSentiment
 	 * @param insertedArgumentMap
 	 * @param ontologyMap
@@ -116,23 +138,35 @@ public class KBSentiment extends KBMentalState {
 
 			for (MentalStateMention.Filler mention : argument.getProvenances()) {
 				Chunk chunk = null;
+				String mentionType = null;
 				if (mention.asEntityMention().isPresent()) {
 					chunk = mention.asEntityMention().get();
+					mentionType = ((EntityMention)chunk).getMentionType()
+							.getType();
 				} else if (mention.asStrength().isPresent()) {
 					chunk = mention.asStrength().get();
 				} else if (mention.asRelationMention().isPresent()) {
 					chunk = mention.asRelationMention().get().getJustification();
+					Optional<OntType> relMentionType = ontologyMap.getKBTypeForType((
+							(RelationMention)mention.asRelationMention
+									().get()).getRelationType());
+					checkArgument(relMentionType.isPresent(),
+							"Ontology map must have entry for all RelationMention types.");
+					mentionType = relMentionType.get().getType();
 				} else if (mention.asRelationArgument().isPresent()) {
 					RelationMention.Filler relationArg = mention.asRelationArgument().get();
 					if (relationArg.asEntityMention().isPresent()) {
 						chunk = relationArg.asEntityMention().get();
+						mentionType = ((EntityMention)chunk).getMentionType()
+								.getType();
 					} else if (relationArg.asNumberPhrase().isPresent()) {
 						chunk = relationArg.asNumberPhrase().get();
 					} else if (relationArg.asTimePhrase().isPresent()) {
 						chunk = relationArg.asTimePhrase().get();
+						mentionType = ((TimePhrase)chunk).getType();
 					}
 				}
-				if (null != chunk) 
+				if (null != chunk)
 					argumentBuilder.addProvenance(KBTextProvenance.builder(chunk,
 						mention.getConfidence()));
 			}
@@ -144,7 +178,8 @@ public class KBSentiment extends KBMentalState {
 			// add provenances
 			if (mention.getJustification() != null) {
 				KBProvenance.InsertionBuilder provenanceBuilder = KBTextProvenance.builder(
-						mention.getJustification(), mention.getConfidence());
+						mention.getJustification(), mention.getConfidence
+								());
 				builder.addProvenance(provenanceBuilder);
 			}
 		}
@@ -153,7 +188,7 @@ public class KBSentiment extends KBMentalState {
 
 	/**
 	 * Class for inserting a KBSentiment into the KB.
-	 * 
+	 *
 	 * @author dkolas
 	 */
 	public static class InsertionBuilder extends KBMentalState.InsertionBuilder<KBSentiment> {
@@ -177,9 +212,9 @@ public class KBSentiment extends KBMentalState {
 	/**
 	 * Get an updateBuilder for this KBSentiment. Provenances and the confidence
 	 * may be updated.
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 */
 	public UpdateBuilder updateBuilder() {
 		return new UpdateBuilder();
@@ -187,7 +222,7 @@ public class KBSentiment extends KBMentalState {
 
 	/**
 	 * Class for updating the provenances or confidence of this sentiment.
-	 * 
+	 *
 	 * @author dkolas
 	 */
 	public class UpdateBuilder extends KBMentalState.UpdateBuilder<KBSentiment> {
@@ -196,9 +231,9 @@ public class KBSentiment extends KBMentalState {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return
-		 * 
+		 *
 		 * @see adept.kbapi.KBPredicateArgument.UpdateBuilder#me()
 		 */
 		@Override
@@ -207,14 +242,14 @@ public class KBSentiment extends KBMentalState {
 		}
 
 		/**
-		 * 
+		 *
 		 * @param kb
 		 * @param kbid
 		 * @param confidence
 		 * @param arguments
 		 * @param provenances
 		 * @return
-		 * 
+		 *
 		 */
 		@Override
 		protected KBSentiment buildMentalState(KB kb, KBID kbid, float confidence,

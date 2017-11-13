@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.unittests;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi.unittests;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,7 +80,6 @@ import adept.common.EventMentionArgument;
 import adept.common.EventText;
 import adept.common.HltContentContainer;
 import adept.common.Item;
-import adept.common.KBID;
 import adept.common.OntType;
 import adept.common.Pair;
 import adept.common.RelationMention;
@@ -75,6 +94,7 @@ import adept.kbapi.KB;
 import adept.kbapi.KBBelief;
 import adept.kbapi.KBDate;
 import adept.kbapi.KBEntity;
+import adept.kbapi.KBEntityMentionProvenance;
 import adept.kbapi.KBEvent;
 import adept.kbapi.KBGenericThing;
 import adept.kbapi.KBNumber;
@@ -152,7 +172,7 @@ public abstract class KBUnitTest {
 
 	protected void initializeDataStores() {
 		try {
-			schemaName = "unittest" + rand.nextInt(1000000);
+			schemaName = "unittest" + rand.nextInt(Integer.MAX_VALUE);
 
 			Model model = ModelFactory.createRDFSModel(ModelFactory.createDefaultModel());
 			model.read(getClass().getResourceAsStream("/adept/ontology/adept-base.ttl"), "", "TTL");
@@ -524,7 +544,7 @@ public abstract class KBUnitTest {
 	 * Query the given {@code KBPredicateArgument} from the KB by its KBID.
 	 * Then, verify equality and equal hashCode()s for the given and queried
 	 * objects using {@code Assert.assertEquals()}.
-	 * 
+	 *
 	 * @param kbpa
 	 */
 	public void assertEqualsAndHashCodeByQueryByKBID(KBPredicateArgument kbpa)
@@ -579,7 +599,7 @@ public abstract class KBUnitTest {
 	}
 
 	/**
-	 * @param event
+	 * @param relation
 	 * @param ontType
 	 * @return
 	 */
@@ -596,7 +616,13 @@ public abstract class KBUnitTest {
 		return generateProvenance(value, provenanceNumber++);
 	}
 
-	protected static KBTextProvenance.InsertionBuilder generateProvenance(String value, int index) {
+	protected KBEntityMentionProvenance.InsertionBuilder generateProvenance(String value, String
+			entityMentionType) {
+		return generateProvenance(value, provenanceNumber++,entityMentionType);
+	}
+
+	protected static KBTextProvenance.InsertionBuilder generateProvenance(String value, int
+			index) {
 		KBTextProvenance.InsertionBuilder builder = KBTextProvenance.builder();
 		builder.setBeginOffset(0);
 		builder.setEndOffset(1);
@@ -613,5 +639,14 @@ public abstract class KBUnitTest {
 		builder.setSourceLanguage("SourceLanguage" + index);
 		builder.setValue(value);
 		return builder;
+	}
+
+	protected static KBEntityMentionProvenance.InsertionBuilder generateProvenance(String value, int
+			index, String entityMentionType) {
+		KBTextProvenance.InsertionBuilder builder = generateProvenance(value,index);
+		KBEntityMentionProvenance.InsertionBuilder entityMentionBuilder =
+				new KBEntityMentionProvenance.InsertionBuilder(builder);
+		entityMentionBuilder.setType(entityMentionType);
+		return entityMentionBuilder;
 	}
 }

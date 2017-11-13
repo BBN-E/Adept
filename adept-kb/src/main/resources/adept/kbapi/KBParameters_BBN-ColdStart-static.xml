@@ -37,4 +37,3 @@
 <!-- Whether to use Parliament update processors.  Should be  false for Jena+TDB, true for Parliament -->
 <entry key="useParliamentUpdates">true</entry>
 </properties>
-

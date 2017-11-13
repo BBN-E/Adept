@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.common;
 
 /*-
@@ -42,7 +62,7 @@ public class Document extends Item implements Serializable {
 	private final String docId;
 
 	/** The corpus. */
-	private final Corpus corpus;
+	private Corpus corpus;
 
 	/** The doc type. */
 	private final String docType;
@@ -117,9 +137,9 @@ public class Document extends Item implements Serializable {
 	public Document(String docId, Corpus corpus, String docType, String uri,
 			String language) {
 
-        checkArgument(docId!=null && docId.trim().length() > 0);
-        checkArgument(docType!=null && docType.trim().length() > 0);
-        checkArgument(language!=null && language.trim().length() > 0);
+        checkArgument(docId!=null && docId.trim().length() > 0, "docId must be non-null and non-empty (after trim())");
+        checkArgument(docType!=null && docType.trim().length() > 0, "docType must be non-null and non-empty (after trim())");
+        checkArgument(language!=null && language.trim().length() > 0, "language must be non-null and non-empty (after trim())");
         this.docId = docId.trim();
         
         //TODO: Add checks for any of the other fields?
@@ -167,6 +187,15 @@ public class Document extends Item implements Serializable {
 	 */
 	public String getDocId() {
 		return docId;
+	}
+
+	/**
+	 * Sets the corpus.
+	 *
+	 * @param corpus The new corpus
+	 */
+	public void setCorpus(Corpus corpus) {
+		this.corpus = corpus;
 	}
 
 	/**

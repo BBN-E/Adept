@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.common;
 
 /*-
@@ -369,14 +389,14 @@ public class TokenStream extends ArrayList<Token> implements Serializable {
 		List<String> tokenValues = this.tokenValues(tokenOffset);
 		for (int i = 0; i < tokenValues.size(); i++) {
 			String tokenValue = tokenValues.get(i);
-			String[] tokenCharacters = tokenValue.replaceAll("\\s", "").split("");
+			String[] tokenCharacters = tokenValue.replace((char)160, ' ').replaceAll("\\s", "").split("");
 			for (String tokenCharacter : tokenCharacters) {
 				condensedSubstreamBuilder.append(tokenCharacter);
 				tokenValueCharacterTokenPositions.add(i);
 			}
 		}
 		String condensedSubstream = condensedSubstreamBuilder.toString();
-		String condensedPhrase = phrase.replaceAll("\\s", "");
+		String condensedPhrase = phrase.replace((char)160, ' ').replaceAll("\\s", "");
 
 		int index = condensedSubstream.indexOf(condensedPhrase);
 		if (index == -1) {
@@ -389,6 +409,9 @@ public class TokenStream extends ArrayList<Token> implements Serializable {
 	}
 
 	public List<String> tokenValues() {
+		if (this.isEmpty()) {
+			return new ArrayList<>();
+		}
 		return tokenValues(new TokenOffset(0, this.size() - 1));
 	}
 

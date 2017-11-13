@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.common;
 
 /*-
@@ -20,9 +40,8 @@ package adept.common;
  * #L%
  */
 
-import com.google.common.base.Objects;
-import java.util.List;
 import java.io.Serializable;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -39,10 +58,10 @@ public class Chunk extends HltContent implements Serializable {
 	protected TokenStream tokenStream;
 
 	/** The token offset which is the index into tokenstream. */
-	protected final TokenOffset tokenOffset;
+	protected TokenOffset tokenOffset;
 
     /** The char offset. */
-    protected final CharOffset charOffset;
+    protected CharOffset charOffset;
 
 
 	/**
@@ -156,10 +175,39 @@ public class Chunk extends HltContent implements Serializable {
 	 * 
 	 * @param tokenStream
 	 *            the new token stream
+	 *
 	 */
 	public void setTokenStream(TokenStream tokenStream) {
                 checkArgument(tokenStream!=null);
 		this.tokenStream = tokenStream;
+	}
+
+	public void updateOffset(TokenStream tokenStream, TokenOffset tokenOffset){
+		checkArgument(tokenOffset!=null);
+		checkArgument(tokenStream!=null);
+		this.tokenOffset = tokenOffset;
+		this.tokenStream = tokenStream;
+		this.charOffset = new CharOffset(tokenStream.get(tokenOffset.getBegin()).getCharOffset().getBegin(),tokenStream.get(tokenOffset.getEnd()).getCharOffset().getEnd());
+		this.setValue();
+	}
+
+	public void updateOffset(TokenStream tokenStream, CharOffset charOffset){
+		checkArgument(charOffset != null);
+		checkArgument(tokenStream != null);
+		int tokenOffsetBegin = -1;
+		int tokenOffsetEnd = -1;
+		for (int i = 0; i < tokenStream.size(); i++) {
+			if (tokenStream.get(i).getCharOffset().getBegin() == charOffset.getBegin()) {
+				tokenOffsetBegin = i;
+			}
+			if (tokenStream.get(i).getCharOffset().getEnd() == charOffset.getEnd()) {
+				tokenOffsetEnd = i;
+			}
+		}
+		this.tokenOffset = new TokenOffset(tokenOffsetBegin, tokenOffsetEnd);
+		this.tokenStream = tokenStream;
+		this.charOffset = charOffset;
+		setValue();
 	}
 
 	/**

@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.common;
 
 /*-
@@ -9,9 +29,9 @@ package adept.common;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +40,6 @@ package adept.common;
  * #L%
  */
 
-import com.google.common.base.Objects;
 import java.io.Serializable;
 
 
@@ -55,16 +74,20 @@ public class TimePhrase extends Chunk implements Serializable {
 
 	/**
 	 * Gets the type.
-	 * 
+	 *
 	 * @return the type
 	 */
 	public String getType() {
-		return type.getType();
+		String type = null;
+		if(this.type!=null) {
+			type = this.type.getType();
+		}
+		return type;
 	}
 
 	/**
 	 * Gets the resolution type.
-	 * 
+	 *
 	 * @return the resolution type
 	 */
 	public String getResolutionType() {
@@ -73,7 +96,7 @@ public class TimePhrase extends Chunk implements Serializable {
 
 	/**
 	 * Gets the resolution.
-	 * 
+	 *
 	 * @return the resolution
 	 */
 	public String getResolution() {
@@ -82,7 +105,7 @@ public class TimePhrase extends Chunk implements Serializable {
 
 	/**
 	 * Sets the type.
-	 * 
+	 *
 	 * @param type
 	 *            the new type
 	 */
@@ -101,7 +124,7 @@ public class TimePhrase extends Chunk implements Serializable {
 
 	/**
 	 * Sets the resolution.
-	 * 
+	 *
 	 * @param resolution
 	 *            the new resolution
 	 */

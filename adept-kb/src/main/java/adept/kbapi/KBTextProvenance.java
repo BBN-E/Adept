@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,12 +41,16 @@ package adept.kbapi;
  */
 
 import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
+import com.google.common.collect.FluentIterable;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import adept.common.Chunk;
 import adept.common.KBID;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A textual provenance for a KB Object.
@@ -41,22 +65,22 @@ import adept.common.KBID;
  */
 public class KBTextProvenance extends KBProvenance {
 
-	private final float confidence;
-	private final String sourceAlgorithmName;
-	private final String contributingSiteName;
-	private final String value;
-	private final int beginOffset;
-	private final int endOffset;
-	private final String documentID;
-	private final String documentURI;
-	private final String documentPublicationDate;
-	private final String sourceLanguage;
-	private final String corpusType;
-	private final String corpusName;
-	private final String corpusURI;
-	private final String corpusID;
+	protected final float confidence;
+	protected final String sourceAlgorithmName;
+	protected final String contributingSiteName;
+	protected final String value;
+	protected final int beginOffset;
+	protected final int endOffset;
+	protected final String documentID;
+	protected final String documentURI;
+	protected final String documentPublicationDate;
+	protected final String sourceLanguage;
+	protected final String corpusType;
+	protected final String corpusName;
+	protected final String corpusURI;
+	protected final String corpusID;
 
-	private KBTextProvenance(KBID kbID, float confidence, String sourceAlgorithmName,
+	protected KBTextProvenance(KBID kbID, float confidence, String sourceAlgorithmName,
 			String contributingSiteName, String value, int beginOffset, int endOffset,
 			String documentID, String documentURI, String documentPublicationDate,
 			String sourceLanguage, String corpusType, String corpusName, String corpusURI,
@@ -186,24 +210,47 @@ public class KBTextProvenance extends KBProvenance {
 		return new InsertionBuilder();
 	}
 
+	@Override
+	public KBProvenance.InsertionBuilder modifiedCopyInsertionBuilder() {
+		// note that the corresponding method in KBEntityMentionProvenance will need updates if this changes
+		final KBTextProvenance.InsertionBuilder insertionBuilder = builder();
+		insertionBuilder.setConfidence(confidence);
+		insertionBuilder.setSourceAlgorithmName(sourceAlgorithmName);
+		insertionBuilder.setContributingSiteName(contributingSiteName);
+		insertionBuilder.setValue(value);
+		insertionBuilder.setBeginOffset(beginOffset);
+		insertionBuilder.setEndOffset(endOffset);
+		insertionBuilder.setDocumentURI(documentURI);
+		insertionBuilder.setDocumentID(documentID);
+		insertionBuilder.setDocumentPublicationDate(documentPublicationDate);
+		insertionBuilder.setSourceLanguage(sourceLanguage);
+		insertionBuilder.setCorpusType(corpusType);
+		insertionBuilder.setCorpusName(corpusName);
+		insertionBuilder.setCorpusURI(corpusURI);
+		insertionBuilder.setCorpusID(corpusID);
+		return insertionBuilder;
+	}
+
+
 	public static class InsertionBuilder extends KBProvenance.InsertionBuilder {
-		private float confidence;
-		private String sourceAlgorithmName;
-		private String contributingSiteName;
-		private String value;
-		private int beginOffset;
-		private int endOffset;
-		private String documentURI;
-		private String documentID;
-		private String documentPublicationDate;
-		private String sourceLanguage;
-		private String corpusType;
-		private String corpusName;
-		private String corpusURI;
-		private String corpusID;
-		private String chunkId;
+		protected float confidence;
+		protected String sourceAlgorithmName;
+		protected String contributingSiteName;
+		protected String value;
+		protected int beginOffset;
+		protected int endOffset;
+		protected String documentURI;
+		protected String documentID;
+		protected String documentPublicationDate;
+		protected String sourceLanguage;
+		protected String corpusType;
+		protected String corpusName;
+		protected String corpusURI;
+		protected String corpusID;
+		protected String chunkId;
 
 		public InsertionBuilder(Chunk chunk, float confidence) {
+			checkNotNull(chunk);
 			this.confidence = confidence;
 			if (chunk.getSourceAlgorithm() != null) {
 				this.sourceAlgorithmName = chunk.getSourceAlgorithm().getAlgorithmName();
@@ -231,7 +278,7 @@ public class KBTextProvenance extends KBProvenance {
 		}
 
 		protected KBTextProvenance build() {
-			Preconditions.checkNotNull(kbid);
+			checkNotNull(kbid);
 			return new KBTextProvenance(kbid, confidence, sourceAlgorithmName,
 					contributingSiteName, value, beginOffset, endOffset, documentID, documentURI,
 					documentPublicationDate, sourceLanguage, corpusType, corpusName, corpusURI,
@@ -464,19 +511,36 @@ public class KBTextProvenance extends KBProvenance {
 			}
 			return chunkId;
 		}
+
+		public static Set<String> getDocumentIDsFromProvenanceBuilders
+				(Iterable<KBProvenance.InsertionBuilder>
+						provenanceBuilders) {
+			checkNotNull(provenanceBuilders);
+			Set<String> documentIDs = new HashSet(FluentIterable.from
+					(provenanceBuilders).transform(
+					(KBProvenance.InsertionBuilder
+							provenanceBuilder) ->
+							((KBTextProvenance.InsertionBuilder)
+									 provenanceBuilder)
+									.getDocumentID())
+					.toList());
+			return documentIDs;
+
+		}
 	}
 
-  	public UpdateBuilder getUpdateBuilder(){
-		return new UpdateBuilder(this.getKBID());
+  	public UpdateBuilder getUpdateBuilder(KBID sourceEntityKBID){
+		return new UpdateBuilder(this.getKBID(),sourceEntityKBID);
 	}
 
   	public class UpdateBuilder extends KBProvenance.UpdateBuilder{
 
 	  KBID sourceEntityKBID;
 
-
-	  private UpdateBuilder(KBID provenanceKBID){
+	  protected UpdateBuilder(KBID provenanceKBID, KBID sourceEntityKBID){
 	    setKBID(provenanceKBID);
+	    checkNotNull(sourceEntityKBID);
+	    this.sourceEntityKBID = sourceEntityKBID;
 	  }
 
 	  protected KBTextProvenance build() {
@@ -490,23 +554,20 @@ public class KBTextProvenance extends KBProvenance {
 		//TODO: add update implementation in KB.java
 
 	  }
+		/**
+		 * @return the KBID of entity that has this provenance
+		 */
+		public KBID getSourceEntityKBID() {
+			return sourceEntityKBID;
+		}
 
-	  /**
-	   * @return the KBID of entity that has this provenance
-	   */
-	  public KBID getSourceEntityKBID() {
-	    return sourceEntityKBID;
-	  }
-
-	  /**
-	   * @param kbid
-	   *            the new KBID of the source entity to replace current one with
-	   */
-	  public void setSourceEntityKBID(KBID kbid) {
-	    Preconditions.checkNotNull(kbid);
-	    this.sourceEntityKBID = kbid;
-	  }
-
+		/**
+		 * @param kbid
+		 *            the new KBID of the source entity to replace current one with
+		 */
+		public void setSourceEntityKBID(KBID kbid) {
+			this.sourceEntityKBID = checkNotNull(kbid);
+		}
   	}
 
 	@Override
@@ -536,5 +597,18 @@ public class KBTextProvenance extends KBProvenance {
 				contributingSiteName, value, beginOffset, endOffset, documentID, documentURI,
 				documentPublicationDate, sourceLanguage, corpusType, corpusName, corpusURI,
 				corpusID);
+	}
+
+	public static Set<String> getDocumentIDsFromProvenances
+			(Iterable<KBProvenance> provenances) {
+  		checkNotNull(provenances);
+		Set<String> documentIDs = new HashSet(FluentIterable.from
+				(provenances).transform(
+				(KBProvenance provenance) ->
+						((KBTextProvenance)provenance)
+								.getDocumentID())
+				.toList());
+		return documentIDs;
+
 	}
 }

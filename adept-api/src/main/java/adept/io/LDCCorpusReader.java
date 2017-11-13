@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.io;
 
 /*-
@@ -20,45 +40,23 @@ package adept.io;
  * #L%
  */
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-
+import adept.common.*;
+import adept.utilities.PassageAttributes;
+import adept.utilities.StanfordTokenizer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import adept.common.Pair;
-import adept.common.ConversationElement;
-import adept.common.ConversationElementAttributesTypeFactory;
-import adept.common.ConversationElementEntityRelationTypeFactory;
-import adept.common.ConversationElementRelationTypeFactory;
-import adept.common.ChannelName;
-import adept.common.CharOffset;
-import adept.common.ContentType;
-import adept.common.Corpus;
-import adept.common.HltContentContainer;
-import adept.common.ConversationElementTag;
-import adept.common.Token;
-import adept.common.TokenOffset;
-import adept.common.TokenStream;
-import adept.common.TokenizerType;
-import adept.common.TranscriptType;
-import adept.utilities.PassageAttributes;
-import adept.utilities.StanfordTokenizer;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.util.*;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 
 /**
@@ -368,15 +366,87 @@ public class LDCCorpusReader {
      */
     public adept.common.Document readCorpus(org.w3c.dom.Document doc,
                                             List<PassageAttributes> passageAttributesList,
+                                            String docIDArgument,
                                             Corpus corpus,
                                             String uri,
                                             String language) {
         adept.common.Document adeptDocument;    // distinguish from w3c Document type
         String docID = null;
         String docType = null;
-        String headline;
         StringBuffer documentTextBuffer = new StringBuffer();
+
+        // thrown an exception if we encounter unknown tag name(s)
+        NodeList nodeList = doc.getElementsByTagName("*");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            String tagName = nodeList.item(i).getNodeName();
+            if (!tagName.matches("AUTHOR|BODY|DATE(_?TIME|LINE)|DOC(ID|TYPE)?|HEADLINE|P(OST(ER|DATE)?)?|TEXT|URL")) {
+                throw new RuntimeException(new IOException("input document contains unknown tag '" + tagName + "'"));
+            }
+        }
+
         doc.getDocumentElement().normalize();
+
+        String headline = "";
+        Node headlineNode = doc.getElementsByTagName("HEADLINE").item(0);
+        if (headlineNode != null) {
+            headline = headlineNode.getTextContent();
+        } else {
+            // HUB4
+            headlineNode = doc.getElementsByTagName("headline").item(0);
+            if (headlineNode != null) {
+                headline = headlineNode.getTextContent();
+            }
+        }
+        String date = "";
+        Node dateNode = null;
+        String[] dateTags = {"DATE","date","DATETIME","datetime","DATELINE","dateline","DATE_TIME","date_time",
+                "DATE_LINE","date_line","POSTDATE","postdate"};
+        for(String dateTag : dateTags){
+            dateNode = doc.getElementsByTagName(dateTag).item(0);
+            if(dateNode!=null){
+                break;
+            }
+        }
+        if (dateNode != null) {
+            date = dateNode.getTextContent().trim();
+        }
+
+        String author = "";
+        // (don't use the author as part of the document value for now)
+        /*Node authorNode = doc.getElementsByTagName("AUTHOR").item(0);
+        if (authorNode != null) {
+            author = authorNode.getTextContent();
+        } else {
+            // HUB4
+            authorNode = doc.getElementsByTagName("author").item(0);
+            if (authorNode != null) {
+                author = authorNode.getTextContent();
+            }
+        }
+        // if the document doesn't have an author, perhaps it has a poster
+        if(author.isEmpty()) {
+            authorNode = doc.getElementsByTagName("POSTER").item(0);
+            if (authorNode != null) {
+                author = authorNode.getTextContent();
+            } else {
+                // HUB4
+                authorNode = doc.getElementsByTagName("poster").item(0);
+                if (authorNode != null) {
+                    author = authorNode.getTextContent();
+                }
+            }
+        }*/
+
+        int passageStartCharOffset = 0;
+        StringBuilder headersBuffer = new StringBuilder();
+        if(!headline.isEmpty()){
+            headersBuffer.append(headline).append("\n");
+            passageStartCharOffset += (headline.length() + 1);
+        }
+        if (!author.isEmpty()) {
+            headersBuffer.append(author).append("\n");
+            passageStartCharOffset += (author.length() + 1);
+        }
 
         /** get text */
         // TODO - there should be a clearer way of distinguishing XML formats.
@@ -400,6 +470,10 @@ public class LDCCorpusReader {
                 for (int i = 0; i < passages.getLength(); i++) {
                     Element passage = (Element) passages.item(i);
                     if (passage != null) {
+                        Node passageFirstChild = passage.getFirstChild();
+                        if (passageFirstChild == null) {
+                            continue; // empty passage
+                        }
                         String passageText = passage.getFirstChild().getNodeValue();
                         long passageId = i;
                         String sarcasmValue = "";
@@ -441,7 +515,7 @@ public class LDCCorpusReader {
                     if (child.getNodeType() == Node.TEXT_NODE)
                         documentTextBuffer.append(child.getTextContent());
                 }
-                getPassages(passageAttributesList, documentTextBuffer.toString().trim());
+                getPassages(passageAttributesList, documentTextBuffer.toString().trim(), passageStartCharOffset);
             } else {
                 textElement = (Element) doc.getElementsByTagName("TEXT").item(0);
                 Element postElement = (Element) textElement.getElementsByTagName("POST").item(0);
@@ -452,7 +526,7 @@ public class LDCCorpusReader {
                     if (child.getNodeType() == Node.TEXT_NODE)
                         documentTextBuffer.append(child.getTextContent());
                 }
-                getPassages(passageAttributesList, documentTextBuffer.toString().trim());
+                getPassages(passageAttributesList, documentTextBuffer.toString().trim(), passageStartCharOffset);
             }
 
             /** get adept Document ID and type */
@@ -460,7 +534,6 @@ public class LDCCorpusReader {
             docID = DOCElement.getAttribute("id");
             docType = DOCElement.getAttribute("type");
             if (docID.equals("")) {
-                try {
                     System.out.println("DOCID was empty on the first attempt");
                     /** Get Adept Document ID */
                     NodeList docElements = doc.getElementsByTagName("DOCID");
@@ -470,16 +543,9 @@ public class LDCCorpusReader {
                     if (docElements == null || docElements.getLength() == 0 || docID == null ||
                             (docID != null && docID.equals(""))) {
                         System.out.println("DOCID was empty in the second attempt (DOCID)");
-                        docID = doc.getElementsByTagName("DOCNO").item(0).getFirstChild()
-                                .getNodeValue();
+                        Node docNoNode = doc.getElementsByTagName("DOCNO").item(0);
+                        docID = docNoNode != null ? docNoNode.getFirstChild().getNodeValue() : null;
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    // Unrecoverable error, so made this an unchecked exception
-                    throw new RuntimeException("Unable to set DOC ID. Adept documents are required to have a non-empty document ID.");
-                }
-
             }
             if (docType.equals("")) {
                 /** get adept Document Type */
@@ -493,7 +559,7 @@ public class LDCCorpusReader {
 
         }
 
-        String documentText = documentTextBuffer.toString().trim();
+        String documentText = (headersBuffer.toString() + documentTextBuffer.toString()).trim();
 
         /** convert to utf-8 */
         Charset charset = Charset.forName("UTF-8");
@@ -505,29 +571,29 @@ public class LDCCorpusReader {
             e.printStackTrace();
         }
 
-        /** get headline */
-        headline = "";
-        Element headlineElement = (Element) doc.getElementsByTagName("HEADLINE").item(0);
-        if (headlineElement != null && headlineElement.getFirstChild() != null) {
-            headline = headlineElement.getFirstChild().getNodeValue();
-        } else {
-            // HUB4
-            headlineElement = (Element) doc.getElementsByTagName("headline").item(0);
-            if (headlineElement != null && headlineElement.getFirstChild() != null) {
-                headline = headlineElement.getFirstChild().getNodeValue();
-            }
-        }
-
         /** create adept document and return */
         // TODO - more languages
+
+        // if a non-null docIDArgument was provided, then use that instead of the docid from the document itself
+        if (docIDArgument != null) {
+            docID = docIDArgument;
+        }
 
         System.out.println("Doc URI: " + uri);
         System.out.println("Doc Id: " + docID);
         System.out.println("Doc type: " + docType);
         adeptDocument = new adept.common.Document(docID, corpus, docType, uri, language);
-        adeptDocument.setValue(documentText);
+        adeptDocument.setValue(Reader.checkSurrogates(documentText));
         adeptDocument.setHeadline(headline);    // TODO should this be trimmed?
-
+        if(!date.isEmpty()){
+            adeptDocument.setCaptureDate(date);
+            //Not setting the publication date for now, since KBAPI assumes it to always be in ISO 8601 DateTime format
+            //which is not always the case with input documents
+//            adeptDocument.setPublicationDate(date);
+        }
+        for (PassageAttributes passageAttributes : passageAttributesList) {
+            passageAttributes.setValue(Reader.checkSurrogates(passageAttributes.getValue()));
+        }
         return adeptDocument;
     }
 
@@ -600,9 +666,8 @@ public class LDCCorpusReader {
      * @param passageAttributesList The empty list to which to add the passages.
      * @param text                  The input text.
      */
-    public void getPassages(List<PassageAttributes> passageAttributesList, String text) {
+    public void getPassages(List<PassageAttributes> passageAttributesList, String text, int postPassageOffset) {
         BufferedReader bufReader = new BufferedReader(new StringReader(text));
-        int postPassageOffset = 0; // used to count up the increasing postPassageOffset for each passage
         StringBuffer value = new StringBuffer(); // used to build up the value string for each passage
         String line; // used to hold each line as we read it in from the buffer
         boolean wasPreviousLineBlank = false; // used to store whether the line before the one that we are currently reading was blank

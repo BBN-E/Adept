@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.unittests;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi.unittests;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +52,7 @@ import adept.kbapi.KBTextProvenance;
 import adept.kbapi.KBUpdateException;
 
 /**
- * 
+ *
  * @author dkolas
  */
 public class TestProvenance extends KBUnitTest {
@@ -88,7 +108,8 @@ public class TestProvenance extends KBUnitTest {
 		//   Note that 7 and 77 are distinct values for same text so that we get unique
 		//   KBNumber objects
 		Chunk sevenChunk = new Chunk(testTokenOffset, testTokenStream);
-		KBTextProvenance.InsertionBuilder sevenChunkBuilder = KBTextProvenance.builder(sevenChunk, 1.0f);
+		KBTextProvenance.InsertionBuilder sevenChunkBuilder = KBTextProvenance.builder
+				(sevenChunk, 1.0f);//NumeberPhrase has no type
 		KBNumber.InsertionBuilder builder = KBNumber.numberInsertionBuilder(7);
 		builder.addProvenance(sevenChunkBuilder);
 		KBNumber seven = builder.insert(kb);

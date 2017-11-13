@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.utilities;
 
 /*-
@@ -89,6 +109,8 @@ public class DocumentMaker implements ITokenizer {
     RAW_XML,
     /**
      * Like RAW_XML, but read the raw file as if it began at the opening &lt;doc&gt; or &lt;DOC&gt; tag, as per TAC offset guidelines.
+     * Note that while TAC guidelines state that character offset ends are inclusive, this option maintains exclusive offsets for
+     * backwards compatibility. It may be necessary to account for this in certain applications, including TAC evaluations.
      */
     RAW_XML_TAC
   }
@@ -272,7 +294,7 @@ public class DocumentMaker implements ITokenizer {
                 w3cDoc,
                 Optional.absent(),
                 postAttributesList,
-                Optional.of(docId),
+                Optional.fromNullable(docId),
                 corpus,
                 Optional.of(docType),
                 uri,
@@ -349,14 +371,14 @@ public class DocumentMaker implements ITokenizer {
 
     document =
         LDCCorpusReader.getInstance()
-            .readCorpus(w3cDoc, passageAttributesList, corpus, uri, language);
+            .readCorpus(w3cDoc, passageAttributesList, docId, corpus, uri, language);
 
     if (document != null && tokenize) {
       TokenStream tokenStream = tokenize(document.getValue(), document);
       if (xmlReadMode != XMLReadMode.DEFAULT) {
         String rawText;
         try {
-          rawText = Reader.readRawFile(filename);
+          rawText = Reader.checkSurrogates(Reader.readRawFile(filename));
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
@@ -365,23 +387,27 @@ public class DocumentMaker implements ITokenizer {
         }
         String cleanedRawDocumentValue;
         if (rawText.contains("<POST>")) {
-          String[] whiteListedRegexes = {"<POST>.*?<\\/POST>"};
+          String whiteListedRegex = "<(POST|HEADLINE)>.*?<\\/(POST|HEADLINE)>";
           String[] blackListedRegexes = {
+                  "<AUTHOR?>.*?<\\/AUTHOR?>",
                   "<POSTER?>.*?<\\/POSTER?>",
-                  "<\\/?.*?>"
+                  "<\\/?.*?>" // covers: (tags of target elements) "POST" and "HEADLINE"
           };
-          cleanedRawDocumentValue = Reader.cleanRawText(rawText, whiteListedRegexes, 1, blackListedRegexes);
+          cleanedRawDocumentValue = Reader.cleanRawText(rawText, whiteListedRegex, 2, blackListedRegexes);
         } else {
-          String[] whiteListedRegexes = {"<DOC.*?<\\/DOC>"};
+          String whiteListedRegex = "<DOC.*?<\\/DOC>";
           String[] blackListedRegexes = {
+                  "<AUTHOR>.*?<\\/AUTHOR>",
+                  "<DATETIME>.*?<\\/DATETIME>",
+                  "<DATE_TIME>.*?<\\/DATE_TIME>",
+                  "<DATELINE>.*?<\\/DATELINE>",
                   "<DOCID>.*?<\\/DOCID>",
                   "<DOCTYPE.*?>.*?<\\/DOCTYPE>",
-                  "<DATETIME>.*?<\\/DATETIME>",
-                  "<HEADLINE>.*?<\\/HEADLINE>",
                   "<POSTER>.*?<\\/POSTER>",
-                  "<\\/?.*?>",
+                  "<POSTERDATE>.*?<\\/POSTERDATE>",
+                  "<\\/?.*?>", // covers: "BODY" and "DOC", as well as (tags of target elements) "P"/"POST"/"TEXT" and "HEADLINE"
           };
-          cleanedRawDocumentValue = Reader.cleanRawText(rawText, whiteListedRegexes, blackListedRegexes);
+          cleanedRawDocumentValue = Reader.cleanRawText(rawText, whiteListedRegex, blackListedRegexes);
         }
         tokenStream.reAlignToText(cleanedRawDocumentValue);
         document.setValue(cleanedRawDocumentValue);

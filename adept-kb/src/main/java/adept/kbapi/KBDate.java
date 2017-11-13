@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +39,10 @@ package adept.kbapi;
  * limitations under the License.
  * #L%
  */
+
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,19 +52,15 @@ import adept.common.TemporalResolution;
 import adept.common.TimexValue;
 import adept.common.XSDDate;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-
 /**
  * Class for representing Dates in the KB.
- * 
+ *
  * Currently this implementation supports date strings in either Timex2 or
  * XSDDate format. Both formats will be available if conversion is possible.
- * 
+ *
  * Dates are intended to be canonical within the KB; only one copy of a
  * particular date should ever exist.
- * 
+ *
  * @author dkolas
  */
 public class KBDate extends KBThing {
@@ -58,6 +78,7 @@ public class KBDate extends KBThing {
 	/**
 	 * @param kb
 	 * @param kbID
+	 * @param provenances
 	 * @param timexString
 	 * @param xsdDateString
 	 */
@@ -71,7 +92,7 @@ public class KBDate extends KBThing {
 	/**
 	 * Get the timex2 representation of the date. This should always be
 	 * available.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getTimexString() {
@@ -82,9 +103,9 @@ public class KBDate extends KBThing {
 	 * Get the XSDDate representation of the date. This will be available if the
 	 * date was created with an XSDDate representation, or if the timex2 value
 	 * could be successfully converted.
-	 * 
+	 *
 	 * Otherwise this method will return {@link Optional#absent()}
-	 * 
+	 *
 	 * @return
 	 */
 	public Optional<String> xsdDateString() {
@@ -93,9 +114,9 @@ public class KBDate extends KBThing {
 
 	/**
 	 * Create an insertionBuilder based on a Timex string.
-	 * 
+	 *
 	 * Provenances can then be added.
-	 * 
+	 *
 	 * @param timexString
 	 * @return
 	 */
@@ -106,7 +127,7 @@ public class KBDate extends KBThing {
 
 	/**
 	 * Private method for converting timex2 strings to XSDDate strings
-	 * 
+	 *
 	 * @param timexString
 	 * @return
 	 */
@@ -121,9 +142,9 @@ public class KBDate extends KBThing {
 
 	/**
 	 * Create an insertionBuilder based on an XSDDate string.
-	 * 
+	 *
 	 * Provenances can then be added.
-	 * 
+	 *
 	 * @param xsdDateString
 	 * @return
 	 */
@@ -134,7 +155,7 @@ public class KBDate extends KBThing {
 
 	/**
 	 * Private method for converting XSDDate strings to Timex strings
-	 * 
+	 *
 	 * @param xsdDateString
 	 * @return
 	 */
@@ -144,10 +165,10 @@ public class KBDate extends KBThing {
 
 	/**
 	 * Create an insertion builder from a {@link TimexValue}.
-	 * 
+	 *
 	 * Any temporal resolutions in the provided list that are linked to the
 	 * provided timexValue are used to add provenances to the builder.
-	 * 
+	 *
 	 * @param timexValue
 	 * @param temporalResolutions
 	 * @return the new InsertionBuilder
@@ -169,10 +190,10 @@ public class KBDate extends KBThing {
 
 	/**
 	 * Create an insertion builder from a {@link XSDDate}.
-	 * 
+	 *
 	 * Any temporal resolutions in the provided list that are linked to the
 	 * provided xsdDate are used to add provenances to the builder.
-	 * 
+	 *
 	 * @param xsdDate
 	 * @param temporalResolutions
 	 * @return
@@ -194,7 +215,7 @@ public class KBDate extends KBThing {
 
 	/**
 	 * Class for inserting KBDates into the KB.
-	 * 
+	 *
 	 * @author dkolas
 	 */
 	public static class InsertionBuilder extends
@@ -214,7 +235,7 @@ public class KBDate extends KBThing {
 		/**
 		 * Private constructor for the builder, to be called only by
 		 * insertionBuilder methods.
-		 * 
+		 *
 		 * @param timexString
 		 * @param xsdDateString
 		 */
@@ -226,10 +247,10 @@ public class KBDate extends KBThing {
 
 		/**
 		 * Method to insert the contents of this builder into the KB.
-		 * 
+		 *
 		 * @param kb
 		 * @return
-		 * 
+		 *
 		 */
 		@Override
 		public KBDate insert(KB kb) throws KBUpdateException {
@@ -243,9 +264,9 @@ public class KBDate extends KBThing {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return
-		 * 
+		 *
 		 * @see adept.kbapi.KBPredicateArgument.InsertionBuilder#me()
 		 */
 		@Override
@@ -256,11 +277,11 @@ public class KBDate extends KBThing {
 
 	/**
 	 * Get an update builder for this object.
-	 * 
+	 *
 	 * Only provenances are updatable.
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 */
 	@Override
 	public UpdateBuilder updateBuilder() {
@@ -269,16 +290,16 @@ public class KBDate extends KBThing {
 
 	/**
 	 * Class for updating a KBDate.
-	 * 
+	 *
 	 * Only provenances are updatable.
-	 * 
+	 *
 	 * @author dkolas
 	 */
 	public class UpdateBuilder extends KBPredicateArgument.UpdateBuilder<UpdateBuilder, KBDate> {
 
 		@Override
 		public KBDate update(KB kb) throws KBUpdateException {
-			
+
 			Set<KBProvenance> oldProvenances = null;
 			try{
 				oldProvenances = getProvenances();
@@ -301,9 +322,9 @@ public class KBDate extends KBThing {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return
-		 * 
+		 *
 		 * @see adept.kbapi.KBPredicateArgument.UpdateBuilder#me()
 		 */
 		@Override

@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.unittests;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi.unittests;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +40,10 @@ package adept.kbapi.unittests;
  * #L%
  */
 
-import static org.junit.Assert.assertTrue;
+import com.google.common.base.Optional;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,9 +52,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 import adept.common.Chunk;
 import adept.common.DocumentRelation;
@@ -55,7 +75,8 @@ import adept.kbapi.KBRelationArgument;
 import adept.kbapi.KBTextProvenance;
 import adept.kbapi.KBUpdateException;
 import adept.metadata.SourceAlgorithm;
-import com.google.common.base.Optional;
+
+import static org.junit.Assert.assertTrue;
 
 public class TestRelation extends KBUnitTest {
 	// Initial relation values
@@ -102,7 +123,8 @@ public class TestRelation extends KBUnitTest {
 		testQueryRelationByRegex("BBN.*", false);
 
 		KBTextProvenance.InsertionBuilder newArgumentProvenanceBuilder = KBTextProvenance.builder(
-				createTestChunk(), 0.3f);
+				createTestChunk(), 0.3f);//createTestChunk
+		// creates a NAME-type mention/chunk
 		KBTextProvenance.InsertionBuilder newRelationProvenanceBuilder = KBTextProvenance.builder(
 				createTestChunk(), updatedRelationMentionConfidence);
 
@@ -131,7 +153,7 @@ public class TestRelation extends KBUnitTest {
 		assertEqualsAndHashCodeByQueryByKBID(newArgEntity);
 		updateBuilder.addNewArgument(KBRelationArgument.insertionBuilder(new OntType(
 				KBOntologyModel.ONTOLOGY_CORE_PREFIX, "person"), newArgEntity, 0.05f));
-                
+
         updateBuilder.removeExternalKBID(new KBID("External_Resident_Relation2", "ExampleKB2"));
         updateBuilder.addExternalKBID(new KBID("New_External_Resident_Relation", "New_ExampleKB"));
 
@@ -143,10 +165,10 @@ public class TestRelation extends KBUnitTest {
 		testQueryRelationByArg(kbEntity1.getKBID());
 		testQueryRelationByArgAndType(kbEntity1.getKBID(), "LivesIn", 0);
 		testQueryRelationByStringRef("BBN Technologies");
-                
+
         Optional<KBPredicateArgument> externalObject1 = kb.getKBObjectByExternalID(new KBID("External_Resident_Relation2", "ExampleKB2"));
         Assert.assertTrue("Deleted external kb id was not removed correctly.", !externalObject1.isPresent());
-                
+
         Optional<KBPredicateArgument> externalObject2 = kb.getKBObjectByExternalID(new KBID("New_External_Resident_Relation", "New_ExampleKB"));
         Assert.assertTrue("Updated external kb id was not inserted correctly.", externalObject2.isPresent());
 	}
@@ -222,7 +244,7 @@ public class TestRelation extends KBUnitTest {
 
 		assertTrue("Expected external kb id \"External_Resident_Relation\" not found", assertion);
 	}
-	
+
 	private void testQueryRelationByArgs(KBID entityKbId, KBID otherArgKBID) throws KBQueryException {
 		boolean assertion = false;
 
@@ -279,7 +301,7 @@ public class TestRelation extends KBUnitTest {
 			}
 		}
 	}
-	
+
 	/**
 	 * this query method looks for the relation justification chunk. If this is
 	 * not correctly set, the query returns empty handed.
@@ -334,10 +356,13 @@ public class TestRelation extends KBUnitTest {
 		OntType organizationRole = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "organization");
 
 		KBEntity.InsertionBuilder employeeBuilder = KBEntity.entityInsertionBuilder(
-				Collections.singletonMap(personType, 1f), generateProvenance("John Smith"), 1f, 1f);
+				Collections.singletonMap(personType, 1f),
+				generateProvenance
+						("John Smith","NAME"), 1f, 1f);
 
 		KBEntity.InsertionBuilder employerBuilder = KBEntity.entityInsertionBuilder(
-				Collections.singletonMap(orgType, 1f), generateProvenance("MegaCorp"), 1f, 1f);
+				Collections.singletonMap(orgType, 1f), generateProvenance
+						("MegaCorp","NAME"), 1f, 1f);
 
 		KBEntity johnSmith = employeeBuilder.insert(kb);
 		assertEqualsAndHashCodeByQueryByKBID(johnSmith);
@@ -350,7 +375,8 @@ public class TestRelation extends KBUnitTest {
 				johnSmith, 1f));
 		relationBuilder.addArgument(KBRelationArgument.insertionBuilder(organizationRole, megaCorp,
 				1f));
-		relationBuilder.addProvenance(generateProvenance("John Smith works for MegaCorp"));
+		relationBuilder.addProvenance(generateProvenance("John Smith works for "
+				+ "MegaCorp"));
 
 		KBRelation relation = relationBuilder.insert(kb);
 		assertEqualsAndHashCodeByQueryByKBID(relation);

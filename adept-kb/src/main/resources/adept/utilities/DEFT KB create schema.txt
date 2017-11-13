@@ -87,6 +87,21 @@ CREATE TABLE "TextProvenances"
 
 CREATE INDEX "TextProvenances_KBId" on "TextProvenances" ( "KBId" );
 
+-- Table: "EntityMentionTypes"
+
+CREATE TABLE "EntityMentionTypes"
+(
+  "ID" text NOT NULL,
+  "provenance" text NOT NULL,
+  "type" text NOT NULL,
+  CONSTRAINT "EntityMentionTypes_pkey" PRIMARY KEY ("ID"),
+  CONSTRAINT "EntityMentionTypes_provenance_fkey" FOREIGN KEY (provenance)
+      REFERENCES "TextProvenances" ("ID") MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE INDEX "EntityMentionTypes_provenanceID" on "EntityMentionTypes" ( "provenance" );
+
 CREATE TABLE "DocumentTexts"
 (
   docID text NOT NULL,

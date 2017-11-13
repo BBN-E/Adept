@@ -32,6 +32,12 @@
 <entry key="Commodity">com</entry>
 <entry key="Weapon">wea</entry>
 <entry key="Vehicle">veh</entry>
+<entry key="Title">title</entry>
+<entry key="URL">url</entry>
+<entry key="Number">number</entry>
+<entry key="Date">date</entry>
+<entry key="Money">money</entry>
+<entry key="CauseofDeath">causeofdeath</entry>
 
 <!--  mapping of relation types -->
 <entry key="PhysicalLocation">physical</entry>

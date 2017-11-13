@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.io;
 
 /*-
@@ -1145,13 +1165,13 @@ public class Reader {
      * on the given regular expressions.
      * In practice, this is used for raw XML tokenization, where is it necessary to filter from the raw file text
      * unwanted items such as XML tags and extraneous XML elements.
-     * @param whiteListedRegexes Expressions the represent the character spans in the given text to preserve. All
+     * @param whiteListedRegex An expression the represents the character spans in the given text to preserve. All
      *                           surrounding spans will be replaced with whitespace.
      * @param blackListedRegexes Expressions that represent the character spans that are present within the whitespace
      *                           areas to replace with whitespace.
      */
-    public static String cleanRawText(String rawText, String[] whiteListedRegexes, String[] blackListedRegexes) {
-        return cleanRawText(rawText, whiteListedRegexes, Integer.MAX_VALUE, blackListedRegexes);
+    public static String cleanRawText(String rawText, String whiteListedRegex, String[] blackListedRegexes) {
+        return cleanRawText(rawText, whiteListedRegex, Integer.MAX_VALUE, blackListedRegexes);
     }
 
     /**
@@ -1159,27 +1179,25 @@ public class Reader {
      * on the given regular expressions.
      * In practice, this is used for raw XML tokenization, where is it necessary to filter from the raw file text
      * unwanted items such as XML tags and extraneous XML elements.
-     * @param whiteListedRegexes Expressions the represent the character spans in the given text to preserve. All
+     * @param whiteListedRegex An expression the represents the character spans in the given text to preserve. All
      *                           surrounding spans will be replaced with whitespace.
      * @param maxNumWhiteListedSpansToRead The maximum number of whitelisted spans to read. Any remaining are discarded.
      * @param blackListedRegexes Expressions that represent the character spans that are present within the whitespace
      *                           areas to replace with whitespace.
      */
-    public static String cleanRawText(String rawText, String[] whiteListedRegexes, int maxNumWhiteListedSpansToRead, String[] blackListedRegexes) {
+    public static String cleanRawText(String rawText, String whiteListedRegex, int maxNumWhiteListedSpansToRead, String[] blackListedRegexes) {
         int whiteListedSpanEnd = 0;
-        for (String whiteListedRegex: whiteListedRegexes) {
-            Matcher matcher = Pattern.compile(whiteListedRegex, Pattern.DOTALL).matcher(rawText);
-            for (int i = 0; i < maxNumWhiteListedSpansToRead && matcher.find(); i++) {
-                rawText = replaceSubstringWithSpaces(rawText, whiteListedSpanEnd, matcher.start());
-                whiteListedSpanEnd = matcher.end();
-            }
+        Matcher whiteListMatcher = Pattern.compile(whiteListedRegex, Pattern.DOTALL).matcher(rawText);
+        for (int i = 0; i < maxNumWhiteListedSpansToRead && whiteListMatcher.find(); i++) {
+            rawText = replaceSubstringWithSpaces(rawText, whiteListedSpanEnd, whiteListMatcher.start());
+            whiteListedSpanEnd = whiteListMatcher.end();
         }
         rawText = replaceSubstringWithSpaces(rawText, whiteListedSpanEnd, rawText.length());
 
         for (String forbiddenSubstringRegex : blackListedRegexes) {
-            Matcher matcher = Pattern.compile(forbiddenSubstringRegex, Pattern.DOTALL).matcher(rawText);
-            while (matcher.find()) {
-                rawText = replaceSubstringWithSpaces(rawText, matcher.start(), matcher.end());
+            Matcher blackListMatcher = Pattern.compile(forbiddenSubstringRegex, Pattern.DOTALL).matcher(rawText);
+            while (blackListMatcher.find()) {
+                rawText = replaceSubstringWithSpaces(rawText, blackListMatcher.start(), blackListMatcher.end());
             }
         }
         return rawText;
@@ -1222,7 +1240,7 @@ public class Reader {
             throw new IllegalArgumentException("'" + tagName + "'");
         }
         CharOffset charOffset = searchByRegex(
-                Reader.cleanRawText(xmlString, new String[]{".*"}, new String[]{"<!--.*?-->"}),
+                Reader.cleanRawText(xmlString, ".*", new String[]{"<!--.*?-->"}),
                 String.format("<%s[\\s|>]", tagName)
         );
         return charOffset != null ? charOffset.getBegin() : -1;
@@ -1452,7 +1470,8 @@ public class Reader {
         char[] chars = text.toCharArray();
         for (Character c : chars) {
             if (Character.isHighSurrogate(c) || Character.isLowSurrogate(c)) {
-                System.out.println("WARNING -- invalid xml character " + c + " removed");
+                buffer.append(' ');
+                System.out.println("WARNING -- invalid xml character " + c + " replaced with a space");
             } else {
                 buffer.append(c);
             }
@@ -1479,4 +1498,3 @@ public class Reader {
     }
 
 }
-

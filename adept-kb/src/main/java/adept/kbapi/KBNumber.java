@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +39,9 @@ package adept.kbapi;
  * limitations under the License.
  * #L%
  */
+
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,16 +51,13 @@ import adept.common.KBID;
 import adept.common.NumberPhrase;
 import adept.common.NumericValue;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-
 /**
  * This class represents numbers in the KB.
- * 
+ *
  * Numbers are assumed to be canonical, so they do not have confidences.
- * 
+ *
  * There should only be one copy of any given number in the KB at any time.
- * 
+ *
  * @author dkolas
  */
 public class KBNumber extends KBThing {
@@ -49,10 +69,10 @@ public class KBNumber extends KBThing {
 
 	/**
 	 * Internal constructor
-	 * 
+	 *
 	 * @param kbID
 	 * @param provenances
-	 * @param canonicalString
+	 * @param number
 	 */
 	private KBNumber(KB kb, KBID kbID, Optional<Set<KBProvenance>> provenances, Number number) {
 		super(kb, kbID, provenances, number.toString());
@@ -61,7 +81,7 @@ public class KBNumber extends KBThing {
 
 	/**
 	 * Get the numeric value as a {@link Number}
-	 * 
+	 *
 	 * @return
 	 */
 	public Number getNumber() {
@@ -71,7 +91,7 @@ public class KBNumber extends KBThing {
 	/**
 	 * Create a new insertion builder with a {@link Number} object. Provenances
 	 * can then be added to the builder.
-	 * 
+	 *
 	 * @param number
 	 * @return
 	 */
@@ -83,7 +103,7 @@ public class KBNumber extends KBThing {
 	 * Create a new insertion builder with an existing NumericValue and list of
 	 * number phrases. The numeric value will be used to determine the number
 	 * value, and the numberPhrases will be used to add provenance.
-	 * 
+	 *
 	 * @param numericValue
 	 * @param numberPhrases
 	 * @return
@@ -99,9 +119,9 @@ public class KBNumber extends KBThing {
 
 	/**
 	 * Class defines the InsertionBuilder for a KBNumber object.
-	 * 
+	 *
 	 * Only the addition of provenances is supported.
-	 * 
+	 *
 	 * @author dkolas
 	 */
 	public static class InsertionBuilder extends
@@ -119,7 +139,7 @@ public class KBNumber extends KBThing {
 		/**
 		 * Private constructor, to be called by KBNumber.insertionBuilder
 		 * methods
-		 * 
+		 *
 		 * @param number
 		 */
 		private InsertionBuilder(Number number) {
@@ -128,11 +148,11 @@ public class KBNumber extends KBThing {
 
 		/**
 		 * Insert method for saving the KBNumber in the KB.
-		 * 
+		 *
 		 * @param kb
 		 * @return
 		 * @throws adept.kbapi.KBUpdateException
-		 * 
+		 *
 		 */
 		@Override
 		public KBNumber insert(KB kb) throws KBUpdateException {
@@ -146,9 +166,9 @@ public class KBNumber extends KBThing {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return
-		 * 
+		 *
 		 * @see adept.kbapi.KBPredicateArgument.InsertionBuilder#me()
 		 */
 		@Override
@@ -159,9 +179,9 @@ public class KBNumber extends KBThing {
 
 	/**
 	 * Update builder for KBNumber objects. Provenances may be added or removed.
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 */
 	@Override
 	public UpdateBuilder updateBuilder() {
@@ -170,7 +190,7 @@ public class KBNumber extends KBThing {
 
 	/**
 	 * Update builder for KBNumber objects. Provenances may be added or removed.
-	 * 
+	 *
 	 * @author dkolas
 	 */
 	public class UpdateBuilder extends KBPredicateArgument.UpdateBuilder<UpdateBuilder, KBNumber> {
@@ -203,9 +223,9 @@ public class KBNumber extends KBThing {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return
-		 * 
+		 *
 		 * @see adept.kbapi.KBPredicateArgument.UpdateBuilder#me()
 		 */
 		@Override

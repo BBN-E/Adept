@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.utilities;
 
 /*-
@@ -9,9 +29,9 @@ package adept.utilities;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +40,8 @@ package adept.utilities;
  * #L%
  */
 
+import adept.io.Reader;
+import adept.kbapi.*;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -43,6 +65,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,23 +74,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import adept.common.KBID;
 import adept.common.OntType;
-import adept.kbapi.KB;
-import adept.kbapi.KBConfigurationException;
-import adept.kbapi.KBEntity;
-import adept.kbapi.KBEvent;
-import adept.kbapi.KBOntologyMap;
-import adept.kbapi.KBParameters;
-import adept.kbapi.KBPredicateArgument;
-import adept.kbapi.KBProvenance;
-import adept.kbapi.KBQueryException;
-import adept.kbapi.KBRelation;
-import adept.kbapi.KBRelationArgument;
-import adept.kbapi.KBTextProvenance;
-import adept.kbapi.KBThing;
-import adept.kbapi.KBUpdateException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -80,6 +91,12 @@ public class TacFormatConverter {
      * automatically detect UTF-8 encoding.
      */
     private static final String bom = "\uFEFF";
+
+    /**
+     * Version of freebase we are using
+     */
+    private static final String freebaseVersion = "LDC2015E42";
+
     /**
      * Log report generation.
      */
@@ -112,6 +129,10 @@ public class TacFormatConverter {
      * Maximum count of justifications to generate for each slotfill argument.
      */
     private static final int maxArgJustifications = 2;
+    
+    private final boolean isEdlOnly;
+    
+    private final boolean is2016Version;
 
     /**
      * Map of names of types to TAC abbreviations of types
@@ -131,12 +152,15 @@ public class TacFormatConverter {
      * @param parameters A knowledge base configuration read from XML.
      * @throws KBConfigurationException
      */
-    public TacFormatConverter(KBParameters parameters, File outputDirectory, String runName, boolean resumeRun, int sampleSize) throws KBConfigurationException {
+    public TacFormatConverter(KBParameters parameters, File outputDirectory, String runName, 
+            boolean resumeRun, int sampleSize, boolean isEdlOnly, boolean is2016Version) throws KBConfigurationException {
         this.kb = new KB(parameters);
         this.outputDirectory = new File(outputDirectory, runName);
         this.runName = runName;
         this.resumeRun = resumeRun;
         this.sampleSize = sampleSize;
+        this.isEdlOnly = isEdlOnly;
+        this.is2016Version = is2016Version;
     }
 
     /**
@@ -152,7 +176,9 @@ public class TacFormatConverter {
         }
     }
 
-    public Map<KBSummary.ArtifactType, KBSummary> generate() throws KBQueryException, IOException {
+    public Map<KBSummary.ArtifactType, KBSummary> generate() throws KBQueryException, IOException, URISyntaxException {
+
+
         // Make sure output directory exists
         if (!outputDirectory.exists()) {
             outputDirectory.mkdirs();
@@ -196,8 +222,22 @@ public class TacFormatConverter {
         requiredEntities.addAll(sentimentTargets.get(KBEntity.class));
         requiredEntities.addAll(relationTargets.get(KBEntity.class));
         requiredEntities.addAll(eventTargets.get(KBEntity.class));
-        generateColdStart(requiredEntities, requiredRelations, kbSummaryMap);
+        generateColdStart(requiredEntities, requiredRelations);
+        //generateEDL();
         return kbSummaryMap;
+    }
+
+    protected HashMap<String, String> buildDbpediaToFreebase() throws IOException, URISyntaxException{
+        String path = Reader.getAbsolutePathFromClasspathOrFileSystem("adept/adept-kb/src/main/resources/adept/utilities/dbpedia2freebase.tsv");
+        CSVReader reader = new CSVReader(new FileReader(path), '\t');
+
+        HashMap<String, String> hash = new HashMap<>();
+
+        String [] nextLine;
+        while ((nextLine = reader.readNext()) != null) {
+            hash.put(nextLine[0], nextLine[1]);
+        }
+        return hash;
     }
 
     protected Set<String> getUniqueArgumentJustifications(final KBPredicateArgument pa, Set<KBID> uniqueProvenanceIDs) throws KBQueryException {
@@ -227,7 +267,7 @@ public class TacFormatConverter {
                     uniqueJustifications.add(  String.format("%s:%d-%d %s",
                             documentID,
                             textProvenance.getBeginOffset(),
-                            textProvenance.getEndOffset(),
+                            textProvenance.getEndOffset() - 1,
                             text
                     ));
 
@@ -241,9 +281,8 @@ public class TacFormatConverter {
         return uniqueJustifications;
     }
 
-    protected Set<String> getUniqueJustifications(final KBPredicateArgument pa,
-                                                          final int nJustifications, Set<String> uniqueDocumentIDs,
-                                                          Set<String> uniqueText, Set<KBID> uniqueProvenanceIDs) throws KBQueryException {
+    protected Set<String> getRelationJustifications(final KBPredicateArgument pa,
+                                                    final int nJustifications, KBPredicateArgument slotfill) throws KBQueryException {
         Iterator<KBProvenance> provenances = pa.getProvenances().iterator();
         Set<String> uniqueJustifications = new HashSet<String>();
         int count = 0;
@@ -253,35 +292,55 @@ public class TacFormatConverter {
             KBTextProvenance textProvenance = (KBTextProvenance) provenances.next();
             String documentID = textProvenance.getDocumentID();
 
-            // Accumulate in a HashSet to get unique justifications up to specified maximum
-            if (uniqueJustifications.size() < nJustifications) {
-                uniqueJustifications.add(  String.format("%s:%d-%d",
-                        documentID,
-                        textProvenance.getBeginOffset(),
-                        textProvenance.getEndOffset()
-                ));
+            //calculate beginning and end offsets
+            int beginningOffset = textProvenance.getBeginOffset();
+            int endOffset = textProvenance.getEndOffset() - 1;
+            if (endOffset - beginningOffset > 150){
+                // KBGenericThings have no provenances, so truncate these at 150 chars.
+                // TODO: Regex search for KBGenericThing canonical string and build beginning and end offset around that.
+                if (slotfill instanceof KBGenericThing){
+                    endOffset = beginningOffset + 150;
+                // Search for slotfill provenances that exist within the relation provenance
+                // build beginning and end offsets around that.
+                } else {
+                    for (KBProvenance prov : slotfill.getProvenances()){
+                        KBTextProvenance slotfillProv = (KBTextProvenance) prov;
+                        if (slotfillProv.getDocumentID().equals(documentID)){
+                            if (slotfillProv.getBeginOffset() > textProvenance.getBeginOffset() &&
+                                    (slotfillProv.getEndOffset() - 1) < (textProvenance.getEndOffset() - 1)){
+                                beginningOffset = slotfillProv.getBeginOffset();
+                                endOffset = beginningOffset + 150;
+                            }
+                        }
+                    }
+                }
             }
 
-            // Accumulate some combined stats
-            uniqueDocumentIDs.add(documentID);
-            uniqueProvenanceIDs.add(textProvenance.getKBID());
+            // Accumulate in a HashSet to get unique justifications up to specified maximum
+            String just = String.format("%s:%d-%d",
+                    documentID,
+                    beginningOffset,
+                    endOffset);
+            uniqueJustifications.add(just);
         }
         return uniqueJustifications;
     }
 
-    protected Set<List<String>> getEntityMentionFields(final KBPredicateArgument pa,
+
+
+    protected Set<List<String>> getEntityMentionFields(final KBEntity entity,
                                                        final int nJustifications, Set<String> uniqueDocumentIDs,
                                                        Set<String> uniqueText, Set<KBID> uniqueProvenanceIDs) throws KBQueryException {
-        Iterator<KBProvenance> provenances = pa.getProvenances().iterator();
+        Iterator<KBProvenance> provenances = entity.getProvenances().iterator();
         Set<List<String>> uniqueJustifications = new HashSet();
         while (provenances.hasNext()) {
-            KBTextProvenance textProvenance = (KBTextProvenance) provenances.next();
+            KBEntityMentionProvenance textProvenance = (KBEntityMentionProvenance) provenances.next();
             String documentID = textProvenance.getDocumentID();
             String text = textProvenance.getValue();
             if (text == null) {
-                log.warn("Provenance string for {} {} was null", pa.getClass().getName(), pa.getKBID().getObjectID());
+                log.warn("Provenance string for {} {} was null", entity.getClass().getName(), entity.getKBID().getObjectID());
             } else if (text.isEmpty()) {
-                log.warn("Provenance string for {} {} was empty", pa.getClass().getName(), pa.getKBID().getObjectID());
+                log.warn("Provenance string for {} {} was empty", entity.getClass().getName(), entity.getKBID().getObjectID());
             }
 
             // Accumulate in a HashSet to get unique justifications up to specified maximum
@@ -290,12 +349,20 @@ public class TacFormatConverter {
                 String justification = String.format("%s:%d-%d",
                         documentID,
                         textProvenance.getBeginOffset(),
-                        textProvenance.getEndOffset());
+                        textProvenance.getEndOffset() - 1);
                 ArrayList<String> just = new ArrayList<String>();
                 just.add(justification);
                 just.add(text);
+                just.add(textProvenance.getType().substring(0, 3));
+                just.add(documentID);
+                just.add(String.valueOf(textProvenance.getConfidence()));
                 uniqueJustifications.add(just);
+//                if (textProvenance.getEndOffset() - textProvenance.getBeginOffset() > 150){
+//                    System.out.println(pa.getKBID().getObjectID());
+//                    System.out.println(just);
+//                }
             }
+
 
             // Accumulate some combined stats
             uniqueDocumentIDs.add(documentID);
@@ -303,27 +370,6 @@ public class TacFormatConverter {
             uniqueProvenanceIDs.add(textProvenance.getKBID());
         }
         return uniqueJustifications;
-    }
-
-    protected String getReferenceString(KBThing thing) {
-        return String.format("%s %s", thing.getClass().getName(), thing.getCanonicalString());
-    }
-
-    protected String getReferenceString(KBEntity entity) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(entity.getClass().getName());
-        for (Map.Entry<OntType, Float> typeEntry : entity.getTypes().entrySet()) {
-            builder.append(String.format(" %s[%f]", typeEntry.getKey().getType(), typeEntry.getValue()));
-        }
-        return builder.toString();
-    }
-
-    protected String getReferenceString(KBRelation relation) {
-        return String.format("%s %s", relation.getClass().getName(), relation.getType().getType());
-    }
-
-    protected String getReferenceString(KBRelationArgument argument) {
-        return String.format("%s %s", argument.getClass().getName(), argument.getRole().getType());
     }
 
     protected Set<String> readExistingIDs(File outputFile, int idColumn) throws IOException {
@@ -345,9 +391,105 @@ public class TacFormatConverter {
         return existingIDs;
     }
 
-    protected void generateColdStart(final List<KBID> requiredEntities, final List<KBID> requiredRelations,
-                                     Map<KBSummary.ArtifactType,KBSummary> kbSummaryMap) throws KBQueryException,
-            IOException {
+    protected void generateEDL() throws IOException, KBQueryException, URISyntaxException{
+        System.out.println("EDL");
+        HashMap<String, String> dbpediaToFreebase = buildDbpediaToFreebase();
+
+        File outputFile = new File(outputDirectory, String.format("%s.EDL.tsv", runName));
+        // Open the output CSV file with headers
+        FileWriter fileWriter = new FileWriter(outputFile, resumeRun);
+        fileWriter.write(bom);
+
+        CSVWriter writer = new CSVWriter(fileWriter, '\t', CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.NO_ESCAPE_CHARACTER);
+        writer.writeNext(new String[] {runName});
+
+        List<KBID> entityIDs = kb.getKBIDsByType("adept-base:Entity", new String[] {});
+        log.info("Found {} entities", entityIDs.size());
+
+        Set<String> goodMentionTypes = Stream.of("NAM", "NOM").collect(Collectors.toSet());
+
+        for (KBID entityID : entityIDs) {
+            // Get the entity by ID;
+            KBEntity entity;
+            try {
+                entity = kb.getEntityById(entityID);
+            } catch (Exception e) {
+                System.out.println("Could not get Entity {}");
+                System.out.println(entityID.getObjectID());
+                continue;
+            }
+
+            List<String> types = new ArrayList<String>();
+            for (Map.Entry<OntType, Float> entry : entity.getTypes().entrySet()) {
+                types.add(entry.getKey().getType());
+            }
+            String t = types.get(0);
+            if (types.size() > 1){
+                for ( String type : types) {
+                    if (typeToCodeMap.containsKey(type)) {
+                        t = type;
+                        break;
+                    }
+                }
+            }
+
+            for ( KBProvenance provenance : entity.getProvenances() ) {
+                List<String> line = new ArrayList<String>();
+                KBEntityMentionProvenance prov = (KBEntityMentionProvenance) provenance;
+
+                //DocID
+                line.add(prov.getDocumentID());
+
+                //Offsets
+                line.add(Integer.toString(prov.getBeginOffset()));
+                line.add(Integer.toString(prov.getEndOffset() - 1));
+
+                //Freebase ID
+                String externalId = kb.getExternalKBIDs(entityID).get(0).getKBNamespace();
+                String externalIdTrimmed = externalId.substring(1, externalId.length() - 1);
+                String freebaseID = dbpediaToFreebase.containsKey(externalIdTrimmed)? dbpediaToFreebase.get(externalIdTrimmed) : "None";
+
+//  print statements for debugging dbpediaToFreebase issues
+//                if (freebaseID.equals("None")){
+//                    System.out.println(entityID);
+//                    System.out.println(externalId);
+//                }
+//                if (!dbpediaToFreebase.containsKey(externalIdTrimmed)){
+//                    System.out.println(entityID);
+//                    System.out.println(externalId);
+//                }
+                line.add(freebaseID);
+
+                //Confidence
+                line.add(Float.toString(prov.getConfidence()));
+
+                //Mention Type
+                String provType = prov.getType().substring(0, 3);
+                line.add(String.format("%s/%s", typeToCodeMap.get(t), provType));
+                if (!goodMentionTypes.contains(provType)){
+// Print statement for debugging removal of non-NAM/NOM mentions
+//                    System.out.println("MENTION DROPPED:");
+//                    System.out.println(entityID.getObjectID());
+//                    System.out.println(line);
+                    continue;
+                }
+
+                //Add it to the TSV
+//                System.out.println(line);
+                String[] csvFields = new String[line.size()];
+                line.toArray(csvFields);
+                writer.writeNext(csvFields, false);
+            }
+        }
+        writer.close();
+    }
+
+    protected void generateColdStart(final List<KBID> requiredEntities, final List<KBID> requiredRelations) throws KBQueryException,
+            IOException, URISyntaxException {
+        System.out.println("Coldstart");
+
+        HashMap<String, String> dbpediaToFreebase = buildDbpediaToFreebase();
+
         // Load any existing object IDs
         File outputFile = new File(outputDirectory, String.format("%s.ColdStart.tsv", runName));
         boolean appending = resumeRun && outputFile.exists();
@@ -400,12 +542,6 @@ public class TacFormatConverter {
             }
 
             // Convert interesting entity fields
-            List<String> types = new ArrayList<String>();
-            for (Map.Entry<OntType, Float> entry : entity.getTypes().entrySet()) {
-                types.add(entry.getKey().getType());
-                typesForSummary.add(KBSummary.TypeWithOptionalArgTypes.create(entry.getKey().getType(),
-                        Optional.absent()));
-            }
 
             // Accumulate and convert provenances
             Set<String> uniqueDocumentIDs = new HashSet<String>();
@@ -414,24 +550,20 @@ public class TacFormatConverter {
             Set<List<String>> entityMentionFields = getEntityMentionFields(entity, maxJustifications, uniqueDocumentIDs, uniqueText, uniqueProvenanceIDs);
 
             List<String> line1 = new ArrayList<String>();
-            line1.add(String.format(":%s", entity.getKBID().getObjectID()));
+            line1.add(String.format(!is2016Version ? ":Entity_%s" : ":%s", entity.getKBID().getObjectID().replace('-', '_')));
             line1.add("type");
-            String t = types.get(0);
-            if (types.size() > 1){
-                for ( String type : types) {
-                    if (typeToCodeMap.containsKey(type)) {
-                        t = type;
-                        break;
-                    }
-                }
-            }
-            line1.add(typeToCodeMap.get(t));
+
+            line1.add(getEntityType(entity));
 
             String[] csvFields = new String[line1.size()];
             line1.toArray(csvFields);
             writer.writeNext(csvFields, false);
+            
+            List<List<String>> entityMentionFieldsArray = new ArrayList<List<String>>(entityMentionFields);
+            Set<String> documentIdsWithCanonicalMentions = new HashSet<String>();
 
-            for ( List<String> justification : entityMentionFields ) {
+            for (int i = 0; i < entityMentionFieldsArray.size(); i++) {
+                List<String> justification = entityMentionFieldsArray.get(i);
                 if(uniqueDocumentIDs.size()>maxDistinctDocs){
                     maxDistinctDocs=uniqueDocumentIDs.size();
                 }
@@ -439,30 +571,73 @@ public class TacFormatConverter {
                     maxUniqueStrings=uniqueText.size();
                 }
 
-                List<String> line2 = new ArrayList<String>();
-                line2.add(String.format(":%s", entity.getKBID().getObjectID()));
-                line2.add("canonical_mention");
-                line2.add(String.format("\"%s\"", entity.getCanonicalString().replace('\n', ' ')));
-                line2.add(justification.get(0));
+                if (!documentIdsWithCanonicalMentions.contains(justification.get(3))) {
+                    // If named entity mention, just use it as the canonical mention for now.
+                    boolean addCanonicalMention = justification.get(2).equals("NAM");
+             
+                    // If it's a nominal mention and no future mentions from the document 
+                    // are named mentions, go ahead and use it as a canonical mention.
+                    if (!addCanonicalMention) {             
+                        addCanonicalMention = true;
+                        for (int j = i+1; j < entityMentionFieldsArray.size(); j++) {
+                            if (justification.get(3).equals(entityMentionFieldsArray.get(j).get(3)) && entityMentionFieldsArray.get(j).get(2).equals("NAM")) {
+                                addCanonicalMention = false;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (addCanonicalMention) {
+                        List<String> line = new ArrayList<String>();
+                        line.add(String.format(!is2016Version ? ":Entity_%s" : ":%s", entity.getKBID().getObjectID().replace('-', '_')));
+                        line.add("canonical_mention");
+                        line.add(String.format("\"%s\"", justification.get(1).replace('\n', ' ').replace("\\", "\\\\").replace("\"", "\\\"")));
+                        line.add(justification.get(0));
+                        if (!is2016Version && isEdlOnly) {
+                            line.add(justification.get(4));
+                        }
 
-                List<String> line3 = new ArrayList<String>();
-                line3.add(String.format(":%s", entity.getKBID().getObjectID()));
-                line3.add("mention");
-                line3.add(String.format("\"%s\"", justification.get(1).replace('\n', ' ')));
-                line3.add(justification.get(0));
+                        csvFields = new String[line.size()];
+                        line.toArray(csvFields);
+                        writer.writeNext(csvFields, false);
+                        
+                        documentIdsWithCanonicalMentions.add(justification.get(3));
+                    }
+                }
+                
+                List<String> line = new ArrayList<String>();
+                line.add(String.format(!is2016Version ? ":Entity_%s" : ":%s", entity.getKBID().getObjectID().replace('-', '_')));
+                line.add(justification.get(2).equals("NOM") ? "nominal_mention" : "mention");
+                line.add(String.format("\"%s\"", justification.get(1).replace('\n', ' ').replace("\\", "\\\\").replace("\"", "\\\"")));
+                line.add(justification.get(0));
+                if (!is2016Version && isEdlOnly) {
+                    line.add(justification.get(4));
+                }
 
-                // Convert to CSV
-                csvFields = new String[line2.size()];
-                line2.toArray(csvFields);
+                csvFields = new String[line.size()];
+                line.toArray(csvFields);
                 writer.writeNext(csvFields, false);
-                csvFields = new String[line3.size()];
-                line3.toArray(csvFields);
-                writer.writeNext(csvFields, false);
+                
                 written++;
             }
 
+            // Freebase ID
+            String externalId = kb.getExternalKBIDs(entityID).get(0).getKBNamespace();
+            String externalIdTrimmed = externalId.substring(1, externalId.length() - 1);
+            if (!is2016Version && isEdlOnly && dbpediaToFreebase.containsKey(externalIdTrimmed)) {
+                String freebaseID = dbpediaToFreebase.get(externalIdTrimmed);
+                List<String> line = new ArrayList<String>();
+                line.add(String.format(":Entity_%s", entity.getKBID().getObjectID().replace('-', '_')));
+                line.add("link");
+                line.add("\""+freebaseVersion+":"+freebaseID+"\"");
+
+                csvFields = new String[line.size()];
+                line.toArray(csvFields);
+                writer.writeNext(csvFields, false);
+            }
         }
 
+        if (!isEdlOnly) {
         // Now it's time to print the relations
             printRelations(requiredRelations, writer, "adept-base:Relation",
                 new String[]{
@@ -471,9 +646,28 @@ public class TacFormatConverter {
                         "adept-core:Belief",
                         "adept-core:Sentiment",
                 });
+        }
 
         // Done
         writer.close();
+    }
+
+    protected String getEntityType(KBEntity entity){
+        List<String> types = new ArrayList<String>();
+        for (Map.Entry<OntType, Float> entry : entity.getTypes().entrySet()) {
+            types.add(entry.getKey().getType());
+
+        }
+        String t = types.get(0);
+        if (types.size() > 1){
+            for ( String type : types) {
+                if (typeToCodeMap.containsKey(type)) {
+                    t = type;
+                    break;
+                }
+            }
+        }
+        return typeToCodeMap.get(t);
     }
 
     protected HashMap<Optional<String>, KBRelationArgument> getRelationFields(KBOntologyMap ontologyMap, KBRelation slotfill){
@@ -491,11 +685,11 @@ public class TacFormatConverter {
     }
     protected void printRelations(final List<KBID> requiredItems, CSVWriter writer, String
             slotfillType, final String[] ignoredTypes) throws KBQueryException, IOException {
-        // Load any existing object IDs
-        String KBExtractionType = "relations";
+        HashMap<String, String> TACInverseMap = KBOntologyMap.getTACInverseMap();
 
             // Select entity IDs
-            List<KBID> ids = kb.getKBIDsByType(slotfillType, ignoredTypes);
+        String KBExtractionType = "relations";
+        List<KBID> ids = kb.getKBIDsByType(slotfillType, ignoredTypes);
             log.info("Found {} {}", ids.size(), KBExtractionType);
             if (sampleSize > 0) {
                 Collections.shuffle(ids);
@@ -521,7 +715,7 @@ public class TacFormatConverter {
                 } catch (IllegalArgumentException e) {
                     throw e;
                 } catch (Exception e) {
-                    log.error("Could not get KB object {}", id.getObjectID(), e);
+                    log.error("Could not get KB object {}", id.getObjectID().replace('-', '_'), e);
                     continue;
                 }
 
@@ -533,13 +727,14 @@ public class TacFormatConverter {
                 String arg1;
                 String arg2;
                 try {
-                    arg1 = argumentHashMap.get(Optional.of("arg-1")).getKBID().getObjectID();
-                    arg2 = argumentHashMap.get(Optional.of("arg-2")).getKBID().getObjectID();
+                    arg1 = argumentHashMap.get(Optional.of("arg-1")).getTarget().getKBID().getObjectID().replace('-', '_');
+                    arg2 = argumentHashMap.get(Optional.of("arg-2")).getTarget().getKBID().getObjectID().replace('-', '_');
                 } catch (NullPointerException e) {
+
 //                    System.out.println("Missing an argument. Relation type and present arguments are:");
-//                    System.out.println(relation.getType().getType());
+//                    System.out.println(relation.getEntityMentionType().getEntityMentionType());
 //                    for ( KBRelationArgument arg : relation.getArguments() ){
-//                        System.out.println(arg.getRole().getType());
+//                        System.out.println(arg.getRole().getEntityMentionType());
 //                    }
 //                    missingArgs++;
                     continue;
@@ -547,7 +742,8 @@ public class TacFormatConverter {
 
 
                 //First field: unique main argument's ID
-                fields.add(String.format(":%s", arg1));
+                fields.add(String.format((argumentHashMap.get(Optional.of("arg-1")).getTarget() instanceof KBEntity && !is2016Version) 
+                        ? ":Entity_%s" : ":%s", arg1));
 
                 //Second field: type of relation
                 KBEntity entity = null;
@@ -568,8 +764,8 @@ public class TacFormatConverter {
                             if (type.getType().equals("City")){
                                 fields.add("org:city_of_headquarters");
                                 break;
-                            } else if (type.getType().equals("Country")){
-                                fields.add("org:stateprovince_of_headquarters");
+                            } else if (type.getType().equals("StateProvince")){
+                                fields.add("org:stateorprovince_of_headquarters");
                                 break;
                             } else if (type.getType().equals("Country")) {
                                 fields.add("org:country_of_headquarters");
@@ -579,22 +775,18 @@ public class TacFormatConverter {
                     } else if (relation.getType().getType().equals("Resident")){
                         for ( OntType type : entity.getTypes().keySet() ) {
                                 if (type.getType().equals("City")){
-                                    fields.add("org:city_of_residence");
+                                    fields.add("per:cities_of_residence");
                                     break;
-                                } else if (type.getType().equals("Country")){
-                                    fields.add("org:stateprovince_of_residence");
+                                } else if (type.getType().equals("StateProvince")){
+                                    fields.add("per:statesorprovinces_of_residence");
                                     break;
                                 } else if (type.getType().equals("Country")) {
-                                    fields.add("org:country_of_residence");
+                                    fields.add("per:countries_of_residence");
                                     break;
                                 }
                             }
                     } else {
                         String f = ontologyMap.getTypeStringForKBType(relation.getType()).get();
-                        if (f.equals("")) {
-                            System.out.println(relation.getKBID().getObjectID());
-                            System.out.println(relation.getType().getType());
-                        }
                         fields.add(f);
                     }
                 } else {
@@ -602,13 +794,22 @@ public class TacFormatConverter {
                 }
 
                 //Third field: Secondary argument's unique ID
-                fields.add(String.format(":%s", arg2));
+                if (argumentHashMap.get(Optional.of("arg-2")).getTarget() instanceof KBGenericThing){
+                    fields.add(String.format("\"%s\"", ((KBGenericThing) argumentHashMap.get(Optional.of("arg-2")).getTarget()).getCanonicalString()));
+                } else if (argumentHashMap.get(Optional.of("arg-2")).getTarget() instanceof KBNumber){
+                    fields.add(String.format("\"%s\"", ((KBNumber) argumentHashMap.get(Optional.of("arg-2")).getTarget()).getNumber()));
+                } else if (fields.get(fields.size()-1).equals("per:origin")) {
+                    fields.add(String.format("\"%s\"", ((KBThing) argumentHashMap.get(Optional.of("arg-2")).getTarget()).getCanonicalString()));
+                }
+                else if (fields.get(fields.size()-1).equals("per:title")) {
+                    fields.add(String.format("\"%s\"", ((KBThing) argumentHashMap.get(Optional.of("arg-2")).getTarget()).getCanonicalString()));
+                }
+                else {
+                    fields.add(String.format(!is2016Version ? ":Entity_%s" : ":%s", arg2));
+                }
 
                 // Provenances
-                Set<String> uniqueDocumentIDs = new HashSet<String>();
-                Set<String> uniqueText = new HashSet<String>();
-                Set<KBID> uniqueProvenanceIDs = new HashSet<KBID>();
-                Set<String> uniqueJustifications = getUniqueJustifications(relation, maxJustifications, uniqueDocumentIDs, uniqueText, uniqueProvenanceIDs);
+                Set<String> uniqueJustifications = getRelationJustifications(relation, maxJustifications, argumentHashMap.get(Optional.of("arg-2")).getTarget());
 
                 String join = StringUtils.join(uniqueJustifications, ",");
                 fields.add(join);
@@ -620,19 +821,69 @@ public class TacFormatConverter {
                 String[] csvFields = new String[fields.size()];
                 fields.toArray(csvFields);
                 writer.writeNext(csvFields, false);
+
+                if (TACInverseMap.containsKey(fields.get(1))){
+                    fields = relationReverser(fields, TACInverseMap, (KBEntity) argumentHashMap.get(Optional.of("arg-2")).getTarget());
+                    fields.toArray(csvFields);
+                    writer.writeNext(csvFields, false);
+                }
             }
+    }
+
+    protected List<String> relationReverser(List<String> fields, HashMap<String, String> tacInverseMap, KBEntity entity){
+        String entityType = getEntityType(entity);
+        List<String> reversedFields = new ArrayList<String>();
+        reversedFields.add(fields.get(2));
+        String relationType = tacInverseMap.get(fields.get(1));
+        if (relationType.equals("org|gpe:employees_or_members")){
+            if (entityType.equals("ORG")){
+                relationType = "org:employees_or_members";
+            } else {
+                relationType = "gpe:employees_or_members";
+            }
+        } else if (relationType.equals("per|org|gpe:holds_shares_in")){
+            if (entityType.equals("PER")){
+                relationType = "per:holds_shares_in";
+            } else if (entityType.equals("ORG")){
+                relationType = "org:holds_shares_in";
+            } else {
+                relationType = "gpe:holds_shares_in";
+            }
+        } else if (relationType.equals("per|org|gpe:organizations_founded")){
+            if (entityType.equals("PER")){
+                relationType = "per:organizations_founded";
+            } else if (entityType.equals("ORG")){
+                relationType = "org:organizations_founded";
+            } else {
+                relationType = "gpe:organizations_founded";
+            }
+        } else if (relationType.equals("per|org|gpe:organizations_founded")) {
+            if (entityType.equals("PER")) {
+                relationType = "per:organizations_founded";
+            } else if (entityType.equals("ORG")) {
+                relationType = "org:organizations_founded";
+            } else {
+                relationType = "gpe:organizations_founded";
+            }
+        }else if (relationType.equals("org:member_of|gpe:member_of")){
+            if (entityType.equals("ORG")){
+                relationType = "org:member_of";
+            } else if (entityType.equals("GPE")) {
+                relationType = "gpe:member_of";
+            }
+        }
+        reversedFields.add(relationType);
+        reversedFields.add(fields.get(0));
+        for (int i = 3; i < fields.size(); i++) {
+            reversedFields.add(fields.get(i));
+        }
+        return reversedFields;
     }
 
     protected MultiValuedMap<Class<? extends KBPredicateArgument>, KBID> generateSlotfills(String outputFilePrefix, String
             slotfillType, Map<KBSummary.ArtifactType,KBSummary> kbSummaryMap) throws KBQueryException, IOException {
         return generateSlotfills(outputFilePrefix, slotfillType, new String[]{}, new ArrayList<KBID>(),
                 kbSummaryMap);
-    }
-
-    protected MultiValuedMap<Class<? extends KBPredicateArgument>, KBID> generateSlotfills(String outputFilePrefix, String
-            slotfillType, Map<KBSummary.ArtifactType,KBSummary> kbSummaryMap, final String[]
-                                                                                                   ignoredTypes) throws KBQueryException, IOException {
-        return generateSlotfills(outputFilePrefix, slotfillType, ignoredTypes, new ArrayList<KBID>(), kbSummaryMap);
     }
 
     protected MultiValuedMap<Class<? extends KBPredicateArgument>, KBID> generateSlotfills(String outputFilePrefix, String
@@ -656,14 +907,12 @@ public class TacFormatConverter {
             fileWriter.write(bom);
         }
 
-        int count=0;
         float minConfidence=Float.MAX_VALUE;
         float maxConfidence=Float.MIN_VALUE;
         int minNumArguments=Integer.MAX_VALUE;
         int maxNumArguments=0;
         int maxMentionCount=0;
         int maxDistinctDocs=0;
-        int written = 0;
 
         ImmutableSet.Builder<KBSummary.TypeWithOptionalArgTypes> typesForSummary = ImmutableSet
                 .builder();
@@ -674,39 +923,6 @@ public class TacFormatConverter {
 
         // Accumulate targeted objects
         MultiValuedMap<Class<? extends KBPredicateArgument>, KBID> slotfillTargetIDs = new ArrayListValuedHashMap<>();
-
-        try (CSVWriter writer = new CSVWriter(fileWriter, '\t')) {
-            final int nFields = 6;
-            final int nArgFields = 4;
-            String[] csvFields = new String[nFields + maxJustifications + maxArguments*(nArgFields + maxArgJustifications)];
-            csvFields[0] = "Type";
-            csvFields[1] = "ID";
-            csvFields[2] = "Confidence";
-            csvFields[3] = "# Mentions";
-            csvFields[4] = "# Unique Docs";
-            int i = 5;
-            for (int j = 1; j <= maxJustifications; i++, j++) {
-                csvFields[i] = String.format("Justification %d", j);
-            }
-            csvFields[i] = "# Arguments";
-            i++;
-            for (int a = 1; a <= maxArguments; a++) {
-                csvFields[i] = String.format("Arg %d Role", a);
-                csvFields[i + 1] = String.format("Arg %d Confidence", a);
-                csvFields[i + 2] = String.format("Arg %d ID", a);
-                if (outputFilePrefix.equals("beliefs") || outputFilePrefix.equals("sentiments")) {
-                    csvFields[i + 3] = String.format("Arg %d Type", a);
-                } else {
-                    csvFields[i + 3] = String.format("Arg %d Canonical String", a);
-                }
-                i += nArgFields;
-                for (int j = 1; j <= maxArgJustifications; i++, j++) {
-                    csvFields[i] = String.format("Arg %d Justification %d", a, j);
-                }
-            }
-            if (!appending) {
-                writer.writeNext(csvFields, false);
-            }
 
             // Select entity IDs
             List<KBID> ids = kb.getKBIDsByType(slotfillType, ignoredTypes);
@@ -720,8 +936,6 @@ public class TacFormatConverter {
                     log.info("Injected {} required {}", requiredItems.size(), outputFilePrefix);
                 }
             }
-
-            // default type
 
             // Loop over all of the event IDs
             for (KBID id : ids) {
@@ -755,13 +969,12 @@ public class TacFormatConverter {
                     continue;
                 }
 
-                count++;
                 // Convert interesting slotfill fields
                 List<String> fields = new ArrayList<String>();
-//                fields.add(slotfill.getType().getType());
+
+//                fields.add(slotfill.getEntityMentionType().getEntityMentionType());
+
                 String type = slotfill.getType().getType();
-//                fields.add(slotfill.getKBID().getObjectID());
-//                fields.add(Float.toString(slotfill.getConfidence()));
                 if(slotfill.getConfidence()>maxConfidence){
                     maxConfidence = slotfill.getConfidence();
                 }
@@ -773,7 +986,7 @@ public class TacFormatConverter {
                 Set<String> uniqueText = new HashSet<String>();
                 Set<KBID> uniqueProvenanceIDs = new HashSet<KBID>();
                 Set<String> uniqueJustifications = getUniqueJustificationsWithText(slotfill, maxJustifications, uniqueDocumentIDs, uniqueText, uniqueProvenanceIDs);
-//                fields.add(Integer.toString(slotfill.getProvenances().size()));
+
                 if(slotfill.getProvenances().size()>maxMentionCount){
                     maxMentionCount=slotfill.getProvenances().size();
                 }
@@ -781,13 +994,11 @@ public class TacFormatConverter {
                 if(uniqueDocumentIDs.size()>maxDistinctDocs){
                     maxDistinctDocs = uniqueDocumentIDs.size();
                 }
-//                fields.addAll(uniqueJustifications);
                 for (int j = uniqueJustifications.size(); j < maxJustifications; j++) {
                     fields.add("");
                 }
 
                 // Accumulate and convert arguments
-//                fields.add(Integer.toString(slotfill.getArguments().size()));
                 if(slotfill.getArguments().size()>maxNumArguments){
                     maxNumArguments = slotfill.getArguments().size();
                 }
@@ -796,10 +1007,11 @@ public class TacFormatConverter {
                 }
                 ImmutableSet.Builder<String> argTypes = ImmutableSet.builder();
                 for (KBRelationArgument argument : slotfill.getArguments()) {
-//                    fields.add(argument.getRole().getType());
+
+//                    fields.add(argument.getRole().getEntityMentionType());
                     argTypes.add(argument.getRole().getType());
-//                    fields.add(Float.toString(argument.getConfidence()));
                     KBPredicateArgument target = argument.getTarget();
+
                     fields.add(target.getKBID().getObjectID());
 //                    if (target instanceof KBThing) {
 //                        if (outputFilePrefix.equals("beliefs") || outputFilePrefix.equals("sentiments")) {
@@ -817,7 +1029,7 @@ public class TacFormatConverter {
 //                        fields.add(getReferenceString((KBRelationArgument) target));
 //                    } else {
 //                        log.warn("Could not generate string for {} argument target {} for {} {} {}",
-//                                target.getClass().getName(), target.getKBID().getObjectID(), slotfillType, slotfill.getType().getType(), id);
+//                                target.getClass().getName(), target.getKBID().getObjectID(), slotfillType, slotfill.getEntityMentionType().getEntityMentionType(), id);
 //                        fields.add("");
 //                    }
                     if (sampleSize > 0) {
@@ -825,7 +1037,6 @@ public class TacFormatConverter {
                     }
                     Set<KBID> uniqueArgProvenanceIDs = new HashSet<KBID>();
                     Set<String> uniqueArgJustifications = getUniqueArgumentJustifications(target, uniqueArgProvenanceIDs);
-//                    fields.addAll(uniqueArgJustifications);
                     for (int j = uniqueArgJustifications.size(); j < maxArgJustifications; j++) {
                         fields.add("");
                     }
@@ -840,24 +1051,8 @@ public class TacFormatConverter {
                 KBSummary.TypeWithOptionalArgTypes typeForSummary =
                         KBSummary.TypeWithOptionalArgTypes.create(type,Optional.of(argTypes.build()));
                 typesForSummary.add(typeForSummary);
-                // Convert to CSV
-//                csvFields = new String[fields.size()];
-//                fields.toArray(csvFields);
-//                writer.writeNext(csvFields, false);
-//                written++;
+
             }
-        }
-        // Done
-        if(count==0) {
-            minConfidence=0.0f;
-            maxConfidence=0.0f;
-            minNumArguments=0;
-        }
-        KBSummary kbSummary   = KBSummary.create(artifactType,count,maxMentionCount,maxDistinctDocs,
-                minConfidence,maxConfidence,Optional.absent(),Optional.of(minNumArguments),Optional.of
-                        (maxArguments),typesForSummary.build());
-        kbSummaryMap.put(artifactType,kbSummary);
-        log.info("Wrote {} {}", written, outputFilePrefix);
         return slotfillTargetIDs;
     }
 
@@ -865,7 +1060,7 @@ public class TacFormatConverter {
      * Entry point for {@link TacFormatConverter} that loads configuration from
      * command line or default configuration, connects to knowledge base, and generates reports.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         TacFormatConverter reportGenerator = null;
         try {
             // Define command line options
@@ -885,6 +1080,14 @@ public class TacFormatConverter {
                     .hasArg()
                     .desc("number of objects to randomly sample from the KB")
                     .build());
+            options.addOption(Option.builder("e")
+                    .longOpt("edl_only")
+                    .desc("only produce output with entities for EDL use")
+                    .build());
+            options.addOption(Option.builder("o")
+                    .longOpt("old")
+                    .desc("if specified, use old 2016 version")
+                    .build());
 
             // Read parameters
             CommandLine line = parser.parse(options, args);
@@ -900,6 +1103,8 @@ public class TacFormatConverter {
             } else {
                 kbParameters = new KBParameters();
             }
+            boolean isEdlOnly = line.hasOption("edl_only");
+            boolean use2016version = line.hasOption("old");
             boolean resumeRun = line.hasOption("resume");
             int sampleSize = 0;
             if (line.hasOption("sample")) {
@@ -907,7 +1112,7 @@ public class TacFormatConverter {
             }
 
             // Initialize connections
-            reportGenerator = new TacFormatConverter(kbParameters, outputDirectory, systemName, resumeRun, sampleSize);
+            reportGenerator = new TacFormatConverter(kbParameters, outputDirectory, systemName, resumeRun, sampleSize, isEdlOnly, use2016version);
 
             // Generate reports
             reportGenerator.generate();

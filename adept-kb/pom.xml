@@ -1,50 +1,85 @@
 <?xml version="1.0"?>
+<!-- Copyright 2012-2017 Raytheon BBN Technologies Corp. All Rights Reserved. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>adept</groupId>
+    <groupId>com.bbn.adept</groupId>
     <artifactId>adept</artifactId>
-    <version>2.7.0</version>
+    <version>2.7.3</version>
   </parent>
   <artifactId>adept-kb</artifactId>
   <name>adept-kb</name>
   <description>The project file for the Adept KB module.</description>
   <packaging>jar</packaging>
   <properties>
+    <appAsmDir>${basedir}/target/appassembler</appAsmDir>
     <resourceDir>${basedir}/src/main/resources/pipeline</resourceDir>
   </properties>
   <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <testOutputDirectory>${project.basedir}/target/test-classes</testOutputDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </testResource>
+    </testResources>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changelog-plugin</artifactId>
+        <version>2.3</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
+        <version>1.12</version>
         <configuration>
+          <inceptionYear>2012</inceptionYear>
+          <licenseName>apache_v2</licenseName>
           <excludes>
-            <exclude>${project.build.sourceDirectory}/TestConnectionPools.java</exclude>
-            <exclude>${project.build.sourceDirectory}/adept/kbapi/sparql/HttpClientUtil.java</exclude>
-            <exclude>${project.build.sourceDirectory}/adept/kbapi/sparql/RemoteModel.java</exclude>
-            <exclude>${project.basedir}/src/test/resources/**/*.xml</exclude>
+            <exclude>**/java/TestConnectionPools.java</exclude>
+            <exclude>**/sparql/HttpClientUtil.java</exclude>
+            <exclude>**/sparql/RemoteModel.java</exclude>
+            <exclude>**/test/resources/**/*.xml</exclude>
           </excludes>
           <verbose>true</verbose>
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefirePluginVersion}</version>
         <configuration>
+          <workingDirectory>${project.basedir}/target/test-classes</workingDirectory>
           <skipAfterFailureCount>1</skipAfterFailureCount>
+          <skipTests>${skipUnitTests}</skipTests>
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
+        <version>${sourcePluginVersion}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
             <goals>
               <goal>jar</goal>
             </goals>
+            <configuration>
+              <workingDirectory>${project.basedir}/target/test-classes</workingDirectory>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -105,50 +140,52 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
         <executions>
           <execution>
-            <id>script-chmod</id>
-            <phase>install</phase>
             <goals>
-              <goal>exec</goal>
+              <goal>jar</goal>
             </goals>
-            <configuration>
-              <executable>bash</executable>
-              <arguments>
-                <argument>-c</argument>
-                <argument>chmod a+x ${project.build.directory}/appassembler/bin/*</argument>
-              </arguments>
-            </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
   <profiles>
-    <profile>
-      <id>normal-javadoc</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+	<profile>
+		<id>not-windows</id>
+		<activation>
+			<os>
+				<family>!windows</family>
+			</os>
+		</activation>
+		<build>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.3.2</version>
+					<executions>
+					  <execution>
+						<id>script-chmod</id>
+						<phase>install</phase>
+						<goals>
+						  <goal>exec</goal>
+						</goals>
+						<configuration>
+						  <executable>bash</executable>
+						  <arguments>
+							<argument>-c</argument>
+							<argument>chmod a+x ${project.build.directory}/appassembler/bin/*</argument>
+						  </arguments>
+						</configuration>
+					  </execution>
+					</executions>
+				  </plugin>
+			</plugins>
+		</build>
+	</profile>
     <profile>
       <id>javadoc-html</id>
       <build>
@@ -217,7 +254,7 @@
   </profiles>
   <dependencies>
     <dependency>
-      <groupId>adept</groupId>
+      <groupId>com.bbn.adept</groupId>
       <artifactId>adept-api</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
@@ -229,7 +266,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-dbcp2</artifactId>
-      <version>2.0.1</version>
+      <version>2.1.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

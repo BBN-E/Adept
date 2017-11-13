@@ -24,6 +24,8 @@
 <entry key="Vehicle">Vehicle</entry>
 <entry key="Weapon">Weapon</entry>
 <entry key="Sentence">Sentence</entry>
+<entry key="Number">Number</entry>
+<entry key="Date">Date</entry>
 
 <!--  mapping of Realis types -->
 <entry key="Generic">Generic</entry>

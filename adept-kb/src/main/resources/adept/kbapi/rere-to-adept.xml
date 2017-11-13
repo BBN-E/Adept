@@ -343,6 +343,7 @@
 <entry key="commodity">Commodity</entry>
 <entry key="com">Commodity</entry>
 <entry key="crime">Crime</entry>
+<entry key="causeofdeath">CauseOfDeath</entry>
 <entry key="money">Money</entry>
 <!--<entry key="sentence">Sentence</entry>--> <!-- commenting this out because it conflicts with the sentence key for event type. The mapping is hardcoded in the adept-kb code -->
 <entry key="title">Title</entry>
@@ -351,6 +352,9 @@
 <entry key="weapon">Weapon</entry>
 <entry key="wea">Weapon</entry>
 <entry key="url">URL</entry>
+<entry key="number">Number</entry>
+<entry key="date">Date</entry>
+<entry key="time">Date</entry>
 
 
 </properties>

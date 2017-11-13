@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.sql;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi.sql;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,12 +84,15 @@ public class SqlQueryBuilder {
 					+ "SD.\"publicationDate\" AS \"SD_publicationDate\", "
 					+ "SD.\"URI\" AS \"SD_URI\", "
 					+ "SD.\"sourceLanguage\" AS \"SD_sourceLanguage\", "
-					+ "TP.\"ID\" AS \"TP_ID\" "
+					+ "TP.\"ID\" AS \"TP_ID\", "
+					+ "EMT.\"type\" AS \"TP_TYPE\" "
 					+ "FROM \"TextProvenances\" AS TP "
 					+ "INNER JOIN \"TextChunks\" AS CHUNK ON TP.chunk = CHUNK.\"ID\" "
 					+ "LEFT JOIN \"SourceAlgorithms\" AS SA ON TP.\"sourceAlgorithm\" = SA.\"algorithmName\" "
 					+ "LEFT JOIN \"SourceDocuments\" AS SD ON CHUNK.\"sourceDocument\"=SD.\"ID\" "
 					+ "LEFT JOIN \"Corpus\" as CORPUS on CORPUS.\"ID\"=SD.CORPUS "
+					+ "LEFT JOIN \"EntityMentionTypes\" as EMT on EMT"
+					+ ".\"provenance\"=TP.\"ID\" "
 					+ "WHERE TP.\"KBId\" = ?";
 
 	public static final String textProvenanceByOwnerIds =
@@ -89,12 +112,15 @@ public class SqlQueryBuilder {
 					+ "SD.\"publicationDate\" AS \"SD_publicationDate\", "
 					+ "SD.\"URI\" AS \"SD_URI\", "
 					+ "SD.\"sourceLanguage\" AS \"SD_sourceLanguage\", "
-					+ "TP.\"ID\" AS \"TP_ID\" "
+					+ "TP.\"ID\" AS \"TP_ID\", "
+					+ "EMT.\"type\" AS \"TP_TYPE\" "
 					+ "FROM \"TextProvenances\" AS TP "
 					+ "INNER JOIN \"TextChunks\" AS CHUNK ON TP.chunk = CHUNK.\"ID\" "
 					+ "LEFT JOIN \"SourceAlgorithms\" AS SA ON TP.\"sourceAlgorithm\" = SA.\"algorithmName\" "
 					+ "LEFT JOIN \"SourceDocuments\" AS SD ON CHUNK.\"sourceDocument\"=SD.\"ID\" "
 					+ "LEFT JOIN \"Corpus\" as CORPUS on CORPUS.\"ID\"=SD.CORPUS "
+					+ "LEFT JOIN \"EntityMentionTypes\" as EMT on EMT"
+					+ ".\"provenance\"=TP.\"ID\" "
 					+ "WHERE TP.\"KBId\" IN (";
 
 	public static final String sourceDocumentById =
@@ -140,11 +166,20 @@ public class SqlQueryBuilder {
 					+ "SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS ( SELECT \"ID\" FROM \"TextChunks\" WHERE \"ID\"= ? )";
 
 	public static final String insertTextProvenance =
-			"INSERT INTO \"TextProvenances\"(\"ID\", \"chunk\", \"sourceAlgorithm\", \"KBId\", \"confidence\") "
+			"INSERT INTO \"TextProvenances\"(\"ID\", \"chunk\", \"sourceAlgorithm\", "
+					+ "\"KBId\", \"confidence\") "
 					+ "values (?, ?, ?, ?, ?)";
+
+	public static final String insertEntityMentionType =
+			"INSERT INTO \"EntityMentionTypes\"(\"ID\", \"provenance\", "
+					+"\"type\") "
+					+ "values (?, ?, ?)";
 
   	public static final String updateTextProvenance =
       		"UPDATE \"TextProvenances\" set \"KBId\"=? WHERE \"ID\"=?";
+
+//	public static final String updateEntityMentionType =
+//			"UPDATE \"EntityMentionTypes\" set \"type\"=? WHERE \"provenance\"=?";
 
 	public static final String getChunkIDByProvenanceKBID =
 			"SELECT \"chunk\" FROM \"TextProvenances\" WHERE \"ID\" = ?";
@@ -372,6 +407,17 @@ public class SqlQueryBuilder {
 		textProvenanceInsertBatchStatement.addBatch();
 	}
 
+	public static void addEntityMentionTypeInsertQueryToBatch(String entityMentionTypeId,
+			String provenanceId, String type,
+			PreparedStatement entityMentionTypeInsertBatchStatement) throws SQLException {
+		entityMentionTypeInsertBatchStatement.setString(1, entityMentionTypeId);
+		entityMentionTypeInsertBatchStatement.setString(2, provenanceId);
+		entityMentionTypeInsertBatchStatement.setString(3, type);
+		entityMentionTypeInsertBatchStatement.addBatch();
+	}
+
+
+
 	public static void addTextProvenanceDeleteQueryToBatch(String provenanceId,
 			PreparedStatement textProvenanceDeleteBatchStatement) throws SQLException {
 		textProvenanceDeleteBatchStatement.setString(1, provenanceId);
@@ -384,6 +430,14 @@ public class SqlQueryBuilder {
 	  	textProvenanceUpdateBatchStatement.setString(2,provenanceId);
     		textProvenanceUpdateBatchStatement.addBatch();
   	}
+
+//	public static void addEntityMentionTypeUpdateQueryToBatch(String provenanceId,
+//			String newType, PreparedStatement entityMentionTypeUpdateBatchStatement)
+//			throws SQLException {
+//		entityMentionTypeUpdateBatchStatement.setString(1, newType);
+//		entityMentionTypeUpdateBatchStatement.setString(2,provenanceId);
+//		entityMentionTypeUpdateBatchStatement.addBatch();
+//	}
 
 	/**
 	 * create SQL query to check if a text chunk already exists in the DB given

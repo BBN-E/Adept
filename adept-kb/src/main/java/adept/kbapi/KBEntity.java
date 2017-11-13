@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +39,16 @@ package adept.kbapi;
  * limitations under the License.
  * #L%
  */
+
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multiset;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,16 +61,7 @@ import adept.common.EntityMention;
 import adept.common.IType;
 import adept.common.KBID;
 import adept.common.OntType;
-
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multiset;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import edu.stanford.nlp.util.Sets;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -68,6 +89,12 @@ public class KBEntity extends KBThing {
 	 */
 	private final float canonicalMentionConfidence;
 
+	//Both provenanceCount and documentCount are Optional, only for
+	// backwards compatibility
+	private final Optional<Integer> provenanceCount;
+
+	private final Optional<Integer> documentCount;
+
 	/**
 	 * Private constructor. To be called only by builders.
 	 *
@@ -77,12 +104,22 @@ public class KBEntity extends KBThing {
 	 * @param provenances
 	 */
 	private KBEntity(KB kb, KBID kbID, float confidence, Map<OntType, Float> types,
-			String canonicalString, float canonicalMentionConfidence, Optional<Set<KBProvenance>> provenances) {
+			String canonicalString, float
+			canonicalMentionConfidence,
+			Optional<Set<KBProvenance>> provenances,
+			Optional<Integer>
+			provenanceCount, Optional<Integer> documentCount) {
 		super(kb, kbID, provenances, canonicalString);
 		checkNotNull(types);
 		this.confidence = confidence;
 		this.types = ImmutableMap.copyOf(types);
 		this.canonicalMentionConfidence = canonicalMentionConfidence;
+		checkArgument(!provenanceCount.isPresent()||provenanceCount
+				.get()>=0);
+		this.provenanceCount = provenanceCount;
+		checkArgument(!documentCount.isPresent()||documentCount
+				.get()>=0);
+		this.documentCount = documentCount;
 	}
 
 	public float getConfidence() {
@@ -107,6 +144,14 @@ public class KBEntity extends KBThing {
 		return canonicalMentionConfidence;
 	}
 
+	public Optional<Integer> getProvenanceCount(){
+		return provenanceCount;
+	}
+
+	public Optional<Integer> getDocumentCount(){
+		return documentCount;
+	}
+
 	/**
 	 * Get a new InsertionBuilder for this entity.
 	 *
@@ -116,7 +161,7 @@ public class KBEntity extends KBThing {
 	 * @return
 	 */
 	public static InsertionBuilder entityInsertionBuilder(Map<OntType, Float> types,
-			KBTextProvenance.InsertionBuilder canonicalMention, float confidence,
+			KBEntityMentionProvenance.InsertionBuilder canonicalMention, float confidence,
 			float canonicalMentionConfidence) {
 		InsertionBuilder insertionBuilder = new InsertionBuilder(types, canonicalMention, confidence, canonicalMentionConfidence);
 		insertionBuilder.addProvenance(canonicalMention);
@@ -135,8 +180,12 @@ public class KBEntity extends KBThing {
 	 * @return
 	 */
 	protected static InsertionBuilder entityInsertionBuilder(Map<OntType, Float> types,
-			KBID canonicalMentionID, String canonicalMentionValue, float confidence, float canonicalMentionConfidence){
-		return new InsertionBuilder(types, canonicalMentionID, canonicalMentionValue, confidence, canonicalMentionConfidence);
+			KBID canonicalMentionID, String
+			canonicalMentionValue, float confidence, float
+			canonicalMentionConfidence){
+		return new InsertionBuilder(types, canonicalMentionID,
+				canonicalMentionValue, confidence,
+				canonicalMentionConfidence);
 	}
 
 	/**
@@ -178,8 +227,9 @@ public class KBEntity extends KBThing {
 		long entityId = entity.getEntityId();
 
 		EntityMention canonicalMention = entity.getCanonicalMention();
-		KBTextProvenance.InsertionBuilder canonicalMentionBuilder = KBTextProvenance.builder(
-				canonicalMention, canonicalMention.getConfidence(entityId));
+		KBEntityMentionProvenance.InsertionBuilder canonicalMentionBuilder = KBEntityMentionProvenance.builder(
+				canonicalMention, canonicalMention.getConfidence(entityId),
+				canonicalMention.getMentionType().getType());
 		InsertionBuilder insertionBuilder = entityInsertionBuilder(types, canonicalMentionBuilder,
 				(float) entity.getEntityConfidence(),
 				(float) entity.getCanonicalMentionConfidence());
@@ -196,8 +246,11 @@ public class KBEntity extends KBThing {
 				Preconditions
 						.checkArgument(ontType.isPresent(),
 								"Ontology map must have mapping for the entity types of all entity mentions.");
-				KBTextProvenance.InsertionBuilder textProvenance = KBTextProvenance.builder(
-						entityMention, entityMention.getConfidence(entityId));
+				KBEntityMentionProvenance.InsertionBuilder textProvenance = KBEntityMentionProvenance
+						.builder(
+						entityMention, entityMention.getConfidence
+								(entityId),entityMention.getMentionType()
+										.getType());
 				insertionBuilder.addProvenance(textProvenance);
 			}
 		}
@@ -216,7 +269,7 @@ public class KBEntity extends KBThing {
 
 		/**
 		 * This builder is for query-time loading of the Entity.  The canonical mention
-		 * is only loaded as an ID and a value string
+		 * is only loaded as an ID and a value string.
 		 * @param types
 		 * @param canonicalMentionID
 		 * @param canonicalMentionValue
@@ -240,7 +293,7 @@ public class KBEntity extends KBThing {
 
 		/**
 		 * This builder is for insertion-time creation of the Entity.  The canonical mention
-		 * is given as a builder
+		 * is given as a builder.
 		 *
 		 * @param types
 		 * @param canonicalMention
@@ -290,6 +343,13 @@ public class KBEntity extends KBThing {
 			return canonicalMention;
 		}
 
+		public Set<String> getDocumentIDsFromProvenances(){
+			return KBTextProvenance
+					.InsertionBuilder
+					.getDocumentIDsFromProvenanceBuilders
+							(getProvenances());
+		}
+
 		/**
 		 *
 		 * @param kb
@@ -298,13 +358,22 @@ public class KBEntity extends KBThing {
 		@Override
 		public KBEntity insert(KB kb) throws KBUpdateException {
 			kb.insertEntity(this);
-			return build(kb, false);
+			//When inserting an entity, the insertionBuilder must
+			// have at least one KBProvenance.InsertionBuilder set
+			Set<String> documentIDs =
+					getDocumentIDsFromProvenances();
+			return build(kb, false,Optional.of(getProvenances()
+					.size()),Optional.of(documentIDs.size()));
 		}
 
-		protected KBEntity build(KB kb, boolean deferProvenances) {
+		protected KBEntity build(KB kb, boolean deferProvenances,
+				Optional<Integer> provenanceCount,
+				Optional<Integer> documentCount) {
 			Optional<Set<KBProvenance>> provenances = buildProvenances(deferProvenances);
 			return new KBEntity(kb, kbid, getConfidence(), types,
-					this.getCanonicalMentionValue(), canonicalMentionConfidence, provenances);
+					this.getCanonicalMentionValue(),
+					canonicalMentionConfidence,
+					provenances, provenanceCount,documentCount);
 		}
 
 		/**
@@ -340,8 +409,9 @@ public class KBEntity extends KBThing {
 	public class UpdateBuilder extends
 			KBPredicateArgument.UpdateBuilderWithConfidence<UpdateBuilder, KBEntity> {
 
-		private KBTextProvenance.InsertionBuilder newCanonicalMention = null;
+		private KBEntityMentionProvenance.InsertionBuilder newCanonicalMention = null;
 		private Float newCanonicalMentionConfidence = null;
+		private int newProvenanceCount;
 
 		private Map<OntType, Float> updatedTypes;
 
@@ -350,7 +420,7 @@ public class KBEntity extends KBThing {
 		}
 
 		public UpdateBuilder setNewCanonicalMention(
-				KBTextProvenance.InsertionBuilder newCanonicalMention,
+				KBEntityMentionProvenance.InsertionBuilder newCanonicalMention,
 				float newCanonicalMentionConfidence) {
 			this.newCanonicalMention = newCanonicalMention;
 			this.newCanonicalMentionConfidence = newCanonicalMentionConfidence;
@@ -378,7 +448,26 @@ public class KBEntity extends KBThing {
 			return me();
 		}
 
-		public KBTextProvenance.InsertionBuilder getNewCanonicalMention() {
+		public int getUpdatedProvenanceCount() throws KBQueryException{
+			return getProvenances().size() + getNewProvenances().size() - getProvenancesToRemove().size();
+		}
+
+		public int getUpdatedDocumentCount() throws KBQueryException{
+			Set<KBProvenance> provenancesToRetain =
+					Sets.diff(getProvenances(),
+							getProvenancesToRemove());
+			Set<String> updatedDocIDs = KBTextProvenance
+					.getDocumentIDsFromProvenances
+							(provenancesToRetain);
+			updatedDocIDs.addAll(KBTextProvenance
+					.InsertionBuilder
+					.getDocumentIDsFromProvenanceBuilders
+							(getNewProvenances()));
+			return updatedDocIDs.size();
+
+		}
+
+		public KBEntityMentionProvenance.InsertionBuilder getNewCanonicalMention() {
 			return newCanonicalMention;
 		}
 
@@ -414,12 +503,20 @@ public class KBEntity extends KBThing {
 					provenances.add(kbProvenance);
 				}
 			}
+			Set<String> documentIds = KBTextProvenance
+					.getDocumentIDsFromProvenances
+							(provenances);
 			return new KBEntity(kb, getKBID(),
 					this.getNewConfidence() != null ? this.getNewConfidence() : getConfidence(),
 					updatedTypes, newCanonicalMention != null ? newCanonicalMention.getValue()
 							: getCanonicalString(),
-					newCanonicalMentionConfidence != null ? newCanonicalMentionConfidence
-							: getCanonicalMentionConfidence(), Optional.of(provenances));
+					newCanonicalMentionConfidence != null
+					? newCanonicalMentionConfidence
+					:getCanonicalMentionConfidence(),
+					Optional.of(provenances),
+					Optional.of(provenances
+					.size()),Optional.of(documentIds.size
+					()));
 		}
 
 		/**
@@ -493,7 +590,7 @@ public class KBEntity extends KBThing {
       return kbEntitiesToMerge.get(0);
     }
     KBEntity kbEntityToRetain = null;
-    KBTextProvenance.InsertionBuilder canonicalMention=null;
+    KBEntityMentionProvenance.InsertionBuilder canonicalMention=null;
     Map<Float, Multiset<String>> canonicalStringConfidences = new HashMap<>();
     Map<OntType, Float> entityTypeConfidences = new HashMap<OntType, Float>();
     double weightTotal = 0.0;
@@ -566,18 +663,18 @@ public class KBEntity extends KBThing {
     //provenances
     for(KBProvenance provenance : allProvenances) {
       if(!kbEntityToRetain.getProvenances().contains(provenance)) {
-	KBTextProvenance.UpdateBuilder provenanceUpdateBuilder =
-	    ((KBTextProvenance)provenance).getUpdateBuilder();
-	provenanceUpdateBuilder.setSourceEntityKBID(kbEntityToRetain.getKBID());
+	KBEntityMentionProvenance.UpdateBuilder provenanceUpdateBuilder =
+	    ((KBEntityMentionProvenance)provenance).getUpdateBuilder(kbEntityToRetain.getKBID());
+//	provenanceUpdateBuilder.setSourceEntityKBID(kbEntityToRetain.getKBID());
 	log.info("Added provenance {}.... ",provenanceUpdateBuilder
 	    .getKBID().getObjectID());
 	log.info("...to update with KBId: {}",provenanceUpdateBuilder.getSourceEntityKBID()
 	    .getObjectID());
 	updateBuilder.addProvenanceToUpdate(provenanceUpdateBuilder);
       }
-      if(canonicalMention==null&&bestCanonicalString.equals(((KBTextProvenance)
+      if(canonicalMention==null&&bestCanonicalString.equals(((KBEntityMentionProvenance)
 								 provenance).getValue())){
-	canonicalMention=createInsertionBuilderForProvenance((KBTextProvenance)provenance);
+	canonicalMention=createInsertionBuilderForProvenance((KBEntityMentionProvenance)provenance);
       }
     }
     //canonicalmention
@@ -595,10 +692,10 @@ public class KBEntity extends KBThing {
     return mergedKBEntity;
   }
 
-  private static KBTextProvenance.InsertionBuilder createInsertionBuilderForProvenance
-      (KBTextProvenance
+  private static KBEntityMentionProvenance.InsertionBuilder createInsertionBuilderForProvenance
+      (KBEntityMentionProvenance
       provenance) {
-    KBTextProvenance.InsertionBuilder insertionBuilder = KBTextProvenance.builder();
+    KBEntityMentionProvenance.InsertionBuilder insertionBuilder = KBEntityMentionProvenance.builder();
     insertionBuilder.setBeginOffset(provenance.getBeginOffset());
     insertionBuilder.setContributingSiteName(provenance.getContributingSiteName());
     insertionBuilder.setCorpusID(provenance.getCorpusID());
@@ -614,6 +711,7 @@ public class KBEntity extends KBThing {
     insertionBuilder.setSourceAlgorithmName(provenance.getSourceAlgorithmName());
     insertionBuilder.setSourceLanguage(provenance.getSourceLanguage());
     insertionBuilder.setValue(provenance.getValue());
+    insertionBuilder.setType(provenance.getType());
     return insertionBuilder;
   }
 

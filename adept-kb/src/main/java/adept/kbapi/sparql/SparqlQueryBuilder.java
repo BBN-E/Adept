@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.sparql;
 
 /*-
@@ -20,6 +40,14 @@ package adept.kbapi.sparql;
  * #L%
  */
 
+import com.google.common.base.Optional;
+import com.hp.hpl.jena.graph.impl.LiteralLabel;
+import com.hp.hpl.jena.graph.impl.LiteralLabelFactory;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.update.UpdateFactory;
+import com.hp.hpl.jena.update.UpdateRequest;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -29,15 +57,12 @@ import adept.common.IType;
 import adept.common.KBID;
 import adept.common.OntType;
 import adept.kbapi.KBEntity;
+import adept.kbapi.KBGenericThing;
 import adept.kbapi.KBOntologyModel;
+import adept.kbapi.KBQueryException;
 
-import com.google.common.base.Optional;
-import com.hp.hpl.jena.graph.impl.LiteralLabel;
-import com.hp.hpl.jena.graph.impl.LiteralLabelFactory;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.update.UpdateFactory;
-import com.hp.hpl.jena.update.UpdateRequest;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SparqlQueryBuilder {
 
@@ -163,7 +188,7 @@ public class SparqlQueryBuilder {
 					"WHERE { " +
 					"   ?subject rdfs:subClassOf adept-base:Thing . " +
 					"   FILTER(!isblank(?subject)) " +
-					"   FILTER(?subject != adept-base:Number && ?subject != adept-base:Date) " +
+//					"   FILTER(?subject != adept-base:Number && ?subject != adept-base:Date) " +
 					"} ";
 
 	private static final String GET_GENERIC_THING_TYPES =
@@ -254,6 +279,11 @@ public class SparqlQueryBuilder {
 			"		 adept-base:canonicalString ?entityCanonicalString; " +
 			"        adept-base:confidence ?entityconfidence; " +
 			"        a ?entityType . " +
+			"	 OPTIONAL {"+
+			"		?argument adept-base:provenanceCount "
+			+ "?provenanceCount .} OPTIONAL {?argument "
+			+ "adept-base:documentCount ?documentCount ."
+			+ " } " +
 			"    ?entityTypeStatement a rdf:Statement; " +
 			"        rdf:subject ?argument; " +
 			"        rdf:predicate rdf:type; " +
@@ -383,6 +413,11 @@ public class SparqlQueryBuilder {
 					+ "INSERT DATA"
 					+ "{ adept-data:%s    adept-base:canonicalMention  " + "adept-data:%s ;"
 					+ "                         adept-base:canonicalString  " + "\"%s\"  ;"
+					+ "							adept-base:provenanceCount  " + "\"%s\"^^xsd:integer  ;"
+					+ "				"
+					+ "			"
+					+ "adept-base:documentCount  " +
+					"\"%s\"^^xsd:integer  ;"
 					+ "                         adept-base:confidence  " + "\"%s\"^^xsd:float" + " ."
 					+ "  adept-data:%s    adept-base:confidence  " + "\"%s\"^^xsd:float" + " ." + "}   ";
 
@@ -414,6 +449,17 @@ public class SparqlQueryBuilder {
 					+ "                         rdf:predicate  " + "rdf:type ;"
 					+ "                         adept-base:confidence  " + "\"%s\"^^xsd:float" + " ." + "}   ";
 
+	private static final String BASE_TYPE_REIFICATION_TEMPLATE =
+			PREFIXES
+					+ "INSERT DATA"
+					+ "{ adept-data:%s    rdf:type  adept-base:%s  ." + "} ; "
+					+ "INSERT DATA"
+					+ "{ adept-data:%s    rdf:type    rdf:Statement    ;"
+					+ "                         rdf:subject  " + "adept-data:%s ;"
+					+ "                         rdf:object  " + "adept-base:%s  ;"
+					+ "                         rdf:predicate  " + "rdf:type ."
+					+ "                         }   ";
+
 	private static final String EXTERNALKBID_INSERTION_TEMPLATE =
 			PREFIXES
 					+ "INSERT DATA"
@@ -441,6 +487,24 @@ public class SparqlQueryBuilder {
 					+ "{ adept-data:%s    adept-base:confidence  " + "?o" + " ." + "}  ; "
 					+ "INSERT DATA "
 					+ "{ adept-data:%s    adept-base:confidence  " + "\"%s\"^^xsd:float" + " ." + "}   ";
+
+	private static final String UPDATE_ENTITY_PROVENANCE_COUNT_TEMPLATE =
+			PREFIXES
+					+ "DELETE WHERE"
+					+ "{ adept-data:%s    adept-base:provenanceCount  " + "?o" + " ." + "}  ; "
+					+ "INSERT DATA "
+					+ "{ adept-data:%s    adept-base:provenanceCount  " + "\"%s\"^^xsd:integer" + " ." + "}   ";
+
+	private static final String UPDATE_ENTITY_DOCUMENT_COUNT_TEMPLATE =
+			PREFIXES
+					+ "DELETE WHERE"
+					+ "{ adept-data:%s    "
+					+ "adept-base:documentCount  " + "?o" +
+					" ." + "}  ; "
+					+ "INSERT DATA "
+					+ "{ adept-data:%s    "
+					+ "adept-base:documentCount  " +
+					"\"%s\"^^xsd:integer" + " ." + "}   ";
 
 	private static final String UPDATE_CANONICAL_MENTION_TEMPLATE =
 			PREFIXES
@@ -506,7 +570,10 @@ public class SparqlQueryBuilder {
 			PREFIXES
 					+ "INSERT DATA"
 					+ "{ adept-data:%s    rdf:type      <%s>  ;"
-					+ "    adept-base:canonicalString  \"%s\" .}   ";
+					+ "    adept-base:canonicalString  "
+					+ "\"%s\" ; "
+					+ "adept-base:provenanceCount  "
+					+ "\"%s\"^^xsd:integer  ; adept-base:documentCount \"%s\"^^xsd:integer  .}   ";
 
 	private static final String INSERT_DATE_TEMPLATE =
 			PREFIXES
@@ -591,8 +658,15 @@ public class SparqlQueryBuilder {
 					+ "SELECT ?canonicalString ?type "
 					+ "WHERE { "
 					+ "adept-data:%s a ?type;"
-					+ "  adept-base:canonicalString ?canonicalString"
-					+ "}";
+					+ "  adept-base:canonicalString "
+					+ "?canonicalString . "
+					+ "OPTIONAL {?id "
+					+ "adept-base:provenanceCount "
+					+ "?provenanceCount .} OPTIONAL {?id "
+					+ " adept-base:documentCount "
+					+ "?documentCount ."
+					+ " }"
+					+ " }";
 
 	private static final String QUERY_GENERIC_THING_BY_VALUE_AND_TYPE =
 			PREFIXES
@@ -600,6 +674,12 @@ public class SparqlQueryBuilder {
 					+ "WHERE { "
 					+ "?id adept-base:canonicalString \"%s\";"
 					+ "		a <%s> ."
+					+ "OPTIONAL {?id "
+					+ "adept-base:provenanceCount "
+					+ "?provenanceCount .} OPTIONAL {?id "
+					+ " adept-base:documentCount "
+					+ "?documentCount ."
+					+ " }"
 					+ "}";
 
 	private static final String QUERY_EXTERNALID_BY_ID_AND_NAME =
@@ -661,13 +741,24 @@ public class SparqlQueryBuilder {
 
 	private static final String QUERY_ENTITY_DATA_BY_IDS =
 			PREFIXES +
-					"SELECT ?id ?confidence ?canonicalMention ?canonicalMentionConfidence ?type ?typeConfidence ?entityCanonicalString " +
+					"SELECT ?id ?confidence "
+					+ "?canonicalMention "
+					+ "?canonicalMentionConfidence ?type "
+					+ "?typeConfidence "
+					+ "?entityCanonicalString "
+					+ "?provenanceCount ?documentCount " +
 					"WHERE { " +
 					"  ?id a adept-base:Entity . " +
-					"  FILTER (?id in (%s)) " +
+					"  VALUES ?id { %s } . " +
 					"  ?id adept-base:confidence ?confidence . " +
 					"  ?id adept-base:canonicalMention ?canonicalMention ; " +
 					"	 adept-base:canonicalString ?entityCanonicalString . " +
+					"  OPTIONAL {?id "
+					+ "adept-base:provenanceCount "
+					+ "?provenanceCount .} OPTIONAL {?id "
+					+ " adept-base:documentCount "
+					+ "?documentCount ."
+					+ " }"+
 					"  ?typeId rdf:subject ?id . " +
 					"  ?typeId rdf:predicate rdf:type . " +
 					"  ?typeId rdf:type rdf:Statement . " +
@@ -676,15 +767,75 @@ public class SparqlQueryBuilder {
 					"  ?canonicalMention adept-base:confidence ?canonicalMentionConfidence . " +
 					"}";
 
+	private static final String
+			QUERY_MOST_FREQUENT_ENTITY_IDS_BY_PROVENANCE_COUNT =
+			PREFIXES +
+					"SELECT ?id " +
+					"WHERE { " +
+					"  ?id a adept-base:Entity . " +
+					"  ?id adept-base:provenanceCount ?provenanceCount . "+
+					"} order by DESC(?provenanceCount) limit %s";
+
+	private static final String
+			QUERY_MOST_FREQUENT_ENTITY_IDS_BY_PROVENANCE_COUNT_AND_TYPE =
+			PREFIXES +
+					"SELECT ?id " +
+					"WHERE { " +
+					"  ?id a adept-base:Entity . " +
+					"  ?id adept-base:provenanceCount ?provenanceCount . "+
+					"  ?typeId rdf:subject ?id . " +
+					"  ?typeId rdf:predicate rdf:type . " +
+					"  ?typeId rdf:type rdf:Statement . " +
+					"  ?typeId rdf:object ?type . " +
+					"  FILTER (?type = adept-core:%s) " +
+					"} order by DESC(?provenanceCount) limit %s";
+
+	private static final String
+			QUERY_MOST_FREQUENT_ENTITY_IDS_BY_DOCUMENT_COUNT =
+			PREFIXES +
+					"SELECT ?id " +
+					"WHERE { " +
+					"  ?id a adept-base:Entity . " +
+					"  ?id adept-base:documentCount "
+					+ "?documentCount . "+
+					"} order by DESC(?documentCount) "
+					+ "limit %s";
+
+	private static final String
+			QUERY_MOST_FREQUENT_ENTITY_IDS_BY_DOCUMENT_COUNT_AND_TYPE =
+			PREFIXES +
+					"SELECT ?id " +
+					"WHERE { " +
+					"  ?id a adept-base:Entity . " +
+					"  ?id adept-base:documentCount "
+					+ "?documentCount . "+
+					"  ?typeId rdf:subject ?id . " +
+					"  ?typeId rdf:predicate rdf:type . " +
+					"  ?typeId rdf:type rdf:Statement . " +
+					"  ?typeId rdf:object ?type . " +
+					"  FILTER (?type = adept-core:%s) " +
+					"} order by DESC(?documentCount) "
+					+ "limit %s";
 
 	private static final String QUERY_ENTITY_DATA_BY_TYPE =
 			PREFIXES +
-					"SELECT ?id ?confidence ?canonicalMention ?canonicalMentionConfidence ?type ?typeConfidence ?entityCanonicalString " +
+					"SELECT ?id ?confidence "
+					+ "?canonicalMention "
+					+ "?canonicalMentionConfidence ?type "
+					+ "?typeConfidence "
+					+ "?entityCanonicalString "
+					+ "?provenanceCount ?documentCount" +
 					"WHERE { " +
 					"  ?id a adept-base:Entity . " +
 					"  ?id adept-base:confidence ?confidence . " +
 					"  ?id adept-base:canonicalMention ?canonicalMention ; " +
 					"		adept-base:canonicalString ?entityCanonicalString . " +
+					"  OPTIONAL {?id "
+					+ "adept-base:provenanceCount "
+					+ "?provenanceCount . }"+
+					"  OPTIONAL {?id "
+					+ "adept-base:documentCount "
+					+ "?documentCount . }"+
 					"  ?typeId rdf:subject ?id . " +
 					"  ?typeId rdf:predicate rdf:type . " +
 					"  ?typeId rdf:type rdf:Statement . " +
@@ -991,7 +1142,18 @@ public class SparqlQueryBuilder {
 			PREFIXES +
 					"SELECT * " +
 					"WHERE{ " +
-					"adept-data:%s a rdf:Statement; " +
+					"# For consistency among various "
+					+ "argument queries, make "
+					+ "sure that there's a "
+					+ "kbRelationArgumentID variable "
+					+ "which is the same as input "
+					+ "Statement id \n"+
+					" ?kbRelationArgumentID a "
+					+ "rdf:Statement . "
+					+ "FILTER "
+					+ "(?kbRelationArgumentID in "
+					+ "(adept-data:%s)) ."+
+					"?kbRelationArgumentID "+
 					"      adept-base:confidence ?argumentConfidence; " +
 					"      rdf:predicate ?role; " +
 					"      rdf:object ?argument . " +
@@ -1001,8 +1163,16 @@ public class SparqlQueryBuilder {
 					"		 adept-base:canonicalString ?entityCanonicalString; " +
 					"        adept-base:confidence ?entityconfidence; " +
 					"        a ?entityType . " +
+					" OPTIONAL "
+					+ "{?argument  "
+					+ "adept-base:provenanceCount "
+					+ "?provenanceCount. }" +
+					" OPTIONAL "
+					+ "{?argument  "
+					+ "adept-base:documentCount "
+					+ "?documentCount. }" +
 					"    ?entityTypeStatement a rdf:Statement; " +
-					"        rdf:subject ?entity; " +
+					"        rdf:subject ?argument; " +
 					"        rdf:predicate rdf:type; " +
 					"        rdf:object ?entityType; " +
 					"        adept-base:confidence ?entityTypeConfidence . " +
@@ -1075,7 +1245,13 @@ public class SparqlQueryBuilder {
                                     "  	?relatedEntityId adept-base:canonicalMention ?entityCanonicalMention; " +
                                     "		adept-base:canonicalString ?entityCanonicalString; " +
                                     "		adept-base:confidence ?entityconfidence; " +
-                                    "		a ?entityType . " +
+				    "		a ?entityType . " +
+				    "	OPTIONAL {?relationEntityId "
+				    + "adept-base:provenanceCount "
+				    + "?provenanceCount .} " +
+				    "	OPTIONAL {?relationEntityId "
+				    + "adept-base:documentCount "
+				    + "?documentCount .} " +
                                     "	?entityTypeStatement a rdf:Statement; " +
                                     "		rdf:subject ?relatedEntityId; " +
                                     "		rdf:predicate rdf:type; " +
@@ -1096,7 +1272,13 @@ public class SparqlQueryBuilder {
                                     "  	?relatedEntityId adept-base:canonicalMention ?entityCanonicalMention; " +
                                     "		adept-base:canonicalString ?entityCanonicalString; " +
                                     "		adept-base:confidence ?entityconfidence; " +
-                                    "		a ?entityType . " +
+				    "		a ?entityType . " +
+				    "	OPTIONAL{ ?relatedEntityId "
+				    + "adept-base:provenanceCount "
+				    + "?provenanceCount. }" +
+				    "	OPTIONAL{ ?relatedEntityId "
+				    + "adept-base:documentCount "
+				    + "?documentCount. }" +
                                     "	?entityTypeStatement a rdf:Statement; " +
                                     "		rdf:subject ?relatedEntityId; " +
                                     "		rdf:predicate rdf:type; " +
@@ -1275,6 +1457,9 @@ public class SparqlQueryBuilder {
 		UpdateRequest updateRequest = UpdateFactory.create(String.format(INSERT_ENTITY_TEMPLATE,
 				SparqlUtils.escape(entityId), SparqlUtils.escape(canonicalMentionSqlId),
 				SparqlUtils.escape(entityInsertionBuilder.getCanonicalMentionValue()),
+				entityInsertionBuilder.getProvenances().size
+						(), entityInsertionBuilder
+						.getDocumentIDsFromProvenances().size(),
 				entityInsertionBuilder.getConfidence(),
 				SparqlUtils.escape(canonicalMentionSqlId), entityInsertionBuilder.getCanonicalMentionConfidence()));
 
@@ -1298,6 +1483,28 @@ public class SparqlQueryBuilder {
 
 	/**
 	 *
+	 * create statements to update the provenanceCount and documentCount
+	 * properties of an existing KB generic thing.
+	 */
+	public UpdateRequest createGenericThingUpdateQueries(KBGenericThing
+			.UpdateBuilder genericThingUpdateBuilder,
+			String genericThingId) throws KBQueryException {
+		UpdateRequest updateRequest = UpdateFactory.create();
+		//update provenance count
+		updateRequest = updateRequest.add(String.format(UPDATE_ENTITY_PROVENANCE_COUNT_TEMPLATE,
+				SparqlUtils.escape(genericThingId), SparqlUtils.escape(genericThingId),
+				genericThingUpdateBuilder.getUpdatedProvenanceCount()));
+
+		//update provenance count
+		updateRequest = updateRequest.add(String.format(UPDATE_ENTITY_DOCUMENT_COUNT_TEMPLATE,
+				SparqlUtils.escape(genericThingId), SparqlUtils.escape(genericThingId),
+				genericThingUpdateBuilder.getUpdatedDocumentCount()));
+
+		return updateRequest;
+	}
+
+	/**
+	 *
 	 * create statements to update an existing KB entity. Entity confidence,
 	 * canonical mention and canonical string value are overwritten. If the
 	 * updated entity has a new type associated with it, the type is appended to
@@ -1309,7 +1516,7 @@ public class SparqlQueryBuilder {
 	 * valid Adept ontology type, the update fails.
 	 */
 	public UpdateRequest createEntityUpdateQueries(KBEntity.UpdateBuilder entityUpdateBuilder,
-			String entityId) {
+			String entityId) throws KBQueryException {
 		String canonicalMentionSqlId = entityUpdateBuilder.getNewCanonicalMention() != null ? entityUpdateBuilder
 				.getNewCanonicalMention().getKBID().getObjectID()
 				: null;
@@ -1321,6 +1528,16 @@ public class SparqlQueryBuilder {
 					SparqlUtils.escape(entityId), SparqlUtils.escape(entityId),
 					entityUpdateBuilder.getNewConfidence()));
 		}
+
+		//update provenance count
+		updateRequest = updateRequest.add(String.format(UPDATE_ENTITY_PROVENANCE_COUNT_TEMPLATE,
+				SparqlUtils.escape(entityId), SparqlUtils.escape(entityId),
+				entityUpdateBuilder.getUpdatedProvenanceCount()));
+
+		//update provenance count
+		updateRequest = updateRequest.add(String.format(UPDATE_ENTITY_DOCUMENT_COUNT_TEMPLATE,
+				SparqlUtils.escape(entityId), SparqlUtils.escape(entityId),
+				entityUpdateBuilder.getUpdatedDocumentCount()));
 
 		if (canonicalMentionSqlId != null) {
 			// overwrite canonical mention, canonical string, canonical mention
@@ -1466,7 +1683,6 @@ public class SparqlQueryBuilder {
 				SparqlUtils.escape(dateId), xsdDate != null ? SparqlUtils.escape(xsdDate) : "null",
 				xsdDuration != null ? SparqlUtils.escape(xsdDuration) : "null",
 				SparqlUtils.escape(dateString)));
-
 		return updateRequest;
 	}
 
@@ -1501,7 +1717,8 @@ public class SparqlQueryBuilder {
 	 * @param id
 	 * @return
 	 */
-	public UpdateRequest createDateValueInsertQueries(String timexValue, Optional<String> xsdValue,
+	public UpdateRequest createDateValueInsertQueries(String timexValue, Optional<String>
+			xsdValue,
 			String id) {
 		UpdateRequest updateRequest = null;
 		if (xsdValue.isPresent()) {
@@ -1512,6 +1729,11 @@ public class SparqlQueryBuilder {
 			updateRequest = UpdateFactory.create(String.format(INSERT_TIMEX_VALUE_TEMPLATE,
 					SparqlUtils.escape(id), SparqlUtils.escape(timexValue)));
 		}
+		String typeStmtId = UUID.randomUUID().toString();
+		updateRequest.add(String.format(BASE_TYPE_REIFICATION_TEMPLATE,
+				SparqlUtils.escape(id), SparqlUtils.escape("Date"),
+				SparqlUtils.escape(typeStmtId), SparqlUtils.escape(id),
+				SparqlUtils.escape("Date")));
 
 		return updateRequest;
 	}
@@ -1624,6 +1846,11 @@ public class SparqlQueryBuilder {
 		String literalString = getLiteralString(number);
 		UpdateRequest updateRequest = UpdateFactory.create(String.format(INSERT_NUMBER_TEMPLATE,
 				SparqlUtils.escape(id), literalString));
+		String typeStmtId = UUID.randomUUID().toString();
+		updateRequest.add(String.format(BASE_TYPE_REIFICATION_TEMPLATE,
+				SparqlUtils.escape(id), SparqlUtils.escape("Number"),
+				SparqlUtils.escape(typeStmtId), SparqlUtils.escape(id),
+				SparqlUtils.escape("Number")));
 
 		return updateRequest;
 	}
@@ -1756,20 +1983,34 @@ public class SparqlQueryBuilder {
 	}
 
 	/**
-	 * @param type
-	 * @param canonicalString
+	 * @param genericThingInsertionBuilder
 	 * @param genericThingId
 	 * @return
 	 */
-	public UpdateRequest createGenericThingInsertQueries(OntType type, String canonicalString,
+	public UpdateRequest createGenericThingInsertQueries(KBGenericThing
+			.InsertionBuilder genericThingInsertionBuilder,
 			String genericThingId) {
+		OntType type = genericThingInsertionBuilder.getType();
+		String canonicalString = genericThingInsertionBuilder
+				.getCanonicalString();
+		int provenanceCount = genericThingInsertionBuilder
+				.getProvenances().size();
+		int documentCount = genericThingInsertionBuilder
+				.getDocumentIDsFromProvenances().size();
 		if (!KBOntologyModel.instance().getGenericThingTypes().contains(type.getType())) {
 			throw new RuntimeException("Invalid entity type: " + type
-					+ ". Entity insertion failed.");
+					+ ". GenericThing insertion failed.");
 		}
 		UpdateRequest updateRequest = UpdateFactory.create(String.format(
 				INSERT_GENERIC_THING_TEMPLATE, SparqlUtils.escape(genericThingId), type.getURI(),
-				SparqlUtils.escape(canonicalString)));
+				SparqlUtils.escape(canonicalString),
+				provenanceCount,documentCount));
+		String typeStmtId = UUID.randomUUID().toString();
+		updateRequest.add(String.format(TYPE_REIFICATION_TEMPLATE,
+			SparqlUtils.escape(genericThingId), SparqlUtils.escape(type.getType()),
+			SparqlUtils.escape(typeStmtId), SparqlUtils.escape(genericThingId),
+			SparqlUtils.escape(type.getType()), 1.0f));
+
 
 		return updateRequest;
 	}
@@ -1811,11 +2052,71 @@ public class SparqlQueryBuilder {
 		}
 		StringBuilder subjectString = new StringBuilder();
 		for (String kbUri : kbUris) {
-			subjectString.append("adept-data:").append(kbUri).append(", ");
+			subjectString.append("adept-data:").append(kbUri).append(" ");
 		}
-		subjectString.setLength(subjectString.length() - 2);
+		subjectString.setLength(subjectString.length() - 1);
 		return QueryFactory.create(String.format(QUERY_ENTITY_DATA_BY_IDS,
 				SparqlUtils.escape(subjectString.toString())));
+	}
+
+	/**
+	 * Create query to get information for most frequent entities by
+	 * provenanceCount
+	 *
+	 */
+	public Query createGetMostFrequentEntityIdsByProvenanceCountQuery(int
+			limit){
+		checkArgument(limit>0,"limit must be a positive integer");
+		StringBuilder subjectString = new StringBuilder();
+		return QueryFactory.create(String.format
+				(QUERY_MOST_FREQUENT_ENTITY_IDS_BY_PROVENANCE_COUNT,
+				limit));
+	}
+
+	/**
+	 * Create query to get information for most frequent entities (by
+	 * provenance count) given an entityType
+	 *
+	 */
+	public Query createGetMostFrequentEntityIdsByProvenanceCountAndTypeQuery
+	(int limit, OntType entityType){
+		checkArgument(limit>0,"limit must be a positive integer");
+		checkNotNull(entityType);
+		checkArgument(!entityType.getType().isEmpty(),"entityType cannot be empty");
+		return QueryFactory.create(String.format
+				(QUERY_MOST_FREQUENT_ENTITY_IDS_BY_PROVENANCE_COUNT_AND_TYPE,
+						entityType.getType(),
+				limit));
+	}
+
+	/**
+	 * Create query to get information for most frequent entities by
+	 * document count
+	 *
+	 */
+	public Query createGetMostFrequentEntityIdsByDocumentCountQuery(int
+			limit){
+		checkArgument(limit>0,"limit must be a positive integer");
+		StringBuilder subjectString = new StringBuilder();
+		return QueryFactory.create(String.format
+				(QUERY_MOST_FREQUENT_ENTITY_IDS_BY_DOCUMENT_COUNT,
+						limit));
+	}
+
+	/**
+	 * Create query to get information for most frequent entities (by
+	 * document count) given an entityType
+	 *
+	 */
+	public Query createGetMostFrequentEntityIdsByDocumentCountAndTypeQuery
+	(int limit, OntType entityType){
+		checkArgument(limit>0,"limit must be a positive integer");
+		checkNotNull(entityType);
+		checkArgument(!entityType.getType().isEmpty(),"entityType cannot be empty");
+		return QueryFactory.create(String.format
+				(QUERY_MOST_FREQUENT_ENTITY_IDS_BY_DOCUMENT_COUNT_AND_TYPE,
+						entityType.getType(),
+						limit));
 	}
 
 	public Query createGetEntitiesByTypeQuery(String type) {

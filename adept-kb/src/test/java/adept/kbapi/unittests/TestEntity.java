@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.unittests;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi.unittests;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +40,10 @@ package adept.kbapi.unittests;
  * #L%
  */
 
-import static org.junit.Assert.assertTrue;
+import com.google.common.base.Optional;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,9 +52,6 @@ import java.util.Collections;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import adept.common.Entity;
 import adept.common.EntityMention;
 import adept.common.KBID;
@@ -39,6 +59,7 @@ import adept.common.OntType;
 import adept.common.Pair;
 import adept.common.Type;
 import adept.kbapi.KBEntity;
+import adept.kbapi.KBEntityMentionProvenance;
 import adept.kbapi.KBOntologyMap;
 import adept.kbapi.KBOntologyModel;
 import adept.kbapi.KBPredicateArgument;
@@ -47,7 +68,7 @@ import adept.kbapi.KBQueryException;
 import adept.kbapi.KBTextProvenance;
 import adept.kbapi.KBUpdateException;
 
-import com.google.common.base.Optional;
+import static org.junit.Assert.assertTrue;
 
 public class TestEntity extends KBUnitTest {
 	// initial entity values
@@ -102,15 +123,26 @@ public class TestEntity extends KBUnitTest {
 		// Update entry
 		KBEntity.UpdateBuilder entityUpdateBuilder = kbEntity.updateBuilder();
 		entityUpdateBuilder.setConfidence(updatedEntityConfidence);
-		entityUpdateBuilder.removeProvenance(kbEntity.getProvenances().iterator().next());
+		List<KBProvenance> provenances =
+				new ArrayList(kbEntity.getProvenances());
+		entityUpdateBuilder.removeProvenance(provenances.get(0));
 
-		KBTextProvenance.InsertionBuilder canonicalMentionBuilder = KBTextProvenance.builder(
-				createTestChunk(), updatedEntityCanonicalMentionConfidence);
-		KBTextProvenance.InsertionBuilder otherMentionBuilder = KBTextProvenance.builder(
-				createTestChunk(), updatedEntityMentionConfidence);
+		KBEntityMentionProvenance.InsertionBuilder canonicalMentionBuilder = KBEntityMentionProvenance.builder(
+				createTestChunk(), updatedEntityCanonicalMentionConfidence,
+				"NAME");//createTestChunk creates a NAME-type
+		// mention/chunk
+		KBEntityMentionProvenance.InsertionBuilder otherMentionBuilder = KBEntityMentionProvenance.builder(
+				createTestChunk(), updatedEntityMentionConfidence,
+						"NAME");
+
+		KBEntityMentionProvenance.UpdateBuilder provenanceUpdateBuilder =
+				((KBEntityMentionProvenance)provenances.get(1)).getUpdateBuilder
+						(kbEntity.getKBID());
+//		provenanceUpdateBuilder.setNewType("NOMINAL");
 
 		entityUpdateBuilder.addProvenance(otherMentionBuilder);
 		entityUpdateBuilder.addProvenance(canonicalMentionBuilder);
+		entityUpdateBuilder.addProvenanceToUpdate(provenanceUpdateBuilder);
 		entityUpdateBuilder.setNewCanonicalMention(canonicalMentionBuilder,
 				updatedEntityCanonicalMentionConfidence);
 
@@ -129,7 +161,7 @@ public class TestEntity extends KBUnitTest {
 
         entityUpdateBuilder.removeExternalKBID(new KBID("External_Entity_ID2", "ExampleKB2"));
         entityUpdateBuilder.addExternalKBID(new KBID("Updated_external_entity_id", "updatedKb"));
-                
+
 		KBEntity updatedKbEntity = entityUpdateBuilder.update(kb);
 
 		// Run queries
@@ -143,10 +175,10 @@ public class TestEntity extends KBUnitTest {
 		testQueryEntityByExternalID(new KBID("External_Entity_ID", "ExampleKB"), entityType,
 				updatedEntityConfidence, updatedEntityCanonicalMentionConfidence,
 				updatedEntityTypesWithConfidences);
-                
+
         Optional<KBPredicateArgument> externalObject1 = kb.getKBObjectByExternalID(new KBID("External_Entity_ID2", "ExampleKB2"));
         Assert.assertTrue("Deleted external kb id was not removed correctly.", !externalObject1.isPresent());
-                
+
         Optional<KBPredicateArgument> externalObject2 = kb.getKBObjectByExternalID(new KBID("Updated_external_entity_id", "updatedKb"));
         Assert.assertTrue("Updated external kb id was not inserted correctly.", externalObject2.isPresent());
 
@@ -176,14 +208,14 @@ public class TestEntity extends KBUnitTest {
 				assertionFailureText += "Entity type " + entityType
 						+ " does not match expected entity type of " + expectedEntityType + ". ";
 			}
-	
+
 			if (kbEntity.getConfidence() != expectedEntityConfidence) {
 				assertion = false;
 				assertionFailureText += "Entity confidence " + kbEntity.getConfidence()
 						+ " does not match expected entity confidence of " + expectedEntityConfidence
 						+ ". ";
 			}
-	
+
 			if (kbEntity.getCanonicalMentionConfidence() != expectedCanonicalMentionConfidence) {
 				assertion = false;
 				assertionFailureText += "Entity canonical mention confidence "
@@ -191,11 +223,11 @@ public class TestEntity extends KBUnitTest {
 						+ " does not match expected canonical mention confidence of "
 						+ expectedCanonicalMentionConfidence + ". ";
 			}
-	
+
 			for (Pair<String, Double> expectedEntityTypeWithConfidence : expectedEntityTypesWithConfidences) {
 				OntType expectedType = KBOntologyMap.getTACOntologyMap()
 						.getKBTypeForType(new Type(expectedEntityTypeWithConfidence.getL())).get();
-	
+
 				if (!kbEntity.getTypes().containsKey(expectedType)
 						|| !kbEntity.getTypes().get(expectedType)
 								.equals(expectedEntityTypeWithConfidence.getR().floatValue())) {
@@ -345,14 +377,14 @@ public class TestEntity extends KBUnitTest {
 				assertionFailureText += "Entity type " + entityType
 						+ " does not match expected entity type of " + expectedEntityType + ". ";
 			}
-	
+
 			if (testEntity.getConfidence() != expectedEntityConfidence) {
 				assertion = false;
 				assertionFailureText += "Entity confidence " + testEntity.getConfidence()
 						+ " does not match expected entity confidence of " + expectedEntityConfidence
 						+ ". ";
 			}
-	
+
 			if (testEntity.getCanonicalMentionConfidence() != expectedCanonicalMentionConfidence) {
 				assertion = false;
 				assertionFailureText += "Entity canonical mention confidence "
@@ -360,7 +392,7 @@ public class TestEntity extends KBUnitTest {
 						+ " does not match expected canonical mention confidence of "
 						+ expectedCanonicalMentionConfidence + ". ";
 			}
-	
+
 			for (Pair<String, Double> expectedEntityTypeWithConfidence : expectedEntityTypesWithConfidences) {
 				OntType expectedType = KBOntologyMap.getTACOntologyMap()
 						.getKBTypeForType(new Type(expectedEntityTypeWithConfidence.getL())).get();
@@ -388,12 +420,12 @@ public class TestEntity extends KBUnitTest {
 		}
 		return currentOntType;
 	}
-	
+
 	@Test
 	public void testInvalidEntityType() throws KBQueryException {
 		KBEntity.InsertionBuilder entity = KBEntity.entityInsertionBuilder(
 						Collections.singletonMap(new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "INVALID_TYPE"), .1f),
-						generateProvenance("invalidType"),
+						generateProvenance("invalidType",""),
 						.1f, .1f);
 		KBUpdateException exception = null;
 		try{
@@ -404,53 +436,59 @@ public class TestEntity extends KBUnitTest {
 		}
 		Assert.assertTrue("Inserting entity with bad type should throw exception.", exception != null);
 	}
-	
-	@Test 
+
+	@Test
 	public void testGetPersonByExternalID() throws KBQueryException, KBUpdateException{
 		KBEntity.InsertionBuilder personBuilder = KBEntity.entityInsertionBuilder(
-				Collections.singletonMap(new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Person"), .1f), generateProvenance("Person"), .1f, .1f);
+				Collections.singletonMap(new OntType(KBOntologyModel
+						.ONTOLOGY_CORE_PREFIX, "Person"), .1f),
+				generateProvenance("Person","NOMINAL"), .1f, .1f);
 		KBID testExternalKBID = new KBID("test","testid");
 		personBuilder.addExternalKBId(testExternalKBID);
-		
+
 		KBEntity person = personBuilder.insert(kb);
-		
+
 		Optional<KBPredicateArgument> queryResult = kb.getKBObjectByExternalID(testExternalKBID);
-		
+
 		Assert.assertTrue("Person by external Id should exist", queryResult.isPresent());
-		Assert.assertEquals("Queried person should be same as inserted person", person, queryResult.get()); 
-		
+		Assert.assertEquals("Queried person should be same as inserted person", person, queryResult.get());
+
 	}
-	
-	@Test 
+
+	@Test
 	public void testGetFemaleByExternalID() throws KBQueryException, KBUpdateException{
 		KBEntity.InsertionBuilder personBuilder = KBEntity.entityInsertionBuilder(
-				Collections.singletonMap(new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Female"), .1f), generateProvenance("Person"), .1f, .1f);
+				Collections.singletonMap(new OntType(KBOntologyModel
+						.ONTOLOGY_CORE_PREFIX, "Female"), .1f),
+				generateProvenance("Person","NOMINAL"), .1f, .1f);
 		KBID testExternalKBID = new KBID("test","testid");
 		personBuilder.addExternalKBId(testExternalKBID);
-		
+
 		KBEntity person = personBuilder.insert(kb);
-		
+
 		Optional<KBPredicateArgument> queryResult = kb.getKBObjectByExternalID(testExternalKBID);
-		
+
 		Assert.assertTrue("Person by external Id should exist", queryResult.isPresent());
-		Assert.assertEquals("Queried person should be same as inserted person", person, queryResult.get()); 
-		
+		Assert.assertEquals("Queried person should be same as inserted person", person, queryResult.get());
+
 	}
-	
-	@Test 
+
+	@Test
 	public void testGetMaleByExternalID() throws KBQueryException, KBUpdateException{
 		KBEntity.InsertionBuilder personBuilder = KBEntity.entityInsertionBuilder(
-				Collections.singletonMap(new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Male"), .1f), generateProvenance("Person"), .1f, .1f);
+				Collections.singletonMap(new OntType(KBOntologyModel
+						.ONTOLOGY_CORE_PREFIX, "Male"), .1f),
+				generateProvenance("Person","NOMINAL"), .1f, .1f);
 		KBID testExternalKBID = new KBID("test","testid");
 		personBuilder.addExternalKBId(testExternalKBID);
-		
+
 		KBEntity person = personBuilder.insert(kb);
-		
+
 		Optional<KBPredicateArgument> queryResult = kb.getKBObjectByExternalID(testExternalKBID);
-		
+
 		Assert.assertTrue("Person by external Id should exist", queryResult.isPresent());
-		Assert.assertEquals("Queried person should be same as inserted person", person, queryResult.get()); 
-		
+		Assert.assertEquals("Queried person should be same as inserted person", person, queryResult.get());
+
 	}
 
 }

@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.io;
 
 /*-
@@ -24,6 +44,7 @@ import adept.utilities.DocumentMaker;
 import com.google.common.base.Optional;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -116,11 +137,11 @@ public class MPDFDocumentReader {
     if (xmlReadMode != DocumentMaker.XMLReadMode.DEFAULT) {
         String cleanedRawDocumentValue;
         try {
-            String rawDocumentValue = Reader.readRawFile(filename);
+            String rawDocumentValue = Reader.checkSurrogates(Reader.readRawFile(filename));
             if (xmlReadMode == DocumentMaker.XMLReadMode.RAW_XML_TAC) {
                 rawDocumentValue = rawDocumentValue.substring(Reader.findXMLTag(rawDocumentValue, "doc"));
             }
-            cleanedRawDocumentValue = Reader.cleanRawText(rawDocumentValue, new String[]{"<post.*?>.*?<\\/post>"}, new String[]{"<\\/?.*?>"});
+            cleanedRawDocumentValue = Reader.cleanRawText(rawDocumentValue, "<(post|headline).*?>.*?<\\/(post|headline)>", new String[]{"<\\/?.*?>"});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -199,6 +220,18 @@ public class MPDFDocumentReader {
 		//		 			", newend: "	+ newPasCharEnd + ", OldValue: " + token.getValue() + ", NewValue: " + docToken.getValue());
 	}
 
+	private static boolean isNodeOutsidePost(Node node) {
+		if (node == null) {
+			throw new NullPointerException();
+		}
+		for (Node n = node; n != null; n = n.getParentNode()) {
+			if (n.getNodeName().equals("post")) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * reads the Awake format document into an ADEPT document.
 	 *
@@ -209,16 +242,35 @@ public class MPDFDocumentReader {
 	protected Document readDocument(org.w3c.dom.Document doc, List<PostAttributes> postList,
 	    Optional<String> docId, Corpus corpus, Optional<String> docType, String uri,
 	    String language) {
+
+		// thrown an exception if we encounter unknown tag name(s)
+		NodeList nodeList = doc.getElementsByTagName("*");
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node node = nodeList.item(i);
+			String tagName = node.getNodeName();
+			// only consider tags outside of "post" elements, since tags within the post are
+			// actually part of the user-posted text (we filter these out later anyway)
+			if (isNodeOutsidePost(node) && !tagName.matches("doc|headline")) {
+				throw new RuntimeException(new IOException("input document contains unknown tag '" + tagName + "'"));
+			}
+		}
+
 		Element docElement = doc.getDocumentElement();
 		docElement.normalize();
 	  	StringBuffer sb = new StringBuffer();
+
+		Node headlineNode = docElement.getElementsByTagName("headline").item(0);
+		if (headlineNode != null) {
+			sb.append(Reader.checkSurrogates(headlineNode.getTextContent()));
+		}
+
 		NodeList posts= docElement.getElementsByTagName("post");
 		//System.out.println("passages: " + passages.toString() + " " + passages.getLength());
 		for (int i = 0; i < posts.getLength(); i++) {
 			Element postElement = (Element)posts.item(i);
 			if (postElement != null) {
 				PostAttributes pa = createPost(postElement, sb);
-				if ( pa.value() != null && !pa.value().equals("")) {
+				if ( pa.value() != null && !pa.value().trim().equals("")) {
 					postList.add(pa);
 				}
 			}
@@ -246,15 +298,12 @@ public class MPDFDocumentReader {
 
 	protected Document makeDocument( Element docElement, Optional<String> docId, Corpus
 	    corpus, Optional<String> docType, String uri, String language) {
-		String docID = docElement.getAttribute("id");
-	  	if(docID==null || docID.equals("")){
-			docID = docId.orNull();
-		}
-		Document mpdfDocument = new Document(docID, corpus, docType.or("discussion_thread"),
+		String effectiveDocId = docId.or(docElement.getAttribute("id"));
+		Document mpdfDocument = new Document(effectiveDocId, corpus, docType.or("discussion_thread"),
 		    uri,language);
-		NodeList headline = docElement.getElementsByTagName("headline");
-		if(headline!=null){
-		  mpdfDocument.setHeadline(headline.item(0).getTextContent());
+		Node headlineNode = docElement.getElementsByTagName("headline").item(0);
+		if(headlineNode != null) {
+		  mpdfDocument.setHeadline(headlineNode.getTextContent());
 	  	}
 		return mpdfDocument;
 	}
@@ -294,7 +343,7 @@ public class MPDFDocumentReader {
 		this.author = author;
 	    	this.datetime = datetime;
 	    	this.id = id;
-	    	this.value = value;
+	    	this.value = value.replace("\uFEFF", "");
 	  }
 	  static PostAttributes create(String author, String datetime, String id, String value){
 		return new PostAttributes(author,datetime,id,value);

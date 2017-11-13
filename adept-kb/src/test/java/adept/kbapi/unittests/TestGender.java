@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.unittests;
 
 /*-
@@ -35,7 +55,6 @@ import adept.common.EntityMention;
 import adept.common.GenderTypeFactory;
 import adept.common.OntType;
 import adept.common.Pair;
-import adept.common.Type;
 import adept.kbapi.KBEntity;
 import adept.kbapi.KBOntologyMap;
 import adept.kbapi.KBOntologyModel;
@@ -63,13 +82,6 @@ public class TestGender extends KBUnitTest {
 	private void testGender(String commonGenderType, OntType kbGenderType) throws KBUpdateException, InvalidPropertiesFormatException, FileNotFoundException, IOException, KBQueryException{
 		Pair<Entity, List<EntityMention>> entityAndMentions = createTestEntityWithMentions("per", .3f, "NAME", .2f, .7f, Collections.singletonList(new Pair<String, Double>("per", .3)));
 		Entity entity = entityAndMentions.getL();
-		Type gender = null;
-		while (null == gender || gender.getType().equals("UNKNOWN")) {
-			gender = GenderTypeFactory.getInstance().getType(commonGenderType);
-			if (gender.getType().equals("UNKNOWN")) {
-			    System.out.println("Unknown gender returned!");
-			}
-		}
 		entity.addGender(GenderTypeFactory.getInstance().getType(commonGenderType), .43d);
 		KBEntity.InsertionBuilder insertionBuilder = KBEntity.entityInsertionBuilder(
 				entityAndMentions.getL(), entityAndMentions.getR(),

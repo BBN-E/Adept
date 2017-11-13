@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,17 +56,6 @@ import adept.common.IType;
 import adept.common.Item;
 import adept.common.KBID;
 import adept.common.OntType;
-import adept.kbapi.KB;
-import adept.kbapi.KBConfigurationException;
-import adept.kbapi.KBEntity;
-import adept.kbapi.KBOntologyMap;
-import adept.kbapi.KBOntologyModel;
-import adept.kbapi.KBParameters;
-import adept.kbapi.KBPredicateArgument;
-import adept.kbapi.KBQueryException;
-import adept.kbapi.KBRelation;
-import adept.kbapi.KBTextProvenance;
-import adept.kbapi.KBUpdateException;
 
 public class KBExamples {
   public static void main(String[] args)
@@ -71,9 +80,10 @@ public class KBExamples {
     // Update existing entities
     KBEntity.UpdateBuilder updateBuilder = insertedEntity.updateBuilder();
     updateBuilder.setConfidence((float) entity.getEntityConfidence());
-    KBTextProvenance.InsertionBuilder canonicalMentionBuilder =
-        KBTextProvenance.builder(entity.getCanonicalMention(),
-            (float) entity.getCanonicalMentionConfidence());
+    KBEntityMentionProvenance.InsertionBuilder canonicalMentionBuilder =
+        KBEntityMentionProvenance.builder(entity.getCanonicalMention(),
+            (float) entity.getCanonicalMentionConfidence(),entity.getCanonicalMention
+                ().getMentionType().getType());
     updateBuilder.addProvenance(canonicalMentionBuilder);
     updateBuilder
         .setNewCanonicalMention(canonicalMentionBuilder,

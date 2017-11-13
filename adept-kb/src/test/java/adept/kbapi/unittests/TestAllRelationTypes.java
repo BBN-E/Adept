@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.unittests;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi.unittests;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +41,8 @@ package adept.kbapi.unittests;
  */
 
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,9 +52,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 import adept.common.ChannelName;
 import adept.common.CharOffset;
@@ -71,7 +89,7 @@ import adept.kbapi.KBUpdateException;
 import adept.metadata.SourceAlgorithm;
 import adept.utilities.DocumentMaker;
 
-import com.google.common.base.Optional;
+import static org.junit.Assert.assertTrue;
 
 public class TestAllRelationTypes extends KBUnitTest {
     private static final HashMap<String, String> tacEntityReverseMap = new HashMap<String, String>();
@@ -82,7 +100,7 @@ public class TestAllRelationTypes extends KBUnitTest {
         tacEntityReverseMap.put("Location","loc");
         tacEntityReverseMap.put("Facility","fac");
     }
-    
+
     List<String> validEntityTypes = Arrays.asList("Entity","Person","GeoPoliticalEntity","Organization","Location","Facility");
 
     private static final HashMap<String, List<String>> tacRelationTypesWithArguments = new HashMap<String, List<String>>();
@@ -116,7 +134,7 @@ public class TestAllRelationTypes extends KBUnitTest {
         tacRelationTypesWithArguments.put("org:number_of_employees_members",Arrays.asList("arg-1","arg-2"));
         tacRelationTypesWithArguments.put("org:website",Arrays.asList("arg-1","arg-2"));
     }
-    
+
     private static final HashMap<String, List<String>> rereRelationTypesWithArguments = new HashMap<String, List<String>>();
     static {
         rereRelationTypesWithArguments.put("locatednear",Arrays.asList("entity","loc"));
@@ -138,18 +156,18 @@ public class TestAllRelationTypes extends KBUnitTest {
         rereRelationTypesWithArguments.put("orgwebsite",Arrays.asList("org","url"));
         rereRelationTypesWithArguments.put("opra",Arrays.asList("org","entity"));
     }
-                
-                
+
+
     @Test
-    public void testAllTacRelationTypes() throws Exception {         
-        
+    public void testAllTacRelationTypes() throws Exception {
+
         for (String relationType : tacRelationTypesWithArguments.keySet()) {
             // Test founder relation with founder argument of types other than Person
             if (relationType.equals("org:founded_by")) {
                 KBRelation relationWithOrgArg = createTestRelationWithArguments(relationType, "org", KBOntologyMap.getTACOntologyMap(), "tac");
                 confirmRelationWithTypeExists(relationType, KBOntologyMap.getTACOntologyMap());
                 kb.deleteKBObject(relationWithOrgArg.getKBID());
-                
+
                 KBRelation relationWithGpeArg = createTestRelationWithArguments(relationType, "gpe", KBOntologyMap.getTACOntologyMap(), "tac");
                 confirmRelationWithTypeExists(relationType, KBOntologyMap.getTACOntologyMap());
                 kb.deleteKBObject(relationWithGpeArg.getKBID());
@@ -158,17 +176,17 @@ public class TestAllRelationTypes extends KBUnitTest {
             confirmRelationWithTypeExists(relationType, KBOntologyMap.getTACOntologyMap());
             kb.deleteKBObject(relation.getKBID());
         }
-    } 
-    
+    }
+
     @Test
-    public void testAllRereRelationTypes() throws Exception {  
+    public void testAllRereRelationTypes() throws Exception {
         for (String relationType : rereRelationTypesWithArguments.keySet()) {
             KBRelation relation = createTestRelationWithArguments(relationType, "per", KBOntologyMap.getRichEREOntologyMap(), "rere");
             confirmRelationWithTypeExists(relationType, KBOntologyMap.getRichEREOntologyMap());
             kb.deleteKBObject(relation.getKBID());
         }
-    }  
-    
+    }
+
     private void confirmRelationWithTypeExists(String relationType, KBOntologyMap ontologyMap) throws KBQueryException, InvalidPropertiesFormatException, FileNotFoundException, IOException {
         OntType adeptType = ontologyMap.getKBTypeForType(new Type(relationType)).get();
         List<KBRelation> relationIds = kb.getRelationsByType(adeptType);
@@ -192,16 +210,16 @@ public class TestAllRelationTypes extends KBUnitTest {
 
             Type actualRelationType = new Type(relationType);
             OntType adeptType = ontologyMap.getKBTypeForType(actualRelationType).get();
-            
+
             // create relation mention
             RelationMention.Builder relationMentionBuilder = RelationMention.builder(actualRelationType);
             relationMentionBuilder.setConfidence(relationMentionConfidence);
             relationMentionBuilder.addJustification(new Chunk(testTokenOffset, testTokenStream));
 
             // create document relation
-            DocumentRelation.Builder documentRelationBuilder = DocumentRelation.builder(actualRelationType);		
+            DocumentRelation.Builder documentRelationBuilder = DocumentRelation.builder(actualRelationType);
             documentRelationBuilder.setConfidence(relationConfidence);
-            
+
             int entityId = 1;
             HashMap<String, List<String>> relationTypesWithArguments = ontMapType.equals("tac") ? tacRelationTypesWithArguments : rereRelationTypesWithArguments;
             for (String mappingArgumentType : relationTypesWithArguments.get(relationType)) {
@@ -236,12 +254,12 @@ public class TestAllRelationTypes extends KBUnitTest {
                                         numericValue, Collections.singletonList(numberPhrase));
                         KBNumber number1 = numberInsertionBuilder1.insert(kb);
 
-                        argumentMap.put(numericValue, number1); 
+                        argumentMap.put(numericValue, number1);
 
                     RelationMention.Filler argFiller = RelationMention.Filler.fromNumberPhrase(numberPhrase, new Type(mappingArgumentType), 0.55f);
                         relationMentionBuilder.addArgument(argFiller);
 
-                    DocumentRelationArgument.Builder argBuilder = DocumentRelationArgument.builder(new Type(mappingArgumentType), 
+                    DocumentRelationArgument.Builder argBuilder = DocumentRelationArgument.builder(new Type(mappingArgumentType),
                                 DocumentRelationArgument.Filler.fromNumericValue(numericValue), 0.55f);
                         argBuilder.addProvenance(argFiller);
                         documentRelationBuilder.addArgument(argBuilder.build());
@@ -275,11 +293,11 @@ public class TestAllRelationTypes extends KBUnitTest {
                     RelationMention.Filler argFiller = RelationMention.Filler.fromEntityMention(mention, new Type(mappingArgumentType), 0.51f);
                         relationMentionBuilder.addArgument(argFiller);
 
-                    DocumentRelationArgument.Builder argBuilder = DocumentRelationArgument.builder(new Type(mappingArgumentType), 
+                    DocumentRelationArgument.Builder argBuilder = DocumentRelationArgument.builder(new Type(mappingArgumentType),
                                 DocumentRelationArgument.Filler.fromEntity(entityArgument), 0.51f);
                         argBuilder.addProvenance(argFiller);
                         documentRelationBuilder.addArgument(argBuilder.build());
-                } else { 
+                } else {
                     // Generic thing
                     Type type = null;
                     if (kbArgType.equals("Thing")) {
@@ -293,13 +311,13 @@ public class TestAllRelationTypes extends KBUnitTest {
 				.genericThingInsertionBuilder(genericThing, Collections.singletonList(chunk),
                                             ontologyMap);
                         KBGenericThing kbGenericThing = thingBuilder.insert(kb);
-                        
+
                         argumentMap.put(genericThing, kbGenericThing);
 
                     RelationMention.Filler argFiller = RelationMention.Filler.fromGenericChunk(chunk, new Type(mappingArgumentType), 0.55f);
                         relationMentionBuilder.addArgument(argFiller);
 
-                    DocumentRelationArgument.Builder argBuilder = DocumentRelationArgument.builder(new Type(mappingArgumentType), 
+                    DocumentRelationArgument.Builder argBuilder = DocumentRelationArgument.builder(new Type(mappingArgumentType),
                                 DocumentRelationArgument.Filler.fromGenericThing(genericThing), 0.55f);
                         argBuilder.addProvenance(argFiller);
                         documentRelationBuilder.addArgument(argBuilder.build());
@@ -323,11 +341,12 @@ public class TestAllRelationTypes extends KBUnitTest {
             return null;
         }
     }
-    
+
     @Test
     public void testEndorsement() throws KBUpdateException, KBQueryException{
     	OntType personType = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Person");
-    	KBEntity entity = KBEntity.entityInsertionBuilder(Collections.singletonMap(personType, .5f), generateProvenance("entity"), .5f, .5f).insert(kb);
+    	KBEntity entity = KBEntity.entityInsertionBuilder(Collections.singletonMap(personType,
+            .5f), generateProvenance("entity","NOMINAL"), .5f, .5f).insert(kb);
     	OntType threadType = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Thread");
     	KBGenericThing genericThing = KBGenericThing.genericThingInsertionBuilder(threadType, "threadURL").insert(kb);
     	OntType endorsementType = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Endorsement");
@@ -336,14 +355,14 @@ public class TestAllRelationTypes extends KBUnitTest {
     	relationBuilder.addArgument(KBRelationArgument.insertionBuilder(entityRole, entity, .5f));
     	OntType threadRole = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "thread");
     	relationBuilder.addArgument(KBRelationArgument.insertionBuilder(threadRole, genericThing, .5f));
-    	
+
     	relationBuilder.addProvenance(generateProvenance("endorsement provenance"));
     	KBRelation insertedRelation = relationBuilder.insert(kb);
-    	
+
     	KBRelation queriedRelation = kb.getRelationById(insertedRelation.getKBID());
-    	
-    	Assert.assertEquals("Inserted and queried objects should be .equals", insertedRelation, queriedRelation ); 
-    	
-    	
+
+    	Assert.assertEquals("Inserted and queried objects should be .equals", insertedRelation, queriedRelation );
+
+
     }
 }

@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.common;
 
 /*-
@@ -35,8 +55,8 @@ public class DiscourseUnit extends Chunk {
 	/** The sequence id. */
 	private final long sequenceId;
 
-	/** The discource type. */
-	private String discourceType;
+	/** The discourse type. */
+	private String discourseType;
 
 	/** The uncertainty confidence. */
 	private Float uncertaintyConfidence;
@@ -61,7 +81,7 @@ public class DiscourseUnit extends Chunk {
 		super(tokenOffset, tokenStream);
 		this.sequenceId = sequenceId;
                 checkArgument(discourseType!=null && discourseType.trim().length()>0);
-		this.discourceType = discourseType;
+		this.discourseType = discourseType;
 	}
 
 	/**
@@ -103,23 +123,23 @@ public class DiscourseUnit extends Chunk {
 	}
 
 	/**
-	 * Gets the discource type.
+	 * Gets the discourse type.
 	 * 
-	 * @return the discource type
+	 * @return the discourse type
 	 */
-	public String getDiscourceType() {
-		return discourceType;
+	public String getDiscourseType() {
+		return discourseType;
 	}
 
 	/**
-	 * Sets the discource type.
+	 * Sets the discourse type.
 	 * 
 	 * @param discourseType
-	 *            the new discource type
+	 *            the new discourse type
 	 */
-	public void setDiscourceType(String discourseType) {
+	public void setDiscourseType(String discourseType) {
                 checkArgument(discourseType!=null && discourseType.trim().length()>0);
-		this.discourceType = discourseType;
+		this.discourseType = discourseType;
 	}
 
 	/**
@@ -135,7 +155,7 @@ public class DiscourseUnit extends Chunk {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((discourceType == null) ? 0 : discourceType.hashCode());
+		result = prime * result + ((discourseType == null) ? 0 : discourseType.hashCode());
 		result = prime * result + ((noveltyConfidence == null) ? 0 : noveltyConfidence.hashCode());
 		result = prime * result + (int) (sequenceId ^ (sequenceId >>> 32));
 		result = prime * result + ((uncertaintyConfidence == null) ? 0 : uncertaintyConfidence.hashCode());
@@ -151,10 +171,10 @@ public class DiscourseUnit extends Chunk {
 		if (getClass() != obj.getClass())
 			return false;
 		DiscourseUnit other = (DiscourseUnit) obj;
-		if (discourceType == null) {
-			if (other.discourceType != null)
+		if (discourseType == null) {
+			if (other.discourseType != null)
 				return false;
-		} else if (!discourceType.equals(other.discourceType))
+		} else if (!discourseType.equals(other.discourseType))
 			return false;
 		if (noveltyConfidence == null) {
 			if (other.noveltyConfidence != null)

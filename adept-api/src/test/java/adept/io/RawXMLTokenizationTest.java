@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.io;
 
 /*-
@@ -51,6 +71,12 @@ public class RawXMLTokenizationTest extends TestCase {
                 "adept/io/NYT_ENG_20131030.0294.xml",
                 "adept/io/b200ba11535848d04c3abc17bf9b6fbc.mpdf.xml",
                 "adept/io/dd49c9c8294a7ec67b5e2f367768e218.mpdf.xml",
+                "adept/io/NYT_ENG_20101009.0045.sgm.xml", // BBN-913
+                "adept/io/NYT_ENG_20130829.0126-empty-passages.xml", // BBN-930
+                "adept/io/mpdf-with-non-bmp.mpdf.xml", // BBN-840
+                "adept/io/sgm-with-non-bmp.sgm.xml", // BBN-840
+                "adept/io/dtra_data_6332.xml", // BBN-840
+                "adept/io/dtra_data_6652.xml", // BBN-840
                 // (the following contain Chinese text)
                 "adept/io/AFP_CMN_20001001.0001.sgm.xml",
                 "adept/io/AFP_CMN_20001001.0002.sgm.xml",
@@ -62,6 +88,8 @@ public class RawXMLTokenizationTest extends TestCase {
                 "adept/io/AFP_CMN_20001001.0003.mpdf.xml",
                 "adept/io/AFP_CMN_20001001.0004.mpdf.xml",
                 "adept/io/AFP_CMN_20001001.0005.mpdf.xml",
+                "adept/io/CMN_DF_000020_20140629_G00A04FGL.xml", // BBN-930
+                "adept/io/CMN_DF_000020_20150122_G00A0BPBH.xml", // BBN-930
         };
         for (String inputFile : inputFiles) {
             String filePath = Reader.getAbsolutePathFromClasspathOrFileSystem(inputFile);
@@ -97,6 +125,9 @@ public class RawXMLTokenizationTest extends TestCase {
             assertEquals(regularTokenizationDocument.getValue(), regularTokenizationTokenStream.getTextValue());
             assertEquals(rawFileTokenizationDocument.getValue(), rawFileTokenizationTokenStream.getTextValue());
 
+            assertNoNonBMPCharacters(regularTokenizationDocument.getValue());
+            assertNoNonBMPCharacters(rawFileTokenizationDocument.getValue());
+
             assertEquals(regularTokenizationTokenStream.size(), rawFileTokenizationTokenStream.size());
             int tokenStreamLength = regularTokenizationTokenStream.size();
             for (int i = 0; i < tokenStreamLength; i++) {
@@ -106,6 +137,7 @@ public class RawXMLTokenizationTest extends TestCase {
                 assertEquals(i, regularToken.getSequenceId());
                 assertEquals(i, rawFileToken.getSequenceId());
 
+                assertNoNonBMPCharacters(regularToken.getValue());
                 assertEquals(regularToken.getValue(), rawFileToken.getValue());
                 String rawFileTokenValueFromText = rawFileTokenizationTokenStream.getTextValue().substring(rawFileToken.getCharOffset().getBegin(), rawFileToken.getCharOffset().getEnd());
                 // should not have any surrounding whitespace
@@ -132,6 +164,8 @@ public class RawXMLTokenizationTest extends TestCase {
                 assertEquals(regularHltContentContainerConversationElements.size(), rawFileHltContentContainerConversationElements.size());
                 int numConversationElements = regularHltContentContainerConversationElements.size();
                 for (int i = 0; i < numConversationElements; i++) {
+                    assertNoNonBMPCharacters(regularHltContentContainerConversationElements.get(i).getMessageChunk().getValue());
+                    assertNoNonBMPCharacters(rawFileHltContentContainerConversationElements.get(i).getMessageChunk().getValue());
                     assertEquals(
                             regularHltContentContainerConversationElements.get(i).getMessageChunk().getTokenOffset(),
                             rawFileHltContentContainerConversationElements.get(i).getMessageChunk().getTokenOffset()
@@ -153,6 +187,8 @@ public class RawXMLTokenizationTest extends TestCase {
                 assertEquals(regularHltContentContainerPassages.size(), rawFileHltContentContainerPassages.size());
                 int numPassages = regularHltContentContainerPassages.size();
                 for (int i = 0; i < numPassages; i++) {
+                    assertNoNonBMPCharacters(regularHltContentContainerPassages.get(i).getValue());
+                    assertNoNonBMPCharacters(rawFileHltContentContainerPassages.get(i).getValue());
                     assertEquals(
                             regularHltContentContainerPassages.get(i).getTokenOffset(),
                             rawFileHltContentContainerPassages.get(i).getTokenOffset()
@@ -160,5 +196,9 @@ public class RawXMLTokenizationTest extends TestCase {
                 }
             }
         }
+    }
+
+    private static void assertNoNonBMPCharacters(String s) {
+        assertEquals(Reader.checkSurrogates(s), s);
     }
 }

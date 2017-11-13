@@ -1,3 +1,23 @@
+/*
+* ------
+* Adept
+* -----
+* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
+* -----
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* -------
+*/
+
 package adept.kbapi.unittests;
 
 /*-
@@ -9,9 +29,9 @@ package adept.kbapi.unittests;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,14 +41,14 @@ package adept.kbapi.unittests;
  */
 
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 import adept.common.Chunk;
 import adept.common.DocumentEvent;
@@ -160,7 +180,9 @@ public class TestGenericThings extends KBUnitTest {
 	public void testGenericThingExistingProvenances() throws KBUpdateException, KBQueryException {
 		OntType type = new OntType(KBOntologyModel.ONTOLOGY_CORE_PREFIX, "Crime");
 		KBGenericThing thing = KBGenericThing.genericThingInsertionBuilder(type, "larceny")
-				.addProvenance(generateProvenance("three")).insert(kb);
+				.addProvenance(generateProvenance("three"))
+				.insert
+						(kb);
 		assertEqualsAndHashCodeByQueryByKBID(thing);
 
 		Assert.assertEquals("Wrong number of provenances", 1, thing.getProvenances().size());
@@ -189,7 +211,7 @@ public class TestGenericThings extends KBUnitTest {
 				.setDocumentID("TEST_DOCUMENT_ID").setDocumentPublicationDate("2015-11-18")
 				.setSourceLanguage("TEST_SOURCE_LANGUAGE");
 	}
-	
+
 	@Test
 	public void testGenericThingWithQuotes() throws KBUpdateException, KBQueryException{
 		String stringWithQuotes = "quote \" crime";
@@ -197,12 +219,12 @@ public class TestGenericThings extends KBUnitTest {
 		KBGenericThing.InsertionBuilder builder = KBGenericThing.genericThingInsertionBuilder(type, stringWithQuotes);
 		builder.addProvenance(generateProvenance("stuff"));
 		KBGenericThing result = builder.insert(kb);
-		
+
 		KBGenericThing queryResult = kb.getGenericThingByTypeAndValue(type, stringWithQuotes).get();
 		Assert.assertEquals("Inserted and Queried Generic Things don't match", result, queryResult);
-		
+
 	}
-	
+
 	@Test
 	public void testGenericThingsBadType() throws KBQueryException, KBUpdateException,
 			FileNotFoundException {
@@ -221,7 +243,7 @@ public class TestGenericThings extends KBUnitTest {
 		}
 		Assert.assertTrue("Inserting generic thing with bad type should throw exception.", exception != null);
 	}
-	
+
 	@Test
 	public void testCorpusIdNoCorpusName() throws KBQueryException, KBUpdateException,
 			FileNotFoundException {
@@ -237,5 +259,5 @@ public class TestGenericThings extends KBUnitTest {
 		builder.addProvenance(provenanceBuilder);
 		KBGenericThing larceny = builder.insert(kb);
 	}
-	
+
 }
