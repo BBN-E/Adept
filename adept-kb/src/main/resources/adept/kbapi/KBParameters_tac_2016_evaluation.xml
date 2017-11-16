@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2012-2017 Raytheon BBN Technologies Corp. All Rights Reserved. -->
 <!--
   #%L
   adept-kb
@@ -37,3 +38,4 @@
 <!-- Whether to use Parliament update processors.  Should be  false for Jena+TDB, true for Parliament -->
 <entry key="useParliamentUpdates">true</entry>
 </properties>
+

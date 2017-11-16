@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.bbn.adept</groupId>
   <artifactId>adept</artifactId>
-  <version>2.7.3</version>
+  <version>2.7.4</version>
   <name>adept</name>
   <packaging>pom</packaging>
   <description>The project file to build and run ADEPT interfaces and applications using Maven</description>

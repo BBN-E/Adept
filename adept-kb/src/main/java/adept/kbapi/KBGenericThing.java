@@ -1,23 +1,3 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
 package adept.kbapi;
 
 /*-
@@ -53,6 +33,7 @@ import adept.common.Chunk;
 import adept.common.GenericThing;
 import adept.common.KBID;
 import adept.common.OntType;
+import com.google.common.collect.FluentIterable;
 import edu.stanford.nlp.util.Sets;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -184,10 +165,13 @@ public class KBGenericThing extends KBThing {
 		}
 
 		public Set<String> getDocumentIDsFromProvenances(){
-			return KBTextProvenance
-					.InsertionBuilder
-					.getDocumentIDsFromProvenanceBuilders
-							(getProvenances());
+			return new HashSet(FluentIterable.from
+					(getProvenances()).transform(
+					(KBProvenance.InsertionBuilder
+							 provenanceBuilder) ->
+							((KBTextProvenance.InsertionBuilder)
+									provenanceBuilder)
+									.getDocumentID()).toList());
 		}
 
 		/**
@@ -263,20 +247,36 @@ public class KBGenericThing extends KBThing {
 		}
 
 		public int getUpdatedProvenanceCount() throws KBQueryException{
-			return getProvenances().size() + getNewProvenances().size() - getProvenancesToRemove().size();
+			//existing provenances + new provenances + provenances to reassign - provenances to remove
+			return getProvenances().size() + getNewProvenances().size() + getProvenancesToReassign().size() - getProvenancesToRemove().size();
 		}
 
 		public int getUpdatedDocumentCount() throws KBQueryException{
+			//Get docIds from existing provenances minus provenances to remove
 			Set<KBProvenance> provenancesToRetain =
 					Sets.diff(getProvenances(),
 							getProvenancesToRemove());
 			Set<String> updatedDocIDs = KBTextProvenance
 					.getDocumentIDsFromProvenances
 							(provenancesToRetain);
-			updatedDocIDs.addAll(KBTextProvenance
-					.InsertionBuilder
-					.getDocumentIDsFromProvenanceBuilders
-							(getNewProvenances()));
+			//Get docIds from new provenances
+			updatedDocIDs.addAll(
+					new HashSet(FluentIterable.from
+							(getNewProvenances()).transform(
+							(KBProvenance.InsertionBuilder
+									 provenanceBuilder) ->
+									((KBTextProvenance.InsertionBuilder)
+											provenanceBuilder)
+											.getDocumentID()).toList()));
+			//Get docIds from provenances to reassign to this generic thing
+			updatedDocIDs.addAll(
+					new HashSet(FluentIterable.from
+							(getProvenancesToReassign()).transform(
+							(KBProvenance.UpdateBuilder
+									 provenanceBuilder) ->
+									((KBTextProvenance.UpdateBuilder)
+											provenanceBuilder)
+											.getDocumentID()).toList()));
 			return updatedDocIDs.size();
 
 		}

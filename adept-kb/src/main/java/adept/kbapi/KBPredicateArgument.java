@@ -1,23 +1,3 @@
-/*
-* ------
-* Adept
-* -----
-* Copyright (C) 2012-2017 Raytheon BBN Technologies Corp.
-* -----
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* -------
-*/
-
 package adept.kbapi;
 
 /*-
@@ -111,7 +91,7 @@ public abstract class KBPredicateArgument {
 	protected abstract class UpdateBuilder<BuilderType extends UpdateBuilder<BuilderType, PredicateArgumentType>, PredicateArgumentType extends KBPredicateArgument> {
 
 		private Set<KBProvenance.InsertionBuilder> newProvenances;
-	  	private Set<KBProvenance.UpdateBuilder> provenancesToUpdate;
+	  	private Set<KBProvenance.UpdateBuilder> provenancesToReassign;
 		private Set<KBProvenance> provenancesToRemove;
 		private Set<KBID> newExternalKBIDs;
 		private Set<KBID> externalKBIDsToRemove;
@@ -120,8 +100,8 @@ public abstract class KBPredicateArgument {
 			return newProvenances;
 		}
 
-	  	public Set<KBProvenance.UpdateBuilder> getProvenancesToUpdate(){
-		  	return provenancesToUpdate;
+	  	public Set<KBProvenance.UpdateBuilder> getProvenancesToReassign(){
+		  	return provenancesToReassign;
 		}
 
 		public Set<KBProvenance> getProvenancesToRemove() {
@@ -142,7 +122,7 @@ public abstract class KBPredicateArgument {
 		 */
 		protected UpdateBuilder() {
 			newProvenances = new HashSet<KBProvenance.InsertionBuilder>();
-		  	provenancesToUpdate = new HashSet<KBProvenance.UpdateBuilder>();
+		  	provenancesToReassign = new HashSet<KBProvenance.UpdateBuilder>();
 			provenancesToRemove = new HashSet<KBProvenance>();
 
 			newExternalKBIDs = new HashSet<KBID>();
@@ -164,14 +144,14 @@ public abstract class KBPredicateArgument {
 	  	/**
 	   	* Link an existing provenance to this object. The updated state of the provenance
 		 * will be saved to the KB when update is called. This method will be called when
-		 * merging multiple KB objects, so that their provenances can be re-linked with the
+		 * merging multiple KB objects, so that their provenances can be reassigned to the
 		 * merged KB object.
 	   	*
 	   	* @param provenance
 	   	* @return
 	   	*/
-	  	public BuilderType addProvenanceToUpdate(KBProvenance.UpdateBuilder provenance){
-	    		provenancesToUpdate.add(provenance);
+	  	public BuilderType addProvenanceToReassign(KBProvenance.UpdateBuilder provenance){
+	    		provenancesToReassign.add(provenance);
 	    		return me();
 	  	}
 
